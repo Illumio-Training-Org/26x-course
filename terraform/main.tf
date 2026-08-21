@@ -30,11 +30,11 @@ resource "random_integer" "suffix" {
 }
 
 resource "aws_s3_bucket" "illumio_flows" {
-  bucket        = "illumios3bucketforflows${random_integer.suffix.result}"
+  bucket        = "illumios3bucket${random_integer.suffix.result}"
   force_destroy = true
 
   tags = {
-    Name    = "illumios3bucketforflows"
+    Name    = "illumios3bucket"
     company = "illumio"
   }
 }
