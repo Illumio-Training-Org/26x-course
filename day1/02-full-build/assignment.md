@@ -1,30 +1,30 @@
 ---
 slug: full-build
-id: h6ivxw8w0scl
+id: 8qlowwiyze9w
 type: challenge
 title: 02 - Full Build (AWS, VMs, k3s)
 teaser: Verify AWS, the RockyLinux/Windows VMs, and the k3s/CVEN node together
 tabs:
-- id: twsrvmd2w0ra
+- id: fe2jxyzgosy2
   title: CloudCLI
   type: terminal
   hostname: cloud-client
   cmd: bash
-- id: kgsri6vwpzzi
+- id: d9ej759n7914
   title: AWS
   type: service
   hostname: cloud-client
   port: 80
-- id: 63bszuuchpwt
+- id: yx05d9vozqcg
   title: Linux
   type: terminal
   hostname: linux-vm
   cmd: bash
-- id: 1x3wd0u7dtr9
+- id: b2rkcee3crkf
   title: Windows
   type: terminal
   hostname: windows-vm
-- id: 8dtpzdz38ggv
+- id: evarmjetmnns
   title: k3scilium
   type: terminal
   hostname: host
@@ -35,10 +35,8 @@ enhanced_loading: null
 ---
 # 02 - Full Build
 
-Base lab test (alternate layout) — AWS, the RockyLinux/Windows VMs, and
-the k3s/CVEN node all built and verified together in one assignment, for
-load-time and look-and-feel comparison against the 4-challenge version
-(`day1`).
+Base lab test — AWS, the RockyLinux/Windows VMs, and the k3s/CVEN node
+all built and verified together in one assignment.
 
 🧩 Task 01 - Verify AWS Resources
 ==========

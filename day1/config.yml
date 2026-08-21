@@ -13,11 +13,11 @@ virtualmachines:
   cpus: 1
 - name: windows-vm
   image: instruqt/windows-server
-  memory: 8192
+  memory: 4096
   cpus: 2
 - name: host
   image: illumio-training/k3scilium
-  memory: 8192
+  memory: 2048
   cpus: 2
 aws_accounts:
 - name: aws-iam-track
