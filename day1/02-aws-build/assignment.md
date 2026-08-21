@@ -41,7 +41,7 @@ Prod, 4 EC2 total) applies cleanly and every instance is reachable.
 **1 )** Return to the **CloudCLI** tab and check the Terraform outputs
 
 ```run
-cd 26x-course/terraform
+cd /root/26x-course/terraform
 terraform output
 ```
 

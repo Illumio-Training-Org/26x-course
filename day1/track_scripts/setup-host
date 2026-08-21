@@ -4,12 +4,10 @@ set -ex
 echo "===== k3s/Cilium bootstrap START ====="
 
 # Deploy Cilium as the CNI (image ships the binary, but install still has
-# to run against this specific cluster instance)
+# to run against this specific cluster instance). Firewall coexistence is
+# deliberately NOT configured here - that's a hands-on learner task in
+# Challenge 4 (checking status and configuring coexistence themselves).
 cilium install
 cilium hubble enable
-
-# Configure coexistence so Illumio's rules take precedence over Cilium's
-cilium upgrade --set='extraArgs={--prepend-iptables-chains=false}'
-kubectl -n kube-system rollout restart ds/cilium
 
 echo "===== k3s/Cilium bootstrap END ====="

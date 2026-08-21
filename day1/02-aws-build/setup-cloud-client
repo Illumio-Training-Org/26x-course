@@ -4,8 +4,9 @@
 export AWS_REGION=us-east-1
 export AWS_DEFAULT_REGION=us-east-1
 
+cd /root
 git clone https://github.com/Illumio-Training-Org/26x-course.git
-cd 26x-course/terraform
+cd /root/26x-course/terraform
 
 # Add HashiCorp GPG key
 curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg

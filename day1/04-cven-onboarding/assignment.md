@@ -18,9 +18,10 @@ enhanced_loading: null
 
 Adapted from `331-Containers V2`'s Assignment 3 (CVEN-only — Agentless
 skipped). This is real onboarding, not just a connectivity check: Cilium
-and firewall coexistence are already configured in this VM's base image
-(`illumio-training/k3scilium`), so this deploys straight into **CLAS
-mode** with no separate legacy-to-CLAS migration step.
+itself is already installed on this VM at boot, so this deploys straight
+into **CLAS mode** with no separate legacy-to-CLAS migration step — but
+firewall coexistence with Illumio still needs to be checked and
+configured as part of this lab.
 
 🧩 Task 01 - Verify the K3s Node
 ==========
@@ -37,7 +38,35 @@ kubectl get nodes
 kubectl get pods -A -o wide
 ```
 
-🧩 Task 02 - Disable Pre-Existing Policies
+🧩 Task 02 - Check Firewall Coexistence
+==========
+
+**1 )** Check whether Cilium is already configured to coexist with Illumio's iptables rules
+
+```run
+sudo iptables -S FORWARD | head
+```
+
+**2 )** If `CILIUM_FORWARD` appears at the top of the list rather than the bottom, coexistence has not been configured — run the following to fix it
+
+```run
+cilium upgrade --set='extraArgs={--prepend-iptables-chains=false}'
+```
+
+```run
+kubectl -n kube-system rollout restart ds/cilium
+```
+
+**3 )** Re-check the FORWARD chain
+
+```run
+sudo iptables -S FORWARD | head
+```
+
+> [!NOTE]
+> This can take a few seconds to update — you may need to re-run the command above to see CILIUM_FORWARD at the bottom of the list
+
+🧩 Task 03 - Disable Pre-Existing Policies
 ==========
 
 > [!IMPORTANT]
@@ -48,7 +77,7 @@ kubectl get pods -A -o wide
 
 **2 )** Select any existing active policies, click **Disable**, then **Provision** the change
 
-🧩 Task 03 - Create the Cluster Object
+🧩 Task 04 - Create the Cluster Object
 ==========
 
 **1 )** In the Illumio Console navigate to **Settings → Infrastructure → Container Clusters**
@@ -61,7 +90,7 @@ kubectl get pods -A -o wide
 
 **4 )** Copy the **Cluster ID** and **Cluster Token** to a text file
 
-🧩 Task 04 - Create the Pairing Profile
+🧩 Task 05 - Create the Pairing Profile
 ==========
 
 **1 )** Navigate to **Servers & Endpoints → Pairing Profiles**
@@ -82,7 +111,7 @@ kubectl get pods -A -o wide
 
 **4 )** Click **Save**, then **Generate Key** and save the value
 
-🧩 Task 05 - Build the Illumio-values File
+🧩 Task 06 - Build the Illumio-values File
 ==========
 
 **1 )** Create the values file
@@ -103,14 +132,14 @@ containerManager: kubernetes
 clusterMode: clas
 ```
 
-**3 )** Update `pce_url`, `cluster_id`, `cluster_token`, and `cluster_code` with the values copied in Tasks 03–04
+**3 )** Update `pce_url`, `cluster_id`, `cluster_token`, and `cluster_code` with the values copied in Tasks 04–05
 
 > [!IMPORTANT]
 > Ensure there is a single space after each colon `:`
 
 **4 )** Save the file: **CTRL + X → y → ENTER**
 
-🧩 Task 06 - Deploy with Helm
+🧩 Task 07 - Deploy with Helm
 ==========
 
 **1 )** Deploy Illumio for Kubernetes using Helm
