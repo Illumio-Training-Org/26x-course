@@ -25,7 +25,7 @@ tabs:
   type: terminal
   hostname: windows-vm
 - id: evarmjetmnns
-  title: k3scilium
+  title: k3s
   type: terminal
   hostname: host
   cmd: bash
@@ -101,7 +101,7 @@ whoami
 🧩 Task 05 - Verify the K3s Node
 ==========
 
-**1 )** In the **k3scilium** tab, verify the node is operational
+**1 )** In the **k3s** tab, verify the node is operational
 
 ```run
 kubectl get nodes
