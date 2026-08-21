@@ -27,7 +27,7 @@ real Day 1 content is added.
 🧩 Task 01 - Accessing the Illumio Platform
 ==========
 
-**1 )** Open the following link in a new browser tab to access the **Illumio Console**
+**1 )** Open the following link in a new browser tab
 
 ```
 [[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]]
