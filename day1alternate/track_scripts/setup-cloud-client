@@ -1,0 +1,62 @@
+#!/bin/bash
+set -exo
+
+echo "===== MAGIC LINK + ACCOUNT SETUP START ====="
+date
+
+# ---------------------------------------
+# Ensure required tools are present and updated
+# ---------------------------------------
+
+# update package index only
+apt-get update -y
+
+# upgrade only existing core tools (no installs)
+apt-get install --only-upgrade -y curl git
+
+
+# ---------------------------------------
+# Parse PCE FQDN
+# ---------------------------------------
+if [[ "$AUTOACCOUNT_PCE_FQDN" == *:* ]]; then
+  pceFqdn=${AUTOACCOUNT_PCE_FQDN%%:*}
+  pcePort=${AUTOACCOUNT_PCE_FQDN##*:}
+else
+  echo "ERROR: AUTOACCOUNT_PCE_FQDN does not contain a port."
+  exit 1
+fi
+
+# ---------------------------------------
+# Save variables for later use (Instruqt state)
+# ---------------------------------------
+agent variable set ACCOUNTID "$AUTOACCOUNT_TENANT_ID"
+agent variable set APINAME "api_${AUTOACCOUNT_APIKEY_ID}"
+agent variable set APISECRET "$AUTOACCOUNT_APIKEY_SECRET"
+agent variable set ORGID "$AUTOACCOUNT_ORG_ID"
+agent variable set PCEFQDN "$pceFqdn"
+agent variable set PCEPort "$pcePort"
+agent variable set SACLIENT "$AUTOACCOUNT_SAAPIKEY_KEYID"
+agent variable set SASECRET "$AUTOACCOUNT_SAAPIKEY_SECRET"
+
+# ---------------------------------------
+# MAGIC LINK SETUP
+# ---------------------------------------
+MAGIC_LINK=$(echo "${AUTOACCOUNT_MAGICLINK}" | tr -d '{}[]"')
+
+echo "Generated MAGIC LINK:"
+echo "$MAGIC_LINK"
+
+# ---------------------------------------
+# Save MAGIC LINK (Instruqt state)
+# ---------------------------------------
+agent variable set MAGICURL "$MAGIC_LINK"
+
+# ---------------------------------------
+# Render tile (gomplate) - unchanged source repo, per Nathan's instruction
+# ---------------------------------------
+git clone https://github.com/jdschmitz15/illumio-instruqt-terraform-template.git
+AUTOACCOUNT_MAGICLINK="$MAGIC_LINK"
+gomplate -f ~/illumio-instruqt-terraform-template/index.html.tmpl -o /var/www/html/index.html
+date
+
+echo "===== MAGIC LINK + ACCOUNT SETUP END ====="
