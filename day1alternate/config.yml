@@ -17,7 +17,7 @@ virtualmachines:
   cpus: 2
 - name: host
   image: illumio-training/k3scilium
-  memory: 8192
+  memory: 2048
   cpus: 2
 aws_accounts:
 - name: aws-iam-track
