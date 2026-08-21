@@ -1,11 +1,11 @@
 ---
 slug: cven-onboarding
-id: 26x04cven00000
+id: rnte3heuh1tt
 type: challenge
 title: 04 - CVEN Onboarding
 teaser: Onboard the k3s node with CVEN
 tabs:
-- id: 26x04tabk3s
+- id: m51z4d9tlfbp
   title: k3scilium
   type: terminal
   hostname: host

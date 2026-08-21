@@ -1,17 +1,17 @@
 ---
 slug: magic-link
-id: 26x01magiclink0
+id: mry5nvqpmowq
 type: challenge
 title: 01 - Magic Link
 teaser: Access the Illumio Console
 tabs:
-- id: 26x01tabservice
+- id: raf6x6t2cdyv
   title: Illumio Platform Link
   type: service
   hostname: cloud-client
   path: /
   port: 80
-- id: 26x01tabterminal
+- id: h2tdgnqcxv0f
   title: cloud console
   type: terminal
   hostname: cloud-client

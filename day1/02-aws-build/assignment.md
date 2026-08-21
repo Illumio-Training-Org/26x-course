@@ -1,16 +1,16 @@
 ---
 slug: aws-build
-id: 26x02awsbuild0
+id: rcz0dlbkfvnr
 type: challenge
 title: 02 - AWS Build
 teaser: Verify the shared AWS Terraform build
 tabs:
-- id: 26x02tabterm
+- id: vdgaib4micse
   title: CloudCLI
   type: terminal
   hostname: cloud-client
   cmd: bash
-- id: 26x02tabaws
+- id: edtxmri1lfyy
   title: AWS
   type: service
   hostname: cloud-client

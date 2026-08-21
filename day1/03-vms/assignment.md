@@ -1,15 +1,15 @@
 ---
 slug: vms
-id: 26x03vms00000
+id: xjygh0vznmc6
 type: challenge
 title: 03 - VMs
 teaser: Verify the RockyLinux and Windows VMs are reachable
 tabs:
-- id: 26x03tablinux
+- id: rd1ii0kbgkbn
   title: Linux
   type: terminal
   hostname: linux-vm
-- id: 26x03tabwin
+- id: zepbjl9d0tqx
   title: Windows
   type: terminal
   hostname: windows-vm
