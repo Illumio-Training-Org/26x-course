@@ -1,6 +1,6 @@
 slug: 26x-day1-base-lab-test
 id: p2296ewcvqac
-title: 26.x Day 1 - Base Lab Test
+title: '! 26.x Day 1 - Base Lab Test'
 description: |-
   Lab Name: 26.x BASE LAB TEST
 
@@ -25,5 +25,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "3158687236969578881"
+checksum: "13413748999244368790"
 enhanced_loading: false
