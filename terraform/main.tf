@@ -44,23 +44,23 @@ resource "aws_s3_bucket" "illumio_flows" {
 ###############################
 locals {
   ec2_instances = {
-    "app1-dev-web" = {
-      app  = "app1"
+    "crm-dev-web" = {
+      app  = "crm"
       env  = "dev"
       role = "web"
     },
-    "app1-dev-db" = {
-      app  = "app1"
+    "crm-dev-db" = {
+      app  = "crm"
       env  = "dev"
       role = "db"
     },
-    "app2-prod-web" = {
-      app  = "app2"
+    "finance-prod-web" = {
+      app  = "finance"
       env  = "prod"
       role = "web"
     },
-    "app2-prod-db" = {
-      app  = "app2"
+    "finance-prod-db" = {
+      app  = "finance"
       env  = "prod"
       role = "db"
     }
@@ -77,10 +77,10 @@ locals {
   }
 
   private_ip_map = {
-    "app1-dev-web"  = "10.0.1.10"
-    "app1-dev-db"   = "10.0.1.20"
-    "app2-prod-web" = "10.0.2.10"
-    "app2-prod-db"  = "10.0.2.20"
+    "crm-dev-web"      = "10.0.1.10"
+    "crm-dev-db"       = "10.0.1.20"
+    "finance-prod-web" = "10.0.2.10"
+    "finance-prod-db"  = "10.0.2.20"
   }
 }
 
