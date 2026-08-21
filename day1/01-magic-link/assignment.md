@@ -29,9 +29,7 @@ real Day 1 content is added.
 
 **1 )** Use the link below to open your **Illumio Console**
 
-```
-[[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]]
-```
+[Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]])
 
 **2 )** Once logged in, **exit Demo Mode**
 
