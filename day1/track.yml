@@ -1,0 +1,26 @@
+slug: 26x-day1-base-lab-test
+title: 26.x Day 1 - Base Lab Test
+description: |-
+  Lab Name: 26.x BASE LAB TEST
+
+  Outcome:
+  In this lab you will verify that the shared 26.x base lab environment
+  (magic link, AWS Terraform build, RockyLinux/Windows VMs, k3s/CVEN node)
+  is working end to end, before real Day 1 content is added.
+icon: ./assets/logo.png
+tags:
+- ilt
+owner: illumio-training
+developers:
+- nathan.mitchell@illumio.com
+show_timer: true
+skipping_enabled: true
+idle_timeout: 1800
+timelimit: 5400
+lab_config:
+  sidebar_enabled: true
+  feedback_recap_enabled: true
+  feedback_tab_enabled: false
+  loadingMessages: true
+  override_challenge_layout: false
+  hideStopButton: false
