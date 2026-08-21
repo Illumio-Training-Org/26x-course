@@ -10,4 +10,7 @@ echo "===== k3s/Cilium bootstrap START ====="
 cilium install
 cilium hubble enable
 
+# Shorthand for the learner's console
+echo "alias k=kubectl" >> /root/.bashrc
+
 echo "===== k3s/Cilium bootstrap END ====="
