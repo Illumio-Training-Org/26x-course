@@ -7,7 +7,7 @@ echo "===== k3s/Cilium bootstrap START ====="
 # to run against this specific cluster instance). Firewall coexistence is
 # deliberately NOT configured here - that's a hands-on learner task in
 # Challenge 4 (checking status and configuring coexistence themselves).
-cilium install
+cilium install --version 1.18.6
 cilium hubble enable
 
 # Shorthand for the learner's console

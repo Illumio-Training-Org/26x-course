@@ -125,7 +125,7 @@ sudo iptables -S FORWARD | head
 **2 )** If `CILIUM_FORWARD` appears at the top of the list rather than the bottom, coexistence has not been configured — run the following to fix it
 
 ```run
-cilium upgrade --set='extraArgs={--prepend-iptables-chains=false}'
+cilium upgrade --version 1.18.6 --set='extraArgs={--prepend-iptables-chains=false}'
 ```
 
 ```run
