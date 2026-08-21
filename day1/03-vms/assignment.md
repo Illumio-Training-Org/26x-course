@@ -9,6 +9,7 @@ tabs:
   title: Linux
   type: terminal
   hostname: linux-vm
+  cmd: bash
 - id: zepbjl9d0tqx
   title: Windows
   type: terminal

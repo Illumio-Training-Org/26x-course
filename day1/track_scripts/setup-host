@@ -1,0 +1,15 @@
+#!/bin/sh
+set -ex
+
+echo "===== k3s/Cilium bootstrap START ====="
+
+# Deploy Cilium as the CNI (image ships the binary, but install still has
+# to run against this specific cluster instance)
+cilium install
+cilium hubble enable
+
+# Configure coexistence so Illumio's rules take precedence over Cilium's
+cilium upgrade --set='extraArgs={--prepend-iptables-chains=false}'
+kubectl -n kube-system rollout restart ds/cilium
+
+echo "===== k3s/Cilium bootstrap END ====="

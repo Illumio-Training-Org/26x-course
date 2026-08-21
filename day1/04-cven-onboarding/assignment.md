@@ -9,6 +9,7 @@ tabs:
   title: k3scilium
   type: terminal
   hostname: host
+  cmd: bash
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
