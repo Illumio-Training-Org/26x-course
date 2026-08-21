@@ -49,7 +49,7 @@ load-time and look-and-feel comparison against the 4-challenge version
 > Ensure the Region is set to **N. Virginia (us-east-1)**
 
 **2 )** In the AWS Console search for **EC2** and verify **4 running instances**:
-`crm-dev-web`, `crm-dev-db`, `finance-prod-web`, `finance-prod-db`
+`crm-dev-web`, `crm-dev-db`, `crm-prod-web`, `crm-prod-db`
 
 🧩 Task 02 - Verify AWS Connectivity
 ==========

@@ -54,13 +54,13 @@ locals {
       env  = "dev"
       role = "db"
     },
-    "finance-prod-web" = {
-      app  = "finance"
+    "crm-prod-web" = {
+      app  = "crm"
       env  = "prod"
       role = "web"
     },
-    "finance-prod-db" = {
-      app  = "finance"
+    "crm-prod-db" = {
+      app  = "crm"
       env  = "prod"
       role = "db"
     }
@@ -77,10 +77,10 @@ locals {
   }
 
   private_ip_map = {
-    "crm-dev-web"      = "10.0.1.10"
-    "crm-dev-db"       = "10.0.1.20"
-    "finance-prod-web" = "10.0.2.10"
-    "finance-prod-db"  = "10.0.2.20"
+    "crm-dev-web"  = "10.0.1.10"
+    "crm-dev-db"   = "10.0.1.20"
+    "crm-prod-web" = "10.0.2.10"
+    "crm-prod-db"  = "10.0.2.20"
   }
 }
 
