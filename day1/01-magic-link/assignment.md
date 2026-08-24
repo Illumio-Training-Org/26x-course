@@ -100,14 +100,23 @@ print(f'Rules:             {rules}')
 | Object | Endpoint | Example count (clean run) |
 |---|---|---|
 | Labels | `/labels` | 111 |
+| | `curl -s -u "$AUTH" "$BASE/labels"` | |
 | Label Dimensions | `/label_dimensions` | 15 |
+| | `curl -s -u "$AUTH" "$BASE/label_dimensions"` | |
 | Pairing Profiles | `/pairing_profiles` | 4 (2 pre-existing `Default (Servers)`/`Default (Endpoints)` + 2 `Vensim-Created-*`) |
+| | `curl -s -u "$AUTH" "$BASE/pairing_profiles"` | |
 | Workloads | `/workloads` | 206 |
+| | `curl -s -u "$AUTH" "$BASE/workloads?max_results=1000"` | |
 | Services | `/sec_policy/draft/services` | 182 |
+| | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/services"` | |
 | IP Lists | `/sec_policy/draft/ip_lists` | 12 |
+| | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/ip_lists"` | |
 | User Groups | `/security_principals` | 5 |
+| | `curl -s -u "$AUTH" "$BASE/security_principals"` | |
 | Rulesets | `/sec_policy/draft/rule_sets` | 16 (15 vensim-created + 1 pre-existing `Quarantine Policy: Strict`) |
+| | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/rule_sets"` | |
 | Rules | sum of `rules` (allow) + `deny_rules` per ruleset in that same response | 39 (36 from vensim, 3 from the pre-existing ruleset) |
+| | *(same call as Rulesets above — summed client-side from that response)* | |
 
 Each call follows the same pattern:
 
