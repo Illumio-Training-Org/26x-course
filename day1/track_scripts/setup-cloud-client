@@ -143,7 +143,9 @@ nohup bash -c "
   ./workloader ruleset-import ./vensim-templates/standard-demo/rulesets.csv --update-pce --no-prompt --provision
   ./workloader rule-import ./vensim-templates/standard-demo/rules.csv --update-pce --no-prompt --provision
 
-  exec bash vensimscheduler.sh
+  echo done > /tmp/startup.done
+
+  exec bash \"$STARTUP_REPO_DIR/vensimscheduler.sh\"
 " > /var/log/vensim-startup.log 2>&1 < /dev/null &
 
 echo "===== MAGIC LINK + ACCOUNT SETUP END ====="
