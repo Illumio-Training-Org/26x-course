@@ -99,9 +99,9 @@ print(f'Rules:             {rules}')
 
 | Object | Endpoint | Example count (clean run) |
 |---|---|---|
-| Labels | `/labels` | 111 |
+| Labels | `/labels` | 109–111 (varies — see note below) |
 | | `curl -s -u "$AUTH" "$BASE/labels"` | |
-| Label Dimensions | `/label_dimensions` | 15 |
+| Label Dimensions | `/label_dimensions` | 14–15 (varies) + Illumio's built-in `Quarantine` label type, which is **not** returned by this endpoint (it's a reserved system type, not a regular custom dimension) — so the Label Types page in the console will always show one more row than this count |
 | | `curl -s -u "$AUTH" "$BASE/label_dimensions"` | |
 | Pairing Profiles | `/pairing_profiles` | 4 (2 pre-existing `Default (Servers)`/`Default (Endpoints)` + 2 `Vensim-Created-*`) |
 | | `curl -s -u "$AUTH" "$BASE/pairing_profiles"` | |
@@ -113,10 +113,18 @@ print(f'Rules:             {rules}')
 | | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/ip_lists"` | |
 | User Groups | `/security_principals` | 5 |
 | | `curl -s -u "$AUTH" "$BASE/security_principals"` | |
-| Rulesets | `/sec_policy/draft/rule_sets` | 16 (15 vensim-created + 1 pre-existing `Quarantine Policy: Strict`) |
+| Rulesets | `/sec_policy/draft/rule_sets` | 15–16 (15 vensim-created + sometimes 1 more pre-existing `Quarantine Policy: Strict` — see note below) |
 | | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/rule_sets"` | |
-| Rules | sum of `rules` (allow) + `deny_rules` per ruleset in that same response | 39 (36 from vensim, 3 from the pre-existing ruleset) |
+| Rules | sum of `rules` (allow) + `deny_rules` per ruleset in that same response | 36–39 (36 from vensim, sometimes 3 more from the pre-existing ruleset) |
 | | *(same call as Rulesets above — summed client-side from that response)* | |
+
+> [!NOTE]
+> Some counts above vary slightly between orgs: Illumio's own trial
+> signup backend doesn't always seed a `quarantine.illumio.com` label
+> dimension (+ 2 labels + a `Quarantine Policy: Strict` ruleset with 3
+> rules) on a new org — sometimes it does, sometimes it doesn't. This
+> is unrelated to vensim; vensim's own contribution is always exactly
+> the same regardless.
 
 Each call follows the same pattern:
 
