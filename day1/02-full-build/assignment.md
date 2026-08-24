@@ -198,13 +198,9 @@ kubectl get pods -A -o wide
 🧩 Task 07 - Check Firewall Coexistence
 ==========
 
-**1 )** Check whether Cilium is already configured to coexist with Illumio's iptables rules
+Cilium needs to be configured to coexist with Illumio's iptables rules.
 
-```run
-sudo iptables -S FORWARD | head
-```
-
-**2 )** If `CILIUM_FORWARD` appears at the top of the list rather than the bottom, coexistence has not been configured — run the following to fix it
+**1 )** Run the following to configure it
 
 ```run
 cilium upgrade --version 1.18.6 --set='extraArgs={--prepend-iptables-chains=false}'
@@ -214,7 +210,7 @@ cilium upgrade --version 1.18.6 --set='extraArgs={--prepend-iptables-chains=fals
 kubectl -n kube-system rollout restart ds/cilium
 ```
 
-**3 )** Re-check the FORWARD chain
+**2 )** Re-check the FORWARD chain
 
 ```run
 sudo iptables -S FORWARD | head
