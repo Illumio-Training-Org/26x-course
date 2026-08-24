@@ -79,7 +79,136 @@ ping www.illumio.com -c 5
 exit
 ```
 
-🧩 Task 03 - Verify Linux VM
+🧩 Task 03 – Login to AWS
+==========
+
+**1 )** Login to AWS using the credentials in the **AWS** tab
+
+> [!IMPORTANT]
+> Ensure the Region is set to **N. Virginia (us-east-1)** from the menu bar at the top of the page
+
+**2 )** In the AWS Console search for **EC2**
+
+**3 )** Verify that running **EC2 instances** are present
+
+🧩 Task 04 – Connect to EC2
+==========
+
+**1 )** SSH into the instance from the CLI
+
+**2 )** Return to the **Instruqt Console Cloud CLI** and verify the creation of the EC2 instances
+
+```run
+cd /root/26x-course/terraform
+terraform output
+```
+
+> [!NOTE]
+> You can SSH into any of the other EC2 instances by modifying the following command
+
+**3 )** SSH into the **crm-prod-web** EC2
+
+```run
+ssh -o StrictHostKeyChecking=accept-new \
+-i /root/.ssh/my-keypair.pem \
+ec2-user@$(terraform output -json ec2_instances_info | jq -r '."crm-prod-web".public_ip')
+```
+
+**4 )** Verify Internet connectivity
+
+```run
+ping www.illumio.com -c 5
+```
+
+Your environment is now configured and has both **inbound SSH** and **outbound Internet access**
+
+**5 )** To keep the SSH session alive during the labs you can generate traffic in the background
+
+```run
+while true; do
+  curl -s -o /dev/null -w "%{http_code}\n" https://www.illumio.com
+  sleep 60
+done
+```
+
+**6 )** End the traffic loop and exit the shell
+
+Press **CTRL+C**
+
+```run
+exit
+```
+
+🧩 Task 05 – Onboard AWS
+==========
+
+**1 )** Open the **Illumio Console**
+
+Navigate to:
+
+**Cloud → Onboarding → Add AWS → Select Account**
+
+**2 )** Configure the following:
+
+- **Name:** AWSOnboarding
+- **Account ID:** Copy this value from your AWS Console at the top right of the AWS Web Console
+
+Enter this value into the **Account ID** field
+
+> [!NOTE]
+> This is the **12 character value** located in the top right corner of your AWS Console
+
+**3 )** Ensure **Read Write Access** is set to **YES**
+
+Click **Continue**
+
+**4 )** On the subsequent screen select the **Service Account** field
+
+Click **Add a New Service Account** and enter:
+
+**OnboardingAccount**
+
+Select **Create**
+
+**5 )** On the next screen **Download** the credentials
+
+Select **Close** to return to the Service Account screen
+
+> [!IMPORTANT]
+> **Do NOT press Continue until the next step is completed**
+
+**6 )** In the **Type of Integration** field select:
+
+**Create IAM Roles on AWS**
+
+Your **AWS Web Console** will open at the **Create Stack** page
+
+> [!IMPORTANT]
+> Ensure the region is set to **N. Virginia (us-east-1)**
+
+**7 )** Scroll down to the **IllumioServiceAccountSecret** field
+
+Enter the value from the **ServiceAccountToken** in the downloaded credentials
+
+**8 )** Agree to the conditions at the bottom of the page and select **Create Stack**
+
+**9 )** On the **CloudFormation Stack** page monitor the creation of the stack
+
+Wait until you see:
+
+**Illumio Integration – CREATE COMPLETE**
+
+(You may need to refresh the console)
+
+**10 )** Return to the **Illumio Console**
+
+Click **Continue → Confirm and Finish**
+
+**11 )** Verify your newly onboarded account appears
+
+Initial onboarding is now complete
+
+🧩 Task 06 - Verify Linux VM
 ==========
 
 **1 )** In the **Linux** tab, run
@@ -88,7 +217,7 @@ exit
 hostname && whoami
 ```
 
-🧩 Task 04 - Verify Windows VM
+🧩 Task 07 - Verify Windows VM
 ==========
 
 **1 )** In the **Windows** tab, run
@@ -98,7 +227,7 @@ hostname
 whoami
 ```
 
-🧩 Task 05 - Verify the K3s Node
+🧩 Task 08 - Verify the K3s Node
 ==========
 
 **1 )** In the **k3s** tab, verify the node is operational
@@ -113,7 +242,7 @@ kubectl get nodes
 kubectl get pods -A -o wide
 ```
 
-🧩 Task 06 - Check Firewall Coexistence
+🧩 Task 09 - Check Firewall Coexistence
 ==========
 
 **1 )** Check whether Cilium is already configured to coexist with Illumio's iptables rules
@@ -141,7 +270,7 @@ sudo iptables -S FORWARD | head
 > [!NOTE]
 > This can take a few seconds to update — you may need to re-run the command above to see CILIUM_FORWARD at the bottom of the list
 
-🧩 Task 07 - Disable Pre-Existing Policies
+🧩 Task 10 - Disable Pre-Existing Policies
 ==========
 
 > [!IMPORTANT]
@@ -152,7 +281,7 @@ sudo iptables -S FORWARD | head
 
 **2 )** Select any existing active policies, click **Disable**, then **Provision** the change
 
-🧩 Task 08 - Create the Cluster Object
+🧩 Task 11 - Create the Cluster Object
 ==========
 
 **1 )** In the Illumio Console navigate to **Settings → Infrastructure → Container Clusters**
@@ -165,7 +294,7 @@ sudo iptables -S FORWARD | head
 
 **4 )** Copy the **Cluster ID** and **Cluster Token** to a text file
 
-🧩 Task 09 - Create the Pairing Profile
+🧩 Task 12 - Create the Pairing Profile
 ==========
 
 **1 )** Navigate to **Servers & Endpoints → Pairing Profiles**
@@ -186,7 +315,7 @@ sudo iptables -S FORWARD | head
 
 **4 )** Click **Save**, then **Generate Key** and save the value
 
-🧩 Task 10 - Build the Illumio-values File
+🧩 Task 13 - Build the Illumio-values File
 ==========
 
 **1 )** Create the values file
@@ -207,14 +336,14 @@ containerManager: kubernetes
 clusterMode: clas
 ```
 
-**3 )** Update `pce_url`, `cluster_id`, `cluster_token`, and `cluster_code` with the values copied in Tasks 08–09
+**3 )** Update `pce_url`, `cluster_id`, `cluster_token`, and `cluster_code` with the values copied in Tasks 11–12
 
 > [!IMPORTANT]
 > Ensure there is a single space after each colon `:`
 
 **4 )** Save the file: **CTRL + X → y → ENTER**
 
-🧩 Task 11 - Deploy with Helm
+🧩 Task 14 - Deploy with Helm
 ==========
 
 **1 )** Deploy Illumio for Kubernetes using Helm
