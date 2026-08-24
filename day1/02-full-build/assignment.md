@@ -73,56 +73,9 @@ ec2-user@$(terraform output -json ec2_instances_info | jq -r '."crm-dev-web".pub
 ping www.illumio.com -c 5
 ```
 
-**4 )** Exit the shell
-
-```run
-exit
-```
-
-🧩 Task 03 – Login to AWS
-==========
-
-**1 )** Login to AWS using the credentials in the **AWS** tab
-
-> [!IMPORTANT]
-> Ensure the Region is set to **N. Virginia (us-east-1)** from the menu bar at the top of the page
-
-**2 )** In the AWS Console search for **EC2**
-
-**3 )** Verify that running **EC2 instances** are present
-
-🧩 Task 04 – Connect to EC2
-==========
-
-**1 )** SSH into the instance from the CLI
-
-**2 )** Return to the **Instruqt Console Cloud CLI** and verify the creation of the EC2 instances
-
-```run
-cd /root/26x-course/terraform
-terraform output
-```
-
-> [!NOTE]
-> You can SSH into any of the other EC2 instances by modifying the following command
-
-**3 )** SSH into the **crm-prod-web** EC2
-
-```run
-ssh -o StrictHostKeyChecking=accept-new \
--i /root/.ssh/my-keypair.pem \
-ec2-user@$(terraform output -json ec2_instances_info | jq -r '."crm-prod-web".public_ip')
-```
-
-**4 )** Verify Internet connectivity
-
-```run
-ping www.illumio.com -c 5
-```
-
 Your environment is now configured and has both **inbound SSH** and **outbound Internet access**
 
-**5 )** To keep the SSH session alive during the labs you can generate traffic in the background
+**4 )** To keep the SSH session alive during the labs you can generate traffic in the background
 
 ```run
 while true; do
@@ -131,7 +84,7 @@ while true; do
 done
 ```
 
-**6 )** End the traffic loop and exit the shell
+**5 )** End the traffic loop and exit the shell
 
 Press **CTRL+C**
 
@@ -139,7 +92,7 @@ Press **CTRL+C**
 exit
 ```
 
-🧩 Task 05 – Onboard AWS
+🧩 Task 03 – Onboard AWS
 ==========
 
 **1 )** Open the **Illumio Console**
@@ -208,7 +161,7 @@ Click **Continue → Confirm and Finish**
 
 Initial onboarding is now complete
 
-🧩 Task 06 - Verify Linux VM
+🧩 Task 04 - Verify Linux VM
 ==========
 
 **1 )** In the **Linux** tab, run
@@ -217,7 +170,7 @@ Initial onboarding is now complete
 hostname && whoami
 ```
 
-🧩 Task 07 - Verify Windows VM
+🧩 Task 05 - Verify Windows VM
 ==========
 
 **1 )** In the **Windows** tab, run
@@ -227,7 +180,7 @@ hostname
 whoami
 ```
 
-🧩 Task 08 - Verify the K3s Node
+🧩 Task 06 - Verify the K3s Node
 ==========
 
 **1 )** In the **k3s** tab, verify the node is operational
@@ -242,7 +195,7 @@ kubectl get nodes
 kubectl get pods -A -o wide
 ```
 
-🧩 Task 09 - Check Firewall Coexistence
+🧩 Task 07 - Check Firewall Coexistence
 ==========
 
 **1 )** Check whether Cilium is already configured to coexist with Illumio's iptables rules
@@ -270,7 +223,7 @@ sudo iptables -S FORWARD | head
 > [!NOTE]
 > This can take a few seconds to update — you may need to re-run the command above to see CILIUM_FORWARD at the bottom of the list
 
-🧩 Task 10 - Disable Pre-Existing Policies
+🧩 Task 08 - Disable Pre-Existing Policies
 ==========
 
 > [!IMPORTANT]
@@ -281,7 +234,7 @@ sudo iptables -S FORWARD | head
 
 **2 )** Select any existing active policies, click **Disable**, then **Provision** the change
 
-🧩 Task 11 - Create the Cluster Object
+🧩 Task 09 - Create the Cluster Object
 ==========
 
 **1 )** In the Illumio Console navigate to **Settings → Infrastructure → Container Clusters**
@@ -294,7 +247,7 @@ sudo iptables -S FORWARD | head
 
 **4 )** Copy the **Cluster ID** and **Cluster Token** to a text file
 
-🧩 Task 12 - Create the Pairing Profile
+🧩 Task 10 - Create the Pairing Profile
 ==========
 
 **1 )** Navigate to **Servers & Endpoints → Pairing Profiles**
@@ -315,7 +268,7 @@ sudo iptables -S FORWARD | head
 
 **4 )** Click **Save**, then **Generate Key** and save the value
 
-🧩 Task 13 - Build the Illumio-values File
+🧩 Task 11 - Build the Illumio-values File
 ==========
 
 **1 )** Create the values file
@@ -336,14 +289,14 @@ containerManager: kubernetes
 clusterMode: clas
 ```
 
-**3 )** Update `pce_url`, `cluster_id`, `cluster_token`, and `cluster_code` with the values copied in Tasks 11–12
+**3 )** Update `pce_url`, `cluster_id`, `cluster_token`, and `cluster_code` with the values copied in Tasks 09–10
 
 > [!IMPORTANT]
 > Ensure there is a single space after each colon `:`
 
 **4 )** Save the file: **CTRL + X → y → ENTER**
 
-🧩 Task 14 - Deploy with Helm
+🧩 Task 12 - Deploy with Helm
 ==========
 
 **1 )** Deploy Illumio for Kubernetes using Helm
