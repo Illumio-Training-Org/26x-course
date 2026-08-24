@@ -70,6 +70,62 @@ tail -f /var/log/vensim-startup.log
 > hands off into the recurring scheduler, that loop runs silently (same
 > as upstream) — no further output here doesn't mean it's stopped.
 
+To check everything vensim created (excluding traffic itself) by
+querying the PCE API directly, run the below in the **cloud console**
+tab:
+
+```run
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+
+count() { curl -s -u "$AUTH" "$BASE$1" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))"; }
+
+echo "Labels:            $(count /labels)"
+echo "Label Dimensions:  $(count /label_dimensions)"
+echo "Pairing Profiles:  $(count /pairing_profiles)"
+echo "Workloads:         $(count /workloads?max_results=1000)"
+echo "Services:          $(count /sec_policy/draft/services)"
+echo "IP Lists:          $(count /sec_policy/draft/ip_lists)"
+echo "User Groups:       $(count /security_principals)"
+
+curl -s -u "$AUTH" "$BASE/sec_policy/draft/rule_sets" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+rules = sum(len(r.get('rules', [])) + len(r.get('deny_rules', [])) for r in d)
+print(f'Rulesets:          {len(d)}')
+print(f'Rules:             {rules}')
+"
+```
+
+| Object | Endpoint | Example count (clean run) |
+|---|---|---|
+| Labels | `/labels` | 111 |
+| Label Dimensions | `/label_dimensions` | 15 |
+| Pairing Profiles | `/pairing_profiles` | 4 (2 pre-existing `Default (Servers)`/`Default (Endpoints)` + 2 `Vensim-Created-*`) |
+| Workloads | `/workloads` | 206 |
+| Services | `/sec_policy/draft/services` | 182 |
+| IP Lists | `/sec_policy/draft/ip_lists` | 12 |
+| User Groups | `/security_principals` | 5 |
+| Rulesets | `/sec_policy/draft/rule_sets` | 16 (15 vensim-created + 1 pre-existing `Quarantine Policy: Strict`) |
+| Rules | sum of `rules` (allow) + `deny_rules` per ruleset in that same response | 39 (36 from vensim, 3 from the pre-existing ruleset) |
+
+Each call follows the same pattern:
+
+```
+https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID/<endpoint>
+```
+
+- `$AUTOACCOUNT_PCE_FQDN` — the PCE FQDN and port together (e.g.
+  `poc4.illum.io:443`)
+- `/api/v2` — Illumio's REST API version prefix
+- `/orgs/$AUTOACCOUNT_ORG_ID` — this org
+- `/<endpoint>` — the object collection being queried (`/labels`,
+  `/workloads`, `/sec_policy/draft/rule_sets`, etc.)
+
+Authenticated via HTTP Basic Auth as `api_$AUTOACCOUNT_APIKEY_ID` /
+`$AUTOACCOUNT_APIKEY_SECRET` — the same credential pair the org's own
+`pce-add`/`workloader`/`vensim` calls use internally.
+
 ---
 
 **Lab Complete**
