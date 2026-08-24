@@ -59,4 +59,63 @@ AUTOACCOUNT_MAGICLINK="$MAGIC_LINK"
 gomplate -f ~/illumio-instruqt-terraform-template/index.html.tmpl -o /var/www/html/index.html
 date
 
+# ---------------------------------------
+# VENSIM TRAFFIC GENERATION
+# ---------------------------------------
+STARTUP_REPO_DIR=~/manual-instruqt-startup
+VENSIM_FILES_DIR=~/vensim_files
+
+git clone https://github.com/Illumio-Training-Org/manual-instruqt-startup "$STARTUP_REPO_DIR"
+git clone https://github.com/Illumio-Training-Org/vensim_files.git "$VENSIM_FILES_DIR"
+
+mkdir -p "$STARTUP_REPO_DIR/vensim-templates"
+rm -rf "$STARTUP_REPO_DIR/vensim-templates/standard-demo"
+ln -s "$VENSIM_FILES_DIR/files" "$STARTUP_REPO_DIR/vensim-templates/standard-demo"
+
+cp -f "$VENSIM_FILES_DIR/workloader" "$STARTUP_REPO_DIR/workloader"
+cp -f "$VENSIM_FILES_DIR/vensim" "$STARTUP_REPO_DIR/vensim"
+chmod +x "$STARTUP_REPO_DIR/workloader" "$STARTUP_REPO_DIR/vensim" \
+         "$STARTUP_REPO_DIR/vensimscheduler.sh"
+
+# newstartup.sh's full body, minus its three delete/export blocks
+# (pairing-profile-export+delete, label-export+delete, svc-export+delete)
+# — confirmed against a live test org that those steps delete real
+# platform-default objects (2 pairing profiles, 90 services, 15 labels)
+# with zero name overlap against anything vensim creates, so skipping
+# them loses nothing and leaves pre-existing PCE content untouched.
+# Written out explicitly (not sed-patching a cloned copy) so it's fully
+# auditable here. Same order as upstream since later steps (rule-import)
+# depend on the services/iplists imported just before them.
+nohup bash -c "
+  cd \"$STARTUP_REPO_DIR\"
+
+  ./workloader pce-add -a --name default \
+    --fqdn \"$pceFqdn\" --port \"$pcePort\" \
+    --api-user \"api_${AUTOACCOUNT_APIKEY_ID}\" --api-secret \"$AUTOACCOUNT_APIKEY_SECRET\" \
+    --org \"$AUTOACCOUNT_ORG_ID\" --disable-tls-verification true
+
+  ./workloader label-dimension-import ./vensim-templates/standard-demo/labeldimensions.csv --update-pce --no-prompt
+  ./workloader label-import ./vensim-templates/standard-demo/labels.csv --update-pce --no-prompt
+
+  ./workloader get-pk --profile Vensim-Created-Servers --create --ven-type server -f server_pp
+  ./workloader get-pk --profile Vensim-Created-Endpoints --create --ven-type endpoint -f endpoint_pp
+
+  ./vensim activate -c ./vensim-templates/standard-demo/vens.csv \
+    -p ./vensim-templates/standard-demo/processes.csv \
+    -m \"$pceFqdn:$pcePort\" -a \"\$(cat server_pp)\" -e \"\$(cat endpoint_pp)\"
+
+  ./vensim post-traffic -c ./vensim-templates/standard-demo/vens.csv \
+    -t ./vensim-templates/standard-demo/traffic.csv -d today
+
+  ./workloader wkld-import ./vensim-templates/standard-demo/wklds.csv --umwl --allow-enforcement-changes --update-pce --no-prompt
+  ./workloader svc-import ./vensim-templates/standard-demo/svcs.csv --update-pce --provision --no-prompt
+  ./workloader svc-import ./vensim-templates/standard-demo/svcs_meta.csv --meta --update-pce --no-prompt --provision
+  ./workloader ipl-import ./vensim-templates/standard-demo/iplists.csv --update-pce --no-prompt --provision
+  ./workloader adgroup-import ./vensim-templates/standard-demo/adgroups.csv --update-pce --no-prompt
+  ./workloader ruleset-import ./vensim-templates/standard-demo/rulesets.csv --update-pce --no-prompt --provision
+  ./workloader rule-import ./vensim-templates/standard-demo/rules.csv --update-pce --no-prompt --provision
+
+  exec bash vensimscheduler.sh
+" > /var/log/vensim-startup.log 2>&1 < /dev/null &
+
 echo "===== MAGIC LINK + ACCOUNT SETUP END ====="

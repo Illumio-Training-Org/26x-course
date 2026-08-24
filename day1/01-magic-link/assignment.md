@@ -39,7 +39,13 @@ Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostnam
 
 **3 )** Verify the Illumio Console dashboard is visible
 
-**4 )** Return to this lab window and press **NEXT**
+**4 )** To show the Account Identities, run the following command
+
+```run
+echo $AUTOACCOUNT_APIKEY_ID
+```
+
+**5 )** Return to this lab window and press **NEXT**
 
 ---
 
