@@ -122,7 +122,7 @@ chmod +x "$STARTUP_REPO_DIR/workloader" "$STARTUP_REPO_DIR/vensim" \
 nohup bash -c "
   cd \"$STARTUP_REPO_DIR\"
 
-  bash newstartup.sh -f \"$pceFqdn\" -P \"$pcePort\" \
+  bash \"$STARTUP_REPO_DIR/newstartup.sh\" -f \"$pceFqdn\" -P \"$pcePort\" \
     -u \"api_${AUTOACCOUNT_APIKEY_ID}\" -s \"$AUTOACCOUNT_APIKEY_SECRET\" \
     -o \"$AUTOACCOUNT_ORG_ID\"
 
