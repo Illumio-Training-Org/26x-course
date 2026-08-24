@@ -16,6 +16,34 @@ apt-get install --only-upgrade -y curl git
 
 
 # ---------------------------------------
+# Sanitize AUTOACCOUNT_* values
+# ---------------------------------------
+# Instruqt's autoaccount custom resource emits these as JSON-array-literal
+# strings (e.g. '["value"]') even with account_count: 1, not bare scalars.
+# AUTOACCOUNT_MAGICLINK already got this same tr -d treatment further
+# below; extend it to every other AUTOACCOUNT_* value up front so nothing
+# downstream (the PCE FQDN split, the agent variables, or the vensim
+# block) parses a value with stray brackets/quotes still in it.
+for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+           AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+           AUTOACCOUNT_SAAPIKEY_SECRET; do
+  cleaned="$(echo "${!var}" | tr -d '{}[]"')"
+  export "$var=$cleaned"
+done
+
+# Also make the cleaned values visible to any new terminal tab the
+# learner opens (e.g. the Advanced "echo $AUTOACCOUNT_APIKEY_ID" step) —
+# the container's own injected env vars are still the raw/dirty ones, so
+# override them for every future interactive shell via .bashrc.
+{
+  for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+             AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+             AUTOACCOUNT_SAAPIKEY_SECRET; do
+    printf 'export %s=%q\n' "$var" "${!var}"
+  done
+} >> /root/.bashrc
+
+# ---------------------------------------
 # Parse PCE FQDN
 # ---------------------------------------
 if [[ "$AUTOACCOUNT_PCE_FQDN" == *:* ]]; then
