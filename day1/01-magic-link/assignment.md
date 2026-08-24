@@ -135,6 +135,19 @@ Authenticated via HTTP Basic Auth as `api_$AUTOACCOUNT_APIKEY_ID` /
 `$AUTOACCOUNT_APIKEY_SECRET` — the same credential pair the org's own
 `pce-add`/`workloader`/`vensim` calls use internally.
 
+Fully resolved, this is what the Labels call from the table above looks
+like in practice (values below are illustrative, not a real credential —
+yours will be different every session):
+
+```
+curl -s -u "api_a1b2c3d4e5f6g7h8i:9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e" "https://pce.example.illum.io:443/api/v2/orgs/1234567/labels"
+```
+
+- `pce.example.illum.io:443` → `$AUTOACCOUNT_PCE_FQDN`
+- `1234567` → `$AUTOACCOUNT_ORG_ID`
+- `api_a1b2c3d4e5f6g7h8i` → `api_$AUTOACCOUNT_APIKEY_ID`
+- `9f8e7d6c...` → `$AUTOACCOUNT_APIKEY_SECRET`
+
 ---
 
 **Lab Complete**
