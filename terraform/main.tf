@@ -250,10 +250,11 @@ resource "aws_instance" "ec2" {
   key_name = aws_key_pair.shared_key.key_name
 
   tags = {
-    Name    = each.key
-    app     = each.value.app
-    env     = each.value.env
-    role    = each.value.role
-    company = "illumio"
+    Name     = each.key
+    app      = each.value.app
+    env      = each.value.env
+    role     = each.value.role
+    company  = "illumio"
+    location = "AWS"
   }
 }
