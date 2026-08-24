@@ -52,4 +52,24 @@ echo $AUTOACCOUNT_PCE_FQDN
 
 ---
 
+Advanced
+===
+
+> [!WARNING]
+> Advanced options below. Typically used in troubleshooting:
+
+Simulated traffic is generated in the background for this org. To check
+its progress, run the below in the **cloud console** tab:
+
+```run
+tail -f /var/log/vensim-startup.log
+```
+
+> [!NOTE]
+> This shows the org setup and initial traffic post completing. Once it
+> hands off into the recurring scheduler, that loop runs silently (same
+> as upstream) — no further output here doesn't mean it's stopped.
+
+---
+
 **Lab Complete**
