@@ -105,45 +105,26 @@ cp -f "$VENSIM_FILES_DIR/vensim" "$STARTUP_REPO_DIR/vensim"
 chmod +x "$STARTUP_REPO_DIR/workloader" "$STARTUP_REPO_DIR/vensim" \
          "$STARTUP_REPO_DIR/vensimscheduler.sh"
 
-# newstartup.sh's full body, minus its three delete/export blocks
-# (pairing-profile-export+delete, label-export+delete, svc-export+delete)
-# — confirmed against a live test org that those steps delete real
-# platform-default objects (2 pairing profiles, 90 services, 15 labels)
-# with zero name overlap against anything vensim creates, so skipping
-# them loses nothing and leaves pre-existing PCE content untouched.
-# Written out explicitly (not sed-patching a cloned copy) so it's fully
-# auditable here. Same order as upstream since later steps (rule-import)
-# depend on the services/iplists imported just before them.
+# Call newstartup.sh directly (unmodified) rather than maintaining our
+# own copy of its steps — deliberately matches uc-orgs-5-vs's own
+# behavior now, deletes included: any pre-existing pairing profiles/
+# labels/services on the org get wiped before vensim's own content goes
+# in, so the org ends up with vensim's content only, not vensim's
+# content layered on top of the platform's defaults. Calling the file
+# directly (rather than hand-copying its steps) also means we can't
+# silently drift from upstream if it changes later. newstartup.sh
+# already signals /tmp/startup.done itself at its own end; we wait for
+# it to finish (no backgrounding here) before handing off to
+# vensimscheduler.sh, avoiding the race in uc-orgs-5-vs's own script
+# (which launches newstartup.sh and vensimscheduler.sh concurrently and
+# touches /tmp/startup.done itself immediately, before newstartup.sh has
+# actually finished).
 nohup bash -c "
   cd \"$STARTUP_REPO_DIR\"
 
-  ./workloader pce-add -a --name default \
-    --fqdn \"$pceFqdn\" --port \"$pcePort\" \
-    --api-user \"api_${AUTOACCOUNT_APIKEY_ID}\" --api-secret \"$AUTOACCOUNT_APIKEY_SECRET\" \
-    --org \"$AUTOACCOUNT_ORG_ID\" --disable-tls-verification true
-
-  ./workloader label-dimension-import ./vensim-templates/standard-demo/labeldimensions.csv --update-pce --no-prompt
-  ./workloader label-import ./vensim-templates/standard-demo/labels.csv --update-pce --no-prompt
-
-  ./workloader get-pk --profile Vensim-Created-Servers --create --ven-type server -f server_pp
-  ./workloader get-pk --profile Vensim-Created-Endpoints --create --ven-type endpoint -f endpoint_pp
-
-  ./vensim activate -c ./vensim-templates/standard-demo/vens.csv \
-    -p ./vensim-templates/standard-demo/processes.csv \
-    -m \"$pceFqdn:$pcePort\" -a \"\$(cat server_pp)\" -e \"\$(cat endpoint_pp)\"
-
-  ./vensim post-traffic -c ./vensim-templates/standard-demo/vens.csv \
-    -t ./vensim-templates/standard-demo/traffic.csv -d today
-
-  ./workloader wkld-import ./vensim-templates/standard-demo/wklds.csv --umwl --allow-enforcement-changes --update-pce --no-prompt
-  ./workloader svc-import ./vensim-templates/standard-demo/svcs.csv --update-pce --provision --no-prompt
-  ./workloader svc-import ./vensim-templates/standard-demo/svcs_meta.csv --meta --update-pce --no-prompt --provision
-  ./workloader ipl-import ./vensim-templates/standard-demo/iplists.csv --update-pce --no-prompt --provision
-  ./workloader adgroup-import ./vensim-templates/standard-demo/adgroups.csv --update-pce --no-prompt
-  ./workloader ruleset-import ./vensim-templates/standard-demo/rulesets.csv --update-pce --no-prompt --provision
-  ./workloader rule-import ./vensim-templates/standard-demo/rules.csv --update-pce --no-prompt --provision
-
-  echo done > /tmp/startup.done
+  bash newstartup.sh -f \"$pceFqdn\" -P \"$pcePort\" \
+    -u \"api_${AUTOACCOUNT_APIKEY_ID}\" -s \"$AUTOACCOUNT_APIKEY_SECRET\" \
+    -o \"$AUTOACCOUNT_ORG_ID\"
 
   exec bash \"$STARTUP_REPO_DIR/vensimscheduler.sh\"
 " > /var/log/vensim-startup.log 2>&1 < /dev/null &

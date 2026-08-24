@@ -99,15 +99,15 @@ print(f'Rules:             {rules}')
 
 | Object | Endpoint | Example count (clean run) |
 |---|---|---|
-| Labels | `/labels` | 111 (may read a few short if checked very early — see note below) |
+| Labels | `/labels` | ~103 (17 from vensim's own `labels.csv` + ~80-84 auto-created by `wkld-import` + 2 from the async quarantine bundle — may read a few short if checked very early, see note below) |
 | | `curl -s -u "$AUTH" "$BASE/labels"` | |
 | Label Dimensions | `/label_dimensions` | 15, plus Illumio's built-in `Quarantine` label type, which is **not** returned by this endpoint (it's a reserved system type, not a regular custom dimension) — so the Label Types page in the console will always show one more row than this count |
 | | `curl -s -u "$AUTH" "$BASE/label_dimensions"` | |
-| Pairing Profiles | `/pairing_profiles` | 4 (2 pre-existing `Default (Servers)`/`Default (Endpoints)` + 2 `Vensim-Created-*`) |
+| Pairing Profiles | `/pairing_profiles` | 2 (`Vensim-Created-Servers`/`Vensim-Created-Endpoints` — the org's pre-existing `Default (Servers)`/`Default (Endpoints)` are deleted first) |
 | | `curl -s -u "$AUTH" "$BASE/pairing_profiles"` | |
 | Workloads | `/workloads` | 206 |
 | | `curl -s -u "$AUTH" "$BASE/workloads?max_results=1000"` | |
-| Services | `/sec_policy/draft/services` | 182 |
+| Services | `/sec_policy/draft/services` | ~95 (92 from vensim's own `svcs.csv` + ~3 from the async quarantine bundle — the org's pre-existing default services are deleted first) |
 | | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/services"` | |
 | IP Lists | `/sec_policy/draft/ip_lists` | 12 |
 | | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/ip_lists"` | |
