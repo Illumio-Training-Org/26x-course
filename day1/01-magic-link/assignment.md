@@ -43,6 +43,9 @@ Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostnam
 
 ```run
 echo $AUTOACCOUNT_APIKEY_ID
+echo $AUTOACCOUNT_APIKEY_SECRET
+echo $AUTOACCOUNT_ORG_ID
+echo $AUTOACCOUNT_PCE_FQDN
 ```
 
 **5 )** Return to this lab window and press **NEXT**
