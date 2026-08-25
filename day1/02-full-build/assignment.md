@@ -139,7 +139,7 @@ Type of Integration: **Create IAM Roles on AWS**. The AWS Console opens at Creat
 
 **3) Security Review**
 
-**Cloud → Security Review → Review** (may take a few minutes to appear). Select the account → **Approve Security Review → Approve**. Back at **Cloud → Onboarding**, enforcement now shows **Yes** (refresh if needed).
+**Cloud → Security Review → Review**. Select the account → **Approve Security Review → Approve**. Back at **Cloud → Onboarding**, enforcement now shows **Yes** (refresh if needed).
 
 ---
 
@@ -167,6 +167,8 @@ Auto-Approve **ON → Save → Confirm and Save**.
 **6) Deployment Definitions**
 
 **Cloud → Application Discovery → Deployments → Add First Deployment**.
+
+In the AWS Console, search **Subnets** and note the Subnet IDs for the Production and Development subnets.
 
 Production:
 - Environment: `Production`
