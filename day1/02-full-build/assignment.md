@@ -208,7 +208,7 @@ Wait for all PODS **RUNNING**.
 
 ---
 
-**2) Check Firewall Coexistence**
+**2) Set Firewall Coexistence**
 
 Cilium needs to be configured to coexist with Illumio's iptables rules.
 
@@ -230,22 +230,13 @@ sudo iptables -S FORWARD | head
 
 ---
 
-**3) Disable Pre-Existing Policies**
-
-> [!IMPORTANT]
-> Ephemeral training accounts may come pre-loaded with active policies. Disable and provision any before starting policy work.
-
-**Segmentation → Policies → All Policies**. Select any active policies → **Disable → Provision**.
-
----
-
-**4) Create the Cluster Object**
+**3) Create the Cluster Object**
 
 **Settings → Infrastructure → Container Clusters → +Add**. Name: `K3S-LAB`. **Save**. Copy the Cluster ID and Cluster Token.
 
 ---
 
-**5) Create the Pairing Profile**
+**4) Create the Pairing Profile**
 
 **Servers & Endpoints → Pairing Profiles → +Add**:
 
@@ -260,7 +251,7 @@ sudo iptables -S FORWARD | head
 
 ---
 
-**6) Create the Illumio-values File**
+**5) Create the Illumio-values File**
 
 ```run
 nano illumio-values.yaml
@@ -278,7 +269,7 @@ containerManager: kubernetes
 clusterMode: clas
 ```
 
-Update `pce_url`, `cluster_id`, `cluster_token`, `cluster_code` with the values from steps 4–5.
+Update `pce_url`, `cluster_id`, `cluster_token`, `cluster_code` with the values from steps 3–4.
 
 > [!IMPORTANT]
 > Ensure a single space after each colon `:`
@@ -287,7 +278,7 @@ Save: **CTRL + X → y → ENTER**.
 
 ---
 
-**7) Deploy with Helm**
+**6) Deploy with Helm**
 
 ```run
 helm install illumio -f illumio-values.yaml oci://quay.io/illumio/illumio --namespace illumio-system --create-namespace --version 5.6.1
