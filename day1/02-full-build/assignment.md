@@ -269,38 +269,7 @@ sudo iptables -S FORWARD | head
 
 **5) Create the Illumio-values File**
 
-```run
-nano illumio-values.yaml
-```
-
-Paste:
-
-```run
-pce_url: URL_PORT # PCE URL with port, e.g. mypce.example.com:8443
-cluster_id: ILO_CLUSTER_UUID # Cluster ID from PCE
-cluster_token: ILO_CLUSTER_TOKEN # Cluster Token from PCE
-cluster_code: ILO_CODE # Pairing Profile key from PCE
-containerRuntime: k3s_containerd
-containerManager: kubernetes
-clusterMode: clas
-```
-
-Update `pce_url`, `cluster_id`, `cluster_token`, `cluster_code` with the values from steps 3–4.
-
-> [!IMPORTANT]
-> Ensure a single space after each colon `:`
-
-Save: **CTRL + X → y → ENTER**.
-
-**Verify:**
-
-```run
-cat illumio-values.yaml
-```
-
-**Alternative: scripted file creation**
-
-Instead of nano, set your real values as variables (no YAML syntax to get wrong):
+Set your real values as variables (no YAML syntax to get wrong):
 
 Your PCE URL:
 
