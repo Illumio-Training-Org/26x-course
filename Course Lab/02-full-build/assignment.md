@@ -208,7 +208,7 @@ Development:
 
 Onboard the Kubernetes Node.
 
-**1) Select the k3s tab and verify the node is ready for onboarding**
+**1) Select the k3s node, check it is ready for onboarding**
 
 ```run
 kubectl get nodes
