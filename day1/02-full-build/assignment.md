@@ -100,6 +100,22 @@ Try a few of the commands shown, e.g. `version`, `status`, `check-env`, `connect
 
 **Servers and Endpoints → Workloads**, select **linux-vm**, click **Enforcement → Enforced**. Return to the **Linux** tab and try interacting with it — access is blocked (no matching rule, expected). Change enforcement back to **Selective**, wait a few minutes, then confirm access is restored.
 
+---
+
+**Check your work** (run in the **CloudCLI** tab):
+
+```run
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
+import json, sys
+hosts = {w.get('hostname') for w in json.load(sys.stdin)}
+found = sorted(h for h in ('linux-vm', 'windows-vm') if h in hosts)
+print('Paired workloads found:', found or 'none')
+print('PASS - both VMs paired' if len(found) == 2 else 'FAIL - pair both linux-vm and windows-vm first (steps 2-3)')
+"
+```
+
 🧩 Cloud
 ==========
 
