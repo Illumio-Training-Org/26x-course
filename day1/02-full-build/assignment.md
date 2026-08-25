@@ -38,7 +38,7 @@ enhanced_loading: null
 🧩 Workloads
 ==========
 
-Pair the Linux and Windows VMs as VENs using a custom label override.
+Pair the Linux and Windows VMs as VENs.
 
 **1) Create a Pairing Profile**
 
@@ -55,9 +55,13 @@ Pair the Linux and Windows VMs as VENs using a custom label override.
 
 **Save → Generate Key**
 
+---
+
 **2) Pair the Windows Workload**
 
 Copy the Windows Pairing Script from the profile. Run it in the **Windows** tab. Verify the VEN pairs in Idle mode with the profile labels applied.
+
+---
 
 **3) Pair the Linux Workload with a Custom Label**
 
@@ -69,9 +73,13 @@ Copy the Linux Pairing Script. Paste it into the **Linux** tab — don't press E
 
 Then run it. Verify the VEN pairs with the **web** role in **Selective** mode.
 
+---
+
 **4) Verify Connectivity**
 
 **Servers and Endpoints → Workloads**. Filter Name contains `vm`. Click each workload and review its Summary, Processes, Rules, Denied Traffic, and Ransomware Protection tabs.
+
+---
 
 **5) Explore VEN Command Line**
 
@@ -85,6 +93,8 @@ cd /opt/illumio_ven/
 ```
 
 Try a few of the commands shown, e.g. `version`, `status`, `check-env`, `connectivity-test -test-all-ips -v`, or `stop`/`start`.
+
+---
 
 **6) Change Enforcement**
 
@@ -103,6 +113,8 @@ Login using the credentials in the **AWS** tab.
 > Region: **N. Virginia (us-east-1)**
 
 Search **EC2** and verify running instances are present.
+
+---
 
 **2) Connect to EC2**
 
@@ -142,6 +154,8 @@ done
 exit
 ```
 
+---
+
 **3) Onboard AWS**
 
 In the Illumio Console: **Cloud → Onboarding → Add AWS → Select Account**. Configure:
@@ -156,9 +170,13 @@ Ensure **Read Write Access** is **YES → Continue**. Under Service Account, **A
 
 Type of Integration: **Create IAM Roles on AWS**. The AWS Console opens at Create Stack (region N. Virginia). Scroll to **IllumioServiceAccountSecret**, paste the `ServiceAccountToken` from the downloaded credentials. Agree to the terms, **Create Stack**. Wait for **Illumio Integration – CREATE COMPLETE** (refresh if needed). Back in the Illumio Console: **Continue → Confirm and Finish**. Verify the account appears.
 
+---
+
 **4) Security Review**
 
 **Cloud → Security Review → Review** (may take a few minutes to appear). Select the account → **Approve Security Review → Approve**. Back at **Cloud → Onboarding**, enforcement now shows **Yes** (refresh if needed).
+
+---
 
 **5) Resource Discovery**
 
@@ -173,6 +191,8 @@ Type of Integration: **Create IAM Roles on AWS**. The AWS Console opens at Creat
 > [!NOTE]
 > Flow logs aren't enabled in this lab, so no traffic appears yet.
 
+---
+
 **6) Tag to Label Mapping**
 
 **Label Management → Labelling Method → Tag to Label Mapping → Add Mapping**. Ensure **AWS** is selected, filter by the AWS account.
@@ -181,6 +201,8 @@ Type of Integration: **Create IAM Roles on AWS**. The AWS Console opens at Creat
 - Cloud Tag Key **location** → Add to selection → Maps to Illumio Label Type **Location** → **Confirm & Add**
 
 View the generated labels: **Cloud → Labelling Method → System Generated Labels**.
+
+---
 
 **7) Application Mapping**
 
@@ -191,6 +213,8 @@ View the generated labels: **Cloud → Labelling Method → System Generated Lab
 - Cloud Tag Keys: `app`
 
 Auto-Approve **ON → Save → Confirm and Save**.
+
+---
 
 **8) Deployment Definitions**
 
@@ -220,6 +244,8 @@ kubectl get pods -A -o wide
 
 Wait for all PODS **RUNNING**.
 
+---
+
 **2) Check Firewall Coexistence**
 
 Cilium needs to be configured to coexist with Illumio's iptables rules.
@@ -240,6 +266,8 @@ sudo iptables -S FORWARD | head
 > [!NOTE]
 > May take a few seconds — re-run if `CILIUM_FORWARD` isn't at the bottom yet.
 
+---
+
 **3) Disable Pre-Existing Policies**
 
 > [!IMPORTANT]
@@ -247,9 +275,13 @@ sudo iptables -S FORWARD | head
 
 **Segmentation → Policies → All Policies**. Select any active policies → **Disable → Provision**.
 
+---
+
 **4) Create the Cluster Object**
 
 **Settings → Infrastructure → Container Clusters → +Add**. Name: `K3S-LAB`. **Save**. Copy the Cluster ID and Cluster Token.
+
+---
 
 **5) Create the Pairing Profile**
 
@@ -263,6 +295,8 @@ sudo iptables -S FORWARD | head
 - Labels — Location: `ca`, Environment: `Production`, Application: `kubernetes`
 
 **Save → Generate Key**, save the value.
+
+---
 
 **6) Create the Illumio-values File**
 
@@ -288,6 +322,8 @@ Update `pce_url`, `cluster_id`, `cluster_token`, `cluster_code` with the values 
 > Ensure a single space after each colon `:`
 
 Save: **CTRL + X → y → ENTER**.
+
+---
 
 **7) Deploy with Helm**
 
