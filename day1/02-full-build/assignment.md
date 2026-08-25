@@ -110,7 +110,6 @@ Onboard the AWS account to Illumio and map cloud tags to labels.
 Login using the credentials in the **AWS** tab.
 
 > [!IMPORTANT]
-> [!IMPORTANT]
 > You **must** switch the region to **N. Virginia (us-east-1)** before continuing — you will not see the right resources in any other region.
 
 Search **EC2** and verify running instances are present.
