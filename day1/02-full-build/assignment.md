@@ -44,7 +44,7 @@ Pair the Linux and Windows VMs as VENs.
 
 **Servers and Endpoints → Pairing Profiles → Add**:
 
-- Name: `pos | production | lax`
+- Name: `PP-VEN-LAX`
 - Enforcement: Idle
 - Node Type: Server VEN
 - Initial VEN Version: Current Default
