@@ -83,24 +83,8 @@ cd /opt/illumio_ven/
 ```run
 ./illumio-ven-ctl -help
 ```
-```run
-./illumio-ven-ctl version
-```
-```run
-./illumio-ven-ctl connectivity-test -test-all-ips -v
-```
-```run
-./illumio-ven-ctl check-env
-```
-```run
-./illumio-ven-ctl status
-```
-```run
-./illumio-ven-ctl stop
-```
-```run
-./illumio-ven-ctl start
-```
+
+Try a few of the commands shown, e.g. `version`, `status`, `check-env`, `connectivity-test -test-all-ips -v`, or `stop`/`start`.
 
 **6) Change Enforcement**
 
