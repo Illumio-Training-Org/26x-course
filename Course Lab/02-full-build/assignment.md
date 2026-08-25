@@ -208,19 +208,14 @@ Development:
 
 Onboard the Kubernetes Node.
 
-**1) Verify the K3s Node**
+**1) Verify the Kubernetes node is ready for onboarding**
 
 ```run
 kubectl get nodes
-```
-
-Wait for **READY**.
-
-```run
 kubectl get pods -A -o wide
 ```
 
-Wait for all PODS **RUNNING**.
+The node should be ready and all pods running.
 
 ---
 
