@@ -38,7 +38,7 @@ enhanced_loading: null
 🧩 Workloads
 ==========
 
-Pair the Linux and Windows VMs as VENs.
+Onboard the Linux and Windows VM.
 
 **1) Create a Pairing Profile**
 
@@ -190,7 +190,7 @@ Development:
 🧩 Containers
 ==========
 
-Onboard the k3s node as a CVEN.
+Onboard the Kubernetes Node.
 
 **1) Verify the K3s Node**
 
@@ -275,6 +275,43 @@ Update `pce_url`, `cluster_id`, `cluster_token`, `cluster_code` with the values 
 > Ensure a single space after each colon `:`
 
 Save: **CTRL + X → y → ENTER**.
+
+**Verify:**
+
+```run
+cat illumio-values.yaml
+```
+
+**Alternative: scripted file creation**
+
+Instead of nano, set your real values as variables (no YAML syntax to get wrong):
+
+```run
+PCE_URL="mypce.example.com:8443"
+CLUSTER_ID="paste-cluster-id-here"
+CLUSTER_TOKEN="paste-cluster-token-here"
+CLUSTER_CODE="paste-pairing-key-here"
+```
+
+Then generate the file:
+
+```run
+cat > illumio-values.yaml <<EOF
+pce_url: $PCE_URL
+cluster_id: $CLUSTER_ID
+cluster_token: $CLUSTER_TOKEN
+cluster_code: $CLUSTER_CODE
+containerRuntime: k3s_containerd
+containerManager: kubernetes
+clusterMode: clas
+EOF
+```
+
+**Verify:**
+
+```run
+cat illumio-values.yaml
+```
 
 ---
 
