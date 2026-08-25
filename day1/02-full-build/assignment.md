@@ -286,10 +286,27 @@ cat illumio-values.yaml
 
 Instead of nano, set your real values as variables (no YAML syntax to get wrong):
 
+Your PCE URL:
+
 ```run
-PCE_URL="mypce.example.com:8443"
+PCE_URL="poc4.illum.io:443"
+```
+
+Your Cluster ID from step 3:
+
+```run
 CLUSTER_ID="paste-cluster-id-here"
+```
+
+Your Cluster Token from step 3:
+
+```run
 CLUSTER_TOKEN="paste-cluster-token-here"
+```
+
+Your Pairing Profile key from step 4:
+
+```run
 CLUSTER_CODE="paste-pairing-key-here"
 ```
 
