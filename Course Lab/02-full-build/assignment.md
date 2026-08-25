@@ -330,4 +330,16 @@ Verify in the Illumio Console at **Infrastructure → Container Clusters** — c
 
 ---
 
-**Lab Complete**
+🧩 Close Lab
+==========
+
+> [!WARNING]
+> **DO NOT CLICK NEXT UNLESS YOU WANT TO CLOSE THE LAB**
+
+Clicking **NEXT** below will permanently end this session — the PCE org, AWS account, VMs, and k3s cluster will all be destroyed. There is no way to resume once this happens.
+
+Only click **NEXT** if you are completely finished with the lab.
+
+---
+
+**Lab Complete – This is the end of the lab and pressing NEXT will end the session**
