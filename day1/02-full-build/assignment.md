@@ -310,19 +310,19 @@ PCE_URL="poc4.illum.io:443"
 
 Your Cluster ID from step 3:
 
-```run
+```
 CLUSTER_ID="paste-cluster-id-here"
 ```
 
 Your Cluster Token from step 3:
 
-```run
+```
 CLUSTER_TOKEN="paste-cluster-token-here"
 ```
 
 Your Pairing Profile key from step 4:
 
-```run
+```
 CLUSTER_CODE="paste-pairing-key-here"
 ```
 
