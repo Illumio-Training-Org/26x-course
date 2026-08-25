@@ -144,7 +144,14 @@ Ensure **Read Write Access** is **YES → Continue**. Under Service Account, **A
 > [!IMPORTANT]
 > Do NOT press Continue until the next step is completed.
 
-Type of Integration: **Create IAM Roles on AWS**. The AWS Console opens at Create Stack (region N. Virginia). Scroll to **IllumioServiceAccountSecret**, paste the `ServiceAccountToken` from the downloaded credentials. Agree to the terms, **Create Stack**. Wait for **Illumio Integration – CREATE COMPLETE** (refresh if needed). Back in the Illumio Console: **Continue → Confirm and Finish**. Verify the account appears.
+Type of Integration: **Create IAM Roles on AWS**.
+
+- The AWS Console opens at Create Stack (region **us-east-1**)
+- Scroll to **IllumioServiceAccountSecret**, paste the `ServiceAccountToken` from the downloaded credentials
+- Agree to the terms → **Create Stack**
+- Wait for **Illumio Integration – CREATE COMPLETE** (refresh if needed)
+- Back in the Illumio Console: **Continue → Confirm and Finish**
+- Verify the account appears
 
 ---
 
