@@ -2,9 +2,18 @@
 slug: full-build
 id: 8qlowwiyze9w
 type: challenge
-title: 02 - Full Build (AWS, VMs, k3s)
-teaser: Verify AWS, the RockyLinux/Windows VMs, and the k3s/CVEN node together
+title: Workloads, Cloud, Containers
+teaser: Pair workloads, onboard AWS, and connect a container cluster to Illumio
 tabs:
+- id: yx05d9vozqcg
+  title: Linux
+  type: terminal
+  hostname: linux-vm
+  cmd: bash
+- id: b2rkcee3crkf
+  title: Windows
+  type: terminal
+  hostname: windows-vm
 - id: fe2jxyzgosy2
   title: CloudCLI
   type: terminal
@@ -15,15 +24,6 @@ tabs:
   type: service
   hostname: cloud-client
   port: 80
-- id: yx05d9vozqcg
-  title: Linux
-  type: terminal
-  hostname: linux-vm
-  cmd: bash
-- id: b2rkcee3crkf
-  title: Windows
-  type: terminal
-  hostname: windows-vm
 - id: evarmjetmnns
   title: k3s
   type: terminal
@@ -33,49 +33,117 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# 02 - Full Build
+# Workloads, Cloud, Containers
 
-Base lab test — AWS, the RockyLinux/Windows VMs, and the k3s/CVEN node
-all built and verified together in one assignment.
-
-🧩 Task 01 - Verify AWS Resources
+🧩 Workloads
 ==========
 
-**1 )** Login to AWS using the credentials in the **AWS** tab
+Pair the Linux and Windows VMs as VENs using a custom label override.
+
+**1) Create a Pairing Profile**
+
+**Servers and Endpoints → Pairing Profiles → Add**:
+
+- Name: `pos | production | lax`
+- Enforcement: Idle
+- Node Type: Server VEN
+- Initial VEN Version: Current Default
+- Labels: `pos`, `Production`, `lax` (leave **Role** blank — set via CLI override in step 3)
+- Uses Per Key: Unlimited Uses
+- Key Lifespan: 6 Hours
+- Command Line Overrides: Enforcement **Unlocked**, **Role Label can be set**
+
+**Save → Generate Key**
+
+**2) Pair the Windows Workload**
+
+Copy the Windows Pairing Script from the profile. Run it in the **Windows** tab. Verify the VEN pairs in Idle mode with the profile labels applied.
+
+**3) Pair the Linux Workload with a Custom Label**
+
+Copy the Linux Pairing Script. Paste it into the **Linux** tab — don't press Enter yet. Append:
+
+```
+--role web --mode selective
+```
+
+Then run it. Verify the VEN pairs with the **web** role in **Selective** mode.
+
+**4) Verify Connectivity**
+
+**Servers and Endpoints → Workloads**. Filter Name contains `vm`. Click each workload and review its Summary, Processes, Rules, Denied Traffic, and Ransomware Protection tabs.
+
+**5) Explore VEN Command Line**
+
+In the **Linux** tab:
+
+```run
+cd /opt/illumio_ven/
+```
+```run
+./illumio-ven-ctl -help
+```
+```run
+./illumio-ven-ctl version
+```
+```run
+./illumio-ven-ctl connectivity-test -test-all-ips -v
+```
+```run
+./illumio-ven-ctl check-env
+```
+```run
+./illumio-ven-ctl status
+```
+```run
+./illumio-ven-ctl stop
+```
+```run
+./illumio-ven-ctl start
+```
+
+**6) Change Enforcement**
+
+**Servers and Endpoints → Workloads**, select **linux-vm**, click **Enforcement → Enforced**. Return to the **Linux** tab and try interacting with it — access is blocked (no matching rule, expected). Change enforcement back to **Selective**, wait a few minutes, then confirm access is restored.
+
+🧩 Cloud
+==========
+
+Onboard the AWS account to Illumio and map cloud tags to labels.
+
+**1) Login to AWS**
+
+Login using the credentials in the **AWS** tab.
 
 > [!IMPORTANT]
-> Ensure the Region is set to **N. Virginia (us-east-1)**
+> Region: **N. Virginia (us-east-1)**
 
-**2 )** In the AWS Console search for **EC2** and verify **4 running instances**:
-`crm-dev-web`, `crm-dev-db`, `crm-prod-web`, `crm-prod-db`
+Search **EC2** and verify running instances are present.
 
-🧩 Task 02 - Verify AWS Connectivity
-==========
+**2) Connect to EC2**
 
-**1 )** Return to the **CloudCLI** tab and check the Terraform outputs
+Return to **CloudCLI** and verify the instances:
 
 ```run
 cd /root/26x-course/terraform
 terraform output
 ```
 
-**2 )** SSH into the **crm-dev-web** instance
+SSH into **crm-prod-web**:
 
 ```run
 ssh -o StrictHostKeyChecking=accept-new \
 -i /root/.ssh/my-keypair.pem \
-ec2-user@$(terraform output -json ec2_instances_info | jq -r '."crm-dev-web".public_ip')
+ec2-user@$(terraform output -json ec2_instances_info | jq -r '."crm-prod-web".public_ip')
 ```
 
-**3 )** Verify Internet connectivity
+Verify internet connectivity:
 
 ```run
 ping www.illumio.com -c 5
 ```
 
-Your environment is now configured and has both **inbound SSH** and **outbound Internet access**
-
-**4 )** To keep the SSH session alive during the labs you can generate traffic in the background
+Keep the SSH session alive with background traffic:
 
 ```run
 while true; do
@@ -84,196 +152,141 @@ while true; do
 done
 ```
 
-**5 )** End the traffic loop and exit the shell
-
-Press **CTRL+C**
+**CTRL+C** to end the loop, then:
 
 ```run
 exit
 ```
 
-🧩 Task 03 – Onboard AWS
-==========
+**3) Onboard AWS**
 
-**1 )** Open the **Illumio Console**
+In the Illumio Console: **Cloud → Onboarding → Add AWS → Select Account**. Configure:
 
-Navigate to:
+- Name: `AWSOnboarding`
+- Account ID: from the top right of the AWS Console (12 characters)
 
-**Cloud → Onboarding → Add AWS → Select Account**
+Ensure **Read Write Access** is **YES → Continue**. Under Service Account, **Add a New Service Account** named `OnboardingAccount` → **Create**. Download the credentials, **Close**.
 
-**2 )** Configure the following:
+> [!IMPORTANT]
+> Do NOT press Continue until the next step is completed.
 
-- **Name:** AWSOnboarding
-- **Account ID:** Copy this value from your AWS Console at the top right of the AWS Web Console
+Type of Integration: **Create IAM Roles on AWS**. The AWS Console opens at Create Stack (region N. Virginia). Scroll to **IllumioServiceAccountSecret**, paste the `ServiceAccountToken` from the downloaded credentials. Agree to the terms, **Create Stack**. Wait for **Illumio Integration – CREATE COMPLETE** (refresh if needed). Back in the Illumio Console: **Continue → Confirm and Finish**. Verify the account appears.
 
-Enter this value into the **Account ID** field
+**4) Security Review**
+
+**Cloud → Security Review → Review** (may take a few minutes to appear). Select the account → **Approve Security Review → Approve**. Back at **Cloud → Onboarding**, enforcement now shows **Yes** (refresh if needed).
+
+**5) Resource Discovery**
+
+**Cloud → Inventory** (may take a few minutes to populate). Filter **Account → AWSOnboarding → GO**.
+
+- Filter **Resource Type → AWS::EC2::Instance** — note the count and Cloud Tags.
+- Filter **Resource Type → AWS::EC2::Subnet** — note the Cloud Tags.
+- Filter **Resource Type → AWS::EC2::SecurityGroup** — note instance roles share Security Groups (e.g. web roles → `web_sg`).
+
+**Cloud → Explore → Map**, search icon, filter **aws → Account → AWSOnboarding**. Expand each subnet to see the EC2 instances. Click **crm-prod-web** to view its Summary, Attached Resources, and Traffic.
 
 > [!NOTE]
-> This is the **12 character value** located in the top right corner of your AWS Console
+> Flow logs aren't enabled in this lab, so no traffic appears yet.
 
-**3 )** Ensure **Read Write Access** is set to **YES**
+**6) Tag to Label Mapping**
 
-Click **Continue**
+**Label Management → Labelling Method → Tag to Label Mapping → Add Mapping**. Ensure **AWS** is selected, filter by the AWS account.
 
-**4 )** On the subsequent screen select the **Service Account** field
+- Cloud Tag Key **Role** → Add to selection → Maps to Illumio Label Type **Role** → **Confirm & Add**
+- Cloud Tag Key **location** → Add to selection → Maps to Illumio Label Type **Location** → **Confirm & Add**
 
-Click **Add a New Service Account** and enter:
+View the generated labels: **Cloud → Labelling Method → System Generated Labels**.
 
-**OnboardingAccount**
+**7) Application Mapping**
 
-Select **Create**
+**Cloud → Application Discovery → Application Definitions → Discovery Rules → Add**:
 
-**5 )** On the next screen **Download** the credentials
+- Rule Name: `AppDiscovery`
+- Rule Type: Cloud Tags
+- Cloud Tag Keys: `app`
 
-Select **Close** to return to the Service Account screen
+Auto-Approve **ON → Save → Confirm and Save**.
+
+**8) Deployment Definitions**
+
+**Cloud → Application Discovery → Deployments → Add First Deployment**. Environment: **Production**. Deployment Stack → **Add → Add Regions** → `us-east-1` → Add. **Add → Add Virtual Networks** → select the VPC → Add. **Add → Add Subnets** → select the Production subnet → Add. **Save**.
+
+Repeat for **Development** (its own Region/VPC/Subnet).
 
 > [!IMPORTANT]
-> **Do NOT press Continue until the next step is completed**
+> Ensure both deployments — Production and Development — are added before continuing.
 
-**6 )** In the **Type of Integration** field select:
-
-**Create IAM Roles on AWS**
-
-Your **AWS Web Console** will open at the **Create Stack** page
-
-> [!IMPORTANT]
-> Ensure the region is set to **N. Virginia (us-east-1)**
-
-**7 )** Scroll down to the **IllumioServiceAccountSecret** field
-
-Enter the value from the **ServiceAccountToken** in the downloaded credentials
-
-**8 )** Agree to the conditions at the bottom of the page and select **Create Stack**
-
-**9 )** On the **CloudFormation Stack** page monitor the creation of the stack
-
-Wait until you see:
-
-**Illumio Integration – CREATE COMPLETE**
-
-(You may need to refresh the console)
-
-**10 )** Return to the **Illumio Console**
-
-Click **Continue → Confirm and Finish**
-
-**11 )** Verify your newly onboarded account appears
-
-Initial onboarding is now complete
-
-🧩 Task 04 - Verify Linux VM
+🧩 Containers
 ==========
 
-**1 )** In the **Linux** tab, run
+Onboard the k3s node as a CVEN.
 
-```run
-hostname && whoami
-```
-
-🧩 Task 05 - Verify Windows VM
-==========
-
-**1 )** In the **Windows** tab, run
-
-```
-hostname
-whoami
-```
-
-🧩 Task 06 - Verify the K3s Node
-==========
-
-**1 )** In the **k3s** tab, verify the node is operational
+**1) Verify the K3s Node**
 
 ```run
 kubectl get nodes
 ```
 
-**2 )** Ensure all PODS have initialised
+Wait for **READY**.
 
 ```run
 kubectl get pods -A -o wide
 ```
 
-🧩 Task 07 - Check Firewall Coexistence
-==========
+Wait for all PODS **RUNNING**.
+
+**2) Check Firewall Coexistence**
 
 Cilium needs to be configured to coexist with Illumio's iptables rules.
-
-**1 )** Run the following to configure it
 
 ```run
 cilium upgrade --version 1.18.6 --set='extraArgs={--prepend-iptables-chains=false}'
 ```
-
 ```run
 kubectl -n kube-system rollout restart ds/cilium
 ```
 
-**2 )** Re-check the FORWARD chain
+Re-check the FORWARD chain:
 
 ```run
 sudo iptables -S FORWARD | head
 ```
 
 > [!NOTE]
-> This can take a few seconds to update — you may need to re-run the command above to see CILIUM_FORWARD at the bottom of the list
+> May take a few seconds — re-run if `CILIUM_FORWARD` isn't at the bottom yet.
 
-🧩 Task 08 - Disable Pre-Existing Policies
-==========
+**3) Disable Pre-Existing Policies**
 
 > [!IMPORTANT]
-> Ephemeral training accounts may come pre-loaded with existing active
-> policies. Disable and provision any of these before starting policy work.
+> Ephemeral training accounts may come pre-loaded with active policies. Disable and provision any before starting policy work.
 
-**1 )** In the Illumio Console, navigate to **Segmentation → Policies → All Policies**
+**Segmentation → Policies → All Policies**. Select any active policies → **Disable → Provision**.
 
-**2 )** Select any existing active policies, click **Disable**, then **Provision** the change
+**4) Create the Cluster Object**
 
-🧩 Task 09 - Create the Cluster Object
-==========
+**Settings → Infrastructure → Container Clusters → +Add**. Name: `K3S-LAB`. **Save**. Copy the Cluster ID and Cluster Token.
 
-**1 )** In the Illumio Console navigate to **Settings → Infrastructure → Container Clusters**
+**5) Create the Pairing Profile**
 
-**2 )** Click **+Add** and configure:
+**Servers & Endpoints → Pairing Profiles → +Add**:
 
-- **Name:** K3S-LAB
+- Name: `kubernetes`
+- Enforcement: Visibility Only
+- Visibility: Denied + Allowed
+- Enforcement Node Type: Server VEN
+- Initial VEN Version: Current Default
+- Labels — Location: `ca`, Environment: `Production`, Application: `kubernetes`
 
-**3 )** Click **Save**
+**Save → Generate Key**, save the value.
 
-**4 )** Copy the **Cluster ID** and **Cluster Token** to a text file
-
-🧩 Task 10 - Create the Pairing Profile
-==========
-
-**1 )** Navigate to **Servers & Endpoints → Pairing Profiles**
-
-**2 )** Click **+Add** and configure:
-
-- **Name:** kubernetes
-- **Enforcement:** Visibility Only
-- **Visibility:** Denied + Allowed
-- **Enforcement Node Type:** Server VEN
-- **Initial VEN Version:** Current Default
-
-**3 )** Add labels:
-
-- **Location type label:** ca
-- **Environment type label:** Production
-- **Application type label:** kubernetes
-
-**4 )** Click **Save**, then **Generate Key** and save the value
-
-🧩 Task 11 - Build the Illumio-values File
-==========
-
-**1 )** Create the values file
+**6) Create the Illumio-values File**
 
 ```run
 nano illumio-values.yaml
 ```
 
-**2 )** Paste the following text
+Paste:
 
 ```run
 pce_url: URL_PORT # PCE URL with port, e.g. mypce.example.com:8443
@@ -285,29 +298,23 @@ containerManager: kubernetes
 clusterMode: clas
 ```
 
-**3 )** Update `pce_url`, `cluster_id`, `cluster_token`, and `cluster_code` with the values copied in Tasks 09–10
+Update `pce_url`, `cluster_id`, `cluster_token`, `cluster_code` with the values from steps 4–5.
 
 > [!IMPORTANT]
-> Ensure there is a single space after each colon `:`
+> Ensure a single space after each colon `:`
 
-**4 )** Save the file: **CTRL + X → y → ENTER**
+Save: **CTRL + X → y → ENTER**.
 
-🧩 Task 12 - Deploy with Helm
-==========
-
-**1 )** Deploy Illumio for Kubernetes using Helm
+**7) Deploy with Helm**
 
 ```run
 helm install illumio -f illumio-values.yaml oci://quay.io/illumio/illumio --namespace illumio-system --create-namespace --version 5.6.1
 ```
-
-**2 )** Monitor the deployment
-
 ```run
 kubectl get pods -A -o wide
 ```
 
-**3 )** Verify in the Illumio Console at **Infrastructure → Container Clusters** — the cluster should show **"in sync"**
+Verify in the Illumio Console at **Infrastructure → Container Clusters** — cluster shows **"in sync"**.
 
 ---
 
