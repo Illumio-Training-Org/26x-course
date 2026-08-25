@@ -110,53 +110,14 @@ Onboard the AWS account to Illumio and map cloud tags to labels.
 Login using the credentials in the **AWS** tab.
 
 > [!IMPORTANT]
-> Region: **N. Virginia (us-east-1)**
+> [!IMPORTANT]
+> You **must** switch the region to **N. Virginia (us-east-1)** before continuing — you will not see the right resources in any other region.
 
 Search **EC2** and verify running instances are present.
 
 ---
 
-**2) Connect to EC2**
-
-Return to **CloudCLI** and verify the instances:
-
-```run
-cd /root/26x-course/terraform
-terraform output
-```
-
-SSH into **crm-prod-web**:
-
-```run
-ssh -o StrictHostKeyChecking=accept-new \
--i /root/.ssh/my-keypair.pem \
-ec2-user@$(terraform output -json ec2_instances_info | jq -r '."crm-prod-web".public_ip')
-```
-
-Verify internet connectivity:
-
-```run
-ping www.illumio.com -c 5
-```
-
-Keep the SSH session alive with background traffic:
-
-```run
-while true; do
-  curl -s -o /dev/null -w "%{http_code}\n" https://www.illumio.com
-  sleep 60
-done
-```
-
-**CTRL+C** to end the loop, then:
-
-```run
-exit
-```
-
----
-
-**3) Onboard AWS**
+**2) Onboard AWS**
 
 In the Illumio Console: **Cloud → Onboarding → Add AWS → Select Account**. Configure:
 
@@ -172,39 +133,27 @@ Type of Integration: **Create IAM Roles on AWS**. The AWS Console opens at Creat
 
 ---
 
-**4) Security Review**
+> [!IMPORTANT]
+> Onboarding may take **10–15 minutes** to complete before continuing with the rest of the instructions.
+
+---
+
+**3) Security Review**
 
 **Cloud → Security Review → Review** (may take a few minutes to appear). Select the account → **Approve Security Review → Approve**. Back at **Cloud → Onboarding**, enforcement now shows **Yes** (refresh if needed).
 
 ---
 
-**5) Resource Discovery**
-
-**Cloud → Inventory** (may take a few minutes to populate). Filter **Account → AWSOnboarding → GO**.
-
-- Filter **Resource Type → AWS::EC2::Instance** — note the count and Cloud Tags.
-- Filter **Resource Type → AWS::EC2::Subnet** — note the Cloud Tags.
-- Filter **Resource Type → AWS::EC2::SecurityGroup** — note instance roles share Security Groups (e.g. web roles → `web_sg`).
-
-**Cloud → Explore → Map**, search icon, filter **aws → Account → AWSOnboarding**. Expand each subnet to see the EC2 instances. Click **crm-prod-web** to view its Summary, Attached Resources, and Traffic.
-
-> [!NOTE]
-> Flow logs aren't enabled in this lab, so no traffic appears yet.
-
----
-
-**6) Tag to Label Mapping**
+**4) Tag to Label Mapping**
 
 **Label Management → Labelling Method → Tag to Label Mapping → Add Mapping**. Ensure **AWS** is selected, filter by the AWS account.
 
 - Cloud Tag Key **Role** → Add to selection → Maps to Illumio Label Type **Role** → **Confirm & Add**
 - Cloud Tag Key **location** → Add to selection → Maps to Illumio Label Type **Location** → **Confirm & Add**
 
-View the generated labels: **Cloud → Labelling Method → System Generated Labels**.
-
 ---
 
-**7) Application Mapping**
+**5) Application Mapping**
 
 **Cloud → Application Discovery → Application Definitions → Discovery Rules → Add**:
 
@@ -216,11 +165,23 @@ Auto-Approve **ON → Save → Confirm and Save**.
 
 ---
 
-**8) Deployment Definitions**
+**6) Deployment Definitions**
 
-**Cloud → Application Discovery → Deployments → Add First Deployment**. Environment: **Production**. Deployment Stack → **Add → Add Regions** → `us-east-1` → Add. **Add → Add Virtual Networks** → select the VPC → Add. **Add → Add Subnets** → select the Production subnet → Add. **Save**.
+**Cloud → Application Discovery → Deployments → Add First Deployment**.
 
-Repeat for **Development** (its own Region/VPC/Subnet).
+Production:
+- Environment: `Production`
+- **Add → Add Regions** → `us-east-1` → Add
+- **Add → Add Virtual Networks** → select the VPC → Add
+- **Add → Add Subnets** → select the Production subnet → Add
+- **Save**
+
+Development:
+- Environment: `Development`
+- **Add → Add Regions** → `us-east-1` → Add
+- **Add → Add Virtual Networks** → select the VPC → Add
+- **Add → Add Subnets** → select the Development subnet → Add
+- **Save**
 
 > [!IMPORTANT]
 > Ensure both deployments — Production and Development — are added before continuing.
