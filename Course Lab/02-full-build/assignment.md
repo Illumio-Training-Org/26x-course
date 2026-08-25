@@ -215,7 +215,7 @@ kubectl get nodes
 kubectl get pods -A -o wide
 ```
 
-The node should be ready and all pods running.
+The node should show **Ready**, and all pods should show **1/1** and **Running**.
 
 ---
 
