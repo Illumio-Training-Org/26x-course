@@ -351,22 +351,45 @@ Verify in the Illumio Console at **Infrastructure → Container Clusters** — c
 
 ---
 
+**7) Label the Kubernetes Workload**
+
+**Settings → Infrastructure → Container Clusters**, open the **Workloads** tab at the top. Select **host** → **Edit Labels**. Add a **Role** label of `controller` (create the label if it doesn't already exist) → **OK**.
+
+---
+
 **Check your work** (run in the **CloudCLI** tab):
 
 ```run
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+
+echo "--- pairing profile ---"
+curl -s -u "$AUTH" "$BASE/pairing_profiles" | python3 -c "
+import json, sys
+p = [x for x in json.load(sys.stdin) if x.get('name') == 'kubernetes']
+print('PASS - kubernetes pairing profile found' if p else 'FAIL - kubernetes pairing profile not found (step 4)')
+"
+
+echo "--- container cluster ---"
 curl -s -u "$AUTH" "$BASE/container_clusters" | python3 -c "
 import json, sys
 clusters = json.load(sys.stdin)
 if not clusters:
-    print('FAIL - no container cluster found, complete step 3 first')
+    print('FAIL - no container cluster found (step 3)')
 else:
     c = clusters[0]
-    if c.get('online'):
-        print('PASS - cluster ' + str(c.get('name')) + ' is online and in sync')
-    else:
-        print('FAIL - cluster ' + str(c.get('name')) + ' is not yet online, check the Helm deploy (step 6)')
+    print('PASS - cluster ' + str(c.get('name')) + ' is online and in sync' if c.get('online') else 'FAIL - cluster ' + str(c.get('name')) + ' is not yet online (step 6)')
+"
+
+echo "--- host workload label ---"
+curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
+import json, sys
+ws = [w for w in json.load(sys.stdin) if w.get('hostname') == 'host']
+if not ws:
+    print('FAIL - host workload not found')
+else:
+    labels = {l['key']: l['value'] for l in ws[0].get('labels', [])}
+    print('PASS - role=controller label found' if labels.get('role') == 'controller' else 'FAIL - role=controller label not found (step 7)')
 "
 ```
 
