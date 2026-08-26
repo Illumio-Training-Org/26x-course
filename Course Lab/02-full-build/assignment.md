@@ -105,34 +105,7 @@ Try a few of the commands shown, e.g. `version`, `status`, `check-env`, `connect
 **Check your work** (run in the **CloudCLI** tab):
 
 ```run
-BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
-AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
-curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
-import json, sys
-workloads = {w.get('hostname'): w for w in json.load(sys.stdin)}
-base = {'app': 'pos', 'env': 'Production', 'loc': 'lax'}
-fails = []
-for host in ('linux-vm', 'windows-vm'):
-    w = workloads.get(host)
-    if not w:
-        fails.append(host + ' not paired')
-        continue
-    labels = {l['key']: l['value'] for l in w.get('labels', [])}
-    for k, v in base.items():
-        if labels.get(k) != v:
-            fails.append(host + ' label ' + k + ' should be ' + v + ', found ' + str(labels.get(k)))
-    if host == 'linux-vm':
-        if labels.get('role') != 'web':
-            fails.append('linux-vm role label should be web, found ' + str(labels.get('role')))
-        if w.get('enforcement_mode') != 'selective':
-            fails.append('linux-vm enforcement_mode should be selective, found ' + str(w.get('enforcement_mode')))
-if fails:
-    print('FAIL')
-    for f in fails:
-        print(' - ' + f)
-else:
-    print('PASS - both VMs paired, labels correct, linux-vm role=web in Selective mode')
-"
+check-workloads
 ```
 
 ---
@@ -238,14 +211,7 @@ Development:
 **Check the PCE API is responding** (run in the **CloudCLI** tab):
 
 ```run
-BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
-AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
-code=$(curl -s -o /dev/null -w "%{http_code}" -u "$AUTH" "$BASE/workloads?max_results=1")
-if [ "$code" = "200" ]; then
-  echo "PASS - PCE API is responding normally"
-else
-  echo "FAIL - PCE API returned HTTP $code (expected 200). Retry in a minute, or restart the sandbox if it persists."
-fi
+check-pce-api
 ```
 
 **TODO: full Cloud check your work** — placeholder, not yet built. The
@@ -389,37 +355,7 @@ Verify in the Illumio Console at **Infrastructure → Container Clusters** — c
 **Check your work** (run in the **CloudCLI** tab):
 
 ```run
-BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
-AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
-
-echo "--- pairing profile ---"
-curl -s -u "$AUTH" "$BASE/pairing_profiles" | python3 -c "
-import json, sys
-p = [x for x in json.load(sys.stdin) if x.get('name') == 'kubernetes']
-print('PASS - kubernetes pairing profile found' if p else 'FAIL - kubernetes pairing profile not found (step 4)')
-"
-
-echo "--- container cluster ---"
-curl -s -u "$AUTH" "$BASE/container_clusters" | python3 -c "
-import json, sys
-clusters = json.load(sys.stdin)
-if not clusters:
-    print('FAIL - no container cluster found (step 3)')
-else:
-    c = clusters[0]
-    print('PASS - cluster ' + str(c.get('name')) + ' is online and in sync' if c.get('online') else 'FAIL - cluster ' + str(c.get('name')) + ' is not yet online (step 6)')
-"
-
-echo "--- host workload label ---"
-curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
-import json, sys
-ws = [w for w in json.load(sys.stdin) if w.get('hostname') == 'host']
-if not ws:
-    print('FAIL - host workload not found')
-else:
-    labels = {l['key']: l['value'] for l in ws[0].get('labels', [])}
-    print('PASS - role=controller label found' if labels.get('role') == 'controller' else 'FAIL - role=controller label not found (step 7)')
-"
+check-containers
 ```
 
 ---
