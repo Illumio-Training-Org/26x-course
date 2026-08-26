@@ -135,6 +135,10 @@ else:
 "
 ```
 
+---
+
+**Lab Complete**
+
 🧩 Cloud
 ==========
 
@@ -249,6 +253,10 @@ Core REST API docs don't cover the Cloud module, so the real endpoint
 for "AWS account onboarded" hasn't been identified yet. Once the
 platform's API-auth issue clears, inspect the Cloud Onboarding
 screen's own network calls to find it, then build this check.
+
+---
+
+**Lab Complete**
 
 🧩 Containers
 ==========
@@ -415,6 +423,8 @@ else:
 ```
 
 ---
+
+**Lab Complete**
 
 🧩 Close Lab
 ==========
