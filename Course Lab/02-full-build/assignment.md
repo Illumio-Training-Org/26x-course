@@ -68,7 +68,7 @@ Copy the Windows Pairing Script from the profile. Run it in the **Windows** tab.
 Copy the Linux Pairing Script. Paste it into the **Linux** tab — don't press Enter yet. Append:
 
 ```
---role web --mode selective
+--role web --enforcement_mode selective
 ```
 
 Then run it. Verify the VEN pairs with the **web** role in **Selective** mode.
