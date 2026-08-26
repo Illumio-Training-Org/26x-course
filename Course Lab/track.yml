@@ -2,12 +2,12 @@ slug: 26x-day1-base-lab-test
 id: fnybywvnettv
 title: '! 26.x Lab'
 description: |-
-  Lab Name: 26.x BASE LAB TEST
+  This lab provides access to:
 
-  Outcome:
-  In this lab you will verify that the shared 26.x base lab environment
-  (magic link, AWS Terraform build, RockyLinux/Windows VMs, k3s/CVEN node)
-  is working end to end, before real Day 1 content is added.
+  - The Illumio Console
+  - Linux and Windows workloads
+  - AWS Console and Cloud Client
+  - Kubernetes
 icon: ./assets/logo.png
 tags:
 - ilt
@@ -25,5 +25,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "130038819879577491"
+checksum: "2204660159887961291"
 enhanced_loading: false
