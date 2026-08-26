@@ -95,6 +95,7 @@ date
 
 cat > /usr/local/bin/check-workloads << 'CHECKEOF'
 #!/bin/bash
+clear
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
 curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
@@ -128,6 +129,7 @@ chmod +x /usr/local/bin/check-workloads
 
 cat > /usr/local/bin/check-containers << 'CHECKEOF'
 #!/bin/bash
+clear
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
 
@@ -164,6 +166,7 @@ chmod +x /usr/local/bin/check-containers
 
 cat > /usr/local/bin/check-pce-api << 'CHECKEOF'
 #!/bin/bash
+clear
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
 code=$(curl -s -o /dev/null -w "%{http_code}" -u "$AUTH" "$BASE/workloads?max_results=1")
