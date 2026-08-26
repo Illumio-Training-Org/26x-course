@@ -231,11 +231,24 @@ Development:
 
 ---
 
-**TODO: Check your work** — placeholder, not yet built. The Core REST
-API docs don't cover the Cloud module, so the real endpoint for "AWS
-account onboarded" hasn't been identified yet. Once the platform's
-API-auth issue clears, inspect the Cloud Onboarding screen's own
-network calls to find it, then build this check.
+**Check the PCE API is responding** (run in the **CloudCLI** tab):
+
+```run
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+code=$(curl -s -o /dev/null -w "%{http_code}" -u "$AUTH" "$BASE/workloads?max_results=1")
+if [ "$code" = "200" ]; then
+  echo "PASS - PCE API is responding normally"
+else
+  echo "FAIL - PCE API returned HTTP $code (expected 200). Retry in a minute, or restart the sandbox if it persists."
+fi
+```
+
+**TODO: full Cloud check your work** — placeholder, not yet built. The
+Core REST API docs don't cover the Cloud module, so the real endpoint
+for "AWS account onboarded" hasn't been identified yet. Once the
+platform's API-auth issue clears, inspect the Cloud Onboarding
+screen's own network calls to find it, then build this check.
 
 🧩 Containers
 ==========
