@@ -2,7 +2,7 @@
 slug: full-build
 id: 8qlowwiyze9w
 type: challenge
-title: Workloads, Cloud, Containers
+title: Onboarding Workloads-Cloud-Containers
 teaser: Pair workloads, onboard AWS, and connect a container cluster to Illumio
 tabs:
 - id: yx05d9vozqcg
@@ -33,7 +33,7 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# Workloads, Cloud, Containers
+# Onboarding Workloads-Cloud-Containers
 
 🧩 Workloads
 ==========
