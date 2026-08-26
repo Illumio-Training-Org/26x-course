@@ -43,6 +43,19 @@ done
   done
 } >> /root/.bashrc
 
+# Also write the same cleaned values to a plain, guard-free env file that
+# non-interactive contexts can source directly — specifically Instruqt's
+# own check-script execution (check-cloud-client), which does not source
+# .bashrc (that only loads for interactive shells). Every check-cloud-client
+# script sources this file explicitly before using any $AUTOACCOUNT_* var.
+{
+  for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+             AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+             AUTOACCOUNT_SAAPIKEY_SECRET; do
+    printf 'export %s=%q\n' "$var" "${!var}"
+  done
+} > /root/.autoaccount_env
+
 # ---------------------------------------
 # Parse PCE FQDN
 # ---------------------------------------

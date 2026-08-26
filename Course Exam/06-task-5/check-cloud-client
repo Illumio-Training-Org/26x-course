@@ -4,6 +4,10 @@
 # Exit 0 = pass, non-zero = fail.
 #
 
+# setup-cloud-client writes cleaned AUTOACCOUNT_* values here since this
+# script's execution context doesn't source .bashrc (interactive-only).
+. /root/.autoaccount_env
+
 AUTH2="${AUTOACCOUNT_SAAPIKEY_KEYID}:${AUTOACCOUNT_SAAPIKEY_SECRET}"
 
 curl -s -u "$AUTH2" -H "X-Tenant-Id: $AUTOACCOUNT_TENANT_ID" "https://cloud.illum.io/api/v1/integrations" | python3 -c "
