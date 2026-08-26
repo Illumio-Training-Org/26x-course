@@ -109,10 +109,29 @@ BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
 curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
 import json, sys
-hosts = {w.get('hostname') for w in json.load(sys.stdin)}
-found = sorted(h for h in ('linux-vm', 'windows-vm') if h in hosts)
-print('Paired workloads found:', found or 'none')
-print('PASS - both VMs paired' if len(found) == 2 else 'FAIL - pair both linux-vm and windows-vm first (steps 2-3)')
+workloads = {w.get('hostname'): w for w in json.load(sys.stdin)}
+base = {'app': 'pos', 'env': 'Production', 'loc': 'lax'}
+fails = []
+for host in ('linux-vm', 'windows-vm'):
+    w = workloads.get(host)
+    if not w:
+        fails.append(host + ' not paired')
+        continue
+    labels = {l['key']: l['value'] for l in w.get('labels', [])}
+    for k, v in base.items():
+        if labels.get(k) != v:
+            fails.append(host + ' label ' + k + ' should be ' + v + ', found ' + str(labels.get(k)))
+    if host == 'linux-vm':
+        if labels.get('role') != 'web':
+            fails.append('linux-vm role label should be web, found ' + str(labels.get('role')))
+        if w.get('enforcement_mode') != 'selective':
+            fails.append('linux-vm enforcement_mode should be selective, found ' + str(w.get('enforcement_mode')))
+if fails:
+    print('FAIL')
+    for f in fails:
+        print(' - ' + f)
+else:
+    print('PASS - both VMs paired, labels correct, linux-vm role=web in Selective mode')
 "
 ```
 
