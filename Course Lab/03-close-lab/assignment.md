@@ -33,8 +33,6 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# Close Lab
-
 > [!WARNING]
 > **DO NOT CLICK NEXT UNLESS YOU WANT TO CLOSE THE LAB**
 
