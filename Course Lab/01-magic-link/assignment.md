@@ -2,7 +2,7 @@
 slug: magic-link
 id: n3ollcqorgq3
 type: challenge
-title: 01 - Illumio-Console
+title: Illumio-Console
 teaser: Access the Illumio Console
 notes:
 - type: text
@@ -55,7 +55,7 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# 01 - Illumio-Console
+# Illumio-Console
 
 Base lab test — verifying the magic link and PCE org creation work before
 real Day 1 content is added.
