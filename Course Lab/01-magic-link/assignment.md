@@ -106,6 +106,16 @@ tail -f /var/log/vensim-startup.log
 > hands off into the recurring scheduler, that loop runs silently (same
 > as upstream) — no further output here doesn't mean it's stopped.
 
+To quickly check the PCE API is responding (e.g. while investigating
+the intermittent 401 platform issue), run the below in the **cloud
+console** tab:
+
+```run
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+curl -s -o /dev/null -w "%{http_code}\n" -u "$AUTH" "$BASE/workloads?max_results=1"
+```
+
 To check everything vensim created (excluding traffic itself) by
 querying the PCE API directly, run the below in the **cloud console**
 tab:
