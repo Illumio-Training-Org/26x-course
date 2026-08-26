@@ -1,6 +1,6 @@
 slug: 26x-day1-base-lab-test
 id: fnybywvnettv
-title: '! 26.x Day 1 - Base Lab Test'
+title: '! 26.x Lab'
 description: |-
   Lab Name: 26.x BASE LAB TEST
 
@@ -25,5 +25,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "7666303749474085602"
+checksum: "6909142512674737967"
 enhanced_loading: false
