@@ -178,6 +178,23 @@ fi
 CHECKEOF
 chmod +x /usr/local/bin/check-pce-api
 
+cat > /usr/local/bin/check-cloud << 'CHECKEOF'
+#!/bin/bash
+clear
+AUTH2="${AUTOACCOUNT_SAAPIKEY_KEYID}:${AUTOACCOUNT_SAAPIKEY_SECRET}"
+curl -s -u "$AUTH2" -H "X-Tenant-Id: $AUTOACCOUNT_TENANT_ID" "https://cloud.illum.io/api/v1/integrations" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+aws = d.get('aws', [])
+if not aws:
+    print('FAIL - no AWS account onboarded yet')
+else:
+    a = aws[0]
+    print('PASS - AWS account onboarded: ' + str(a.get('name')) + ' (status: ' + str(a.get('status')) + ', security review: ' + str(a.get('srStatus')) + ')')
+"
+CHECKEOF
+chmod +x /usr/local/bin/check-cloud
+
 # ---------------------------------------
 # VENSIM TRAFFIC GENERATION
 # ---------------------------------------

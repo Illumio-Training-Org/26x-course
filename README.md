@@ -13,8 +13,9 @@ fresh and torn down after use — no state carries across sessions.
 - `Course Lab/` — the shared base lab Instruqt track (magic link, Terraform
   apply, RockyLinux + Windows VMs, k3s/CVEN, synthetic traffic) plus its own
   challenge content.
-- `Course Exam/` — empty, reserved for the course exam track (not yet
-  built).
+- `Course Exam/` — the exam track (`! 26.x Exam`), scaffolded with the
+  same shared base build plus placeholder Task challenges — content
+  for the tasks themselves is still being built out.
 
 Content source of truth: the `Foundation & Select agenda` tab of
 `26.x Structure.xlsx` (see `CX-NEW/course-structure/foundation-select-agenda-baseline.md`
@@ -87,3 +88,29 @@ showing live-looking activity throughout the lab, independent of anything
 the learner does. Everything created this way is purely additive: the
 handful of objects Illumio's platform pre-seeds on every new trial org
 (a few default labels, services, and pairing profiles) are left untouched.
+
+## APIs used for self-checks
+
+The sandbox exposes two genuinely different credential/API pairs, and
+which one to use depends on what's being checked:
+
+- **Core PCE API** (`https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID/...`)
+  — the standard Illumio segmentation API: workloads, pairing profiles,
+  labels, label groups, rulesets/rules (including nested `deny_rules`),
+  services, IP lists, container clusters, active vs. draft policy, etc.
+  Authenticated with the primary API key:
+  `api_$AUTOACCOUNT_APIKEY_ID` / `$AUTOACCOUNT_APIKEY_SECRET`. This is
+  what every `check-*` script uses except `check-cloud`.
+- **CloudSecure API** (`https://cloud.illum.io/api/v1/...`) — a
+  completely separate backend for the Cloud/AWS-onboarding module
+  (account status, onboarding/security-review state, cloud inventory).
+  **Not** reachable with the primary API key — it needs the
+  service-account credential pair instead:
+  `$AUTOACCOUNT_SAAPIKEY_KEYID` / `$AUTOACCOUNT_SAAPIKEY_SECRET`,
+  passed as Basic Auth **plus** an `X-Tenant-Id: $AUTOACCOUNT_TENANT_ID`
+  header (both required — omitting either 401s or 404s). Used by
+  `check-cloud` to confirm the AWS account is onboarded. Cloud UI
+  resources fetched by the browser (Application Discovery, Inventory)
+  live on this same backend and are not queryable from the Core PCE
+  API at all, regardless of credential — a bare `curl` against
+  `poc4.illum.io` will never see AWS-onboarded resources.

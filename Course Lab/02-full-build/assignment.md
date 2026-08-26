@@ -214,7 +214,11 @@ Development:
 check-pce-api
 ```
 
-**Check your work**: in the console, go to **Cloud → Onboarding** and confirm the account's **Onboarding Status** shows complete.
+**Check your work** (run in the **CloudCLI** tab):
+
+```
+check-cloud
+```
 
 ---
 
