@@ -351,6 +351,27 @@ Verify in the Illumio Console at **Infrastructure → Container Clusters** — c
 
 ---
 
+**Check your work** (run in the **CloudCLI** tab):
+
+```run
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+curl -s -u "$AUTH" "$BASE/container_clusters" | python3 -c "
+import json, sys
+clusters = json.load(sys.stdin)
+if not clusters:
+    print('FAIL - no container cluster found, complete step 3 first')
+else:
+    c = clusters[0]
+    if c.get('online'):
+        print('PASS - cluster ' + str(c.get('name')) + ' is online and in sync')
+    else:
+        print('FAIL - cluster ' + str(c.get('name')) + ' is not yet online, check the Helm deploy (step 6)')
+"
+```
+
+---
+
 🧩 Close Lab
 ==========
 
