@@ -214,11 +214,7 @@ Development:
 check-pce-api
 ```
 
-**TODO: full Cloud check your work** — placeholder, not yet built. The
-Core REST API docs don't cover the Cloud module, so the real endpoint
-for "AWS account onboarded" hasn't been identified yet. Once the
-platform's API-auth issue clears, inspect the Cloud Onboarding
-screen's own network calls to find it, then build this check.
+**Check your work**: in the console, go to **Cloud → Onboarding** and confirm the account's **Onboarding Status** shows complete.
 
 ---
 
