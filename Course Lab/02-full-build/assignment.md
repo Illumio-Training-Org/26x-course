@@ -229,6 +229,14 @@ Development:
 > [!IMPORTANT]
 > Ensure both deployments — Production and Development — are added before continuing.
 
+---
+
+**TODO: Check your work** — placeholder, not yet built. The Core REST
+API docs don't cover the Cloud module, so the real endpoint for "AWS
+account onboarded" hasn't been identified yet. Once the platform's
+API-auth issue clears, inspect the Cloud Onboarding screen's own
+network calls to find it, then build this check.
+
 🧩 Containers
 ==========
 
