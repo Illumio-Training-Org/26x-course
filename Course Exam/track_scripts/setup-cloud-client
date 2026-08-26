@@ -1,0 +1,132 @@
+#!/bin/bash
+set -exo
+
+echo "===== MAGIC LINK + ACCOUNT SETUP START ====="
+date
+
+# ---------------------------------------
+# Ensure required tools are present and updated
+# ---------------------------------------
+
+# update package index only
+apt-get update -y
+
+# upgrade only existing core tools (no installs)
+apt-get install --only-upgrade -y curl git
+
+
+# ---------------------------------------
+# Sanitize AUTOACCOUNT_* values
+# ---------------------------------------
+# Instruqt's autoaccount custom resource emits these as JSON-array-literal
+# strings (e.g. '["value"]') even with account_count: 1, not bare scalars.
+# AUTOACCOUNT_MAGICLINK already got this same tr -d treatment further
+# below; extend it to every other AUTOACCOUNT_* value up front so nothing
+# downstream (the PCE FQDN split, the agent variables, or the vensim
+# block) parses a value with stray brackets/quotes still in it.
+for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+           AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+           AUTOACCOUNT_SAAPIKEY_SECRET; do
+  cleaned="$(echo "${!var}" | tr -d '{}[]"')"
+  export "$var=$cleaned"
+done
+
+# Also make the cleaned values visible to any new terminal tab the
+# learner opens (e.g. the Advanced "echo $AUTOACCOUNT_APIKEY_ID" step) —
+# the container's own injected env vars are still the raw/dirty ones, so
+# override them for every future interactive shell via .bashrc.
+{
+  for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+             AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+             AUTOACCOUNT_SAAPIKEY_SECRET; do
+    printf 'export %s=%q\n' "$var" "${!var}"
+  done
+} >> /root/.bashrc
+
+# ---------------------------------------
+# Parse PCE FQDN
+# ---------------------------------------
+if [[ "$AUTOACCOUNT_PCE_FQDN" == *:* ]]; then
+  pceFqdn=${AUTOACCOUNT_PCE_FQDN%%:*}
+  pcePort=${AUTOACCOUNT_PCE_FQDN##*:}
+else
+  echo "ERROR: AUTOACCOUNT_PCE_FQDN does not contain a port."
+  exit 1
+fi
+
+# ---------------------------------------
+# Save variables for later use (Instruqt state)
+# ---------------------------------------
+agent variable set ACCOUNTID "$AUTOACCOUNT_TENANT_ID"
+agent variable set APINAME "api_${AUTOACCOUNT_APIKEY_ID}"
+agent variable set APISECRET "$AUTOACCOUNT_APIKEY_SECRET"
+agent variable set ORGID "$AUTOACCOUNT_ORG_ID"
+agent variable set PCEFQDN "$pceFqdn"
+agent variable set PCEPort "$pcePort"
+agent variable set SACLIENT "$AUTOACCOUNT_SAAPIKEY_KEYID"
+agent variable set SASECRET "$AUTOACCOUNT_SAAPIKEY_SECRET"
+
+# ---------------------------------------
+# MAGIC LINK SETUP
+# ---------------------------------------
+MAGIC_LINK=$(echo "${AUTOACCOUNT_MAGICLINK}" | tr -d '{}[]"')
+
+echo "Generated MAGIC LINK:"
+echo "$MAGIC_LINK"
+
+# ---------------------------------------
+# Save MAGIC LINK (Instruqt state)
+# ---------------------------------------
+agent variable set MAGICURL "$MAGIC_LINK"
+
+# ---------------------------------------
+# Render tile (gomplate) - unchanged source repo, per Nathan's instruction
+# ---------------------------------------
+git clone https://github.com/jdschmitz15/illumio-instruqt-terraform-template.git
+AUTOACCOUNT_MAGICLINK="$MAGIC_LINK"
+gomplate -f ~/illumio-instruqt-terraform-template/index.html.tmpl -o /var/www/html/index.html
+date
+
+# ---------------------------------------
+# VENSIM TRAFFIC GENERATION
+# ---------------------------------------
+STARTUP_REPO_DIR=~/manual-instruqt-startup
+VENSIM_FILES_DIR=~/vensim_files
+
+git clone https://github.com/Illumio-Training-Org/manual-instruqt-startup "$STARTUP_REPO_DIR"
+git clone https://github.com/Illumio-Training-Org/vensim_files.git "$VENSIM_FILES_DIR"
+
+mkdir -p "$STARTUP_REPO_DIR/vensim-templates"
+rm -rf "$STARTUP_REPO_DIR/vensim-templates/standard-demo"
+ln -s "$VENSIM_FILES_DIR/files" "$STARTUP_REPO_DIR/vensim-templates/standard-demo"
+
+cp -f "$VENSIM_FILES_DIR/workloader" "$STARTUP_REPO_DIR/workloader"
+cp -f "$VENSIM_FILES_DIR/vensim" "$STARTUP_REPO_DIR/vensim"
+chmod +x "$STARTUP_REPO_DIR/workloader" "$STARTUP_REPO_DIR/vensim" \
+         "$STARTUP_REPO_DIR/vensimscheduler.sh"
+
+# Call newstartup.sh directly (unmodified) rather than maintaining our
+# own copy of its steps — deliberately matches uc-orgs-5-vs's own
+# behavior now, deletes included: any pre-existing pairing profiles/
+# labels/services on the org get wiped before vensim's own content goes
+# in, so the org ends up with vensim's content only, not vensim's
+# content layered on top of the platform's defaults. Calling the file
+# directly (rather than hand-copying its steps) also means we can't
+# silently drift from upstream if it changes later. newstartup.sh
+# already signals /tmp/startup.done itself at its own end; we wait for
+# it to finish (no backgrounding here) before handing off to
+# vensimscheduler.sh, avoiding the race in uc-orgs-5-vs's own script
+# (which launches newstartup.sh and vensimscheduler.sh concurrently and
+# touches /tmp/startup.done itself immediately, before newstartup.sh has
+# actually finished).
+nohup bash -c "
+  cd \"$STARTUP_REPO_DIR\"
+
+  bash \"$STARTUP_REPO_DIR/newstartup.sh\" -f \"$pceFqdn\" -P \"$pcePort\" \
+    -u \"api_${AUTOACCOUNT_APIKEY_ID}\" -s \"$AUTOACCOUNT_APIKEY_SECRET\" \
+    -o \"$AUTOACCOUNT_ORG_ID\"
+
+  exec bash \"$STARTUP_REPO_DIR/vensimscheduler.sh\"
+" > /var/log/vensim-startup.log 2>&1 < /dev/null &
+
+echo "===== MAGIC LINK + ACCOUNT SETUP END ====="
