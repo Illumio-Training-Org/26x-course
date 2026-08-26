@@ -3,7 +3,7 @@ slug: task-5
 id: hlo8biycjafp
 type: challenge
 title: Task 5
-teaser: TODO - objective not yet decided
+teaser: AWS Onboarding
 tabs:
 - id: te4cgq3i08op
   title: Linux
@@ -35,10 +35,7 @@ enhanced_loading: null
 ---
 # Task 5
 
-**TODO**: objective for this task not yet decided. No step-by-step
-instructions — state the goal only, let the student work out how to
-achieve it. Graded automatically by `check-cloud-client` in this
-challenge's directory.
+Onboard the AWS account to Illumio Cloud.
 
 ---
 

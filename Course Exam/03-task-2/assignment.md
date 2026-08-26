@@ -3,7 +3,7 @@ slug: task-2
 id: wtmcjvb43h6u
 type: challenge
 title: Task 2
-teaser: TODO - objective not yet decided
+teaser: Container Onboarding
 tabs:
 - id: ybjh70rq7udw
   title: Linux
@@ -35,10 +35,7 @@ enhanced_loading: null
 ---
 # Task 2
 
-**TODO**: objective for this task not yet decided. No step-by-step
-instructions — state the goal only, let the student work out how to
-achieve it. Graded automatically by `check-cloud-client` in this
-challenge's directory.
+Onboard the k3s node as a Container VEN (CVEN).
 
 ---
 

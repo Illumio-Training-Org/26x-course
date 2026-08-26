@@ -1,11 +1,18 @@
 #!/bin/sh
 #
 # This script runs when the platform checks the challenge.
-# The platform determines success using this script's exit code.
 # Exit 0 = pass, non-zero = fail.
 #
-# TODO: not yet implemented - task objective not yet decided.
 
-echo "TODO: check not yet implemented for this task"
+AUTH2="${AUTOACCOUNT_SAAPIKEY_KEYID}:${AUTOACCOUNT_SAAPIKEY_SECRET}"
 
-exit 1
+curl -s -u "$AUTH2" -H "X-Tenant-Id: $AUTOACCOUNT_TENANT_ID" "https://cloud.illum.io/api/v1/integrations" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+aws = d.get('aws', [])
+if not aws:
+    print('FAIL - no AWS account onboarded yet')
+    sys.exit(1)
+print('PASS - AWS account onboarded: ' + str(aws[0].get('name')))
+"
+exit $?

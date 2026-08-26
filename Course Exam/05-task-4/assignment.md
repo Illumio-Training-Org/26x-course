@@ -3,7 +3,7 @@ slug: task-4
 id: ytg8yjkbw95u
 type: challenge
 title: Task 4
-teaser: TODO - objective not yet decided
+teaser: Policy Creation and Provisioning
 tabs:
 - id: onrdcgevudrx
   title: Linux
@@ -35,10 +35,9 @@ enhanced_loading: null
 ---
 # Task 4
 
-**TODO**: objective for this task not yet decided. No step-by-step
-instructions — state the goal only, let the student work out how to
-achieve it. Graded automatically by `check-cloud-client` in this
-challenge's directory.
+Create a ruleset named `Task4-Ruleset` containing a deny rule:
+Production/ca to Production/lax on tcp/1234. Then provision the
+ruleset.
 
 ---
 

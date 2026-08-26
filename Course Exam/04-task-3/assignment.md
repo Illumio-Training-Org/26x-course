@@ -3,7 +3,7 @@ slug: task-3
 id: gdmcvr9kaqvo
 type: challenge
 title: Task 3
-teaser: TODO - objective not yet decided
+teaser: Labels, Label Groups, and IP Lists
 tabs:
 - id: cv67fbjwofaw
   title: Linux
@@ -35,10 +35,9 @@ enhanced_loading: null
 ---
 # Task 3
 
-**TODO**: objective for this task not yet decided. No step-by-step
-instructions — state the goal only, let the student work out how to
-achieve it. Graded automatically by `check-cloud-client` in this
-challenge's directory.
+- Create a new **Role** label with the value `Task3Role`.
+- Create a Label Group named `Task3-LabelGroup` containing at least one label.
+- Create an IP List named `Task3-IPList` containing `10.30.30.0/24`.
 
 ---
 

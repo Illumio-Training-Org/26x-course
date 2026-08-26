@@ -3,7 +3,7 @@ slug: task-1
 id: vwuxo5xsfqrk
 type: challenge
 title: Task 1
-teaser: TODO - objective not yet decided
+teaser: VEN Onboarding
 tabs:
 - id: u6bxy5hcue7l
   title: Linux
@@ -35,10 +35,7 @@ enhanced_loading: null
 ---
 # Task 1
 
-**TODO**: objective for this task not yet decided. No step-by-step
-instructions — state the goal only, let the student work out how to
-achieve it. Graded automatically by `check-cloud-client` in this
-challenge's directory.
+Pair one of the workload VMs (Linux or Windows) as a VEN.
 
 ---
 

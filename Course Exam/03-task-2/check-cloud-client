@@ -1,11 +1,19 @@
 #!/bin/sh
 #
 # This script runs when the platform checks the challenge.
-# The platform determines success using this script's exit code.
 # Exit 0 = pass, non-zero = fail.
 #
-# TODO: not yet implemented - task objective not yet decided.
 
-echo "TODO: check not yet implemented for this task"
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
 
-exit 1
+curl -s -u "$AUTH" "$BASE/container_clusters" | python3 -c "
+import json, sys
+clusters = json.load(sys.stdin)
+online = [c for c in clusters if c.get('online')]
+if not online:
+    print('FAIL - no container cluster online yet')
+    sys.exit(1)
+print('PASS - cluster online: ' + str(online[0].get('name')))
+"
+exit $?
