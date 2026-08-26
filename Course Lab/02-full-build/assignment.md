@@ -104,7 +104,7 @@ Try a few of the commands shown, e.g. `version`, `status`, `check-env`, `connect
 
 **Check your work** (run in the **CloudCLI** tab):
 
-```run
+```
 check-workloads
 ```
 
@@ -210,7 +210,7 @@ Development:
 
 **Check the PCE API is responding** (run in the **CloudCLI** tab):
 
-```run
+```
 check-pce-api
 ```
 
@@ -354,7 +354,7 @@ Verify in the Illumio Console at **Infrastructure → Container Clusters** — c
 
 **Check your work** (run in the **CloudCLI** tab):
 
-```run
+```
 check-containers
 ```
 
