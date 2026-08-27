@@ -25,7 +25,7 @@ tabs:
   hostname: cloud-client
   port: 80
 - id: evarmjetmnns
-  title: k3s
+  title: k3s console
   type: terminal
   hostname: host
   cmd: bash
@@ -222,7 +222,7 @@ Development:
 
 Onboard the Kubernetes Node.
 
-**1) Select the k3s node, check it is ready for onboarding**
+**1) In the k3s console tab, check the node is ready for onboarding**
 
 ```run
 kubectl get nodes
