@@ -44,14 +44,13 @@ Onboard the Linux and Windows VM.
 
 **Servers and Endpoints → Pairing Profiles → Add**:
 
-- Name: `PP-VEN-LAX`
+- Name: `VEN-Pairing`
 - Enforcement: Idle
 - Node Type: Server VEN
 - Initial VEN Version: Current Default
-- Labels: `pos`, `Production`, `lax` (leave **Role** blank — set via CLI override in step 3)
+- Labels: `web`, `pos`, `Production`, `lax`
 - Uses Per Key: Unlimited Uses
 - Key Lifespan: 6 Hours
-- Command Line Overrides: Enforcement **Unlocked**, **Role Label can be set**
 
 **Save → Generate Key**
 
@@ -63,15 +62,9 @@ Copy the Windows Pairing Script from the profile. Run it in the **Windows** tab.
 
 ---
 
-**3) Pair the Linux Workload with a Custom Label**
+**3) Pair the Linux Workload**
 
-Copy the Linux Pairing Script. Paste it into the **Linux** tab — don't press Enter yet. Append:
-
-```
---role web --enforcement_mode selective
-```
-
-Then run it. Verify the VEN pairs with the **web** role in **Selective** mode.
+Copy the Linux Pairing Script from the profile. Run it in the **Linux** tab. Verify the VEN pairs in Idle mode with the profile labels applied.
 
 ---
 
