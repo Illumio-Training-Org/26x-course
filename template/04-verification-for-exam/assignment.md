@@ -1,9 +1,11 @@
 ---
 slug: verification-for-exam
+id: 0muzhqpkopac
 type: challenge
 title: Verification for Exam
 tabs:
-- title: terminal
+- id: 6jqfq2muazwe
+  title: terminal
   type: terminal
   hostname: rockyvm
   cmd: /bin/bash
