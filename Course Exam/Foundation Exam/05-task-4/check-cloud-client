@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+
+# setup-cloud-client writes cleaned AUTOACCOUNT_* values here since this
+# script's execution context doesn't source .bashrc (interactive-only).
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+workloads = get('/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')
+wl = next((w for w in workloads if w.get('hostname') == 'linux-vm'), None)
+if not wl:
+    print('linux-vm workload not found')
+    sys.exit(1)
+
+wl_labels = {l.get('key'): (l.get('value') or '').lower() for l in (wl.get('labels') or [])}
+required = ('app', 'env', 'loc')
+if not all(wl_labels.get(k) for k in required):
+    print('linux-vm needs Application, Environment, and Location labels before this can be checked (see Task 2)')
+    sys.exit(1)
+
+def resolve(entries):
+    out = {}
+    for e in entries:
+        href = e.get('label', {}).get('href')
+        if not href:
+            continue
+        lbl = get(href.replace('/api/v2', ''))
+        out[lbl['key']] = (lbl.get('value') or '').lower()
+    return out
+
+rulesets = []
+for policy in ('draft', 'active'):
+    rulesets += get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/' + policy + '/rule_sets')
+
+for rs in rulesets:
+    for dr in rs.get('deny_rules', []):
+        providers = resolve(dr.get('providers', []))
+        if all(providers.get(k) == wl_labels[k] for k in required):
+            print('Found a deny rule targeting linux-vm by Application/Environment/Location in ruleset ' + str(rs.get('name')))
+            sys.exit(0)
+
+print('No deny rule found whose providers match linux-vm on Application, Environment, and Location')
+sys.exit(1)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

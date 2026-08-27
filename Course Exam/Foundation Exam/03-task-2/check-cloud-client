@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+
+# setup-cloud-client writes cleaned AUTOACCOUNT_* values here since this
+# script's execution context doesn't source .bashrc (interactive-only).
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+
+result=$(curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
+import json, sys
+ws = {w.get('hostname'): w for w in json.load(sys.stdin)}
+wl = ws.get('linux-vm')
+if not wl:
+    print('linux-vm workload not found')
+    sys.exit(1)
+keys = {l.get('key') for l in (wl.get('labels') or []) if l.get('value')}
+required = {'role', 'app', 'env', 'loc'}
+missing = required - keys
+if missing:
+    print('linux-vm is missing labels: ' + ', '.join(sorted(missing)))
+    sys.exit(1)
+print('linux-vm has Role, Application, Environment, and Location labels')
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

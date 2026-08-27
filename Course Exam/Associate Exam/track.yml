@@ -1,0 +1,29 @@
+slug: 26x-associate-exam
+id: k49aezgaloxu
+title: '! 26.x Associate Exam'
+description: |-
+  Lab Name: 26.x ASSOCIATE EXAM
+
+  Outcome:
+  In this exam you will complete 5 hands-on tasks against the shared
+  26.x base lab environment (magic link, AWS Terraform build,
+  RockyLinux/Windows VMs, k3s/CVEN node), each graded automatically by
+  a check script. 4 of 5 correct is a pass.
+icon: ./assets/logo.png
+tags:
+- ilt
+owner: illumio-training
+developers:
+- nathan.mitchell@illumio.com
+show_timer: true
+idle_timeout: 3600
+timelimit: 2700
+lab_config:
+  sidebar_enabled: true
+  feedback_recap_enabled: true
+  feedback_tab_enabled: false
+  loadingMessages: true
+  override_challenge_layout: false
+  hideStopButton: false
+checksum: "11635987507497106023"
+enhanced_loading: false

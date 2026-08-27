@@ -1,0 +1,87 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+# NOTE (unproven pattern - build session 2026-08-27): this checks the
+# PCE's /permissions endpoint for a scoped (non-global) role granted to
+# a user, where the scope's labels match linux-vm's own Application,
+# Environment, and Location labels. This has NOT been live-tested
+# against a real sandbox yet - the exact /permissions and scope-label
+# response shape is inferred from documented API conventions, not
+# confirmed live. Verify against a live sandbox before trusting this
+# check in a real exam session, and fix the field names below if the
+# real response shape differs.
+
+# setup-cloud-client writes cleaned AUTOACCOUNT_* values here since this
+# script's execution context doesn't source .bashrc (interactive-only).
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    try:
+        return json.loads(out)
+    except Exception:
+        return None
+
+workloads = get('/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')
+wl = next((w for w in (workloads or []) if w.get('hostname') == 'linux-vm'), None)
+if not wl:
+    print('linux-vm workload not found')
+    sys.exit(1)
+
+wl_labels = {l.get('key'): (l.get('value') or '').lower() for l in (wl.get('labels') or [])}
+required = ('app', 'env', 'loc')
+if not all(wl_labels.get(k) for k in required):
+    print('linux-vm needs Application, Environment, and Location labels before this can be checked (see Task 2)')
+    sys.exit(1)
+
+perms = get('/orgs/$AUTOACCOUNT_ORG_ID/permissions')
+if perms is None:
+    print('Could not read /permissions - create a scoped role assignment for a user')
+    sys.exit(1)
+
+def resolve(href):
+    lbl = get(href.replace('/api/v2', ''))
+    if not lbl:
+        return None
+    return lbl.get('key'), (lbl.get('value') or '').lower()
+
+for p in perms:
+    principal = p.get('auth_security_principal') or {}
+    if principal.get('type') != 'user':
+        continue
+    scope = p.get('scope') or []
+    if not scope:
+        continue  # empty scope = org-wide, not what we want
+    matched = {}
+    for group in scope:
+        for entry in group:
+            href = (entry.get('label') or {}).get('href')
+            if not href:
+                continue
+            kv = resolve(href)
+            if kv:
+                matched[kv[0]] = kv[1]
+    if all(matched.get(k) == wl_labels[k] for k in required):
+        print('Found a user with a role scoped to linux-vm\'s Application/Environment/Location labels')
+        sys.exit(0)
+
+print('No user found with a role scoped specifically to linux-vm\'s Application, Environment, and Location labels')
+sys.exit(1)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0
