@@ -11,13 +11,19 @@
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
 
-curl -s -u "$AUTH" "$BASE/container_clusters" | python3 -c "
+result=$(curl -s -u "$AUTH" "$BASE/container_clusters" | python3 -c "
 import json, sys
 clusters = json.load(sys.stdin)
 online = [c for c in clusters if c.get('online')]
 if not online:
-    print('FAIL - no container cluster online yet')
+    print('No container cluster is online yet - onboard the k3s node as a CVEN')
     sys.exit(1)
-print('PASS - cluster online: ' + str(online[0].get('name')))
-"
-exit $?
+print('cluster online: ' + str(online[0].get('name')))
+")
+status=$?
+echo "$result"
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+exit 0

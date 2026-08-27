@@ -19,7 +19,7 @@ d = json.load(sys.stdin)
 found = [x for x in d if x.get('key') == 'role' and (x.get('value') or '').lower() == 'task3role']
 print('1' if found else '0')
 ")
-[ "$label_ok" = "0" ] && fails="$fails\n - Role label Task3Role not found"
+[ "$label_ok" = "0" ] && fails="${fails}Role label Task3Role not found. "
 
 lg_ok=$(curl -s -u "$AUTH" "$BASE/sec_policy/draft/label_groups" | python3 -c "
 import json, sys
@@ -27,7 +27,7 @@ d = json.load(sys.stdin)
 found = [x for x in d if (x.get('name') or '').lower() == 'task3-labelgroup' and x.get('labels')]
 print('1' if found else '0')
 ")
-[ "$lg_ok" = "0" ] && fails="$fails\n - Task3-LabelGroup not found or has no labels"
+[ "$lg_ok" = "0" ] && fails="${fails}Task3-LabelGroup not found or has no labels. "
 
 ip_ok=$(curl -s -u "$AUTH" "$BASE/sec_policy/draft/ip_lists" | python3 -c "
 import json, sys
@@ -36,10 +36,11 @@ found = [x for x in d if (x.get('name') or '').lower() == 'task3-iplist']
 ok = found and any(r.get('from_ip') == '10.30.30.0/24' for r in found[0].get('ip_ranges', []))
 print('1' if ok else '0')
 ")
-[ "$ip_ok" = "0" ] && fails="$fails\n - Task3-IPList not found or missing 10.30.30.0/24"
+[ "$ip_ok" = "0" ] && fails="${fails}Task3-IPList not found or missing 10.30.30.0/24. "
 
 if [ -n "$fails" ]; then
-  printf "FAIL$fails\n"
+  echo "FAIL: $fails"
+  fail-message "$fails"
   exit 1
 fi
 echo "PASS - label, label group, and IP list all found"

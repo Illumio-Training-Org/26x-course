@@ -11,13 +11,19 @@
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
 
-curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
+result=$(curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
 import json, sys
 ws = {w.get('hostname'): w for w in json.load(sys.stdin)}
 paired = [h for h in ('linux-vm', 'windows-vm') if ws.get(h) and ws[h].get('ven')]
 if not paired:
-    print('FAIL - no workload paired as a VEN yet')
+    print('No workload paired as a VEN yet - pair linux-vm or windows-vm')
     sys.exit(1)
-print('PASS - paired: ' + ', '.join(paired))
-"
-exit $?
+print('paired: ' + ', '.join(paired))
+")
+status=$?
+echo "$result"
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+exit 0

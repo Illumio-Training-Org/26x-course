@@ -12,18 +12,18 @@ BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
 FQDN="$AUTOACCOUNT_PCE_FQDN"
 
-curl -s -u "$AUTH" "$BASE/sec_policy/active/rule_sets" | python3 -c "
+result=$(curl -s -u "$AUTH" "$BASE/sec_policy/active/rule_sets" | python3 -c "
 import json, sys, subprocess
 
 d = json.load(sys.stdin)
 rs = [x for x in d if (x.get('name') or '').lower() == 'task4-ruleset']
 if not rs:
-    print('FAIL - Task4-Ruleset not found in provisioned (active) policy - did you provision it?')
+    print('Task4-Ruleset not found in provisioned (active) policy - create it and provision it')
     sys.exit(1)
 
 drs = rs[0].get('deny_rules', [])
 if len(drs) != 1:
-    print('FAIL - expected 1 deny rule, found ' + str(len(drs)))
+    print('Task4-Ruleset found but expected 1 deny rule, found ' + str(len(drs)))
     sys.exit(1)
 
 dr = drs[0]
@@ -52,10 +52,14 @@ if not (consumers.get('env') == 'Production' and consumers.get('loc') == 'ca'):
     fails.append('consumers should be env=Production, loc=ca, found ' + str(consumers))
 
 if fails:
-    print('FAIL')
-    for f in fails:
-        print(' - ' + f)
+    print('; '.join(fails))
     sys.exit(1)
-print('PASS - Task4-Ruleset provisioned and correctly configured')
-"
-exit $?
+print('Task4-Ruleset provisioned and correctly configured')
+")
+status=$?
+echo "$result"
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+exit 0
