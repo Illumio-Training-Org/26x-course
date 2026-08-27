@@ -1,0 +1,47 @@
+slug: template-for-cx
+id: h4xmabcokcrx
+title: '! 000-Template for CX'
+description: |-
+  Lab Name: FOLLOW CONVENTION
+
+  Outcome:
+  In this lab you will successfully [outcome — e.g. pair the Illumio VEN to the Platform]
+
+  BEST PRACTICE:
+  - Ensure context defined
+  - Outcome driven
+  - Simplify tracks for maintenance
+  - Tracks must be robust (Github)
+  - Automate lab testing (track-test)
+  - Clear feedback when checking (fail-message)
+  - Provide student with a method for checking their work
+  - Provide a method for exam testing
+  - Right-size VM/container memory — don't default to the largest preset.
+    Reference points from the 26.x base lab:
+    - cloud-client (container): 2048MB
+    - linux-vm: 4096MB
+    - windows-vm: 4096MB (down from 8192MB default — matches Microsoft's
+      own "lightly loaded Server Core" baseline; still being verified)
+    - k3s/Cilium host: 2048MB (down from 8192MB default — aggressive,
+      near Cilium's own agent limit; still being verified)
+icon: ./assets/logo.png
+tags:
+- ilt
+owner: illumio-training
+developers:
+- nathan.mitchell@illumio.com
+show_timer: true
+skipping_enabled: true
+idle_timeout: 1800
+timelimit: 5400
+sandbox_preset: base-image
+lab_config:
+  extend_ttl: 600
+  sidebar_enabled: true
+  feedback_recap_enabled: true
+  feedback_tab_enabled: false
+  loadingMessages: true
+  override_challenge_layout: false
+  hideStopButton: false
+checksum: "17768091344914694399"
+enhanced_loading: false

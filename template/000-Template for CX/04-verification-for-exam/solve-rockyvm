@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# This script runs when the learner clicks "Skip" (skipping_enabled: true
+# at the track level requires every checked challenge to have one) - it
+# should bring the sandbox to the same state as if the learner had
+# actually completed the challenge themselves.
+#
+
+touch /root/verified.txt

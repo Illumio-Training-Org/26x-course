@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# The platform determines success using this script's exit code:
+# exit 0 = pass, non-zero = fail.
+#
+# fail-message writes its text to stdout, prefixed with FAIL: - this
+# is what Instruqt actually shows the learner in the failure banner.
+# Plain echo/print output is NOT shown to the learner on failure.
+#
+
+if [ -f /root/verified.txt ]; then
+  echo "Found /root/verified.txt"
+  exit 0
+else
+  fail-message "There is no file named /root/verified.txt - did you create it? Run: touch /root/verified.txt"
+  exit 1
+fi
