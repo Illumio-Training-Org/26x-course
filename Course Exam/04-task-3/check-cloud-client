@@ -39,7 +39,6 @@ print('1' if ok else '0')
 [ "$ip_ok" = "0" ] && fails="${fails}Task3-IPList not found or missing 10.30.30.0/24. "
 
 if [ -n "$fails" ]; then
-  echo "FAIL: $fails"
   fail-message "$fails"
   exit 1
 fi
