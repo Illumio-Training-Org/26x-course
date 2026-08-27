@@ -13,9 +13,13 @@ fresh and torn down after use — no state carries across sessions.
 - `Course Lab/` — the shared base lab Instruqt track (magic link, Terraform
   apply, RockyLinux + Windows VMs, k3s/CVEN, synthetic traffic) plus its own
   challenge content.
-- `Course Exam/` — the exam track (`! 26.x Exam`), scaffolded with the
-  same shared base build plus placeholder Task challenges — content
-  for the tasks themselves is still being built out.
+- `Course Exam/` — the exam track (`! 26.x Exam`), sharing the same
+  base build as `Course Lab/`, with 5 auto-graded Tasks (VEN
+  onboarding, container onboarding, labels/label groups/IP lists,
+  policy creation + provisioning, AWS onboarding).
+- `template/` — the org's reusable `! 000-Template for CX` scaffold
+  (see its own `README.md`/`CLAUDE.md`) — the starting point for any
+  new CX lab, not specific to the 26.x course itself.
 
 Content source of truth: the `Foundation & Select agenda` tab of
 `26.x Structure.xlsx` (see `CX-NEW/course-structure/foundation-select-agenda-baseline.md`
