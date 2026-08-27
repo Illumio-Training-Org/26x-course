@@ -23,7 +23,12 @@ fresh and torn down after use — no state carries across sessions.
   - `Associate Exam/`, `Foundation Exam/`, `Specialist Exam/`,
     `Select Exam/` — the 4 real certification exams (`! 26.x Associate
     Exam`, etc.), matching the actual scored exam definitions in the
-    `Foundation & Select agenda` spreadsheet tab. Being built out.
+    `Foundation & Select agenda` spreadsheet tab. Each has the shared
+    base build (magic link, Terraform AWS, Linux/Windows VMs, k3s/CVEN)
+    and its own spreadsheet-correct `timelimit`. `Foundation Exam/` has
+    its full 10-task exam content built and pushed; `Associate Exam/`,
+    `Specialist Exam/`, `Select Exam/` currently ship base infra plus
+    the magic-link challenge only — their task content isn't built yet.
 - `template/` — the org's reusable `! 000-Template for CX` scaffold
   (see its own `README.md`/`CLAUDE.md`) — the starting point for any
   new CX lab, not specific to the 26.x course itself.
