@@ -2,7 +2,7 @@
 slug: magic-link
 id: debzljxkixd0
 type: challenge
-title: 01 - Magic Link
+title: Illumio-Console
 teaser: Access the Illumio Console
 notes:
 - type: text
@@ -54,7 +54,7 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# 01 - Magic Link
+# Illumio-Console
 
 🧩 Task 01 - Accessing the Illumio Platform
 ==========

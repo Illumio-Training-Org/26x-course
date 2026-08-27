@@ -6,7 +6,7 @@ description: |-
 
   Outcome:
   In this exam you will complete 5 hands-on tasks against the shared
-  26.x base lab environment (magic link, AWS Terraform build,
+  26.x base lab environment (Illumio Console access, AWS Terraform build,
   RockyLinux/Windows VMs, k3s/CVEN node), each graded automatically by
   a check script. 4 of 5 correct is a pass.
 icon: ./assets/logo.png
@@ -25,5 +25,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "11635987507497106023"
+checksum: "10869784663892895322"
 enhanced_loading: false

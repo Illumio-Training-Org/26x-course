@@ -57,9 +57,6 @@ enhanced_loading: null
 ---
 # Illumio-Console
 
-Base lab test — verifying the magic link and PCE org creation work before
-real Day 1 content is added.
-
 🧩 Task 01 - Accessing the Illumio Platform
 ==========
 
