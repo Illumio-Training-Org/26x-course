@@ -13,10 +13,17 @@ fresh and torn down after use — no state carries across sessions.
 - `Course Lab/` — the shared base lab Instruqt track (magic link, Terraform
   apply, RockyLinux + Windows VMs, k3s/CVEN, synthetic traffic) plus its own
   challenge content.
-- `Course Exam/` — the exam track (`! 26.x Exam`), sharing the same
-  base build as `Course Lab/`, with 5 auto-graded Tasks (VEN
-  onboarding, container onboarding, labels/label groups/IP lists,
-  policy creation + provisioning, AWS onboarding).
+- `Course Exam/` — parent folder for all exam tracks, one subfolder
+  per Instruqt track:
+  - `Test Exam/` — `! 26.x Test Exam` (was `! 26.x Exam`), the
+    original proof-of-concept exam track (5 generic auto-graded
+    Tasks: VEN onboarding, container onboarding, labels/label
+    groups/IP lists, policy creation + provisioning, AWS onboarding).
+    Kept as a demo/practice lab, not a real certification exam.
+  - `Associate Exam/`, `Foundation Exam/`, `Specialist Exam/`,
+    `Select Exam/` — the 4 real certification exams (`! 26.x Associate
+    Exam`, etc.), matching the actual scored exam definitions in the
+    `Foundation & Select agenda` spreadsheet tab. Being built out.
 - `template/` — the org's reusable `! 000-Template for CX` scaffold
   (see its own `README.md`/`CLAUDE.md`) — the starting point for any
   new CX lab, not specific to the 26.x course itself.
