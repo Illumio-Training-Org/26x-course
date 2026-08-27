@@ -149,6 +149,20 @@ Type of Integration: **Create IAM Roles on AWS**.
 
 ---
 
+**Check the PCE API is responding** (run in the **CloudCLI** tab):
+
+```
+check-pce-api
+```
+
+**Check your work** (run in the **CloudCLI** tab):
+
+```
+check-cloud
+```
+
+---
+
 **3) Security Review**
 
 **Cloud → Security Review → Review**. Select the account → **Approve Security Review → Approve**. Back at **Cloud → Onboarding**, enforcement now shows **Yes** (refresh if needed).
@@ -198,20 +212,6 @@ Development:
 
 > [!IMPORTANT]
 > Ensure both deployments — Production and Development — are added before continuing.
-
----
-
-**Check the PCE API is responding** (run in the **CloudCLI** tab):
-
-```
-check-pce-api
-```
-
-**Check your work** (run in the **CloudCLI** tab):
-
-```
-check-cloud
-```
 
 ---
 
