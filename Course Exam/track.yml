@@ -1,6 +1,6 @@
 slug: 26x-exam-test
 id: l8vxilxdxhzw
-title: '! 26.x Exam'
+title: '! 26.x Test Exam'
 description: |-
   Lab Name: 26.x EXAM TEST
 
@@ -25,5 +25,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "9293039294478695574"
+checksum: "7360910403402619581"
 enhanced_loading: false
