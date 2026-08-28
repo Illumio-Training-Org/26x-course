@@ -67,8 +67,6 @@ enhanced_loading: null
 
 Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]])
 
-**2 )** Once logged in, **exit Demo Mode**
+**2 )** Verify the Illumio Console dashboard is visible
 
-**3 )** Verify the Illumio Console dashboard is visible
-
-**4 )** Welcome to your **26.x Foundation Exam** — you have **75 minutes (1 hour 15)** to complete it. Once you're logged into the Console, return to this lab window and press **NEXT** to begin. Good luck!
+**3 )** Welcome to your **26.x Foundation Exam** — you have **75 minutes (1 hour 15)** to complete it. Once you're logged into the Console, return to this lab window and press **NEXT** to begin. Good luck!
