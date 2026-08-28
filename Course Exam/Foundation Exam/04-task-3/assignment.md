@@ -10,7 +10,7 @@ answers:
 - Full
 - Visibility Only
 solution:
-- 0
+- 3
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
