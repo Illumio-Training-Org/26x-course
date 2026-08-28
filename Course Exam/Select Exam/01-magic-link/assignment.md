@@ -69,7 +69,3 @@ Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostnam
 **3 )** Verify the Illumio Console dashboard is visible
 
 **4 )** Return to this lab window and press **NEXT**
-
----
-
-**Lab Complete**

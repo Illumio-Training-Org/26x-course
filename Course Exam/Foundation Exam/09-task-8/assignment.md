@@ -36,7 +36,3 @@ enhanced_loading: null
 # Task 8
 
 Take the `linux-vm` workload to Full enforcement.
-
----
-
-**Lab Complete**

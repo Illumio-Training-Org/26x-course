@@ -38,7 +38,3 @@ enhanced_loading: null
 Create a ruleset named `Task4-Ruleset` containing a deny rule:
 Production/ca to Production/lax on tcp/1234. Then provision the
 ruleset.
-
----
-
-**Lab Complete**

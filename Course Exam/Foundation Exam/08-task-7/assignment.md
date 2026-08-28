@@ -37,7 +37,3 @@ enhanced_loading: null
 
 Create a user and assign them the **Ruleset Manager** role, scoped to
 Environment: `Production`, Location: `ca` — not the whole organization.
-
----
-
-**Lab Complete**

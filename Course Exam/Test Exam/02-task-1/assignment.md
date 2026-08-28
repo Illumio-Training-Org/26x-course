@@ -36,7 +36,3 @@ enhanced_loading: null
 # Task 1
 
 Pair one of the workload VMs (Linux or Windows) as a VEN.
-
----
-
-**Lab Complete**

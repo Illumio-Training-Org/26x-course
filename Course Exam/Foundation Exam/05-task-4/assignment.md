@@ -42,7 +42,3 @@ assigned to `linux-vm` in Task 2.
 
 > [!NOTE]
 > Leave the ruleset in draft — do not provision it for this task.
-
----
-
-**Lab Complete**

@@ -41,7 +41,3 @@ Label the `linux-vm` workload with 4 labels:
 - Application: `ordering`
 - Environment: `Production`
 - Location: `ca`
-
----
-
-**Lab Complete**

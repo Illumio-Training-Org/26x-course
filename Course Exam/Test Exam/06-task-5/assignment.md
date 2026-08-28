@@ -36,7 +36,3 @@ enhanced_loading: null
 # Task 5
 
 Onboard the AWS account to Illumio Cloud.
-
----
-
-**Lab Complete**

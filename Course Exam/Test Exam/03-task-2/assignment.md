@@ -87,7 +87,3 @@ Deploy with Helm:
 ```run
 helm install illumio -f illumio-values.yaml oci://quay.io/illumio/illumio --namespace illumio-system --create-namespace --version 5.6.1
 ```
-
----
-
-**Lab Complete**

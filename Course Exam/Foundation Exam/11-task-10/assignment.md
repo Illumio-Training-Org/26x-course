@@ -41,7 +41,3 @@ Navigate the Cloud map to show the AWS instance you onboarded in Task 9.
 > This step is not automatically graded — it isn't possible to check map
 > navigation state from the API. Once you've found the instance on the
 > map, click **Next** to finish the exam.
-
----
-
-**Lab Complete**

@@ -37,7 +37,3 @@ enhanced_loading: null
 
 A rogue Role label has been planted somewhere in your organization.
 Find it and delete it.
-
----
-
-**Lab Complete**

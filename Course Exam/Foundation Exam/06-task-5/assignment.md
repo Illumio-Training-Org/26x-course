@@ -36,7 +36,3 @@ enhanced_loading: null
 # Task 5
 
 Set the `linux-vm` workload's enforcement to Selective mode.
-
----
-
-**Lab Complete**

@@ -38,7 +38,3 @@ enhanced_loading: null
 - Create a new **Role** label with the value `Task3Role`.
 - Create a Label Group named `Task3-LabelGroup` containing at least one label.
 - Create an IP List named `Task3-IPList` containing `10.30.30.0/24`.
-
----
-
-**Lab Complete**
