@@ -16,6 +16,7 @@ owner: illumio-training
 developers:
 - nathan.mitchell@illumio.com
 show_timer: true
+skipping_enabled: true
 idle_timeout: 3600
 timelimit: 4500
 lab_config:
@@ -25,5 +26,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "7777946298100434966"
+checksum: "1097739129047118090"
 enhanced_loading: false

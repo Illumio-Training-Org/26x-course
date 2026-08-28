@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Runs when the learner clicks Skip. Best-effort: sets linux-vm to
+# Full enforcement. No-ops if linux-vm hasn't been paired yet.
+
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+
+wl_href=$(curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
+import json, sys
+ws = {w.get('hostname'): w for w in json.load(sys.stdin)}
+wl = ws.get('linux-vm')
+print(wl['href'] if wl else '')
+")
+
+if [ -n "$wl_href" ]; then
+  curl -s -u "$AUTH" -X PUT "https://$AUTOACCOUNT_PCE_FQDN/api/v2$wl_href" \
+    -H "Content-Type: application/json" \
+    -d '{"enforcement_mode":"full"}' > /dev/null
+fi
+
+exit 0
