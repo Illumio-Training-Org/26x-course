@@ -81,7 +81,7 @@ for rs in named:
             if not svc_ok:
                 missing.append('service should deny tcp/22 (either the built-in SSH service or a custom tcp/22 entry), found ' + str(dr.get('ingress_services')))
             if not from_all_ok:
-                missing.append('consumers should be All Workloads, found ' + str(dr.get('consumers')))
+                missing.append('source should be All Workloads, found ' + str(dr.get('consumers')))
             reasons.append('; '.join(missing))
 
 if reasons:
