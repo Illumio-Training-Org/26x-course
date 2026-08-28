@@ -14,21 +14,6 @@ tabs:
   title: Windows
   type: terminal
   hostname: windows-vm
-- id: agbzxlbfychc
-  title: CloudCLI
-  type: terminal
-  hostname: cloud-client
-  cmd: bash
-- id: vhkxspsd4a3t
-  title: AWS
-  type: service
-  hostname: cloud-client
-  port: 80
-- id: t8mprccgif3c
-  title: k3s
-  type: terminal
-  hostname: host
-  cmd: bash
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
