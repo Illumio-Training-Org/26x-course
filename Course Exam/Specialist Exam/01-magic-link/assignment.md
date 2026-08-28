@@ -71,4 +71,4 @@ Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostnam
 
 **3 )** Verify the Illumio Console dashboard is visible
 
-**4 )** Return to this lab window and press **NEXT**
+**4 )** Welcome to your **26.x Specialist Exam** — you have **120 minutes (2 hours)** to complete it. Once you're logged into the Console, return to this lab window and press **NEXT** to begin. Good luck!
