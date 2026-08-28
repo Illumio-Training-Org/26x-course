@@ -56,6 +56,9 @@ enhanced_loading: null
 ---
 # Illumio-Console
 
+> [!IMPORTANT]
+> This exam is **6 hours (practice exam, no strict time pressure)**.
+
 **1 )** Open the following link in a new browser tab
 
 ```

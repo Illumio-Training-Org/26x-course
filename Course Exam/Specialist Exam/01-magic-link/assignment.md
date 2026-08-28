@@ -56,6 +56,9 @@ enhanced_loading: null
 ---
 # Illumio-Console
 
+> [!IMPORTANT]
+> This exam is **120 minutes (2 hours)**.
+
 **1 )** Open the following link in a new browser tab
 
 ```
