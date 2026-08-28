@@ -44,6 +44,7 @@ def resolve_label(href):
         return None
     return lbl.get('key'), (lbl.get('value') or '').lower()
 
+too_broad = None
 for p in perms:
     role_href = (p.get('role') or {}).get('href', '')
     if 'ruleset_manager' not in role_href:
@@ -59,11 +60,16 @@ for p in perms:
         kv = resolve_label(href)
         if kv:
             matched[kv[0]] = kv[1]
-    if all(matched.get(k) == v for k, v in expected_scope.items()):
-        print('Found a user with Ruleset Manager scoped to Environment=Production, Location=ca')
+    if matched == expected_scope:
+        print('Found a user with Ruleset Manager scoped to exactly Environment=Production, Location=ca')
         sys.exit(0)
+    if all(matched.get(k) == v for k, v in expected_scope.items()):
+        too_broad = sorted(matched.keys())
 
-print('No user found with the Ruleset Manager role scoped specifically to Environment=Production, Location=ca')
+if too_broad:
+    print('Scope has extra labels beyond Environment=Production, Location=ca - narrow it to just those 2, found: ' + str(too_broad))
+else:
+    print('No user found with the Ruleset Manager role scoped specifically to Environment=Production, Location=ca')
 sys.exit(1)
 ")
 status=$?
