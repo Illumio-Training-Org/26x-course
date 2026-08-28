@@ -56,9 +56,6 @@ enhanced_loading: null
 ---
 # Illumio-Console
 
-🧩 Task 01 - Accessing the Illumio Platform
-==========
-
 **1 )** Open the following link in a new browser tab
 
 ```
