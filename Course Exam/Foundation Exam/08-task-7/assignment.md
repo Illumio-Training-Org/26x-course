@@ -35,9 +35,8 @@ enhanced_loading: null
 ---
 # Task 7
 
-Create a user with permissions to administer the `linux-vm` workload
-only — scope the role to that workload's Application, Environment, and
-Location labels, not the whole organization.
+Create a user and assign them the **Ruleset Manager** role, scoped to
+Environment: `Production`, Location: `ca` — not the whole organization.
 
 ---
 
