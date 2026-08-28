@@ -41,6 +41,22 @@ if not named:
     print('Ruleset Task4-DenyPolicy not found')
     sys.exit(1)
 
+def has_tcp_22(ingress_services):
+    # Accept either an inline port/proto entry (student typed 22/tcp
+    # directly) or a linked service object (student picked the
+    # built-in 'SSH' service, which bundles tcp/22 + udp/22 together) -
+    # either way, what matters is that tcp/22 is denied somewhere in it.
+    for entry in ingress_services or []:
+        if entry.get('port') == 22 and entry.get('proto') == 6:
+            return True
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            for sp in svc.get('service_ports', []):
+                if sp.get('port') == 22 and sp.get('proto') == 6:
+                    return True
+    return False
+
 def is_all_workloads(consumers):
     # 'All Workloads' as a consumer is represented as an empty list (no
     # consumers = unrestricted) or an actors:'ams' entry, depending on
@@ -55,7 +71,7 @@ for rs in named:
     for dr in rs.get('deny_rules', []):
         providers = resolve(dr.get('providers', []))
         labels_ok = all(providers.get(k) == v for k, v in expected.items())
-        svc_ok = dr.get('ingress_services') == [{'port': 22, 'proto': 6}]
+        svc_ok = has_tcp_22(dr.get('ingress_services'))
         from_all_ok = is_all_workloads(dr.get('consumers', []))
         if labels_ok and svc_ok and from_all_ok:
             print('Found a deny rule: SSH, from All Workloads, to Application=ordering/Environment=Production/Location=ca in Task4-DenyPolicy')
@@ -63,7 +79,7 @@ for rs in named:
         if labels_ok:
             missing = []
             if not svc_ok:
-                missing.append('service should be SSH (tcp/22), found ' + str(dr.get('ingress_services')))
+                missing.append('service should deny tcp/22 (either the built-in SSH service or a custom tcp/22 entry), found ' + str(dr.get('ingress_services')))
             if not from_all_ok:
                 missing.append('consumers should be All Workloads, found ' + str(dr.get('consumers')))
             reasons.append('; '.join(missing))
