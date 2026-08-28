@@ -4,31 +4,6 @@ id: tpfz40xdlgpm
 type: challenge
 title: Close Lab
 teaser: Read this before ending your session
-tabs:
-- id: w00pyrmd7ppf
-  title: Linux
-  type: terminal
-  hostname: linux-vm
-  cmd: bash
-- id: ehwvawwb8wy4
-  title: Windows
-  type: terminal
-  hostname: windows-vm
-- id: alrqrz8snm5b
-  title: CloudCLI
-  type: terminal
-  hostname: cloud-client
-  cmd: bash
-- id: v68fz1iqzlzs
-  title: AWS
-  type: service
-  hostname: cloud-client
-  port: 80
-- id: dkh9x9nxkgf1
-  title: k3s
-  type: terminal
-  hostname: host
-  cmd: bash
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
