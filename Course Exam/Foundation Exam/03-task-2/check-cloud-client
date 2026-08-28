@@ -18,13 +18,18 @@ wl = ws.get('linux-vm')
 if not wl:
     print('linux-vm workload not found')
     sys.exit(1)
-keys = {l.get('key') for l in (wl.get('labels') or []) if l.get('value')}
-required = {'role', 'app', 'env', 'loc'}
-missing = required - keys
-if missing:
-    print('linux-vm is missing labels: ' + ', '.join(sorted(missing)))
+labels = {l.get('key'): (l.get('value') or '') for l in (wl.get('labels') or [])}
+fails = []
+if not labels.get('role'):
+    fails.append('Role label is missing')
+expected = {'app': 'ordering', 'env': 'Production', 'loc': 'ca'}
+for k, v in expected.items():
+    if labels.get(k, '').lower() != v.lower():
+        fails.append(k + ' should be ' + v + ', found ' + str(labels.get(k)))
+if fails:
+    print('; '.join(fails))
     sys.exit(1)
-print('linux-vm has Role, Application, Environment, and Location labels')
+print('linux-vm labeled correctly: Role set, Application=ordering, Environment=Production, Location=ca')
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

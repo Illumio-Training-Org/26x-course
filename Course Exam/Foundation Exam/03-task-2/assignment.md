@@ -35,8 +35,12 @@ enhanced_loading: null
 ---
 # Task 2
 
-Label the `linux-vm` workload with at least 4 labels: Role, Application,
-Environment, and Location.
+Label the `linux-vm` workload with 4 labels:
+
+- Role: any value
+- Application: `ordering`
+- Environment: `Production`
+- Location: `ca`
 
 ---
 

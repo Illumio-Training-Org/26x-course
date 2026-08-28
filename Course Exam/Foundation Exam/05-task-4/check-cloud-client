@@ -20,17 +20,7 @@ def get(path):
     out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
     return json.loads(out)
 
-workloads = get('/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')
-wl = next((w for w in workloads if w.get('hostname') == 'linux-vm'), None)
-if not wl:
-    print('linux-vm workload not found')
-    sys.exit(1)
-
-wl_labels = {l.get('key'): (l.get('value') or '').lower() for l in (wl.get('labels') or [])}
-required = ('app', 'env', 'loc')
-if not all(wl_labels.get(k) for k in required):
-    print('linux-vm needs Application, Environment, and Location labels before this can be checked (see Task 2)')
-    sys.exit(1)
+expected = {'app': 'ordering', 'env': 'production', 'loc': 'ca'}
 
 def resolve(entries):
     out = {}
@@ -64,11 +54,11 @@ reasons = []
 for rs in named:
     for dr in rs.get('deny_rules', []):
         providers = resolve(dr.get('providers', []))
-        labels_ok = all(providers.get(k) == wl_labels[k] for k in required)
+        labels_ok = all(providers.get(k) == v for k, v in expected.items())
         svc_ok = dr.get('ingress_services') == [{'port': 22, 'proto': 6}]
         from_all_ok = is_all_workloads(dr.get('consumers', []))
         if labels_ok and svc_ok and from_all_ok:
-            print('Found a deny rule: SSH, from All Workloads, to linux-vm by Application/Environment/Location in Task4-DenyPolicy')
+            print('Found a deny rule: SSH, from All Workloads, to Application=ordering/Environment=Production/Location=ca in Task4-DenyPolicy')
             sys.exit(0)
         if labels_ok:
             missing = []
@@ -79,9 +69,9 @@ for rs in named:
             reasons.append('; '.join(missing))
 
 if reasons:
-    print('Task4-DenyPolicy has a rule targeting linux-vm correctly but: ' + '; '.join(reasons))
+    print('Task4-DenyPolicy has a rule targeting the right labels but: ' + '; '.join(reasons))
 else:
-    print('Task4-DenyPolicy exists but has no deny rule whose providers match linux-vm on Application, Environment, and Location')
+    print('Task4-DenyPolicy exists but has no deny rule targeting Application=ordering, Environment=Production, Location=ca')
 sys.exit(1)
 ")
 status=$?
