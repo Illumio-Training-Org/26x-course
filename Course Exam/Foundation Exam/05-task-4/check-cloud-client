@@ -46,14 +46,19 @@ rulesets = []
 for policy in ('draft', 'active'):
     rulesets += get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/' + policy + '/rule_sets')
 
-for rs in rulesets:
+named = [rs for rs in rulesets if (rs.get('name') or '').lower() == 'task4-denypolicy']
+if not named:
+    print('Ruleset Task4-DenyPolicy not found')
+    sys.exit(1)
+
+for rs in named:
     for dr in rs.get('deny_rules', []):
         providers = resolve(dr.get('providers', []))
         if all(providers.get(k) == wl_labels[k] for k in required):
-            print('Found a deny rule targeting linux-vm by Application/Environment/Location in ruleset ' + str(rs.get('name')))
+            print('Found a deny rule targeting linux-vm by Application/Environment/Location in Task4-DenyPolicy')
             sys.exit(0)
 
-print('No deny rule found whose providers match linux-vm on Application, Environment, and Location')
+print('Task4-DenyPolicy exists but has no deny rule whose providers match linux-vm on Application, Environment, and Location')
 sys.exit(1)
 ")
 status=$?

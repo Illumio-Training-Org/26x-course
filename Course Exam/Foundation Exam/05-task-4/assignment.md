@@ -35,9 +35,12 @@ enhanced_loading: null
 ---
 # Task 4
 
-Create a basic deny policy denying traffic to the `linux-vm` workload,
-targeting it using at least its Application, Environment, and Location
-labels.
+Create a ruleset named `Task4-DenyPolicy` with a basic deny policy
+denying traffic to the `linux-vm` workload, targeting it using at
+least its Application, Environment, and Location labels.
+
+> [!NOTE]
+> Leave the ruleset in draft — do not provision it for this task.
 
 ---
 
