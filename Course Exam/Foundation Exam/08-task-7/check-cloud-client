@@ -3,12 +3,14 @@
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
 #
-# NOTE (unproven pattern - build session 2026-08-28): this checks the
-# PCE's /permissions endpoint for a user with the Ruleset Manager role
-# scoped to Environment=Production, Location=ca (not org-wide). The
-# exact /permissions response shape (role field name, scope field
-# name/structure) is inferred, not confirmed live yet - fix the field
-# names below once we've seen real output from a sandbox.
+# Checks the PCE's /permissions endpoint for a role assignment scoped
+# to Environment=Production, Location=ca with the Ruleset Manager role.
+# Confirmed live 2026-08-28 against a real /permissions response:
+#   [{"href":..., "role":{"href":".../roles/ruleset_manager"},
+#     "scope":[{"label":{"href":...}}, {"label":{"href":...}}],
+#     "auth_security_principal":{"href":...}}, ...]
+# scope is a FLAT list of {"label":{"href":...}} entries (not a list
+# of groups), and auth_security_principal has no "type" field.
 
 # setup-cloud-client writes cleaned AUTOACCOUNT_* values here since this
 # script's execution context doesn't source .bashrc (interactive-only).
@@ -42,37 +44,21 @@ def resolve_label(href):
         return None
     return lbl.get('key'), (lbl.get('value') or '').lower()
 
-def role_names(p):
-    names = []
-    for entry in ([p['role']] if 'role' in p else p.get('roles', [])):
-        if isinstance(entry, dict):
-            name = entry.get('name')
-            href = entry.get('href')
-            if not name and href:
-                obj = get(href.replace('/api/v2', ''))
-                name = (obj or {}).get('name')
-            if name:
-                names.append(name.lower())
-    return names
-
 for p in perms:
-    principal = p.get('auth_security_principal') or {}
-    if principal.get('type') != 'user':
-        continue
-    if not any('ruleset manager' in n for n in role_names(p)):
+    role_href = (p.get('role') or {}).get('href', '')
+    if 'ruleset_manager' not in role_href:
         continue
     scope = p.get('scope') or []
     if not scope:
         continue  # empty scope = org-wide, not what we want
     matched = {}
-    for group in scope:
-        for entry in group:
-            href = (entry.get('label') or {}).get('href')
-            if not href:
-                continue
-            kv = resolve_label(href)
-            if kv:
-                matched[kv[0]] = kv[1]
+    for entry in scope:
+        href = (entry.get('label') or {}).get('href')
+        if not href:
+            continue
+        kv = resolve_label(href)
+        if kv:
+            matched[kv[0]] = kv[1]
     if all(matched.get(k) == v for k, v in expected_scope.items()):
         print('Found a user with Ruleset Manager scoped to Environment=Production, Location=ca')
         sys.exit(0)
