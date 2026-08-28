@@ -51,14 +51,37 @@ if not named:
     print('Ruleset Task4-DenyPolicy not found')
     sys.exit(1)
 
+def is_all_workloads(consumers):
+    # 'All Workloads' as a consumer is represented as an empty list (no
+    # consumers = unrestricted) or an actors:'ams' entry, depending on
+    # how the rule was built - not live-verified against a real
+    # sandbox yet, so this accepts either shape.
+    if not consumers:
+        return True
+    return any(c.get('actors') == 'ams' for c in consumers)
+
+reasons = []
 for rs in named:
     for dr in rs.get('deny_rules', []):
         providers = resolve(dr.get('providers', []))
-        if all(providers.get(k) == wl_labels[k] for k in required):
-            print('Found a deny rule targeting linux-vm by Application/Environment/Location in Task4-DenyPolicy')
+        labels_ok = all(providers.get(k) == wl_labels[k] for k in required)
+        svc_ok = dr.get('ingress_services') == [{'port': 22, 'proto': 6}]
+        from_all_ok = is_all_workloads(dr.get('consumers', []))
+        if labels_ok and svc_ok and from_all_ok:
+            print('Found a deny rule: SSH, from All Workloads, to linux-vm by Application/Environment/Location in Task4-DenyPolicy')
             sys.exit(0)
+        if labels_ok:
+            missing = []
+            if not svc_ok:
+                missing.append('service should be SSH (tcp/22), found ' + str(dr.get('ingress_services')))
+            if not from_all_ok:
+                missing.append('consumers should be All Workloads, found ' + str(dr.get('consumers')))
+            reasons.append('; '.join(missing))
 
-print('Task4-DenyPolicy exists but has no deny rule whose providers match linux-vm on Application, Environment, and Location')
+if reasons:
+    print('Task4-DenyPolicy has a rule targeting linux-vm correctly but: ' + '; '.join(reasons))
+else:
+    print('Task4-DenyPolicy exists but has no deny rule whose providers match linux-vm on Application, Environment, and Location')
 sys.exit(1)
 ")
 status=$?

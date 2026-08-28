@@ -35,9 +35,10 @@ enhanced_loading: null
 ---
 # Task 4
 
-Create a ruleset named `Task4-DenyPolicy` with a basic deny policy
-denying traffic to the `linux-vm` workload, targeting it using at
-least its Application, Environment, and Location labels.
+Create a ruleset named `Task4-DenyPolicy` with a rule denying **SSH**
+to the `linux-vm` workload **from all workloads**. Target `linux-vm`
+as the destination using at least its Application, Environment, and
+Location labels — the same labels you applied in Task 2.
 
 > [!NOTE]
 > Leave the ruleset in draft — do not provision it for this task.
