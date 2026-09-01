@@ -23,5 +23,7 @@ enhanced_loading: null
 ---
 Open the **AWS** tab and log in to the AWS Console.
 
-How many digits are in the AWS Account ID shown in the top right
-corner of the AWS Console?
+> [!NOTE]
+> Select the **Quiz** tab first, then answer the question.
+
+How many digits are in the AWS Account ID?
