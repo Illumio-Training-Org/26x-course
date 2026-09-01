@@ -21,9 +21,4 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Open the **AWS** tab and log in to the AWS Console.
-
-> [!NOTE]
-> Select the **Quiz** tab and answer the question.
-
 How many digits are in the AWS Account ID?
