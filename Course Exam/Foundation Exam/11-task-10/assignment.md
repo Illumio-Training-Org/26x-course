@@ -5,15 +5,16 @@ type: quiz
 title: Task 10
 teaser: Find the AWS Account ID
 tabs:
-- title: AWS
+- id: ezpc7uyl0i3o
+  title: AWS
   type: service
   hostname: cloud-client
   port: 80
 answers:
-- 8
-- 10
-- 12
-- 16
+- "8"
+- "10"
+- "12"
+- "16"
 solution:
 - 2
 difficulty: ""
