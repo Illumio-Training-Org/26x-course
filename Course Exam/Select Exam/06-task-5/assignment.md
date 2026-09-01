@@ -1,5 +1,6 @@
 ---
 slug: task-5
+id: 8gmrgkfaptxb
 type: challenge
 title: Task 5
 teaser: Enforce Selective Mode

@@ -1,5 +1,6 @@
 ---
 slug: task-3
+id: f6mjr7pt8mgb
 type: quiz
 title: Task 3
 teaser: Find It on the Map

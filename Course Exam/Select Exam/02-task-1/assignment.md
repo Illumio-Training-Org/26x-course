@@ -1,10 +1,12 @@
 ---
 slug: task-1
+id: rg0edgnyuymx
 type: challenge
 title: Task 1
 teaser: Pair a Workload
 tabs:
-- title: Linux
+- id: 54041lxl1tin
+  title: Linux
   type: terminal
   hostname: linux-vm
   cmd: bash

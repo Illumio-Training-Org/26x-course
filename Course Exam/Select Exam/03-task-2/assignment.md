@@ -1,5 +1,6 @@
 ---
 slug: task-2
+id: 3o1lyfzocntq
 type: challenge
 title: Task 2
 teaser: Label the Workload

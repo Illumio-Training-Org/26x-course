@@ -1,5 +1,6 @@
 ---
 slug: task-4
+id: k0ae4mgzbeys
 type: challenge
 title: Task 4
 teaser: Create a Deny Policy
