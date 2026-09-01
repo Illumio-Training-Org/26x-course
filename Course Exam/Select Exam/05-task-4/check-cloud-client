@@ -1,0 +1,99 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+
+# setup-cloud-client writes cleaned AUTOACCOUNT_* values here since this
+# script's execution context doesn't source .bashrc (interactive-only).
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+expected = {'app': 'ordering', 'env': 'production', 'loc': 'ca'}
+
+def resolve(entries):
+    out = {}
+    for e in entries:
+        href = e.get('label', {}).get('href')
+        if not href:
+            continue
+        lbl = get(href.replace('/api/v2', ''))
+        out[lbl['key']] = (lbl.get('value') or '').lower()
+    return out
+
+rulesets = []
+for policy in ('draft', 'active'):
+    rulesets += get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/' + policy + '/rule_sets')
+
+named = [rs for rs in rulesets if (rs.get('name') or '').lower() == 'task4-denypolicy']
+if not named:
+    print('Ruleset Task4-DenyPolicy not found')
+    sys.exit(1)
+
+def has_tcp_22(ingress_services):
+    # Accept either an inline port/proto entry (student typed 22/tcp
+    # directly) or a linked service object (student picked the
+    # built-in 'SSH' service, which bundles tcp/22 + udp/22 together) -
+    # either way, what matters is that tcp/22 is denied somewhere in it.
+    for entry in ingress_services or []:
+        if entry.get('port') == 22 and entry.get('proto') == 6:
+            return True
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            for sp in svc.get('service_ports', []):
+                if sp.get('port') == 22 and sp.get('proto') == 6:
+                    return True
+    return False
+
+def is_all_workloads(consumers):
+    # 'All Workloads' as a consumer is represented as an empty list (no
+    # consumers = unrestricted) or an actors:'ams' entry, depending on
+    # how the rule was built - not live-verified against a real
+    # sandbox yet, so this accepts either shape.
+    if not consumers:
+        return True
+    return any(c.get('actors') == 'ams' for c in consumers)
+
+reasons = []
+for rs in named:
+    for dr in rs.get('deny_rules', []):
+        providers = resolve(dr.get('providers', []))
+        labels_ok = all(providers.get(k) == v for k, v in expected.items())
+        svc_ok = has_tcp_22(dr.get('ingress_services'))
+        from_all_ok = is_all_workloads(dr.get('consumers', []))
+        if labels_ok and svc_ok and from_all_ok:
+            print('Found a deny rule: SSH, from All Workloads, to Application=ordering/Environment=Production/Location=ca in Task4-DenyPolicy')
+            sys.exit(0)
+        if labels_ok:
+            missing = []
+            if not svc_ok:
+                missing.append('service should deny tcp/22 (either the built-in SSH service or a custom tcp/22 entry), found ' + str(dr.get('ingress_services')))
+            if not from_all_ok:
+                missing.append('source should be All Workloads, found ' + str(dr.get('consumers')))
+            reasons.append('; '.join(missing))
+
+if reasons:
+    print('Task4-DenyPolicy has a rule targeting the right labels but: ' + '; '.join(reasons))
+else:
+    print('Task4-DenyPolicy exists but has no deny rule targeting Application=ordering, Environment=Production, Location=ca')
+sys.exit(1)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

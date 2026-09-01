@@ -5,10 +5,10 @@ description: |-
   Lab Name: 26.x SELECT EXAM
 
   Outcome:
-  In this exam you will complete 10 hands-on tasks against the shared
+  In this exam you will complete 5 hands-on tasks against the shared
   26.x base lab environment (Illumio Console access, AWS Terraform build,
   RockyLinux/Windows VMs, k3s/CVEN node), each graded automatically by
-  a check script. 8 of 10 correct is a pass.
+  a check script. 4 of 5 correct is a pass.
 icon: ./assets/logo.png
 tags:
 - ilt
@@ -16,6 +16,7 @@ owner: illumio-training
 developers:
 - nathan.mitchell@illumio.com
 show_timer: true
+skipping_enabled: true
 idle_timeout: 3600
 timelimit: 9000
 lab_config:

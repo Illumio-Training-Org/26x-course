@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# Runs when the learner clicks Skip.
+#
+# NOTE: pairing a VEN can't be done from a script - it requires the
+# actual VEN agent on linux-vm to run its pairing command and check in
+# with the PCE. This is a stub so Skip is at least available and
+# doesn't error; it does NOT actually pair linux-vm. Revisit this if
+# a real solve is needed later (e.g. running the pairing script
+# remotely against linux-vm via SSH from cloud-client).
+
+exit 0

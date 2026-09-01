@@ -27,7 +27,7 @@ notes:
         <p>This is your opportunity to:</p>
         <ul>
           <li>Demonstrate your Zero Trust Segmentation skills</li>
-          <li>Complete 10 hands-on tasks, each automatically graded</li>
+          <li>Complete 5 hands-on tasks, each automatically graded</li>
           <li>Work independently — no step-by-step instructions</li>
         </ul>
         <div class="splash-contact">
