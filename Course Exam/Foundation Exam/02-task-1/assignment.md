@@ -14,5 +14,5 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Create a new Pairing Profile, then use it to pair the `linux-vm`
-workload as a VEN.
+Create a new Pairing Profile with its Enforcement Mode set to **Idle**,
+then use it to pair the `linux-vm` workload as a VEN.

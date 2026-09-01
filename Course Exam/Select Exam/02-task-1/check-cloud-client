@@ -18,7 +18,11 @@ wl = ws.get('linux-vm')
 if not wl or not wl.get('ven'):
     print('linux-vm is not paired as a VEN yet')
     sys.exit(1)
-print('linux-vm paired as a VEN')
+mode = wl.get('enforcement_mode')
+if mode != 'idle':
+    print('linux-vm is paired but in ' + str(mode) + ' mode - the new Pairing Profile must set Enforcement Mode to Idle')
+    sys.exit(1)
+print('linux-vm paired as a VEN in Idle mode')
 ")
 status=$?
 if [ "$status" -ne 0 ]; then
