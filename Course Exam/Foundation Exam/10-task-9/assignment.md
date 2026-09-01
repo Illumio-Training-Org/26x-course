@@ -15,3 +15,6 @@ timelimit: 0
 enhanced_loading: null
 ---
 Onboard the AWS account to Illumio Cloud.
+
+> [!IMPORTANT]
+> Use **us-east-1** (N. Virginia) as the region.
