@@ -42,13 +42,16 @@ if not named:
     sys.exit(1)
 
 def has_tcp_22(ingress_services):
-    # Accept either an inline port/proto entry (student typed 22/tcp
-    # directly) or a linked service object (student picked the
-    # built-in 'SSH' service, which bundles tcp/22 + udp/22 together) -
-    # either way, what matters is that tcp/22 is denied somewhere in it.
+    # Accept either a linked service object (student picked the
+    # built-in 'SSH' service, which already bundles tcp/22 + udp/22
+    # together - tcp/22 alone is enough to confirm it) or manually-typed
+    # inline port/proto entries - but if typed manually, both tcp/22 AND
+    # udp/22 must be present, matching what the SSH service itself
+    # bundles.
+    inline_ports = {(e.get('port'), e.get('proto')) for e in (ingress_services or []) if 'port' in e}
+    if (22, 6) in inline_ports and (22, 17) in inline_ports:
+        return True
     for entry in ingress_services or []:
-        if entry.get('port') == 22 and entry.get('proto') == 6:
-            return True
         href = entry.get('href')
         if href:
             svc = get(href.replace('/api/v2', ''))
@@ -79,7 +82,7 @@ for rs in named:
         if labels_ok:
             missing = []
             if not svc_ok:
-                missing.append('service should deny tcp/22 (either the built-in SSH service or a custom tcp/22 entry), found ' + str(dr.get('ingress_services')))
+                missing.append('service should deny SSH - either the built-in SSH service, or both tcp/22 and udp/22 entered manually, found ' + str(dr.get('ingress_services')))
             if not from_all_ok:
                 missing.append('source should be All Workloads, found ' + str(dr.get('consumers')))
             reasons.append('; '.join(missing))
