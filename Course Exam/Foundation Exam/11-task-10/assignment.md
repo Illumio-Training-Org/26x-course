@@ -3,19 +3,24 @@ slug: task-10
 id: tpydy0kisyxp
 type: quiz
 title: Task 10
-teaser: Check the Security Review Status
+teaser: Find the AWS Account ID
+tabs:
+- title: AWS
+  type: service
+  hostname: cloud-client
+  port: 80
 answers:
-- Pending
-- Approved
-- Approval Pending
-- Pending Approval
+- 8
+- 10
+- 12
+- 16
 solution:
-- 3
+- 2
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-In the Illumio Console, go to **Cloud → Security Review**.
+Open the **AWS** tab and log in to the AWS Console.
 
-What is the current status of the Security Review for the AWS account
-you onboarded in Task 9?
+How many digits are in the AWS Account ID shown in the top right
+corner of the AWS Console?
