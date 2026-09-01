@@ -41,6 +41,7 @@ if any((rs.get('name') or '').lower() == 'task4-denypolicy' for rs in rulesets):
 
 call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
     'name': 'Task4-DenyPolicy',
+    'scopes': [[]],
     'deny_rules': [{
         'ingress_services': [{'port': 22, 'proto': 6}],
         'providers': [
@@ -48,7 +49,7 @@ call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
             {'label': {'href': env_href}},
             {'label': {'href': loc_href}},
         ],
-        'consumers': [],
+        'consumers': [{'actors': 'ams'}],
     }],
 })
 "

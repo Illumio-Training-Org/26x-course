@@ -58,10 +58,10 @@ def has_tcp_22(ingress_services):
     return False
 
 def is_all_workloads(consumers):
-    # 'All Workloads' as a consumer is represented as an empty list (no
-    # consumers = unrestricted) or an actors:'ams' entry, depending on
-    # how the rule was built - not live-verified against a real
-    # sandbox yet, so this accepts either shape.
+    # 'All Workloads' as a consumer is an actors:'ams' entry - the API
+    # rejects an empty consumers list outright (live-verified), but the
+    # empty-list check stays as a harmless fallback in case a rule was
+    # ever built some other way.
     if not consumers:
         return True
     return any(c.get('actors') == 'ams' for c in consumers)
