@@ -52,7 +52,7 @@ else:
         if href:
             values.add(resolve_label_value(href))
     if not {'pci', 'staging'}.issubset(values):
-        reasons.append('Label Group \"pci-staging\" should contain the Environment labels pci and staging, found ' + str(sorted(values)))
+        reasons.append('Label Group \"pci-staging\" should contain the Environment labels PCI and Staging, found ' + str(sorted(values)))
 
 # 3) Service 'Redis' - tcp/6379
 services = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/services')

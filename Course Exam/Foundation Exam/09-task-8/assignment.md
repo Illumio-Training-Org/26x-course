@@ -13,6 +13,6 @@ enhanced_loading: null
 - Add an exclusion: `!45.54.45.254`
 
 **2 )** Create a Label Group named `pci-staging` containing two
-Environment labels: `pci` and `staging`.
+Environment labels: `PCI` and `Staging`.
 
 **3 )** Create a Service named `Redis` for TCP port `6379`.

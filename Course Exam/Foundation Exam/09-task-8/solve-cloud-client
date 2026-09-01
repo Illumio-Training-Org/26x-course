@@ -43,8 +43,8 @@ def find_or_create_label(key, value):
     created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
     return created['href'] if created else None
 
-pci_href = find_or_create_label('env', 'pci')
-staging_href = find_or_create_label('env', 'staging')
+pci_href = find_or_create_label('env', 'PCI')
+staging_href = find_or_create_label('env', 'Staging')
 
 label_groups = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups') or []
 if not any((g.get('name') or '').lower() == 'pci-staging' for g in label_groups):
