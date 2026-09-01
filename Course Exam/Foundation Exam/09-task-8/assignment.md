@@ -3,11 +3,18 @@ slug: task-8
 id: ru6okm047epw
 type: challenge
 title: Task 8
-teaser: Enforce Full Mode
+teaser: Create Policy Objects
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
 # Task 8
 
-Take the `linux-vm` workload to Full enforcement.
+**1 )** Create an IP List named `remote-office`:
+- IP Address: `45.54.45.0/24`
+- Add an exclusion: `!45.54.45.254`
+
+**2 )** Create a Label Group named `pci-staging` containing two
+Environment labels: `pci` and `staging`.
+
+**3 )** Create a Service for TCP port `6379` (all OS).
