@@ -54,14 +54,15 @@ else:
     if not {'pci', 'staging'}.issubset(values):
         reasons.append('Label Group \"pci-staging\" should contain the Environment labels pci and staging, found ' + str(sorted(values)))
 
-# 3) Service - tcp/6379
+# 3) Service 'Redis' - tcp/6379
 services = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/services')
 has_service = any(
-    any(sp.get('port') == 6379 and sp.get('proto') == 6 for sp in (s.get('service_ports') or []))
+    (s.get('name') or '').lower() == 'redis'
+    and any(sp.get('port') == 6379 and sp.get('proto') == 6 for sp in (s.get('service_ports') or []))
     for s in services
 )
 if not has_service:
-    reasons.append('No Service found with TCP port 6379')
+    reasons.append('No Service named \"Redis\" found with TCP port 6379')
 
 if reasons:
     print('; '.join(reasons))

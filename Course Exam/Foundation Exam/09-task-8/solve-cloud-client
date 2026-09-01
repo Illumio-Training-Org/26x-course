@@ -54,15 +54,16 @@ if not any((g.get('name') or '').lower() == 'pci-staging' for g in label_groups)
         'labels': [{'href': pci_href}, {'href': staging_href}],
     })
 
-# 3) Service
+# 3) Service 'Redis'
 services = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/services') or []
 has_service = any(
-    any(sp.get('port') == 6379 and sp.get('proto') == 6 for sp in (s.get('service_ports') or []))
+    (s.get('name') or '').lower() == 'redis'
+    and any(sp.get('port') == 6379 and sp.get('proto') == 6 for sp in (s.get('service_ports') or []))
     for s in services
 )
 if not has_service:
     call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/services', {
-        'name': 'redis-cache',
+        'name': 'Redis',
         'service_ports': [{'port': 6379, 'proto': 6}],
     })
 "
