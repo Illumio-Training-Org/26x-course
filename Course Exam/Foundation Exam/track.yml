@@ -5,10 +5,9 @@ description: |-
   Lab Name: 26.x FOUNDATION EXAM
 
   Outcome:
-  In this exam you will complete 10 hands-on tasks against the shared
-  26.x base lab environment (Illumio Console access, AWS Terraform build,
-  RockyLinux/Windows VMs, k3s/CVEN node), each graded automatically by
-  a check script. 8 of 10 correct is a pass.
+  This exam has 10 questions. The first task must be completed to
+  continue. Subsequent tasks can be skipped. In order to pass the exam
+  you need a score of at least 80% or 8 out of 10 correct answers.
 icon: ./assets/logo.png
 tags:
 - ilt
