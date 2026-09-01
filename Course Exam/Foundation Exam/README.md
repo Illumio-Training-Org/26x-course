@@ -75,22 +75,30 @@ work; not implemented, worth reconsidering later:
   Skip produces a distinctly-flagged entry in this same array or looks
   like a normal attempt (would need a live test against a real session to
   confirm).
-- The API key needed is **organization-wide and permanent** (Settings →
-  API keys) — there is no participant/session-scoped token. It's also
+- **Confirmed live 2026-09-01 (Settings → API keys screen)**: Instruqt
+  only supports **one API key per organization**, not multiple/scoped
+  keys — the screen shows a single "API Key" field with a "Regenerate
+  API Key" button (not "Generate"), no scope/permission picker.
+  Regenerating replaces it outright; the old value stops working
+  immediately, so a dedicated low-privilege key just for this feature
+  isn't possible. It's the org's one and only key, permanent, full
+  access, shared with anything else that already depends on it. Also
   documented for external-system use only, not callable from inside a
   running sandbox.
-- Because one key can see the *entire org's* tracks and sessions, it
-  can't be embedded in the Close Lab challenge's client-side HTML/JS (like
-  the splash screen note does) — any learner opening browser dev tools
-  would be able to read it off the page and gain access to everything in
-  Instruqt, not just their own session.
+- Because it's the single org-wide key, it can't be embedded in the
+  Close Lab challenge's client-side HTML/JS (like the splash screen note
+  does) — any learner opening browser dev tools would be able to read it
+  off the page and gain full access to the whole Instruqt org, not just
+  their own session.
 - Doing this safely would need a small backend proxy: a hosted service
   (e.g. a Lambda/Cloud Function) holding the key as a server-side secret,
   accepting a request from the Close Lab page with the session's
   `_SANDBOX_ID`, querying the GraphQL API server-side, and returning back
   only that one session's summarized counts. Real hosting + secrets
   management + ongoing maintenance, not something achievable from track
-  files alone.
+  files alone — and since it's the org's only key, whatever holds it
+  becomes a single point of failure for every other integration relying
+  on that same key too.
 - **Lighter-weight alternative worth considering instead**: surface this
   to instructors after the fact (a report they pull, using the org key
   from a trusted machine) rather than live in the learner's own sandbox —
