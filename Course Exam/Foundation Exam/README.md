@@ -60,3 +60,39 @@ that task's real-world state, and (for Task 1 specifically) skipping it
 also breaks Tasks 2, 3, 5, and 8's own Skip solves, since they all
 depend on `linux-vm` actually being a paired workload. See
 `solve-cloud-client` in each task's folder for the exact comment/reasoning.
+
+## Future idea: per-learner Check/Skip summary (not built, researched 2026-09-01)
+
+Would be useful to show a summary on the final Close Lab challenge of how
+many times each task's Check button was clicked, and which tasks were
+skipped — a signal of where learners struggled. Researched how this would
+work; not implemented, worth reconsidering later:
+
+- Instruqt's reporting GraphQL API exposes `Challenge.attempts:
+  [ChallengeAttempt!]!` ("list of attempts the user has done to solve the
+  challenge") — each `ChallengeAttempt` has just `message` and
+  `timestamp`. No explicit pass/fail field, and it's unconfirmed whether a
+  Skip produces a distinctly-flagged entry in this same array or looks
+  like a normal attempt (would need a live test against a real session to
+  confirm).
+- The API key needed is **organization-wide and permanent** (Settings →
+  API keys) — there is no participant/session-scoped token. It's also
+  documented for external-system use only, not callable from inside a
+  running sandbox.
+- Because one key can see the *entire org's* tracks and sessions, it
+  can't be embedded in the Close Lab challenge's client-side HTML/JS (like
+  the splash screen note does) — any learner opening browser dev tools
+  would be able to read it off the page and gain access to everything in
+  Instruqt, not just their own session.
+- Doing this safely would need a small backend proxy: a hosted service
+  (e.g. a Lambda/Cloud Function) holding the key as a server-side secret,
+  accepting a request from the Close Lab page with the session's
+  `_SANDBOX_ID`, querying the GraphQL API server-side, and returning back
+  only that one session's summarized counts. Real hosting + secrets
+  management + ongoing maintenance, not something achievable from track
+  files alone.
+- **Lighter-weight alternative worth considering instead**: surface this
+  to instructors after the fact (a report they pull, using the org key
+  from a trusted machine) rather than live in the learner's own sandbox —
+  sidesteps the browser-exposure problem entirely since the key never
+  needs to reach the sandbox at all.
