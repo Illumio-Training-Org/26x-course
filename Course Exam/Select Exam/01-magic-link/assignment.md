@@ -54,8 +54,6 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# Illumio-Console
-
 > [!IMPORTANT]
 > This exam is **150 minutes (2 hours 30)**.
 

@@ -8,8 +8,6 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# Task 2
-
 Label the `linux-vm` workload with 4 labels:
 
 - Role: any value

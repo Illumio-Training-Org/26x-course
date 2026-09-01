@@ -8,8 +8,6 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# Task 8
-
 **1 )** Create an IP List named `remote-office`:
 - IP Address: `45.54.45.0/24`
 - Add an exclusion: `!45.54.45.254`

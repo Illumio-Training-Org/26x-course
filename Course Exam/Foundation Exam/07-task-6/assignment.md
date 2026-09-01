@@ -8,7 +8,5 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# Task 6
-
 A rogue Role label has been planted somewhere in your organization.
 Find it and delete it.

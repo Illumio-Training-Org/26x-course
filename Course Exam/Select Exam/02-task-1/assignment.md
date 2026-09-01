@@ -14,6 +14,4 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# Task 1
-
 Pair the `linux-vm` workload as a VEN.

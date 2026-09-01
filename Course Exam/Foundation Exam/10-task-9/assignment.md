@@ -14,6 +14,4 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# Task 9
-
 Onboard the AWS account to Illumio Cloud.
