@@ -15,4 +15,4 @@ enhanced_loading: null
 **2 )** Create a Label Group named `pci-staging` containing two
 Environment labels: `pci` and `staging`.
 
-**3 )** Create a Service named `Redis` for TCP port `6379` (all OS).
+**3 )** Create a Service named `Redis` for TCP port `6379`.
