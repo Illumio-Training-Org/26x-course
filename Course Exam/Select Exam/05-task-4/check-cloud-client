@@ -24,15 +24,11 @@ if not wl:
     sys.exit(1)
 
 for e in wl.get('labels', []):
-    href = e.get('href')
-    if not href:
-        continue
-    lbl = get(href.replace('/api/v2', ''))
-    if (lbl.get('key') or '').lower() == 'dfirbubble' and (lbl.get('value') or '').lower() == 'ir-dirtybubble':
-        print('linux-vm IR label is now IR-DIRTYBUBBLE')
+    if (e.get('key') or '').lower() == 'quarantine.illumio.com' and (e.get('value') or '').lower() == 'strict-quarantine':
+        print('linux-vm is quarantined (strict-quarantine)')
         sys.exit(0)
 
-print('linux-vm does not have IR=IR-DIRTYBUBBLE yet')
+print('linux-vm does not have the strict-quarantine label yet')
 sys.exit(1)
 ")
 status=$?
