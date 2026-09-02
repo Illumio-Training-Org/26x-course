@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Best-effort: applies the
-# strict-quarantine label to linux-vm. No-ops if not paired yet.
+# Runs when the learner clicks Skip. Best-effort: swaps linux-vm's IR
+# label from IR-CLEANBUBBLE to IR-DIRTYBUBBLE. No-ops if not paired yet.
 
 . /root/.autoaccount_env
 
@@ -21,15 +21,23 @@ def call(method, path, body=None):
     except Exception:
         return None
 
-labels = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
-q_href = next((l['href'] for l in labels if l.get('key') == 'quarantine.illumio.com' and (l.get('value') or '').lower() == 'strict-quarantine'), None)
+def find_or_create_label(key, value):
+    labels = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
+    for l in labels:
+        if l.get('key') == key and (l.get('value') or '').lower() == value.lower():
+            return l['href']
+    created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
+    return created['href'] if created else None
+
+dirty_href = find_or_create_label('DFIRBubble', 'IR-DIRTYBUBBLE')
 
 ws = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000') or []
 wl = next((w for w in ws if w.get('hostname') == 'linux-vm'), None)
 
-if wl and q_href:
-    existing = wl.get('labels', [])
-    call('PUT', wl['href'], {'labels': existing + [{'href': q_href}]})
+if wl and dirty_href:
+    kept = [l for l in wl.get('labels', []) if l.get('href') != dirty_href]
+    kept = [l for l in kept if not (l.get('key') == 'DFIRBubble')]
+    call('PUT', wl['href'], {'labels': kept + [{'href': dirty_href}]})
 "
 
 exit 0

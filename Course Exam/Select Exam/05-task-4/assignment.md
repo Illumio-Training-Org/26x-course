@@ -7,5 +7,5 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-The `linux-vm` (Web) workload has been breached. Isolate it by applying
-the Quarantine label: `strict-quarantine`.
+The `linux-vm` (Web) workload has been breached. Isolate it by
+changing its IR label from `IR-CLEANBUBBLE` to `IR-DIRTYBUBBLE`.
