@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# Runs when the learner clicks Skip. Best-effort: applies the
+# strict-quarantine label to linux-vm. No-ops if not paired yet.
+
+. /root/.autoaccount_env
+
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+python3 -c "
+import json, subprocess
+
+def call(method, path, body=None):
+    cmd = ['curl', '-s', '-u', '$AUTH', '-X', method, 'https://$FQDN/api/v2' + path]
+    if body is not None:
+        cmd += ['-H', 'Content-Type: application/json', '-d', json.dumps(body)]
+    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    try:
+        return json.loads(out)
+    except Exception:
+        return None
+
+labels = call('GET', '/orgs/\$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
+q_href = next((l['href'] for l in labels if l.get('key') == 'quarantine.illumio.com' and (l.get('value') or '').lower() == 'strict-quarantine'), None)
+
+ws = call('GET', '/orgs/\$AUTOACCOUNT_ORG_ID/workloads?max_results=1000') or []
+wl = next((w for w in ws if w.get('hostname') == 'linux-vm'), None)
+
+if wl and q_href:
+    existing = wl.get('labels', [])
+    call('PUT', wl['href'], {'labels': existing + [{'href': q_href}]})
+"
+
+exit 0

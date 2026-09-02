@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+# FIRST DRAFT - label_group-in-scope shape not yet live-verified.
+# Detail to refine.
+
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+label_groups = get('/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups')
+lg = next((g for g in label_groups if (g.get('name') or '').lower() == 'dev-prod'), None)
+if not lg:
+    print('Label Group \"dev-prod\" not found')
+    sys.exit(1)
+
+values = set()
+for l in lg.get('labels', []):
+    href = l.get('href')
+    if href:
+        lbl = get(href.replace('/api/v2', ''))
+        values.add((lbl.get('value') or '').lower())
+if not {'development', 'production'}.issubset(values):
+    print('Label Group \"dev-prod\" should contain Development and Production, found ' + str(sorted(values)))
+    sys.exit(1)
+
+rulesets = get('/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task7-ringfenceordering'), None)
+if not rs:
+    print('Ruleset \"Task7-RingfenceOrdering\" not found - do Task 7 first')
+    sys.exit(1)
+
+uses_group = False
+for scope in rs.get('scopes', []):
+    for entry in scope:
+        href = (entry.get('label_group') or {}).get('href')
+        if href == lg.get('href'):
+            uses_group = True
+
+if not uses_group:
+    print('Task7-RingfenceOrdering scope does not yet use the dev-prod Label Group')
+    sys.exit(1)
+
+print('dev-prod Label Group exists and is used in Task7-RingfenceOrdering scope')
+sys.exit(0)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

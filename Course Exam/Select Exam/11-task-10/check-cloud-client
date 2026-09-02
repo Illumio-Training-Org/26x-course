@@ -1,0 +1,54 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+# FIRST DRAFT - checks scope only, not the intra-scope rule shape
+# (same caveat as Task 2/7). Detail to refine.
+
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+rulesets = get('/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task10-ringfencepayment'), None)
+if not rs:
+    print('Ruleset \"Task10-RingfencePayment\" not found')
+    sys.exit(1)
+
+scope_labels = set()
+for scope in rs.get('scopes', []):
+    for entry in scope:
+        href = (entry.get('label') or {}).get('href')
+        if href:
+            lbl = get(href.replace('/api/v2', ''))
+            scope_labels.add((lbl.get('key'), (lbl.get('value') or '').lower()))
+
+expected = {('app', 'payment'), ('loc', 'ldn')}
+if not expected.issubset(scope_labels):
+    print('Task10-RingfencePayment scope should include Application=Payment, Location=LDN, found ' + str(sorted(scope_labels)))
+    sys.exit(1)
+if not rs.get('rules'):
+    print('Task10-RingfencePayment is scoped correctly but has no allow rule yet')
+    sys.exit(1)
+
+print('Task10-RingfencePayment is scoped and has a rule')
+sys.exit(0)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

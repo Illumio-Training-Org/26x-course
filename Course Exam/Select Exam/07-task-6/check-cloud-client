@@ -1,0 +1,54 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+def resolve(entries):
+    out = {}
+    for e in entries:
+        href = (e.get('label') or {}).get('href')
+        if not href:
+            continue
+        lbl = get(href.replace('/api/v2', ''))
+        out[lbl.get('key')] = (lbl.get('value') or '').lower()
+    return out
+
+rulesets = get('/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-denydevprod'), None)
+if not rs:
+    print('Ruleset \"Task6-DenyDevProd\" not found')
+    sys.exit(1)
+
+want_consumer = {'app': 'ordering', 'env': 'development', 'loc': 'ca'}
+want_provider = {'app': 'ordering', 'env': 'production', 'loc': 'ca'}
+for dr in rs.get('deny_rules', []):
+    consumers = resolve(dr.get('consumers', []))
+    providers = resolve(dr.get('providers', []))
+    if all(consumers.get(k) == v for k, v in want_consumer.items()) and all(providers.get(k) == v for k, v in want_provider.items()):
+        print('Found the Dev->Prod deny rule for ordering in ca')
+        sys.exit(0)
+
+print('Task6-DenyDevProd exists but has no rule denying Dev->Prod for ordering in ca')
+sys.exit(1)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0
