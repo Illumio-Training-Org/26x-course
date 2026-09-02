@@ -30,7 +30,7 @@ def resolve_labels(entries):
         out[lbl.get('key')] = (lbl.get('value') or '').lower()
     return out
 
-ws = {w.get('hostname'): w for w in get('/orgs/\$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')}
+ws = {w.get('hostname'): w for w in get('/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')}
 expected_shared = {'app': 'portal', 'env': 'production', 'loc': 'ca'}
 expected_role = {'linux-vm': 'web', 'windows-vm': 'db'}
 

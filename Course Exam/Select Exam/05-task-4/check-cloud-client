@@ -17,7 +17,7 @@ def get(path):
     out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
     return json.loads(out)
 
-ws = {w.get('hostname'): w for w in get('/orgs/\$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')}
+ws = {w.get('hostname'): w for w in get('/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')}
 wl = ws.get('linux-vm')
 if not wl:
     print('linux-vm not found')

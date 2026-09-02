@@ -27,7 +27,7 @@ def resolve(entries):
         out[lbl.get('key')] = (lbl.get('value') or '').lower()
     return out
 
-rulesets = get('/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-denydevprod'), None)
 if not rs:
     print('Ruleset \"Task6-DenyDevProd\" not found')

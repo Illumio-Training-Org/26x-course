@@ -20,7 +20,7 @@ def get(path):
     out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
     return json.loads(out)
 
-label_groups = get('/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups')
+label_groups = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups')
 lg = next((g for g in label_groups if (g.get('name') or '').lower() == 'dev-prod'), None)
 if not lg:
     print('Label Group \"dev-prod\" not found')
@@ -36,7 +36,7 @@ if not {'development', 'production'}.issubset(values):
     print('Label Group \"dev-prod\" should contain Development and Production, found ' + str(sorted(values)))
     sys.exit(1)
 
-rulesets = get('/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task7-ringfenceordering'), None)
 if not rs:
     print('Ruleset \"Task7-RingfenceOrdering\" not found - do Task 7 first')

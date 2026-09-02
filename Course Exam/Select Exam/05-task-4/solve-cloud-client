@@ -21,10 +21,10 @@ def call(method, path, body=None):
     except Exception:
         return None
 
-labels = call('GET', '/orgs/\$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
+labels = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
 q_href = next((l['href'] for l in labels if l.get('key') == 'quarantine.illumio.com' and (l.get('value') or '').lower() == 'strict-quarantine'), None)
 
-ws = call('GET', '/orgs/\$AUTOACCOUNT_ORG_ID/workloads?max_results=1000') or []
+ws = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000') or []
 wl = next((w for w in ws if w.get('hostname') == 'linux-vm'), None)
 
 if wl and q_href:

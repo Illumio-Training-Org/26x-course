@@ -20,7 +20,7 @@ def get(path):
     out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
     return json.loads(out)
 
-rulesets = get('/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task7-ringfenceordering'), None)
 if not rs:
     print('Ruleset \"Task7-RingfenceOrdering\" not found')

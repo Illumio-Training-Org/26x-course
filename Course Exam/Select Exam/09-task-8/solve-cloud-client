@@ -26,26 +26,26 @@ def call(method, path, body=None):
         return None
 
 def find_or_create_label(key, value):
-    labels = call('GET', '/orgs/\$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
+    labels = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
     for l in labels:
         if l.get('key') == key and (l.get('value') or '').lower() == value.lower():
             return l['href']
-    created = call('POST', '/orgs/\$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
+    created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
     return created['href'] if created else None
 
 dev_href = find_or_create_label('env', 'Development')
 prod_href = find_or_create_label('env', 'Production')
 
-label_groups = call('GET', '/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups') or []
+label_groups = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups') or []
 lg = next((g for g in label_groups if (g.get('name') or '').lower() == 'dev-prod'), None)
 if not lg:
-    lg = call('POST', '/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups', {
+    lg = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups', {
         'name': 'dev-prod',
         'key': 'env',
         'labels': [{'href': dev_href}, {'href': prod_href}],
     })
 
-rulesets = call('GET', '/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets') or []
+rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets') or []
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task7-ringfenceordering'), None)
 if rs and lg:
     app_href = find_or_create_label('app', 'ordering')

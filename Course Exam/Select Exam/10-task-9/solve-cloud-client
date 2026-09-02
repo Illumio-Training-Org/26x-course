@@ -22,20 +22,20 @@ def call(method, path, body=None):
         return None
 
 def find_or_create_label(key, value):
-    labels = call('GET', '/orgs/\$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
+    labels = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
     for l in labels:
         if l.get('key') == key and (l.get('value') or '').lower() == value.lower():
             return l['href']
-    created = call('POST', '/orgs/\$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
+    created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
     return created['href'] if created else None
 
 app_href = find_or_create_label('app', 'ordering')
 dev_href = find_or_create_label('env', 'Development')
 prod_href = find_or_create_label('env', 'Production')
 
-rulesets = call('GET', '/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets') or []
+rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets') or []
 if not any((r.get('name') or '').lower() == 'task9-denyglobal' for r in rulesets):
-    call('POST', '/orgs/\$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
+    call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
         'name': 'Task9-DenyGlobal',
         'scopes': [[]],
         'deny_rules': [
