@@ -121,17 +121,24 @@ nohup bash -c "
   date
 
   # -----------------------------------------------------------------
-  # TODO (prototype, not yet built): automated Illumio Cloud onboarding.
-  # Needs research against the CloudSecure API (cloud.illum.io) to find
-  # the actual endpoints the Console's Cloud -> Onboarding -> Add AWS
-  # wizard calls under the hood - creating a service account, obtaining
-  # the CloudFormation template + ServiceAccountToken it would normally
-  # have the learner paste into AWS Console's Create Stack form, then
-  # running that same CloudFormation stack via 'aws cloudformation
-  # create-stack' (credentials already available here from the
-  # Terraform apply above) instead of a human clicking through it.
+  # AUTOMATED ILLUMIO CLOUD ONBOARDING - separate, isolated Terraform
+  # config (not the shared terraform/ folder, so this experiment can't
+  # break Course Lab or any exam track). Uses the official
+  # illumio/illumio-cloudsecure Terraform provider, modeled on a
+  # colleague's working example (Instruqt track grsxrhaf37xt).
   # -----------------------------------------------------------------
-  echo '### AUTOMATED ONBOARDING: NOT YET IMPLEMENTED - placeholder ###'
+  echo '### STARTING AUTOMATED CLOUDSECURE ONBOARDING ###'
+  date
+  cd /root/26x-course/terraform-cloudsecure-aws
+
+  terraform init -input=false
+  terraform plan -out=tfplan -input=false \
+    -var \"illumio_cloudsecure_client_id=\$AUTOACCOUNT_SAAPIKEY_KEYID\" \
+    -var \"illumio_cloudsecure_client_secret=\$AUTOACCOUNT_SAAPIKEY_SECRET\"
+  terraform apply -input=false -auto-approve tfplan
+
+  echo '### AUTOMATED CLOUDSECURE ONBOARDING APPLY COMPLETE ###'
+  date
 
 " > /var/log/aws-onboard-startup.log 2>&1 < /dev/null &
 
