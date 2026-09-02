@@ -32,7 +32,7 @@ for scope in rs.get('scopes', []):
         href = (entry.get('label') or {}).get('href')
         if href:
             lbl = get(href.replace('/api/v2', ''))
-            scope_labels.add((lbl.get('key'), (lbl.get('value') or '').lower()))
+            scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
 
 expected = {('app', 'payment'), ('loc', 'ldn')}
 if not expected.issubset(scope_labels):

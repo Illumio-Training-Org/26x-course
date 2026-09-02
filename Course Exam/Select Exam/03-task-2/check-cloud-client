@@ -30,7 +30,7 @@ def resolve_labels(entries):
         if not href:
             continue
         lbl = get(href.replace('/api/v2', ''))
-        out[lbl.get('key')] = (lbl.get('value') or '').lower()
+        out[(lbl.get('key') or '').lower()] = (lbl.get('value') or '').lower()
     return out
 
 ws = {w.get('hostname'): w for w in get('/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')}
@@ -57,7 +57,7 @@ else:
             href = (entry.get('label') or {}).get('href')
             if href:
                 lbl = get(href.replace('/api/v2', ''))
-                scope_labels.add((lbl.get('key'), (lbl.get('value') or '').lower()))
+                scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
     expected_scope = {('app', 'portal'), ('env', 'production'), ('loc', 'ca'), ('type', 'server'), ('dfirbubble', 'ir-cleanbubble')}
     if not expected_scope.issubset(scope_labels):
         reasons.append('Task2-Ringfence scope should include Application=portal, Environment=Production, Location=ca, Type=server, IR=IR-CLEANBUBBLE, found ' + str(sorted(scope_labels)))
