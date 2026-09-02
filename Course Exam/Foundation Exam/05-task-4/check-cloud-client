@@ -60,6 +60,23 @@ def has_tcp_22(ingress_services):
                     return True
     return False
 
+def describe_services(ingress_services):
+    # Human-readable version of ingress_services for fail messages -
+    # a linked service is just {'href': ...} otherwise, unreadable to
+    # a learner (live-observed 2026-09-02).
+    out = []
+    for entry in ingress_services or []:
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            out.append(svc.get('name') or href)
+        elif 'port' in entry:
+            proto = 'tcp' if entry.get('proto') == 6 else 'udp' if entry.get('proto') == 17 else str(entry.get('proto'))
+            out.append(str(entry.get('port')) + '/' + proto)
+        else:
+            out.append(str(entry))
+    return out
+
 def is_all_workloads(consumers):
     # 'All Workloads' as a consumer is an actors:'ams' entry - the API
     # rejects an empty consumers list outright (live-verified), but the
@@ -82,7 +99,7 @@ for rs in named:
         if labels_ok:
             missing = []
             if not svc_ok:
-                missing.append('service should deny SSH - either the built-in SSH service, or both tcp/22 and udp/22 entered manually, found ' + str(dr.get('ingress_services')))
+                missing.append('service should deny SSH - either the built-in SSH service, or both tcp/22 and udp/22 entered manually, found ' + str(describe_services(dr.get('ingress_services'))))
             if not from_all_ok:
                 missing.append('source should be All Workloads, found ' + str(dr.get('consumers')))
             reasons.append('; '.join(missing))
