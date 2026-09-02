@@ -1,9 +1,8 @@
 ---
 slug: task-4
-id: k0ae4mgzbeys
+id: mnrirzgvy9l2
 type: challenge
-title: Task 4
-teaser: Create a Deny Policy
+title: 04-Create a Deny Policy
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
