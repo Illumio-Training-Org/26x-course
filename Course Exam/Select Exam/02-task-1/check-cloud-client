@@ -34,22 +34,24 @@ ws = {w.get('hostname'): w for w in get('/orgs/\$AUTOACCOUNT_ORG_ID/workloads?ma
 expected_shared = {'app': 'portal', 'env': 'production', 'loc': 'ca'}
 expected_role = {'linux-vm': 'web', 'windows-vm': 'db'}
 
-reasons = []
+unpaired = [host for host in expected_role if not ws.get(host) or not ws[host].get('ven')]
+if unpaired:
+    print('Not both workloads are paired as VENs yet')
+    sys.exit(1)
+
+labels_ok = True
 for host, want_role in expected_role.items():
-    wl = ws.get(host)
-    if not wl or not wl.get('ven'):
-        reasons.append(host + ' is not paired as a VEN yet')
-        continue
-    labels = resolve_labels(wl.get('labels', []))
+    labels = resolve_labels(ws[host].get('labels', []))
     if labels.get('role') != want_role:
-        reasons.append(host + \" should have Role='\" + want_role + \"', found '\" + str(labels.get('role')) + \"'\")
+        labels_ok = False
     for k, v in expected_shared.items():
         if labels.get(k) != v:
-            reasons.append(host + ' ' + k + \" should be '\" + v + \"', found '\" + str(labels.get(k)) + \"'\")
+            labels_ok = False
 
-if reasons:
-    print('; '.join(reasons))
+if not labels_ok:
+    print('Both workloads are paired, but the labeling is not correct')
     sys.exit(1)
+
 print('Both workloads paired and labeled correctly into the portal application')
 sys.exit(0)
 ")
