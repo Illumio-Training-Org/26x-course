@@ -1,5 +1,6 @@
 ---
 slug: task-6
+id: c9xibkfwnszs
 type: challenge
 title: 06-Create an IP List
 difficulty: ""

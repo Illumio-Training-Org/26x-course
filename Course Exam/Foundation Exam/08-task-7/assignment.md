@@ -1,5 +1,6 @@
 ---
 slug: task-7
+id: osvpiaqlinvw
 type: challenge
 title: 07-Create a Service
 difficulty: ""

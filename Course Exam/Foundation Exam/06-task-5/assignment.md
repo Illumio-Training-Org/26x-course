@@ -1,5 +1,6 @@
 ---
 slug: task-5
+id: kndokmlvxmyv
 type: challenge
 title: 05-Create a Label Group
 difficulty: ""
