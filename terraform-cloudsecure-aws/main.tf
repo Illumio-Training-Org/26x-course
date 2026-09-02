@@ -20,6 +20,17 @@ module "aws_account_onboarding" {
   version         = "~>1.5.3"
   name            = "${var.account_name_prefix} Account"
   iam_name_prefix = var.account_name_prefix
+
+  # This is a standalone Instruqt sandbox AWS account, not part of a real
+  # AWS Organization - the calling identity gets AccessDeniedException on
+  # organizations:DescribeOrganization (live-verified 2026-09-02). Setting
+  # organization_id explicitly skips that data lookup entirely; the module
+  # only forwards this value to Illumio's CloudSecure API as descriptive
+  # metadata (confirmed by reading modules/aws_account/main.tf in the
+  # official illumio/terraform-illumio-cloudsecure repo) - AWS itself never
+  # sees it, so a placeholder is fine here.
+  organization_id = "standalone"
+
   tags = {
     Name  = "CloudSecure Account Policy"
     Owner = "26.x AWS Automated Onboard Testing prototype"
