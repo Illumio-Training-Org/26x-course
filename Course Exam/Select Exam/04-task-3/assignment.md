@@ -9,5 +9,6 @@ enhanced_loading: null
 ---
 Create a ruleset named `Task3-CoreServices` with an allow rule from
 Role: `nagios` to the `portal` application (Application: `portal`,
-Environment: `Production`, Location: `ca`), so monitoring traffic isn't
-denied once the application is ringfenced.
+Environment: `Production`, Location: `ca`) for the Nagios NRPE service,
+TCP port `5666`, so monitoring traffic isn't denied once the
+application is ringfenced.
