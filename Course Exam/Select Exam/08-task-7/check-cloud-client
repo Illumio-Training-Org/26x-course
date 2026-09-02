@@ -38,8 +38,9 @@ expected = {('app', 'ordering'), ('env', 'development'), ('loc', 'ca')}
 if not expected.issubset(scope_labels):
     print('Task7-RingfenceOrdering scope should include Application=ordering, Environment=Development, Location=ca, found ' + str(sorted(scope_labels)))
     sys.exit(1)
-if not rs.get('rules'):
-    print('Task7-RingfenceOrdering is scoped correctly but has no allow rule yet')
+has_all_services_rule = any(not rule.get('ingress_services') for rule in rs.get('rules', []))
+if not has_all_services_rule:
+    print('Task7-RingfenceOrdering needs an intra-scope allow rule for All Services, not restricted to a specific service')
     sys.exit(1)
 
 print('Task7-RingfenceOrdering is scoped and has a rule')
