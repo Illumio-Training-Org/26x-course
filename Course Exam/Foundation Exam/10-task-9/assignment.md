@@ -2,7 +2,7 @@
 slug: task-9
 id: 0onotmlhytun
 type: challenge
-title: 09-Find & Remove a Rogue Label
+title: 09-Remove a Rogue Label
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
