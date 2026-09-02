@@ -17,7 +17,11 @@
 
 module "aws_account_onboarding" {
   source          = "illumio/cloudsecure/illumio//modules/aws_account"
-  version         = "~>1.5.3"
+  # v1.5.3 (the colleague example's pin) predates the organization_id
+  # variable entirely - confirmed by diffing module tags in the official
+  # illumio/terraform-illumio-cloudsecure repo, it was only added in
+  # v1.7.0. Bumped to match.
+  version         = ">=1.7.0"
   name            = "${var.account_name_prefix} Account"
   iam_name_prefix = var.account_name_prefix
 
@@ -28,7 +32,8 @@ module "aws_account_onboarding" {
   # only forwards this value to Illumio's CloudSecure API as descriptive
   # metadata (confirmed by reading modules/aws_account/main.tf in the
   # official illumio/terraform-illumio-cloudsecure repo) - AWS itself never
-  # sees it, so a placeholder is fine here.
+  # sees it, so a placeholder is fine here. Matches the Console wizard's
+  # "Account" (not "Organization") onboarding type, confirmed live.
   organization_id = "standalone"
 
   tags = {
