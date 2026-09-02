@@ -1,15 +1,38 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip.
-#
-# NOTE: user creation can't be scripted - live-verified 2026-09-01
-# against a real sandbox. POST /users returns 403 "Unexpected system
-# error" even with the exact correct payload (username + full_name +
-# type:"local", confirmed by inspecting a Console-created user's real
-# shape via GET /users). This isn't a payload bug: the API key genuinely
-# doesn't have permission to create users, most likely a deliberate
-# Illumio restriction (user/identity management via session-based
-# Console auth only, not API keys). This is a stub so Skip is at least
-# available and doesn't error; it does NOT actually create the user.
+# Runs when the learner clicks Skip. Creates the Service Task 7 asks
+# for - pure org-level object, no dependency on linux-vm or AWS state,
+# so it fully solves the task.
+
+. /root/.autoaccount_env
+
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+python3 -c "
+import json, subprocess
+
+def call(method, path, body=None):
+    cmd = ['curl', '-s', '-u', '$AUTH', '-X', method, 'https://$FQDN/api/v2' + path]
+    if body is not None:
+        cmd += ['-H', 'Content-Type: application/json', '-d', json.dumps(body)]
+    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    try:
+        return json.loads(out)
+    except Exception:
+        return None
+
+services = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/services') or []
+has_service = any(
+    (s.get('name') or '').lower() == 'redis'
+    and any(sp.get('port') == 6379 and sp.get('proto') == 6 for sp in (s.get('service_ports') or []))
+    for s in services
+)
+if not has_service:
+    call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/services', {
+        'name': 'Redis',
+        'service_ports': [{'port': 6379, 'proto': 6}],
+    })
+"
 
 exit 0

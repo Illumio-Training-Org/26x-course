@@ -8,17 +8,16 @@
 # script's execution context doesn't source .bashrc (interactive-only).
 . /root/.autoaccount_env
 
-BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
-AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+AUTH2="${AUTOACCOUNT_SAAPIKEY_KEYID}:${AUTOACCOUNT_SAAPIKEY_SECRET}"
 
-result=$(curl -s -u "$AUTH" "$BASE/labels?max_results=1000" | python3 -c "
+result=$(curl -s -u "$AUTH2" -H "X-Tenant-Id: $AUTOACCOUNT_TENANT_ID" "https://cloud.illum.io/api/v1/integrations" | python3 -c "
 import json, sys
 d = json.load(sys.stdin)
-found = [x for x in d if x.get('key') == 'role' and (x.get('value') or '').lower() == 'rogue-donotuse']
-if found:
-    print('The rogue Role label is still present - find and delete it')
+aws = d.get('aws', [])
+if not aws:
+    print('No AWS account onboarded yet - use Cloud -> Onboarding -> Add AWS')
     sys.exit(1)
-print('Rogue label removed')
+print('AWS account onboarded: ' + str(aws[0].get('name')))
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

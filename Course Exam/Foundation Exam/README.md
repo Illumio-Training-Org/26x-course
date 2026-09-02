@@ -11,23 +11,38 @@ see the repo root `README.md`).
 
 ## Tasks
 
-| # | Task | Teaser |
+Rebuilt 2026-09-02 to match the "Foundation & Select agenda" tab's
+detailed 10-point Foundation exam breakdown exactly (row 29) — order,
+content, and count all now trace directly to that spreadsheet. The two
+native quiz tasks that previously sat at positions 3 and 10 (enforcement
+mode after pairing, AWS Account ID digit count) were dropped — the
+spreadsheet's 10 points are all pure action items, no knowledge checks.
+
+| # | Task | Title |
 |---|---|---|
 | 1 | `02-task-1` | Pair a Workload |
 | 2 | `03-task-2` | Label the Workload |
-| 3 | `04-task-3` | Find It on the Map (quiz) |
+| 3 | `04-task-3` | Enforce Selective Mode |
 | 4 | `05-task-4` | Create a Deny Policy |
-| 5 | `06-task-5` | Enforce Selective Mode |
-| 6 | `07-task-6` | Find & Remove a Rogue Label |
-| 7 | `08-task-7` | Create a Scoped User |
-| 8 | `09-task-8` | Create Policy Objects (IP List, Label Group, Service) |
-| 9 | `10-task-9` | Onboard a Cloud Instance |
-| 10 | `11-task-10` | Find the AWS Account ID (quiz) |
+| 5 | `06-task-5` | Create a Label Group |
+| 6 | `07-task-6` | Create an IP List |
+| 7 | `08-task-7` | Create a Service |
+| 8 | `09-task-8` | Create a Scoped User |
+| 9 | `10-task-9` | Find & Remove a Rogue Label |
+| 10 | `11-task-10` | Onboard a Cloud Instance |
 
-Each non-quiz task has a `check-cloud-client` (graded automatically) and
-a `solve-cloud-client` (runs when the learner clicks Skip, if
-`skipping_enabled: true`). Quiz tasks (3, 10) are graded natively by
-Instruqt from the `answers`/`solution` fields — no check script needed.
+Every task's `title:` field is formatted as `0N-Name` (e.g.
+`01-Pair a Workload`) with no separate `teaser:` — a single combined
+line in the Instruqt UI rather than a "Task N" heading plus a subtitle.
+
+Each task has a `check-cloud-client` (graded automatically) and a
+`solve-cloud-client` (runs when the learner clicks Skip, since
+`skipping_enabled: true`).
+
+**Associate Exam** is the same content, cut down to just the first 5
+tasks (Pair, Label, Enforce, Deny, Label Group) — matches the
+spreadsheet's separate 5-point Associate exam row (row 27), which is
+the customer-facing name for this same Day 1-2 content.
 
 ## Known limitation: 3 tasks can't be solved by Skip
 
@@ -40,7 +55,7 @@ the task:
 - **Task 1 (pair a workload)** — VEN pairing requires a real agent
   installed and checking in from `linux-vm`; there's no API call that
   can fake this.
-- **Task 7 (create a scoped user)** — live-tested 2026-09-01: Illumio
+- **Task 8 (create a scoped user)** — live-tested 2026-09-01: Illumio
   restricts user/identity management (`POST /users`) to the **Global
   Organization Owner** role specifically (confirmed via Illumio's own
   RBAC docs — even Global Administrator is excluded). The automation
@@ -51,15 +66,15 @@ the task:
   returns `403`. Fixing it would require Instruqt/Illumio to issue that
   automation credential with Owner privileges, which is a platform-side
   change outside this repo.
-- **Task 9 (onboard AWS)** — onboarding requires a real CloudFormation
+- **Task 10 (onboard AWS)** — onboarding requires a real CloudFormation
   stack run inside the learner's own AWS Console session; there's no way
   to complete this from a script running in `cloud-client`.
 
-Practical effect: a learner who skips any of these three will not have
-that task's real-world state, and (for Task 1 specifically) skipping it
-also breaks Tasks 2, 3, 5, and 8's own Skip solves, since they all
-depend on `linux-vm` actually being a paired workload. See
-`solve-cloud-client` in each task's folder for the exact comment/reasoning.
+Practical effect: a learner who skips Task 1 also breaks Tasks 2, 3, and
+4's own Skip solves, since they all depend on `linux-vm` actually being
+a paired workload (Tasks 5-9 are pure org-level objects, unaffected).
+See `solve-cloud-client` in each task's folder for the exact
+comment/reasoning.
 
 ## Future idea: per-learner Check/Skip summary (not built, researched 2026-09-01)
 

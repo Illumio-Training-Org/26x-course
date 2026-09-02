@@ -3,6 +3,14 @@
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
 #
+# Checks the PCE's /permissions endpoint for a role assignment scoped
+# to Environment=Production, Location=ca with the Ruleset Manager role.
+# Confirmed live 2026-08-28 against a real /permissions response:
+#   [{"href":..., "role":{"href":".../roles/ruleset_manager"},
+#     "scope":[{"label":{"href":...}}, {"label":{"href":...}}],
+#     "auth_security_principal":{"href":...}}, ...]
+# scope is a FLAT list of {"label":{"href":...}} entries (not a list
+# of groups), and auth_security_principal has no "type" field.
 
 # setup-cloud-client writes cleaned AUTOACCOUNT_* values here since this
 # script's execution context doesn't source .bashrc (interactive-only).
@@ -18,57 +26,51 @@ import json, subprocess, sys
 def get(path):
     url = 'https://$FQDN/api/v2' + path
     out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
-    return json.loads(out)
+    try:
+        return json.loads(out)
+    except Exception:
+        return None
 
-reasons = []
+expected_scope = {'env': 'production', 'loc': 'ca'}
 
-# 1) IP List 'remote-office' - range + exclusion
-ip_lists = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/ip_lists')
-ip_list = next((i for i in ip_lists if (i.get('name') or '').lower() == 'remote-office'), None)
-if not ip_list:
-    reasons.append('IP List \"remote-office\" not found')
-else:
-    ranges = ip_list.get('ip_ranges', [])
-    has_range = any(r.get('from_ip') == '45.54.45.0/24' and not r.get('exclusion') for r in ranges)
-    has_excl = any(r.get('from_ip') == '45.54.45.254' and r.get('exclusion') for r in ranges)
-    if not has_range:
-        reasons.append('IP List \"remote-office\" is missing the 45.54.45.0/24 range')
-    if not has_excl:
-        reasons.append('IP List \"remote-office\" is missing the 45.54.45.254 exclusion')
-
-# 2) Label Group 'pci-staging' - env labels pci + staging
-def resolve_label_value(href):
-    lbl = get(href.replace('/api/v2', ''))
-    return (lbl.get('value') or '').lower()
-
-label_groups = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups')
-lg = next((g for g in label_groups if (g.get('name') or '').lower() == 'pci-staging'), None)
-if not lg:
-    reasons.append('Label Group \"pci-staging\" not found')
-else:
-    values = set()
-    for l in lg.get('labels', []):
-        href = l.get('href')
-        if href:
-            values.add(resolve_label_value(href))
-    if not {'pci', 'staging'}.issubset(values):
-        reasons.append('Label Group \"pci-staging\" should contain the Environment labels PCI and Staging, found ' + str(sorted(values)))
-
-# 3) Service 'Redis' - tcp/6379
-services = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/services')
-has_service = any(
-    (s.get('name') or '').lower() == 'redis'
-    and any(sp.get('port') == 6379 and sp.get('proto') == 6 for sp in (s.get('service_ports') or []))
-    for s in services
-)
-if not has_service:
-    reasons.append('No Service named \"Redis\" found with TCP port 6379')
-
-if reasons:
-    print('; '.join(reasons))
+perms = get('/orgs/$AUTOACCOUNT_ORG_ID/permissions')
+if perms is None:
+    print('Could not read /permissions - create a scoped role assignment for a user')
     sys.exit(1)
-print('IP List remote-office, Label Group pci-staging, and a tcp/6379 Service all found')
-sys.exit(0)
+
+def resolve_label(href):
+    lbl = get(href.replace('/api/v2', ''))
+    if not lbl:
+        return None
+    return lbl.get('key'), (lbl.get('value') or '').lower()
+
+too_broad = None
+for p in perms:
+    role_href = (p.get('role') or {}).get('href', '')
+    if 'ruleset_manager' not in role_href:
+        continue
+    scope = p.get('scope') or []
+    if not scope:
+        continue  # empty scope = org-wide, not what we want
+    matched = {}
+    for entry in scope:
+        href = (entry.get('label') or {}).get('href')
+        if not href:
+            continue
+        kv = resolve_label(href)
+        if kv:
+            matched[kv[0]] = kv[1]
+    if matched == expected_scope:
+        print('Found a user with Ruleset Manager scoped to exactly Environment=Production, Location=ca')
+        sys.exit(0)
+    if all(matched.get(k) == v for k, v in expected_scope.items()):
+        too_broad = sorted(matched.keys())
+
+if too_broad:
+    print('Scope has extra labels beyond Environment=Production, Location=ca - narrow it to just those 2, found: ' + str(too_broad))
+else:
+    print('No user found with the Ruleset Manager role scoped specifically to Environment=Production, Location=ca')
+sys.exit(1)
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

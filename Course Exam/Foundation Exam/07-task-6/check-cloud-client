@@ -10,15 +10,38 @@
 
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
 
-result=$(curl -s -u "$AUTH" "$BASE/labels?max_results=1000" | python3 -c "
-import json, sys
-d = json.load(sys.stdin)
-found = [x for x in d if x.get('key') == 'role' and (x.get('value') or '').lower() == 'rogue-donotuse']
-if found:
-    print('The rogue Role label is still present - find and delete it')
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+ip_lists = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/ip_lists')
+ip_list = next((i for i in ip_lists if (i.get('name') or '').lower() == 'remote-office'), None)
+if not ip_list:
+    print('IP List \"remote-office\" not found')
     sys.exit(1)
-print('Rogue label removed')
+
+ranges = ip_list.get('ip_ranges', [])
+has_range = any(r.get('from_ip') == '45.54.45.0/24' and not r.get('exclusion') for r in ranges)
+has_excl = any(r.get('from_ip') == '45.54.45.254' and r.get('exclusion') for r in ranges)
+
+reasons = []
+if not has_range:
+    reasons.append('missing the 45.54.45.0/24 range')
+if not has_excl:
+    reasons.append('missing the 45.54.45.254 exclusion')
+
+if reasons:
+    print('IP List \"remote-office\" ' + '; '.join(reasons))
+    sys.exit(1)
+
+print('IP List remote-office found with the correct range and exclusion')
+sys.exit(0)
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

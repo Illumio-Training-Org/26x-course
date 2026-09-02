@@ -11,14 +11,18 @@
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
 
-result=$(curl -s -u "$AUTH" "$BASE/labels?max_results=1000" | python3 -c "
+result=$(curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
 import json, sys
-d = json.load(sys.stdin)
-found = [x for x in d if x.get('key') == 'role' and (x.get('value') or '').lower() == 'rogue-donotuse']
-if found:
-    print('The rogue Role label is still present - find and delete it')
+ws = {w.get('hostname'): w for w in json.load(sys.stdin)}
+wl = ws.get('linux-vm')
+if not wl:
+    print('linux-vm workload not found')
     sys.exit(1)
-print('Rogue label removed')
+mode = wl.get('enforcement_mode')
+if mode != 'selective':
+    print('linux-vm enforcement_mode is \'' + str(mode) + '\', expected Selective')
+    sys.exit(1)
+print('linux-vm is in Selective enforcement')
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

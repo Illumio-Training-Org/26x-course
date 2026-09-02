@@ -139,7 +139,7 @@ nohup bash -c "
     -u \"api_${AUTOACCOUNT_APIKEY_ID}\" -s \"$AUTOACCOUNT_APIKEY_SECRET\" \
     -o \"$AUTOACCOUNT_ORG_ID\"
 
-  # Foundation Exam Task 6 (find & remove a rogue label): plant one Role
+  # Foundation Exam Task 9 (find & remove a rogue label): plant one Role
   # label after vensim's own content is in place - newstartup.sh wipes
   # pre-existing labels, so this must run after it, not before.
   curl -s -u \"api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}\" \

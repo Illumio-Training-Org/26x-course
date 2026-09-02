@@ -1,10 +1,22 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip.
-#
-# NOTE: AWS onboarding can't be done from a script - it requires
-# actually running the CloudFormation stack creation in the real AWS
-# Console. This is a stub so Skip is at least available and doesn't
-# error; it does NOT actually onboard the AWS account.
+# Runs when the learner clicks Skip. Brings the sandbox to the same
+# end-state Task 9 itself asks for: the rogue Role label gone.
+
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+
+href=$(curl -s -u "$AUTH" "$BASE/labels?max_results=1000" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+found = [x for x in d if x.get('key') == 'role' and (x.get('value') or '').lower() == 'rogue-donotuse']
+print(found[0]['href'] if found else '')
+")
+
+if [ -n "$href" ]; then
+  curl -s -u "$AUTH" -X DELETE "https://$AUTOACCOUNT_PCE_FQDN/api/v2$href" > /dev/null
+fi
 
 exit 0

@@ -1,18 +1,15 @@
 ---
 slug: task-8
-id: ru6okm047epw
+id: gi44pdldjtql
 type: challenge
-title: Task 8
-teaser: Create Policy Objects
+title: 08-Create a Scoped User
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-**1 )** Create an IP List named `remote-office`:
-- IP Address: `45.54.45.0/24`
-- Add an exclusion: `!45.54.45.254`
+Create a user and assign them the **Ruleset Manager** role, scoped to
+Environment: `Production`, Location: `ca` — not the whole organization.
 
-**2 )** Create a Label Group named `pci-staging` containing two
-Environment labels: `PCI` and `Staging`.
-
-**3 )** Create a Service named `Redis` for TCP port `6379`.
+> [!NOTE]
+> Leave the default **Viewer** role (scope: All) as-is — just add the
+> Ruleset Manager role alongside it.

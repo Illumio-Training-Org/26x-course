@@ -2,8 +2,7 @@
 slug: task-2
 id: zi3xxapqk6nr
 type: challenge
-title: Task 2
-teaser: Label the Workload
+title: 02-Label the Workload
 difficulty: ""
 timelimit: 0
 enhanced_loading: null

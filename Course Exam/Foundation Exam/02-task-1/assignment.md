@@ -2,8 +2,7 @@
 slug: task-1
 id: hsuignla0scy
 type: challenge
-title: Task 1
-teaser: Pair a Workload
+title: 01-Pair a Workload
 tabs:
 - id: 2iic9iu55oyd
   title: Linux

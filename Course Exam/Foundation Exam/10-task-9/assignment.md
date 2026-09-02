@@ -1,20 +1,11 @@
 ---
 slug: task-9
-id: dgtnxmcudfwu
+id: 0onotmlhytun
 type: challenge
-title: Task 9
-teaser: Onboard a Cloud Instance
-tabs:
-- id: 6egz5grzhtok
-  title: AWS
-  type: service
-  hostname: cloud-client
-  port: 80
+title: 09-Find & Remove a Rogue Label
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Onboard the AWS account to Illumio Cloud.
-
-> [!IMPORTANT]
-> Use **us-east-1** (N. Virginia) as the region.
+A rogue Role label has been planted somewhere in your organization.
+Find it and delete it.

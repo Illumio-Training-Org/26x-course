@@ -1,12 +1,11 @@
 ---
 slug: task-6
-id: 0onotmlhytun
 type: challenge
-title: Task 6
-teaser: Find & Remove a Rogue Label
+title: 06-Create an IP List
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-A rogue Role label has been planted somewhere in your organization.
-Find it and delete it.
+Create an IP List named `remote-office`:
+- IP Address: `45.54.45.0/24`
+- Add an exclusion: `!45.54.45.254`

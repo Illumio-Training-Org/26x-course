@@ -1,24 +1,19 @@
 ---
 slug: task-10
-id: tpydy0kisyxp
-type: quiz
-title: Task 10
-teaser: Find the AWS Account ID
+id: dgtnxmcudfwu
+type: challenge
+title: 10-Onboard a Cloud Instance
 tabs:
-- id: ezpc7uyl0i3o
+- id: 6egz5grzhtok
   title: AWS
   type: service
   hostname: cloud-client
   port: 80
-answers:
-- "8"
-- "10"
-- "12"
-- "16"
-solution:
-- 2
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-How many digits are in the AWS Account ID?
+Onboard the AWS account to Illumio Cloud.
+
+> [!IMPORTANT]
+> Use **us-east-1** (N. Virginia) as the region.
