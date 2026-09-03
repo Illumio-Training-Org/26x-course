@@ -77,3 +77,9 @@ echo $AUTOACCOUNT_TENANT_ID
 echo $AUTOACCOUNT_SAAPIKEY_KEYID
 echo $AUTOACCOUNT_SAAPIKEY_SECRET
 ```
+
+To watch the background build/onboarding progress live:
+
+```
+tail -f /var/log/aws-onboard-startup.log
+```

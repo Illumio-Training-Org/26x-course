@@ -207,6 +207,43 @@ nohup bash -c "
   echo '### CLOUD CREDENTIALS REGISTRATION COMPLETE ###'
   date
 
+  # -----------------------------------------------------------------
+  # AUTO-APPROVE SECURITY REVIEW - live-verified 2026-09-03 that
+  # inventory stays at zero indefinitely until Security Review is
+  # approved (Console: Cloud -> Security Review -> Approve). Captured
+  # the real call the Approve button makes
+  # (POST /api/v1/security_review/approve) and confirmed it accepts the
+  # same SAAPIKEY Basic auth as everything else here - a request against
+  # an already-approved account correctly returned 406 'security review
+  # already completed' rather than an auth error, proving the auth path
+  # works. There's a real gap between the account registering (srStatus
+  # flips to PENDING almost immediately) and the review actually being
+  # ready to approve (~5 min observed live) - not a fixed delay we know
+  # the length of, so retry rather than assume a wait time.
+  # -----------------------------------------------------------------
+  echo '### WAITING FOR SECURITY REVIEW TO BE READY, THEN AUTO-APPROVING ###'
+  date
+  sr_approved=0
+  for attempt in \$(seq 1 40); do
+    http_code=\$(curl -s -o /dev/null -w '%{http_code}' -X POST \"https://cloud.illum.io/api/v1/security_review/approve\" \
+      -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+      -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+      -H \"Content-Type: application/json\" \
+      -d \"{\\\"account_id\\\":\\\"\$AWS_ACCT_ID\\\",\\\"cloud\\\":\\\"aws\\\",\\\"enable_account_rw\\\":false,\\\"security_review_status\\\":\\\"APPROVED\\\"}\")
+    if [ \"\$http_code\" = \"200\" ]; then
+      echo \"Security Review approved after \$attempt attempt(s)\"
+      sr_approved=1
+      break
+    fi
+    echo \"Attempt \$attempt: security_review/approve returned \$http_code, retrying in 15s...\"
+    sleep 15
+  done
+  if [ \"\$sr_approved\" != \"1\" ]; then
+    echo '### SECURITY REVIEW APPROVAL NEVER SUCCEEDED - inventory may stay empty ###'
+  fi
+  echo '### SECURITY REVIEW AUTO-APPROVAL STEP COMPLETE ###'
+  date
+
 " > /var/log/aws-onboard-startup.log 2>&1 < /dev/null &
 
 echo "===== MAGIC LINK + ACCOUNT SETUP END ====="
