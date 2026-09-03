@@ -296,10 +296,49 @@ nohup bash -c "
       -H \"Content-Type: application/json\" \
       -d '{\"auto_approve_applications\":true,\"name\":\"aws-auto-discovery\",\"prefix\":\"\",\"rule_type\":\"TAG\",\"tag_keys\":[{\"cloud\":\"aws\",\"key\":\"app\"}]}'
     echo
+
+    # Deployments reference the VPC/subnet by CloudSecure's own internal
+    # inventory id (a UUID), not the raw AWS vpc-xxx/subnet-xxx string -
+    # live-verified 2026-09-03 by comparing a UI-created deployment's
+    # payload against bridge/resources' own 'id' field for the same
+    # objects. Resolves dev/prod by CIDR prefix, matching the shared
+    # terraform/main.tf's fixed layout (dev_subnet 10.0.1.0/24, prod_subnet
+    # 10.0.2.0/24 - both in the one VPC it creates).
+    echo '### RESOLVING VPC/SUBNET INTERNAL IDS FROM INVENTORY ###'
+    date
+    RESOURCES_JSON=\$(curl -s -X POST \"https://cloud.illum.io/api/v1/bridge/resources\" \
+      -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+      -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+      -H \"Content-Type: application/json\" \
+      -d '{\"exclude_references\": false, \"max_results\": 50, \"page_token\": null, \"sortBy\": {}, \"with_total_count\": true}')
+    VPC_ID=\$(echo \"\$RESOURCES_JSON\" | python3 -c \"import json,sys; d=json.load(sys.stdin); print(next((i.get('id') for i in d.get('items',[]) if i.get('object_type')=='AWS::EC2::VPC'), ''))\")
+    DEV_SUBNET_ID=\$(echo \"\$RESOURCES_JSON\" | python3 -c \"import json,sys; d=json.load(sys.stdin); print(next((i.get('id') for i in d.get('items',[]) if i.get('object_type')=='AWS::EC2::Subnet' and any(p.startswith('10.0.1.') for p in i.get('properties',{}).get('address_prefixes',[]))), ''))\")
+    PROD_SUBNET_ID=\$(echo \"\$RESOURCES_JSON\" | python3 -c \"import json,sys; d=json.load(sys.stdin); print(next((i.get('id') for i in d.get('items',[]) if i.get('object_type')=='AWS::EC2::Subnet' and any(p.startswith('10.0.2.') for p in i.get('properties',{}).get('address_prefixes',[]))), ''))\")
+    echo \"VPC_ID=\$VPC_ID DEV_SUBNET_ID=\$DEV_SUBNET_ID PROD_SUBNET_ID=\$PROD_SUBNET_ID\"
+
+    if [ -n \"\$VPC_ID\" ] && [ -n \"\$DEV_SUBNET_ID\" ] && [ -n \"\$PROD_SUBNET_ID\" ]; then
+      echo '### CREATING DEPLOYMENT: Production ###'
+      curl -s -X POST \"https://cloud.illum.io/api/v1/deployments\" \
+        -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+        -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+        -H \"Content-Type: application/json\" \
+        -d \"{\\\"accounts\\\":[],\\\"description\\\":\\\"\\\",\\\"name\\\":\\\"Production\\\",\\\"regions\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"us-east-1\\\"}],\\\"subnets\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$PROD_SUBNET_ID\\\"}],\\\"tags\\\":[],\\\"vnets\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$VPC_ID\\\"}]}\"
+      echo
+
+      echo '### CREATING DEPLOYMENT: Development ###'
+      curl -s -X POST \"https://cloud.illum.io/api/v1/deployments\" \
+        -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+        -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+        -H \"Content-Type: application/json\" \
+        -d \"{\\\"accounts\\\":[],\\\"description\\\":\\\"\\\",\\\"name\\\":\\\"Development\\\",\\\"regions\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"us-east-1\\\"}],\\\"subnets\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$DEV_SUBNET_ID\\\"}],\\\"tags\\\":[],\\\"vnets\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$VPC_ID\\\"}]}\"
+      echo
+    else
+      echo '### COULD NOT RESOLVE VPC/SUBNET IDS - SKIPPING DEPLOYMENTS ###'
+    fi
   else
-    echo '### INVENTORY NEVER SYNCED WITHIN 30 MIN - SKIPPING TAG MAPPING / DISCOVERY ###'
+    echo '### INVENTORY NEVER SYNCED WITHIN 30 MIN - SKIPPING TAG MAPPING / DISCOVERY / DEPLOYMENTS ###'
   fi
-  echo '### TAG-TO-LABEL MAPPING + APPLICATION DISCOVERY STEP COMPLETE ###'
+  echo '### TAG-TO-LABEL MAPPING + APPLICATION DISCOVERY + DEPLOYMENTS STEP COMPLETE ###'
   date
 
 " > /var/log/aws-onboard-startup.log 2>&1 < /dev/null &
