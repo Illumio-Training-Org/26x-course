@@ -208,28 +208,25 @@ nohup bash -c "
   date
 
   # -----------------------------------------------------------------
-  # AUTO-APPROVE SECURITY REVIEW - NOT required for inventory (confirmed
-  # live 2026-09-03: a second run's inventory populated fully with
-  # Security Review still PENDING, disproving an earlier coincidental
-  # correlation). Kept here anyway since it's harmless and may matter for
-  # a future task needing actual cloud-side write/enforcement. Captured
-  # the real call the Approve button makes
-  # (POST /api/v1/security_review/approve) and confirmed it accepts the
-  # same SAAPIKEY Basic auth as everything else here - a request against
-  # an already-approved account correctly returned 406 'security review
-  # already completed' rather than an auth error, proving the auth path
-  # works. There's a real gap between the account registering (srStatus
-  # flips to PENDING almost immediately) and the review actually being
-  # ready to approve (~5 min observed live) - not a fixed delay we know
-  # the length of, so retry rather than assume a wait time. Currently
-  # also hits a 500 'failed to set ruleset summaries' on AWS accounts
-  # Instruqt has recycled across tenants - a platform-side edge case,
-  # not something this retry loop can work around.
+  # AUTO-APPROVE SECURITY REVIEW - not required for inventory (confirmed
+  # live 2026-09-03: a run's inventory populated fully with Security
+  # Review still PENDING). Still wanted for real: subsequent policy
+  # enforcement needs it approved. Captured the real call the Approve
+  # button makes (POST /api/v1/security_review/approve) and confirmed
+  # the exact same payload/auth this loop uses succeeds once the review
+  # is genuinely ready (live-verified 2026-09-03: an identical retry
+  # after a manual UI approval correctly returned 406 'already
+  # completed', not an error - proving the syntax was always correct).
+  # The real problem was window length, not syntax: readiness can take
+  # as long as inventory itself (~20-25 min observed), well past this
+  # loop's original 10-minute budget, so it was giving up before the
+  # review was ever actually ready. Widened to match the inventory
+  # wait-loop's own 30-minute budget below.
   # -----------------------------------------------------------------
   echo '### WAITING FOR SECURITY REVIEW TO BE READY, THEN AUTO-APPROVING ###'
   date
   sr_approved=0
-  for attempt in \$(seq 1 40); do
+  for attempt in \$(seq 1 120); do
     http_code=\$(curl -s -o /dev/null -w '%{http_code}' -X POST \"https://cloud.illum.io/api/v1/security_review/approve\" \
       -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
       -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
