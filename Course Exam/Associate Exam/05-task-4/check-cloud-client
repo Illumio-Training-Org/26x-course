@@ -86,6 +86,28 @@ def is_all_workloads(consumers):
         return True
     return any(c.get('actors') == 'ams' for c in consumers)
 
+def describe_consumers(consumers):
+    # Human-readable version of consumers for fail messages - a linked
+    # ip_list/label/workload is just {'href': ...} otherwise, unreadable
+    # to a learner (same class of bug as describe_services, live-observed
+    # 2026-09-02).
+    out = []
+    for c in consumers or []:
+        if c.get('actors') == 'ams':
+            out.append('All Workloads')
+            continue
+        described = False
+        for key in ('ip_list', 'label', 'label_group', 'workload', 'virtual_service', 'virtual_server'):
+            ref = c.get(key)
+            if ref and ref.get('href'):
+                obj = get(ref['href'].replace('/api/v2', ''))
+                out.append(obj.get('name') or ref['href'])
+                described = True
+                break
+        if not described:
+            out.append(str(c))
+    return out
+
 reasons = []
 for rs in named:
     for dr in rs.get('deny_rules', []):
@@ -101,7 +123,7 @@ for rs in named:
             if not svc_ok:
                 missing.append('service should deny SSH - either the built-in SSH service, or both tcp/22 and udp/22 entered manually, found ' + str(describe_services(dr.get('ingress_services'))))
             if not from_all_ok:
-                missing.append('source should be All Workloads, found ' + str(dr.get('consumers')))
+                missing.append('source should be All Workloads, found ' + str(describe_consumers(dr.get('consumers'))))
             reasons.append('; '.join(missing))
 
 if reasons:

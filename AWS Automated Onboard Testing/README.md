@@ -143,8 +143,8 @@ Registry address** — providers/modules resolve from
 `registry.terraform.io` by default. So reading those two lines
 confirmed directly this is a real, published, first-party Illumio
 integration:
-- Provider: `registry.terraform.io/providers/illumio/illumio-cloudsecure`
-- Module: `registry.terraform.io/modules/illumio/cloudsecure/illumio`
+- Provider: https://registry.terraform.io/providers/illumio/illumio-cloudsecure/latest
+- Module: https://registry.terraform.io/modules/illumio/cloudsecure/illumio/latest
 
 The underlying source code (needed to actually debug the two bugs
 below) came from the module's GitHub repo,

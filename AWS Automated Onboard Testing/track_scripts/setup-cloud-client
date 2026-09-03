@@ -131,6 +131,37 @@ nohup bash -c "
   date
   cd /root/26x-course/terraform-cloudsecure-aws
 
+  # The SAAPIKEY credentials are minted by Instruqt's magic-link custom
+  # resource at sandbox boot - live-observed 2026-09-03 that Illumio's
+  # OAuth token endpoint can reject a freshly-minted key with
+  # 'invalid_client' for a short window before it's fully active on
+  # Illumio's side (the exact same credentials worked seconds later via
+  # a direct curl test). Wait for the token endpoint to actually accept
+  # them before handing them to terraform, instead of racing it.
+  echo '### WAITING FOR CLOUDSECURE CREDENTIALS TO ACTIVATE ###'
+  date
+  cloudsecure_ready=0
+  for attempt in \$(seq 1 30); do
+    http_code=\$(curl -s -o /dev/null -w '%{http_code}' -X POST \"https://cloud.illum.io/api/v1/authenticate\" \
+      -H \"Content-Type: application/x-www-form-urlencoded\" \
+      --data-urlencode \"grant_type=client_credentials\" \
+      --data-urlencode \"client_id=\$AUTOACCOUNT_SAAPIKEY_KEYID\" \
+      --data-urlencode \"client_secret=\$AUTOACCOUNT_SAAPIKEY_SECRET\")
+    if [ \"\$http_code\" = \"200\" ]; then
+      echo \"CloudSecure credentials active after \$attempt attempt(s)\"
+      cloudsecure_ready=1
+      break
+    fi
+    echo \"Attempt \$attempt: token endpoint returned \$http_code, retrying in 10s...\"
+    sleep 10
+  done
+  if [ \"\$cloudsecure_ready\" != \"1\" ]; then
+    echo '### CLOUDSECURE CREDENTIALS NEVER ACTIVATED - ABORTING ONBOARDING ###'
+    date
+    exit 1
+  fi
+  date
+
   terraform init -input=false
   terraform plan -out=tfplan -input=false \
     -var \"illumio_cloudsecure_client_id=\$AUTOACCOUNT_SAAPIKEY_KEYID\" \
@@ -138,6 +169,31 @@ nohup bash -c "
   terraform apply -input=false -auto-approve tfplan
 
   echo '### AUTOMATED CLOUDSECURE ONBOARDING APPLY COMPLETE ###'
+  date
+
+  # -----------------------------------------------------------------
+  # REGISTER CLOUD CREDENTIALS - live-verified 2026-09-03 that the
+  # illumio-cloudsecure_aws_account resource above is NOT enough on its
+  # own: the account shows status ONBOARDING_COMPLETE, but roleArn stays
+  # empty and inventory never populates, because the real Console wizard
+  # relies on a CloudFormation stack whose Lambda makes a SEPARATE REST
+  # call to activate the role for CloudSecure to actually assume. This
+  # replays that exact same call (confirmed against the real CFT
+  # downloaded from the Console's 'Add AWS Cloud Organization' wizard),
+  # using the same SAAPIKEY Basic auth already used for every other
+  # CloudSecure REST call in this project.
+  # -----------------------------------------------------------------
+  echo '### REGISTERING CLOUD CREDENTIALS WITH CLOUDSECURE ###'
+  date
+  ROLE_ARN=\$(terraform output -raw role_arn)
+  ROLE_EXTERNAL_ID=\$(terraform output -raw role_external_id)
+  AWS_ACCT_ID=\$(terraform output -raw aws_account_id)
+  curl -sf -X POST \"https://cloud.illum.io/api/v1/integrations/cloud_credentials\" \
+    -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+    -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+    -H \"Content-Type: application/json\" \
+    -d \"{\\\"account_id\\\":\\\"\$AWS_ACCT_ID\\\",\\\"role_arn\\\":\\\"\$ROLE_ARN\\\",\\\"external_id\\\":\\\"\$ROLE_EXTERNAL_ID\\\",\\\"type\\\":\\\"AWSRole\\\"}\"
+  echo '### CLOUD CREDENTIALS REGISTRATION COMPLETE ###'
   date
 
 " > /var/log/aws-onboard-startup.log 2>&1 < /dev/null &
