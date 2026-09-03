@@ -208,9 +208,11 @@ nohup bash -c "
   date
 
   # -----------------------------------------------------------------
-  # AUTO-APPROVE SECURITY REVIEW - live-verified 2026-09-03 that
-  # inventory stays at zero indefinitely until Security Review is
-  # approved (Console: Cloud -> Security Review -> Approve). Captured
+  # AUTO-APPROVE SECURITY REVIEW - NOT required for inventory (confirmed
+  # live 2026-09-03: a second run's inventory populated fully with
+  # Security Review still PENDING, disproving an earlier coincidental
+  # correlation). Kept here anyway since it's harmless and may matter for
+  # a future task needing actual cloud-side write/enforcement. Captured
   # the real call the Approve button makes
   # (POST /api/v1/security_review/approve) and confirmed it accepts the
   # same SAAPIKEY Basic auth as everything else here - a request against
@@ -219,7 +221,10 @@ nohup bash -c "
   # works. There's a real gap between the account registering (srStatus
   # flips to PENDING almost immediately) and the review actually being
   # ready to approve (~5 min observed live) - not a fixed delay we know
-  # the length of, so retry rather than assume a wait time.
+  # the length of, so retry rather than assume a wait time. Currently
+  # also hits a 500 'failed to set ruleset summaries' on AWS accounts
+  # Instruqt has recycled across tenants - a platform-side edge case,
+  # not something this retry loop can work around.
   # -----------------------------------------------------------------
   echo '### WAITING FOR SECURITY REVIEW TO BE READY, THEN AUTO-APPROVING ###'
   date
@@ -242,6 +247,62 @@ nohup bash -c "
     echo '### SECURITY REVIEW APPROVAL NEVER SUCCEEDED - inventory may stay empty ###'
   fi
   echo '### SECURITY REVIEW AUTO-APPROVAL STEP COMPLETE ###'
+  date
+
+  # -----------------------------------------------------------------
+  # TAG-TO-LABEL MAPPING + APPLICATION DISCOVERY - both confirmed
+  # automatable live 2026-09-03 with the same SAAPIKEY Basic auth. Waits
+  # for inventory to actually exist first (bridge/resources non-empty) -
+  # the real ~15-25 min propagation window this whole track exists to
+  # hide - before attempting either, since both need indexed tag data to
+  # mean anything. Role/Location go through Tag-to-Label Mapping
+  # (POST /api/v1/tags_to_label) - confirmed live that 'app'/'env' are
+  # deliberately REJECTED there ('cannot be used for tag to label
+  # mappings'), by design: those two are meant to come from Application
+  # Discovery instead (POST /api/v1/discovery_rules), which resolved a
+  # matching Application Definition in under 2 seconds in testing, twice.
+  # -----------------------------------------------------------------
+  echo '### WAITING FOR INVENTORY TO SYNC ###'
+  date
+  inventory_ready=0
+  for attempt in \$(seq 1 90); do
+    item_count=\$(curl -s -X POST \"https://cloud.illum.io/api/v1/bridge/resources\" \
+      -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+      -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+      -H \"Content-Type: application/json\" \
+      -d '{\"exclude_references\": false, \"max_results\": 1, \"page_token\": null, \"sortBy\": {}, \"with_total_count\": true}' \
+      | python3 -c \"import json,sys; print(len(json.load(sys.stdin).get('items',[])))\" 2>/dev/null)
+    if [ \"\$item_count\" != \"0\" ] && [ -n \"\$item_count\" ]; then
+      echo \"Inventory ready after \$attempt attempt(s)\"
+      inventory_ready=1
+      break
+    fi
+    echo \"Attempt \$attempt: inventory not ready yet, retrying in 20s...\"
+    sleep 20
+  done
+
+  if [ \"\$inventory_ready\" = \"1\" ]; then
+    echo '### CREATING TAG-TO-LABEL MAPPING: role -> Role ###'
+    date
+    curl -s -X POST \"https://cloud.illum.io/api/v1/tags_to_label\" \
+      -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+      -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+      -H \"Content-Type: application/json\" \
+      -d '{\"key\":\"role\",\"display_name\":\"Role\",\"display_info\":{\"icon\":\"role\"},\"tag_keys\":[{\"key\":\"role\",\"cloud\":\"aws\",\"id\":\"0\",\"created\":false}]}'
+    echo
+
+    echo '### CREATING APPLICATION DISCOVERY RULE: aws:app ###'
+    date
+    curl -s -X POST \"https://cloud.illum.io/api/v1/discovery_rules\" \
+      -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+      -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+      -H \"Content-Type: application/json\" \
+      -d '{\"auto_approve_applications\":true,\"name\":\"aws-auto-discovery\",\"prefix\":\"\",\"rule_type\":\"TAG\",\"tag_keys\":[{\"cloud\":\"aws\",\"key\":\"app\"}]}'
+    echo
+  else
+    echo '### INVENTORY NEVER SYNCED WITHIN 30 MIN - SKIPPING TAG MAPPING / DISCOVERY ###'
+  fi
+  echo '### TAG-TO-LABEL MAPPING + APPLICATION DISCOVERY STEP COMPLETE ###'
   date
 
 " > /var/log/aws-onboard-startup.log 2>&1 < /dev/null &
