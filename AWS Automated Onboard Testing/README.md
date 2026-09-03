@@ -9,31 +9,48 @@ the onboarded account.
 
 ## Why this exists
 
-The Select Exam's "onboard & ringfence a cloud application" task needs
-an AWS account onboarded to Illumio Cloud before a ringfencing policy
-can be built against it. The full manual pipeline (AWS onboard → tag
-mapping → application discovery → deployment) has a real 20-30 minute
-propagation delay, which is too much dead time to burn mid-exam.
-Confirmed here: at least the AWS **account-linking** step can be
-automated entirely, matching the same pattern the shared base lab
-already uses for vensim and the AWS Terraform build (both also run
-invisibly in the background from track start).
+The Select Exam's cloud-onboarding task (now Task 10 — "create a
+discovery rule to onboard the application") needs an AWS account
+onboarded to Illumio Cloud, with inventory synced, before a learner can
+even select a Cloud Tag Key to build a discovery rule against. The full
+manual pipeline (AWS onboard → inventory sync → tag-key availability)
+has a real ~15-30 minute propagation delay, which is too much dead time
+to burn mid-exam if the learner has to sit through it. Confirmed here:
+the entire onboarding pipeline can run invisibly in the background from
+track boot, matching the same pattern the shared base lab already uses
+for vensim and the AWS Terraform build.
 
-## Result — CONFIRMED WORKING (2026-09-02)
+## Result — CONFIRMED WORKING END TO END (2026-09-03)
 
-Live-tested end to end. `terraform apply`: 6 resources created.
-`check-cloud` (queries the real Illumio CloudSecure API independently
-of Terraform's own report):
+Live-tested repeatedly across multiple fresh sandboxes. From a clean
+track restart, with **zero** manual intervention, the background
+pipeline now:
 
-```
-PASS - AWS account onboarded: aws-onboard-test Account
-(status: ONBOARDING_COMPLETE, security review: PENDING)
-```
+1. Builds the shared AWS infrastructure (the tagged `crm` app — 4 EC2
+   instances, `crm-dev-web/db` and `crm-prod-web/db`) via the existing
+   shared `terraform/` folder.
+2. Creates a dedicated IAM role in AWS for CloudSecure, matching the
+   real Console wizard's own CloudFormation template's policy content.
+3. Registers the AWS account with CloudSecure via Terraform
+   (`illumio-cloudsecure_aws_account` resource) — reaches
+   `status: ONBOARDING_COMPLETE`.
+4. Replays the CloudFormation template's own credential-registration
+   REST call (`POST /api/v1/integrations/cloud_credentials`) — without
+   this, the account *shows* onboarded but `roleArn` stays empty and
+   nothing ever syncs.
+5. Inventory (EC2 instances, security groups, VPCs, etc. — 33 resources
+   in testing) appears on its own roughly 15-25 minutes after
+   onboarding completes.
+6. Once inventory exists, the Cloud Tag Keys dropdown (`aws:app`)
+   becomes selectable, and creating a Discovery Rule resolves to a
+   matching Application Definition (e.g. `"crm"`) in **~2 seconds** —
+   trivial exam-task latency, nothing like the original worst case.
 
-**Not yet proven:** this only automates account *linking*. The
-separate Tag-to-Label Mapping + Application Discovery pipeline (the
-~20-30 min propagation piece) is still untested — unclear whether the
-same Terraform provider family covers that too.
+So the actual exam-relevant timing is: **~15-25 min of invisible
+background wait, then near-instant** once the learner acts. Running
+onboarding at track boot (rather than exposing it as an exam task)
+comfortably hides that window behind however long a learner takes to
+reach the last task.
 
 ## How it works, step by step
 
@@ -61,11 +78,21 @@ don't pass the new CloudSecure variables).
 3. **The shared AWS build runs first** — clones the whole `26x-course`
    repo, `cd`s into the shared `terraform/` folder, and does a normal
    `terraform init/plan/apply`. Builds the actual AWS infrastructure
-   (VPC, EC2, S3). Nothing CloudSecure-related happens yet.
+   (the tagged `crm` app, VPC, EC2, S3).
 
-4. **The isolated onboarding config runs second** —
+4. **A defensive re-clean of `AUTOACCOUNT_SAAPIKEY_*`/`TENANT_ID`
+   happens first** inside the subshell (see bug #3 below) — don't
+   trust that values exported earlier in the parent script survive
+   into this `nohup bash -c` child untouched.
+
+5. **A preflight wait-loop polls the real OAuth token endpoint**
+   (`POST /api/v1/authenticate`) until it returns `200`, up to 30
+   attempts / 5 minutes, before ever handing credentials to Terraform
+   (see bug #4 below).
+
+6. **The isolated onboarding config runs** —
    `cd /root/26x-course/terraform-cloudsecure-aws` (own state, own
-   lock file, entirely separate from step 3), then:
+   lock file, entirely separate from step 3):
    ```
    terraform init -input=false
    terraform plan -out=tfplan -input=false \
@@ -73,43 +100,22 @@ don't pass the new CloudSecure variables).
      -var "illumio_cloudsecure_client_secret=$AUTOACCOUNT_SAAPIKEY_SECRET"
    terraform apply -input=false -auto-approve tfplan
    ```
-   The `-var` flags are the whole trick: they take credentials the
-   sandbox already has (`$AUTOACCOUNT_SAAPIKEY_*`, normally only used
-   for read-only CloudSecure checks) and feed them into Terraform.
+   Creates: an IAM role (`aws-onboard-testRole`), its inline read +
+   protection policies (matching the real CFT's policy content — see
+   below), a `SecurityAudit` attachment, a random external ID, and the
+   `illumio-cloudsecure_aws_account` resource itself.
 
-5. **`provider.tf` declares two providers, two different jobs:**
-   - `provider "aws"` — no explicit credentials, reuses the same
-     ambient AWS credentials the shared build in step 3 already used.
-   - `provider "illumio-cloudsecure"` — authenticates to Illumio's
-     CloudSecure Config API via `client_id`/`client_secret`, a
-     documented OAuth2 flow. Completely separate from, and unrelated
-     to, the Console's browser-based Add AWS wizard (see "What didn't
-     work" below).
+7. **The `cloud_credentials` registration call replays** (see "The
+   missing piece" below) — this is what actually activates the role
+   for CloudSecure to assume and start collecting.
 
-6. **`variables.tf`** declares the two OAuth2 credential strings plus
-   a cosmetic naming prefix.
+8. **A Security Review auto-approve retry loop runs** (up to 40
+   attempts / 10 minutes) — see "Security Review" below for why this
+   turned out not to matter for what the exam actually needs, but is
+   still wired up since it's harmless and may matter for a future
+   enforcement-related task.
 
-7. **`main.tf`** calls the actual module:
-   ```hcl
-   module "aws_account_onboarding" {
-     source           = "illumio/cloudsecure/illumio//modules/aws_account"
-     version          = ">=1.7.0"
-     name             = "${var.account_name_prefix} Account"
-     iam_name_prefix  = var.account_name_prefix
-     organization_id  = "standalone"
-     tags = { ... }
-   }
-   ```
-   This is a **published, official Illumio module** — not our own
-   code. Under the hood it creates: an IAM role in AWS trusting
-   Illumio's account, two inline IAM policies (`read` — lets Illumio
-   see resources; `protection` — lets it write security groups), a
-   `SecurityAudit` policy attachment, a random external ID, and
-   finally the `illumio-cloudsecure_aws_account` resource — the actual
-   API call that registers the account with CloudSecure. That's the 6
-   resources in the apply output.
-
-8. **Verification, two independent ways:** Terraform's own apply
+9. **Verification, two independent ways:** Terraform's own apply
    output, and `check-cloud` (built in step 1) hitting the CloudSecure
    API directly — confirming Illumio's own backend agrees the account
    is onboarded, not just that Terraform *says* it ran successfully.
@@ -146,9 +152,11 @@ integration:
 - Provider: https://registry.terraform.io/providers/illumio/illumio-cloudsecure/latest
 - Module: https://registry.terraform.io/modules/illumio/cloudsecure/illumio/latest
 
-The underlying source code (needed to actually debug the two bugs
-below) came from the module's GitHub repo,
-`github.com/illumio/terraform-illumio-cloudsecure`.
+The underlying source code (needed to actually debug the bugs below)
+came from the module's GitHub repo,
+`github.com/illumio/terraform-illumio-cloudsecure`, and the
+provider's own repo,
+`github.com/illumio/terraform-provider-illumio-cloudsecure`.
 
 ## What didn't work first (and why it's a dead end, not a bug to fix)
 
@@ -164,22 +172,163 @@ undocumented API waiting to be found. Correctly abandoned — same
 category as local user creation being restricted to session auth,
 found earlier in this course's build.
 
-## Two real bugs found and fixed getting this working
+## The missing piece: `cloud_credentials` registration (found 2026-09-03)
+
+Getting `terraform apply` to succeed (account shows
+`status: ONBOARDING_COMPLETE`) turned out **not** to be enough —
+`roleArn` stayed empty and inventory never populated, no matter how
+long we waited. The fix came from downloading the *real*
+CloudFormation template the Console's own "Add AWS Cloud Organization"
+wizard generates (**Cloud → Onboarding → Add AWS → Download
+CloudFormation Stack**) and reading it directly.
+
+That CFT deploys a Lambda-backed Custom Resource whose entire job,
+after the IAM role exists, is one REST call:
+`POST /api/v1/integrations/cloud_credentials` with
+`{account_id, role_arn, external_id, type: "AWSRole"}`. That's what
+actually activates the role for CloudSecure to assume and start
+collecting — a completely separate step from the Terraform provider's
+own `illumio-cloudsecure_aws_account` resource, which apparently
+creates the account record but doesn't perform this activation itself.
+
+`terraform-cloudsecure-aws/main.tf` now creates the IAM role directly
+(rather than letting the module generate an internal role with a
+random external ID we could never retrieve), exposes `role_arn` /
+`role_external_id` / `aws_account_id` as outputs, and
+`setup-cloud-client` replays that exact registration call after apply,
+using the same SAAPIKEY Basic auth already proven to work against
+every other CloudSecure REST endpoint in this project. Confirmed
+`200 {}` response, matching what the CFT's own Lambda code checks for
+(`if r.getcode() == 200`).
+
+The extra CFT resources (Lambda, its execution role, the
+`Initialize`-state Custom Resource) are pure CloudFormation delivery
+mechanism — plumbing needed only because CloudFormation itself can't
+make an arbitrary HTTPS call without a Lambda. They don't represent
+extra state or permissions Illumio's backend needs; replicating the
+one real API call was sufficient.
+
+## Security Review — investigated, turned out NOT to be the blocker
+
+Initially looked like Security Review approval (**Cloud → Security
+Review**) was gating inventory collection: on one run, approving it
+manually via the UI was followed by inventory appearing 49 seconds
+later — looked causal. A second full run disproved that: inventory
+appeared after ~15 minutes with Security Review still sitting at
+`PENDING`, never approved. Confirmed directly in the Console too — Tag
+to Label Mapping and Application Discovery were both fully usable with
+Security Review still unapproved. **Security Review is unrelated to
+inventory, tag mapping, or discovery** — it looks like it only governs
+whether Illumio is allowed to *write* security group changes back to
+AWS (the `protection` IAM policy), not read-side visibility. The
+original 49-second correlation was coincidence — the approval click
+happened to land in the same natural ~15-25 min window inventory was
+already about to appear in regardless.
+
+Practical effect: since Task 10 (create a discovery rule) is a
+read/labeling-side action, **it doesn't need Security Review automated
+at all**. The auto-approve step is still wired into `setup-cloud-client`
+(harmless, and may matter for a future task needing actual cloud-side
+enforcement), but isn't load-bearing for what this prototype set out to
+solve.
+
+The real Console call for approval was captured and confirmed
+callable via the same SAAPIKEY Basic auth as everything else
+(`POST /api/v1/security_review/approve` with
+`{account_id, cloud, enable_account_rw, security_review_status}`) — a
+request against an *already-approved* account correctly returned `406
+"security review already completed"` rather than an auth error,
+proving the auth path itself works. However, live automated testing
+kept hitting `500 "failed to set ruleset summaries"` on a fresh,
+not-yet-approved account. Root cause traced to AWS sandbox account
+**reuse**: Instruqt appears to draw the underlying AWS account from a
+small recycled pool (confirmed — two different Illumio orgs/tenants on
+two different track launches both got handed AWS account
+`869935077306`), and approving Security Review again for an AWS
+account number that already has completed-review history under a
+*different* tenant appears to hit a genuine backend conflict. Not
+something fixable from our side; worth flagging to the platform team
+separately, but not blocking since it's not load-bearing for the exam.
+
+## Tag-to-Label Mapping / Application Discovery — confirmed, no extra automation needed
+
+Directly tested end to end: once inventory exists, the Discovery Rule
+flow works exactly as designed and resolves fast.
+
+- **Console path**: Cloud → Application Discovery → Discovery Rules →
+  Add. Fields: Rule Name, optional Application Prefix, Rule Type
+  (`Cloud Tags`), Cloud Tag Keys (populated from tags Illumio has
+  already indexed off the account — this is why it stays empty until
+  inventory has synced), Auto Approve toggle.
+- **Real request captured**:
+  `POST /api/v1/discovery_rules` with
+  ```json
+  {
+    "auto_approve_applications": true,
+    "name": "x",
+    "prefix": "",
+    "rule_type": "TAG",
+    "tag_keys": [{"cloud": "aws", "key": "app"}]
+  }
+  ```
+- **Result timing**: the discovery rule and the resulting Application
+  Definition (`name: "crm"`, matched from the tag value) both showed
+  up via `GET /discovery_rules` and `POST /application_definitions`
+  within **2 seconds** of saving the rule. `discovery_state: "QUEUED"`
+  and `approved: false` initially — full `deployment` status takes
+  longer (untested how much longer) — but for a check-cloud-client's
+  purposes, confirming the rule + a matching Application Definition
+  exist is enough to prove the learner did it correctly, well within
+  normal exam-task latency.
+
+This directly answers the question this prototype was investigating
+via the colleague's pulled reference lab (which didn't cover any of
+this): none of the CloudSecure Terraform module family, nor the
+colleague's lab, automate tag-mapping/discovery/deployment — but they
+also don't need to be automated, since they resolve in seconds once
+inventory exists, and inventory itself is what actually needed the
+background head-start.
+
+## Bugs found and fixed getting this working
 
 1. **`AccessDeniedException` on `organizations:DescribeOrganization`.**
    The module's default behavior auto-detects AWS Organization
    structure via a data source lookup, which fails on a standalone
    (non-Organization) sandbox account — confirmed live in the Console
    wizard this account uses "Account" mode, not "Organization" mode.
-   Fixed by setting `organization_id = "standalone"` explicitly (found
-   by reading the module's `main.tf` on GitHub) — the module only
-   forwards this value to Illumio's API as descriptive metadata; AWS
-   itself never sees it.
+   Fixed by setting `organization_id = "standalone"` explicitly.
 2. **`Unsupported argument: organization_id`.** The version constraint
    (`~>1.5.3`, copied from the colleague's older working example)
-   predates the `organization_id` variable entirely. Confirmed by
-   diffing git tags in the module's GitHub repo that it was only added
-   in `v1.7.0`. Bumped the constraint to `>=1.7.0`.
+   predates the `organization_id` variable entirely — only added in
+   `v1.7.0`. Bumped the constraint.
+3. **`oauth2: invalid_client` from a corrupted credential, not a real
+   auth failure (2026-09-03).** Terraform's own OAuth request was
+   failing, but the *same* credentials worked fine via a direct manual
+   `curl`. `set -x` tracing eventually revealed why: `client_id`/
+   `client_secret` were still JSON-array-wrapped (literal
+   `["value"]`) inside the `nohup bash -c "..."` subshell, despite
+   being cleaned earlier in the parent script — something reintroduces
+   the raw value across that subshell boundary. Fixed by re-cleaning
+   `AUTOACCOUNT_SAAPIKEY_KEYID`/`SECRET`/`TENANT_ID` locally, right at
+   the top of the subshell, rather than trusting inheritance across
+   it. This was very likely the real cause of the original
+   "worked yesterday, failed today" failures too, not credential
+   propagation delay as first suspected.
+4. **Freshly-minted SAAPIKEY rejected for a short window.** Even after
+   fix #3, a brand-new SAAPIKEY could still get `invalid_client` for a
+   short time before Illumio's backend fully activates it. Added a
+   preflight wait-loop polling `/api/v1/authenticate` before handing
+   credentials to Terraform at all.
+5. **`Invalid count argument` on the module's internal
+   `aws_partition`/`random_password` resources.** The module uses
+   `count = local.use_existing_role ? 0 : 1` internally; feeding it a
+   `role_arn` that depends on a resource in the *same* apply
+   (`aws_iam_role.cloudsecure_role.arn`, not known until after apply)
+   makes that count unresolvable at plan time. Fixed by calling the
+   underlying `illumio-cloudsecure_aws_account` resource directly
+   instead of going through the module at all — we already create and
+   tag our own role, so the module's role-creation path was never
+   used anyway.
 
 ## Security note
 
@@ -190,10 +339,15 @@ told to have the colleague rotate it. That folder is deliberately kept
 outside this git repo (and outside `26x-course` entirely) so it's
 never at risk of being committed or pushed.
 
-## Open next step
+## Open next steps
 
-Check whether `illumio/terraform-illumio-cloudsecure` (or a sibling
-module) covers Tag-to-Label Mapping / Application Discovery too, or
-whether that part still needs the task-reordering fallback (kick off
-onboarding early in an exam, put the actual ringfencing check at the
-end) instead.
+- Apply this same background-automation pattern to the actual Select
+  Exam's `track_scripts/setup-cloud-client`, once ready to wire it in
+  for real (currently only proven in this standalone prototype).
+- Decide whether to keep this track around longer-term as a dedicated
+  AWS build/test lab for exploring further automation (tag-to-label
+  mapping rules, deployments, application discovery configuration) —
+  floated as an idea, not yet decided.
+- Flag the Security Review `500 "failed to set ruleset summaries"`
+  AWS-account-reuse collision to the platform team, separate from this
+  prototype's own scope.
