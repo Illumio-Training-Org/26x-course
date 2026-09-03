@@ -229,10 +229,21 @@ resource "aws_iam_role_policy" "protection" {
   })
 }
 
-module "aws_account_onboarding" {
-  source  = "illumio/cloudsecure/illumio//modules/aws_account"
-  version = ">=1.7.0"
-  name    = "${var.account_name_prefix} Account"
+# Calls the underlying provider resource directly instead of going through
+# the illumio/cloudsecure/illumio//modules/aws_account module - the module
+# uses `count = local.use_existing_role ? 0 : 1` internally to decide
+# whether to create its own role, and that expression can't be resolved at
+# plan time when role_arn is fed a value that depends on a resource in the
+# SAME apply (aws_iam_role.cloudsecure_role.arn isn't known until after
+# apply), producing a hard "Invalid count argument" error - live-observed
+# 2026-09-03. Since we already create and tag our own role above (matching
+# the CFT's exact policy content) and never use any of the module's own
+# role-creation logic, calling the resource directly avoids the module's
+# count entirely and is simpler besides.
+resource "illumio-cloudsecure_aws_account" "account" {
+  account_id = data.aws_caller_identity.current.account_id
+  mode       = "ReadWrite"
+  name       = "${var.account_name_prefix} Account"
 
   # This is a standalone Instruqt sandbox AWS account, not part of a real
   # AWS Organization - the calling identity gets AccessDeniedException on
@@ -240,14 +251,6 @@ module "aws_account_onboarding" {
   # organization_id explicitly skips that data lookup entirely.
   organization_id = "standalone"
 
-  # Use the role we created above (matching the CFT's exact policy
-  # content) instead of letting the module generate its own internal role
-  # + random external ID that we'd have no way to retrieve afterwards.
   role_arn         = aws_iam_role.cloudsecure_role.arn
   role_external_id = random_password.role_external_id.result
-
-  tags = {
-    Name  = "CloudSecure Account Policy"
-    Owner = "26.x AWS Automated Onboard Testing prototype"
-  }
 }
