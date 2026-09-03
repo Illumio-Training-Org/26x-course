@@ -103,6 +103,17 @@ nohup bash -c "
   export AWS_REGION=us-east-1
   export AWS_DEFAULT_REGION=us-east-1
 
+  # Defensive re-clean: AUTOACCOUNT_SAAPIKEY_KEYID/SECRET/TENANT_ID can
+  # arrive in THIS subshell still JSON-array-wrapped (e.g. literal
+  # [\"value\"]) despite being cleaned earlier in the parent script -
+  # live-observed 2026-09-03, caused oauth2 invalid_client on every
+  # attempt because the wrapped value never matches a real credential.
+  # Don't trust inheritance across the nohup bash -c boundary - re-clean
+  # locally, right before use, regardless of what caused the corruption.
+  AUTOACCOUNT_SAAPIKEY_KEYID=\$(echo \"\$AUTOACCOUNT_SAAPIKEY_KEYID\" | tr -d '{}[]\"')
+  AUTOACCOUNT_SAAPIKEY_SECRET=\$(echo \"\$AUTOACCOUNT_SAAPIKEY_SECRET\" | tr -d '{}[]\"')
+  AUTOACCOUNT_TENANT_ID=\$(echo \"\$AUTOACCOUNT_TENANT_ID\" | tr -d '{}[]\"')
+
   cd /root
   git clone https://github.com/Illumio-Training-Org/26x-course.git
   cd /root/26x-course/terraform
