@@ -288,6 +288,15 @@ nohup bash -c "
       -d '{\"key\":\"role\",\"display_name\":\"Role\",\"display_info\":{\"icon\":\"role\"},\"tag_keys\":[{\"key\":\"role\",\"cloud\":\"aws\",\"id\":\"0\",\"created\":false}]}'
     echo
 
+    echo '### CREATING TAG-TO-LABEL MAPPING: location -> Location ###'
+    date
+    curl -s -X POST \"https://cloud.illum.io/api/v1/tags_to_label\" \
+      -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+      -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+      -H \"Content-Type: application/json\" \
+      -d '{\"key\":\"loc\",\"display_name\":\"Location\",\"display_info\":{\"icon\":\"loc\"},\"tag_keys\":[{\"key\":\"location\",\"cloud\":\"aws\",\"id\":\"0\",\"created\":false}]}'
+    echo
+
     echo '### CREATING APPLICATION DISCOVERY RULE: aws:app ###'
     date
     curl -s -X POST \"https://cloud.illum.io/api/v1/discovery_rules\" \

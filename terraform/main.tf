@@ -255,6 +255,6 @@ resource "aws_instance" "ec2" {
     env      = each.value.env
     role     = each.value.role
     company  = "illumio"
-    location = "AWS"
+    location = "aws"
   }
 }
