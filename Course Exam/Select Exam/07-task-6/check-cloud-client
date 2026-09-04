@@ -38,13 +38,53 @@ expected = {('app', 'ordering'), ('env', 'development'), ('loc', 'ca')}
 if not expected.issubset(scope_labels):
     print('Task6-RingfenceOrdering scope should include Application=ordering, Environment=Development, Location=ca, found ' + str(sorted(scope_labels)))
     sys.exit(1)
-has_all_services_rule = any(not rule.get('ingress_services') for rule in rs.get('rules', []))
-if not has_all_services_rule:
-    print('Task6-RingfenceOrdering needs an intra-scope allow rule for All Services, not restricted to a specific service')
-    sys.exit(1)
 
-print('Task6-RingfenceOrdering is scoped and has a rule')
-sys.exit(0)
+def is_all_workloads(actors):
+    # 'All Workloads' as a source/destination is an actors:'ams' entry -
+    # an ip_list (e.g. the built-in 'Any') or a specific workload/label
+    # is NOT the same thing, even though a learner might reasonably
+    # reach for 'Any' by mistake.
+    return any(a.get('actors') == 'ams' for a in actors)
+
+def is_all_services(ingress_services):
+    # 'All Services' can be an empty ingress_services list, or a linked
+    # service object whose real name is literally 'All Services' -
+    # live-verified 2026-09-04 that the PCE models it as the latter
+    # (a real service href), not just an empty list.
+    if not ingress_services:
+        return True
+    for entry in ingress_services:
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            if (svc.get('name') or '').lower() == 'all services':
+                return True
+    return False
+
+reasons = []
+for rule in rs.get('rules', []):
+    if not rule.get('enabled', True):
+        continue
+    src_ok = is_all_workloads(rule.get('consumers', []))
+    dst_ok = is_all_workloads(rule.get('providers', []))
+    svc_ok = is_all_services(rule.get('ingress_services'))
+    if src_ok and dst_ok and svc_ok:
+        print('Task6-RingfenceOrdering is scoped and has an intra-scope All Workloads / All Services allow rule')
+        sys.exit(0)
+    missing = []
+    if not src_ok:
+        missing.append('source should be All Workloads, not a specific IP list/workload/label')
+    if not dst_ok:
+        missing.append('destination should be All Workloads, not a specific IP list/workload/label')
+    if not svc_ok:
+        missing.append('service should be All Services, not restricted to a specific service')
+    reasons.append('; '.join(missing))
+
+if reasons:
+    print('Task6-RingfenceOrdering has a rule in scope but: ' + '; '.join(reasons))
+else:
+    print('Task6-RingfenceOrdering needs an enabled intra-scope allow rule for All Workloads to All Workloads, All Services')
+sys.exit(1)
 ")
 status=$?
 if [ "$status" -ne 0 ]; then
