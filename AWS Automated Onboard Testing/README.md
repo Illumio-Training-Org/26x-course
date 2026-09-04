@@ -20,6 +20,66 @@ the entire onboarding pipeline can run invisibly in the background from
 track boot, matching the same pattern the shared base lab already uses
 for vensim and the AWS Terraform build.
 
+## Summary (2026-09-04)
+
+The background pipeline in `track_scripts/setup-cloud-client` now
+automates every step of onboarding an AWS account to Illumio Cloud and
+getting it fully visible in the Console, with **zero** browser/wizard
+interaction:
+
+1. **AWS account onboarding** — Terraform creates a dedicated IAM role
+   (matching the real Console wizard's own CloudFormation template)
+   and registers the account with CloudSecure.
+2. **Credential registration** — replays the CFT's own
+   `cloud_credentials` REST call, which is what actually activates the
+   role for CloudSecure to assume (the Terraform account resource
+   alone isn't enough).
+3. **Tag-to-Label Mapping** — `role → Role` and `location → Location`,
+   using the real Console API. (`app`/`env` are deliberately rejected
+   by this endpoint — those two are meant to come from Application
+   Discovery instead, confirmed by design, not a bug.)
+4. **Application Discovery** — a rule keyed on `aws:app`, which
+   resolves into a real Application Definition (`crm`).
+5. **Deployments** — Production and Development, each tied to the
+   correct AWS subnet *and* an `env` Cloud Tags stack (the second part
+   turned out to be required — see Timings below).
+
+**What this gets you on the Map / Inventory, automatically**: the full
+topology — `AWS → Production/Development → crm → web/db` — with real
+Role, Location, and Environment labels resolved onto the workloads, no
+learner or instructor action required at all.
+
+**What's deliberately NOT automated: Security Review.** This is the
+one remaining manual step (Cloud → Security Review → Approve). It
+governs whether Illumio is allowed to *write* policy back to AWS
+(security group changes) — a real security boundary, not an oversight:
+confirmed the official `illumio-cloudsecure` Terraform provider has no
+`security_review` resource at all (checked its full generated resource
+list directly), and a full DevTools capture of the real browser action
+showed nothing hidden to replicate — just a display-only GET followed
+by the approve POST. The most likely explanation is that action's
+backend logic requires a real logged-in user session, not a service
+account, which is a sensible restriction for something that grants
+write access to a customer's cloud environment. It's also **not
+required for anything above** — inventory, tag mapping, discovery, and
+deployments all resolve independent of it (proven by a run where
+everything else completed with Security Review still `PENDING`).
+
+**Rough timings** (see the full data table further down for every
+individual run):
+- Onboarding → inventory synced: **~21 min average** (range 14-28 min)
+- Inventory → Tag-to-Label Mapping / Discovery Rule / Application
+  Definition all resolving: **near-instant** (seconds)
+- Tag/Discovery Rule creation → actual label values + associated
+  labels showing in the UI: **~11-12 min** on top of the above
+- Deployment creation → Environment resolving on the Map: **~9 min**,
+  but only *after* adding the Cloud Tags stack — the VPC/Subnet stack
+  alone never resolved even after 34+ minutes of waiting
+
+So realistically: **~30-35 minutes** from track boot to a fully
+labeled, fully mapped environment with zero manual steps (Security
+Review aside).
+
 ## Result — CONFIRMED WORKING END TO END (2026-09-03)
 
 Live-tested repeatedly across multiple fresh sandboxes. From a clean
