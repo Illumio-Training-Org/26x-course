@@ -1,0 +1,67 @@
+#!/bin/sh
+#
+# Runs when the learner clicks Skip.
+#
+# FIRST DRAFT - best-effort. Adds the 2 extra labels to both workloads
+# (no-ops per workload if not paired yet) and creates the
+# Task2-Ringfence ruleset scoped correctly, but does NOT yet create the
+# intra-scope allow rule itself (exact rule shape not live-verified).
+# Detail to be refined.
+
+. /root/.autoaccount_env
+
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+python3 -c "
+import json, subprocess
+
+def call(method, path, body=None):
+    cmd = ['curl', '-s', '-u', '$AUTH', '-X', method, 'https://$FQDN/api/v2' + path]
+    if body is not None:
+        cmd += ['-H', 'Content-Type: application/json', '-d', json.dumps(body)]
+    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    try:
+        return json.loads(out)
+    except Exception:
+        return None
+
+def find_or_create_label(key, value):
+    labels = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
+    for l in labels:
+        if l.get('key') == key and (l.get('value') or '').lower() == value.lower():
+            return l['href']
+    created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
+    return created['href'] if created else None
+
+type_href = find_or_create_label('type', 'server')
+ir_href = find_or_create_label('DFIRBubble', 'IR-CLEANBUBBLE')
+
+ws = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000') or []
+by_host = {w.get('hostname'): w for w in ws}
+for host in ('linux-vm', 'windows-vm'):
+    wl = by_host.get(host)
+    if not wl:
+        continue
+    existing = [l for l in wl.get('labels', [])]
+    call('PUT', wl['href'], {'labels': existing + [{'href': type_href}, {'href': ir_href}]})
+
+app_href = find_or_create_label('app', 'portal')
+env_href = find_or_create_label('env', 'Production')
+loc_href = find_or_create_label('loc', 'ca')
+
+rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets') or []
+if not any((r.get('name') or '').lower() == 'task2-ringfence' for r in rulesets):
+    call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
+        'name': 'Task2-Ringfence',
+        'scopes': [[
+            {'label': {'href': app_href}},
+            {'label': {'href': env_href}},
+            {'label': {'href': loc_href}},
+            {'label': {'href': type_href}},
+            {'label': {'href': ir_href}},
+        ]],
+    })
+"
+
+exit 0

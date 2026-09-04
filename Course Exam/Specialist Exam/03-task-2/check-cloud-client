@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+# FIRST DRAFT - scope/rule shape not yet live-verified against a real
+# sandbox (unlike Foundation Exam's checks). Deliberately loose:
+# confirms the ruleset exists, is scoped to the right 5 labels, and has
+# at least one rule - doesn't yet strictly validate "intra-scope" rule
+# semantics. Refine once ringfencing is live-tested.
+
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+def resolve_labels(entries):
+    out = {}
+    for e in entries:
+        href = e.get('href')
+        if not href:
+            continue
+        lbl = get(href.replace('/api/v2', ''))
+        out[(lbl.get('key') or '').lower()] = (lbl.get('value') or '').lower()
+    return out
+
+ws = {w.get('hostname'): w for w in get('/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')}
+reasons = []
+for host in ('linux-vm', 'windows-vm'):
+    wl = ws.get(host)
+    if not wl:
+        reasons.append(host + ' not found')
+        continue
+    labels = resolve_labels(wl.get('labels', []))
+    if labels.get('type') != 'server':
+        reasons.append(host + \" missing Type='server'\")
+    if labels.get('dfirbubble') != 'ir-cleanbubble':
+        reasons.append(host + \" missing IR='IR-CLEANBUBBLE'\")
+
+rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task2-ringfence'), None)
+if not rs:
+    reasons.append('Ruleset \"Task2-Ringfence\" not found')
+else:
+    scope_labels = set()
+    for scope in rs.get('scopes', []):
+        for entry in scope:
+            href = (entry.get('label') or {}).get('href')
+            if href:
+                lbl = get(href.replace('/api/v2', ''))
+                scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
+    expected_scope = {('app', 'portal'), ('env', 'production'), ('loc', 'ca'), ('type', 'server'), ('dfirbubble', 'ir-cleanbubble')}
+    if not expected_scope.issubset(scope_labels):
+        reasons.append('Task2-Ringfence scope should include Application=portal, Environment=Production, Location=ca, Type=server, IR=IR-CLEANBUBBLE, found ' + str(sorted(scope_labels)))
+    has_all_services_rule = any(
+        not rule.get('ingress_services')
+        for rule in rs.get('rules', [])
+    )
+    if not has_all_services_rule:
+        reasons.append('Task2-Ringfence needs an intra-scope allow rule for All Services, not restricted to a specific service')
+
+if reasons:
+    print('; '.join(reasons))
+    sys.exit(1)
+print('Both workloads have the 2 extra labels, and Task2-Ringfence is scoped correctly with a rule')
+sys.exit(0)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

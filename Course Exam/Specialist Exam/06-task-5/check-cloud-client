@@ -1,0 +1,72 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+def resolve(entries):
+    out = {}
+    for e in entries:
+        href = (e.get('label') or {}).get('href')
+        if not href:
+            continue
+        lbl = get(href.replace('/api/v2', ''))
+        out[(lbl.get('key') or '').lower()] = (lbl.get('value') or '').lower()
+    return out
+
+rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task5-denydevprod'), None)
+if not rs:
+    print('Ruleset \"Task5-DenyDevProd\" not found')
+    sys.exit(1)
+
+# A rule can be scopeless (ca repeated explicitly in both providers and
+# consumers) or scoped to ca on the ruleset itself (Intra-Scope rule,
+# ca then implied rather than repeated) - accept either. Resolve the
+# ruleset's own scopes first to see if ca is already implied.
+scope_labels = {}
+for scope_group in rs.get('scopes', []):
+    for entry in scope_group:
+        href = (entry.get('label') or {}).get('href')
+        if not href:
+            continue
+        lbl = get(href.replace('/api/v2', ''))
+        scope_labels[(lbl.get('key') or '').lower()] = (lbl.get('value') or '').lower()
+scoped_to_ca = scope_labels.get('loc') == 'ca'
+
+want_consumer = {'app': 'ordering', 'env': 'development'}
+want_provider = {'app': 'ordering', 'env': 'production'}
+if not scoped_to_ca:
+    want_consumer['loc'] = 'ca'
+    want_provider['loc'] = 'ca'
+
+for dr in rs.get('deny_rules', []):
+    consumers = resolve(dr.get('consumers', []))
+    providers = resolve(dr.get('providers', []))
+    if all(consumers.get(k) == v for k, v in want_consumer.items()) and all(providers.get(k) == v for k, v in want_provider.items()):
+        print('Found the Dev->Prod deny rule for ordering in ca')
+        sys.exit(0)
+
+print('Task5-DenyDevProd exists but has no rule denying Dev->Prod for ordering in ca')
+sys.exit(1)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

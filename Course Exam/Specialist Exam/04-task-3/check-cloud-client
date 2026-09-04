@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+# FIRST DRAFT - rule shape not yet live-verified. Detail to refine.
+
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+def resolve(entries):
+    out = {}
+    for e in entries:
+        href = (e.get('label') or {}).get('href')
+        if not href:
+            continue
+        lbl = get(href.replace('/api/v2', ''))
+        out[(lbl.get('key') or '').lower()] = (lbl.get('value') or '').lower()
+    return out
+
+rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task3-coreservices'), None)
+if not rs:
+    print('Ruleset \"Task3-CoreServices\" not found')
+    sys.exit(1)
+
+def has_tcp_5666(ingress_services):
+    for entry in ingress_services or []:
+        if entry.get('port') == 5666 and entry.get('proto') == 6:
+            return True
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            for sp in svc.get('service_ports', []):
+                if sp.get('port') == 5666 and sp.get('proto') == 6:
+                    return True
+    return False
+
+expected_providers = {'app': 'portal', 'env': 'production', 'loc': 'ca'}
+best_reasons = None
+for rule in rs.get('rules', []):
+    providers = resolve(rule.get('providers', []))
+    consumers = resolve(rule.get('consumers', []))
+    labels_ok = all(providers.get(k) == v for k, v in expected_providers.items()) and consumers.get('role') == 'nagios'
+    service_ok = has_tcp_5666(rule.get('ingress_services'))
+    if labels_ok and service_ok:
+        print('Found the nagios -> portal allow rule for tcp/5666 in Task3-CoreServices')
+        sys.exit(0)
+    reasons = []
+    if consumers.get('role') != 'nagios':
+        reasons.append('source should be Role=nagios, found ' + str(consumers.get('role')))
+    for k, v in expected_providers.items():
+        if providers.get(k) != v:
+            reasons.append('destination missing ' + k + '=' + v)
+    if labels_ok and not service_ok:
+        reasons.append('service is wrong - should be TCP port 5666 (Nagios NRPE)')
+    if best_reasons is None or len(reasons) < len(best_reasons):
+        best_reasons = reasons
+
+if best_reasons:
+    print('Task3-CoreServices rule is close but: ' + '; '.join(best_reasons))
+else:
+    print('Task3-CoreServices exists but has no rule allowing Role=nagios to the portal application')
+sys.exit(1)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

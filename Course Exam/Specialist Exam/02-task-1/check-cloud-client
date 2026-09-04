@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+
+# setup-cloud-client writes cleaned AUTOACCOUNT_* values here since this
+# script's execution context doesn't source .bashrc (interactive-only).
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+def resolve_labels(entries):
+    out = {}
+    for e in entries:
+        href = e.get('href')
+        if not href:
+            continue
+        lbl = get(href.replace('/api/v2', ''))
+        out[(lbl.get('key') or '').lower()] = (lbl.get('value') or '').lower()
+    return out
+
+ws = {w.get('hostname'): w for w in get('/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')}
+expected_shared = {'app': 'portal', 'env': 'production', 'loc': 'ca'}
+expected_role = {'linux-vm': 'web', 'windows-vm': 'db'}
+
+unpaired = [host for host in expected_role if not ws.get(host) or not ws[host].get('ven')]
+if unpaired:
+    print('Not both workloads are paired as VENs yet')
+    sys.exit(1)
+
+labels_ok = True
+for host, want_role in expected_role.items():
+    labels = resolve_labels(ws[host].get('labels', []))
+    if labels.get('role') != want_role:
+        labels_ok = False
+    for k, v in expected_shared.items():
+        if labels.get(k) != v:
+            labels_ok = False
+
+if not labels_ok:
+    print('Both workloads are paired, but the labeling is not correct')
+    sys.exit(1)
+
+print('Both workloads paired and labeled correctly into the portal application')
+sys.exit(0)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0
