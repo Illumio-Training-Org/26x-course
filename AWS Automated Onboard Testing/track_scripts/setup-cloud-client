@@ -288,20 +288,51 @@ nohup bash -c "
 
     if [ -n \"\$VPC_ID\" ] && [ -n \"\$DEV_SUBNET_ID\" ] && [ -n \"\$PROD_SUBNET_ID\" ]; then
       echo '### CREATING DEPLOYMENT: Production ###'
-      curl -s -X POST \"https://cloud.illum.io/api/v1/deployments\" \
+      PROD_DEPLOY_RESP=\$(curl -s -X POST \"https://cloud.illum.io/api/v1/deployments\" \
         -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
         -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
         -H \"Content-Type: application/json\" \
-        -d \"{\\\"accounts\\\":[],\\\"description\\\":\\\"\\\",\\\"name\\\":\\\"Production\\\",\\\"regions\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"us-east-1\\\"}],\\\"subnets\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$PROD_SUBNET_ID\\\"}],\\\"tags\\\":[],\\\"vnets\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$VPC_ID\\\"}]}\"
-      echo
+        -d \"{\\\"accounts\\\":[],\\\"description\\\":\\\"\\\",\\\"name\\\":\\\"Production\\\",\\\"regions\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"us-east-1\\\"}],\\\"subnets\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$PROD_SUBNET_ID\\\"}],\\\"tags\\\":[],\\\"vnets\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$VPC_ID\\\"}]}\")
+      echo \"\$PROD_DEPLOY_RESP\"
+      PROD_DEPLOY_ID=\$(echo \"\$PROD_DEPLOY_RESP\" | python3 -c \"import json,sys; print(json.load(sys.stdin).get('deployment',{}).get('id',''))\")
 
       echo '### CREATING DEPLOYMENT: Development ###'
-      curl -s -X POST \"https://cloud.illum.io/api/v1/deployments\" \
+      DEV_DEPLOY_RESP=\$(curl -s -X POST \"https://cloud.illum.io/api/v1/deployments\" \
         -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
         -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
         -H \"Content-Type: application/json\" \
-        -d \"{\\\"accounts\\\":[],\\\"description\\\":\\\"\\\",\\\"name\\\":\\\"Development\\\",\\\"regions\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"us-east-1\\\"}],\\\"subnets\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$DEV_SUBNET_ID\\\"}],\\\"tags\\\":[],\\\"vnets\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$VPC_ID\\\"}]}\"
-      echo
+        -d \"{\\\"accounts\\\":[],\\\"description\\\":\\\"\\\",\\\"name\\\":\\\"Development\\\",\\\"regions\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"us-east-1\\\"}],\\\"subnets\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$DEV_SUBNET_ID\\\"}],\\\"tags\\\":[],\\\"vnets\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$VPC_ID\\\"}]}\")
+      echo \"\$DEV_DEPLOY_RESP\"
+      DEV_DEPLOY_ID=\$(echo \"\$DEV_DEPLOY_RESP\" | python3 -c \"import json,sys; print(json.load(sys.stdin).get('deployment',{}).get('id',''))\")
+
+      # Adding a Cloud Tags deployment stack (env=dev/prod) is what
+      # actually made these show up on the Map - live-verified
+      # 2026-09-04 that the VPC/Subnet stack alone (the POST above)
+      # left every workload under 'No Environment' even after 34+
+      # minutes, but a PUT adding this Cloud Tags stack resolved it in
+      # ~9 minutes. The PUT payload uses a genuinely different schema
+      # from the POST above (fields wrapped in {\"metadata\": [...]}
+      # instead of flat arrays, tags wrapped in {\"tags\": [...]}) -
+      # captured directly from the real Console edit-and-save action,
+      # not guessed.
+      if [ -n \"\$PROD_DEPLOY_ID\" ]; then
+        echo '### ADDING CLOUD TAGS STACK (env=prod) TO PRODUCTION DEPLOYMENT ###'
+        curl -s -X PUT \"https://cloud.illum.io/api/v1/deployments/\$PROD_DEPLOY_ID\" \
+          -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+          -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+          -H \"Content-Type: application/json\" \
+          -d \"{\\\"accounts\\\":{\\\"metadata\\\":[]},\\\"description\\\":\\\"\\\",\\\"name\\\":\\\"Production\\\",\\\"regions\\\":{\\\"metadata\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"us-east-1\\\"}]},\\\"subnets\\\":{\\\"metadata\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$PROD_SUBNET_ID\\\"}]},\\\"tags\\\":{\\\"tags\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"key\\\":\\\"env\\\",\\\"value\\\":\\\"prod\\\"}]},\\\"vnets\\\":{\\\"metadata\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$VPC_ID\\\"}]}}\"
+        echo
+      fi
+      if [ -n \"\$DEV_DEPLOY_ID\" ]; then
+        echo '### ADDING CLOUD TAGS STACK (env=dev) TO DEVELOPMENT DEPLOYMENT ###'
+        curl -s -X PUT \"https://cloud.illum.io/api/v1/deployments/\$DEV_DEPLOY_ID\" \
+          -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+          -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+          -H \"Content-Type: application/json\" \
+          -d \"{\\\"accounts\\\":{\\\"metadata\\\":[]},\\\"description\\\":\\\"\\\",\\\"name\\\":\\\"Development\\\",\\\"regions\\\":{\\\"metadata\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"us-east-1\\\"}]},\\\"subnets\\\":{\\\"metadata\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$DEV_SUBNET_ID\\\"}]},\\\"tags\\\":{\\\"tags\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"key\\\":\\\"env\\\",\\\"value\\\":\\\"dev\\\"}]},\\\"vnets\\\":{\\\"metadata\\\":[{\\\"cloud\\\":\\\"aws\\\",\\\"id\\\":\\\"\$VPC_ID\\\"}]}}\"
+        echo
+      fi
     else
       echo '### COULD NOT RESOLVE VPC/SUBNET IDS - SKIPPING DEPLOYMENTS ###'
     fi
