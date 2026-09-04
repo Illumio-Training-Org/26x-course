@@ -9,16 +9,9 @@ the onboarded account.
 
 ## Why this exists
 
-The Select Exam's cloud-onboarding task (now Task 10 — "create a
-discovery rule to onboard the application") needs an AWS account
-onboarded to Illumio Cloud, with inventory synced, before a learner can
-even select a Cloud Tag Key to build a discovery rule against. The full
-manual pipeline (AWS onboard → inventory sync → tag-key availability)
-has a real ~15-30 minute propagation delay, which is too much dead time
-to burn mid-exam if the learner has to sit through it. Confirmed here:
-the entire onboarding pipeline can run invisibly in the background from
-track boot, matching the same pattern the shared base lab already uses
-for vensim and the AWS Terraform build.
+This exists to automate the AWS onboarding build process and reduce
+the wait times involved. This lab forms the basis of content that may
+get reused elsewhere across 26.x.
 
 ## Summary (2026-09-04)
 
