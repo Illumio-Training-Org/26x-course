@@ -10,4 +10,4 @@ enhanced_loading: null
 Ringfence the `Payment` application in `LDN`: create a ruleset named
 `Task9-RingfencePayment` with an allow rule so workloads in the
 `Payment` application (Location: `LDN`) can communicate freely with
-each other. Create these labels if they don't already exist.
+each other.
