@@ -66,6 +66,32 @@ The AWS Terraform build is running in the background (`tail -f
 it) - no vensim, no VMs, just the AWS account build and (once built)
 an automated onboarding attempt.
 
+## What gets built and automated, hands-free
+
+1. **AWS infrastructure** - a `crm` app (4 EC2 instances: web/db, in
+   both dev and prod), one VPC, two subnets.
+2. **AWS account onboarding** to Illumio Cloud (CloudSecure).
+3. **Tag-to-Label Mapping** - `role → Role`, `location → Location`.
+4. **Application Discovery** - a rule on `aws:app`, resolving the `crm`
+   Application Definition.
+5. **Deployments** - `Production` and `Development`, each tied to the
+   correct subnet and an `env` Cloud Tags stack.
+
+No learner or instructor action is required for any of this - it all
+happens automatically in the background. The one deliberate exception
+is **Security Review** (Cloud → Security Review → Approve), which is
+left as a manual step by design (see the track's `README.md` for why).
+
+## Rough timing
+
+- Onboarding → everything above configured: **~20-33 minutes**
+  (this has varied across test runs; budget up to 50 minutes)
+- Configuration → actually visible on the Map (labels, environments
+  resolved): **another ~10-15 minutes** on top of that
+
+So budget **up to about 45-50 minutes** from track start before
+expecting to see the full topology on the Map.
+
 To grab the sandbox's credentials, run this in the cloud console tab:
 
 ```
