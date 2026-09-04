@@ -27,6 +27,30 @@ def resolve(entries):
         out[(lbl.get('key') or '').lower()] = (lbl.get('value') or '').lower()
     return out
 
+def service_names(ingress_services):
+    names = set()
+    for entry in ingress_services or []:
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            n = (svc.get('name') or '').lower()
+            if n:
+                names.add(n)
+    return names
+
+def is_all_services(ingress_services):
+    # 'All Services' can be an empty ingress_services list, or a linked
+    # service object whose real name is literally 'All Services' - see
+    # Task 6/7's check for the same live-verified behavior.
+    if not ingress_services:
+        return True
+    return 'all services' in service_names(ingress_services)
+
+def is_ssh_only(ingress_services):
+    if not ingress_services or is_all_services(ingress_services):
+        return False
+    return any('ssh' in n for n in service_names(ingress_services))
+
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task8-denyglobal'), None)
 if not rs:
@@ -34,26 +58,41 @@ if not rs:
     sys.exit(1)
 
 dev_to_prod = False
-prod_to_dev = False
+dev_to_prod_all_services = False
 for dr in rs.get('deny_rules', []):
     consumers = resolve(dr.get('consumers', []))
     providers = resolve(dr.get('providers', []))
     if consumers.get('app') == 'ordering' and providers.get('app') == 'ordering':
         if consumers.get('env') == 'development' and providers.get('env') == 'production':
             dev_to_prod = True
-        if consumers.get('env') == 'production' and providers.get('env') == 'development':
-            prod_to_dev = True
+            if is_all_services(dr.get('ingress_services')):
+                dev_to_prod_all_services = True
 
-if dev_to_prod and prod_to_dev:
-    print('Found both Dev->Prod and Prod->Dev deny rules for ordering (global)')
-    sys.exit(0)
+ssh_dev_to_prod = False
+for rule in rs.get('rules', []):
+    if not rule.get('enabled', True):
+        continue
+    consumers = resolve(rule.get('consumers', []))
+    providers = resolve(rule.get('providers', []))
+    if consumers.get('app') != 'ordering' or providers.get('app') != 'ordering':
+        continue
+    if consumers.get('env') == 'development' and providers.get('env') == 'production':
+        if is_ssh_only(rule.get('ingress_services')):
+            ssh_dev_to_prod = True
 
 missing = []
 if not dev_to_prod:
-    missing.append('Dev->Prod')
-if not prod_to_dev:
-    missing.append('Prod->Dev')
-print('Task8-DenyGlobal is missing: ' + ', '.join(missing))
+    missing.append('Dev->Prod deny rule is missing')
+elif not dev_to_prod_all_services:
+    missing.append('Dev->Prod deny rule should cover All Services, not a specific service')
+if not ssh_dev_to_prod:
+    missing.append('missing an Allow Rule permitting SSH from Development to Production for ordering')
+
+if not missing:
+    print('Found Dev->Prod deny (All Services) for ordering, plus an SSH allow rule')
+    sys.exit(0)
+
+print('Task8-DenyGlobal: ' + '; '.join(missing))
 sys.exit(1)
 ")
 status=$?

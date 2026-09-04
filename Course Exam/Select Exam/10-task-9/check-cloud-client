@@ -2,9 +2,6 @@
 #
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
-#
-# FIRST DRAFT - checks scope only, not the intra-scope rule shape
-# (same caveat as Task 2/7). Detail to refine.
 
 . /root/.autoaccount_env
 
@@ -21,9 +18,9 @@ def get(path):
     return json.loads(out)
 
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
-rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task9-ringfencepayment'), None)
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task9-nanosegmentpayment'), None)
 if not rs:
-    print('Ruleset \"Task9-RingfencePayment\" not found')
+    print('Ruleset \"Task9-NanoSegmentPayment\" not found')
     sys.exit(1)
 
 scope_labels = set()
@@ -35,16 +32,73 @@ for scope in rs.get('scopes', []):
             scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
 
 expected = {('app', 'payment'), ('loc', 'ldn')}
-if not expected.issubset(scope_labels):
-    print('Task9-RingfencePayment scope should include Application=Payment, Location=LDN, found ' + str(sorted(scope_labels)))
-    sys.exit(1)
-has_all_services_rule = any(not rule.get('ingress_services') for rule in rs.get('rules', []))
-if not has_all_services_rule:
-    print('Task9-RingfencePayment needs an intra-scope allow rule for All Services, not restricted to a specific service')
+if scope_labels != expected:
+    print('Task9-NanoSegmentPayment scope should be exactly Application=Payment, Location=LDN (no extra labels like an Environment), found ' + str(sorted(scope_labels)))
     sys.exit(1)
 
-print('Task9-RingfencePayment is scoped and has a rule')
-sys.exit(0)
+def resolve_labels(entries):
+    out = set()
+    for e in entries:
+        href = (e.get('label') or {}).get('href')
+        if href:
+            lbl = get(href.replace('/api/v2', ''))
+            out.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
+    return out
+
+def service_matches(ingress_services, target_port, target_proto):
+    for entry in ingress_services or []:
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            for p in svc.get('service_ports') or []:
+                lo = p.get('port')
+                hi = p.get('to_port', lo)
+                if p.get('proto') == target_proto and lo is not None and lo <= target_port <= hi:
+                    return True
+        else:
+            lo = entry.get('port')
+            hi = entry.get('to_port', lo)
+            if entry.get('proto') == target_proto and lo is not None and lo <= target_port <= hi:
+                return True
+    return False
+
+enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
+if len(enabled_rules) != 2:
+    print('Task9-NanoSegmentPayment should have exactly two enabled intra-scope rules (one per traffic flow), found ' + str(len(enabled_rules)))
+    sys.exit(1)
+
+web_to_processing = False
+processing_to_db = False
+other_issues = []
+for rule in enabled_rules:
+    cons = resolve_labels(rule.get('consumers', []))
+    provs = resolve_labels(rule.get('providers', []))
+    svc = rule.get('ingress_services')
+    if ('role', 'web') in cons and ('role', 'processing') in provs:
+        if service_matches(svc, 8070, 6):
+            web_to_processing = True
+        else:
+            other_issues.append('web->processing rule found but service is not TCP/8070')
+    elif ('role', 'processing') in cons and ('role', 'db') in provs:
+        if service_matches(svc, 3306, 6):
+            processing_to_db = True
+        else:
+            other_issues.append('processing->db rule found but service is not TCP/3306')
+    else:
+        other_issues.append('found a rule that does not match either expected flow (check source/destination roles and direction)')
+
+if web_to_processing and processing_to_db:
+    print('Task9-NanoSegmentPayment has both required flows: web->processing (TCP/8070) and processing->db (TCP/3306)')
+    sys.exit(0)
+
+missing = []
+if not web_to_processing:
+    missing.append('missing web -> processing on TCP/8070')
+if not processing_to_db:
+    missing.append('missing processing -> db on TCP/3306')
+missing += other_issues
+print('Task9-NanoSegmentPayment: ' + '; '.join(missing))
+sys.exit(1)
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

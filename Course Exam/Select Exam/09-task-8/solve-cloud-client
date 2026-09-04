@@ -1,7 +1,11 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Creates Task8-DenyGlobal with both
-# directions - pure org-level objects.
+# Runs when the learner clicks Skip. Creates Task8-DenyGlobal with a
+# Dev->Prod deny (All Services) for ordering, plus a plain Dev->Prod
+# Allow Rule that permits SSH - pure org-level objects, no scope.
+# Idempotent: merges in only whatever pieces are missing if the
+# ruleset already partially exists (e.g. the learner built some of it
+# by hand before skipping).
 
 . /root/.autoaccount_env
 
@@ -29,28 +33,66 @@ def find_or_create_label(key, value):
     created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
     return created['href'] if created else None
 
+def find_service_href(name_contains):
+    services = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/services?max_results=1000') or []
+    for s in services:
+        if name_contains in (s.get('name') or '').lower():
+            return s['href']
+    return None
+
+def label_set(entries):
+    return {(l.get('label') or {}).get('href') for l in entries}
+
+def has_pair(existing, cdir, pdir):
+    for e in existing:
+        if cdir <= label_set(e.get('consumers', [])) and pdir <= label_set(e.get('providers', [])):
+            return True
+    return False
+
 app_href = find_or_create_label('app', 'ordering')
 dev_href = find_or_create_label('env', 'Development')
 prod_href = find_or_create_label('env', 'Production')
+all_services_href = find_service_href('all services')
+ssh_href = find_service_href('ssh')
 
-rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets') or []
-if not any((r.get('name') or '').lower() == 'task8-denyglobal' for r in rulesets):
-    call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
+dev_to_prod = {app_href, dev_href}
+prod_to_dev = {app_href, prod_href}
+
+rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets?max_results=1000') or []
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task8-denyglobal'), None)
+if not rs:
+    rs = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
         'name': 'Task8-DenyGlobal',
         'scopes': [[]],
-        'deny_rules': [
-            {
-                'ingress_services': [{'port': 1, 'proto': 6, 'to_port': 65535}],
-                'consumers': [{'label': {'href': app_href}}, {'label': {'href': dev_href}}],
-                'providers': [{'label': {'href': app_href}}, {'label': {'href': prod_href}}],
-            },
-            {
-                'ingress_services': [{'port': 1, 'proto': 6, 'to_port': 65535}],
-                'consumers': [{'label': {'href': app_href}}, {'label': {'href': prod_href}}],
-                'providers': [{'label': {'href': app_href}}, {'label': {'href': dev_href}}],
-            },
-        ],
     })
+
+if rs and rs.get('href'):
+    deny_rules = rs.get('deny_rules', [])
+    if not has_pair(deny_rules, dev_to_prod, prod_to_dev):
+        call('PUT', rs['href'], {
+            'deny_rules': deny_rules + [{
+                'enabled': True,
+                'providers': [{'label': {'href': app_href}, 'exclusion': False}, {'label': {'href': prod_href}, 'exclusion': False}],
+                'consumers': [{'label': {'href': app_href}, 'exclusion': False}, {'label': {'href': dev_href}, 'exclusion': False}],
+                'ingress_services': [{'href': all_services_href}] if all_services_href else [],
+                'network_type': 'brn',
+                'override': False,
+                'egress_services': [],
+                'unscoped_consumers': False,
+                'all_ips_except_for_in_consumers': False,
+                'all_ips_except_for_in_providers': False,
+            }],
+        })
+
+    rules = rs.get('rules', [])
+    if not has_pair(rules, dev_to_prod, prod_to_dev):
+        call('POST', rs['href'] + '/sec_rules', {
+            'enabled': True,
+            'ingress_services': [{'href': ssh_href}] if ssh_href else [],
+            'consumers': [{'label': {'href': app_href}}, {'label': {'href': dev_href}}],
+            'providers': [{'label': {'href': app_href}}, {'label': {'href': prod_href}}],
+            'resolve_labels_as': {'consumers': ['workloads'], 'providers': ['workloads']},
+        })
 "
 
 exit 0

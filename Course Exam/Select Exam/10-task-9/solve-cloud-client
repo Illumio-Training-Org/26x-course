@@ -1,12 +1,9 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Creates the Payment/LDN labels
-# (didn't exist in the org's pre-seeded content, confirmed 2026-09-02)
-# and Task9-RingfencePayment scoped correctly - pure org-level
-# objects.
-#
-# FIRST DRAFT - does not yet create the intra-scope rule itself. Detail
-# to be refined.
+# Runs when the learner clicks Skip. Creates Task9-NanoSegmentPayment
+# scoped to Payment/LDN, plus the two nano-segmented intra-scope rules
+# that match the app's real traffic flows: web -> processing (TCP/8070)
+# and processing -> db (TCP/3306), each one-directional.
 
 . /root/.autoaccount_env
 
@@ -36,16 +33,48 @@ def find_or_create_label(key, value):
 
 app_href = find_or_create_label('app', 'Payment')
 loc_href = find_or_create_label('loc', 'LDN')
+web_href = find_or_create_label('role', 'web')
+processing_href = find_or_create_label('role', 'processing')
+db_href = find_or_create_label('role', 'db')
 
-rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets') or []
-if not any((r.get('name') or '').lower() == 'task9-ringfencepayment' for r in rulesets):
-    call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
-        'name': 'Task9-RingfencePayment',
+rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets?max_results=1000') or []
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task9-nanosegmentpayment'), None)
+if not rs:
+    rs = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
+        'name': 'Task9-NanoSegmentPayment',
         'scopes': [[
             {'label': {'href': app_href}},
             {'label': {'href': loc_href}},
         ]],
     })
+
+def label_set(entries):
+    return {(l.get('label') or {}).get('href') for l in entries}
+
+def has_pair(existing, cdir, pdir):
+    for e in existing:
+        if cdir <= label_set(e.get('consumers', [])) and pdir <= label_set(e.get('providers', [])):
+            return True
+    return False
+
+if rs and rs.get('href'):
+    existing_rules = rs.get('rules', [])
+    if not has_pair(existing_rules, {web_href}, {processing_href}):
+        call('POST', rs['href'] + '/sec_rules', {
+            'enabled': True,
+            'consumers': [{'label': {'href': web_href}}],
+            'providers': [{'label': {'href': processing_href}}],
+            'ingress_services': [{'port': 8070, 'proto': 6}],
+            'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
+        })
+    if not has_pair(existing_rules, {processing_href}, {db_href}):
+        call('POST', rs['href'] + '/sec_rules', {
+            'enabled': True,
+            'consumers': [{'label': {'href': processing_href}}],
+            'providers': [{'label': {'href': db_href}}],
+            'ingress_services': [{'port': 3306, 'proto': 6}],
+            'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
+        })
 "
 
 exit 0
