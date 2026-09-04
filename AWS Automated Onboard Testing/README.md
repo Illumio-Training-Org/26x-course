@@ -52,6 +52,25 @@ onboarding at track boot (rather than exposing it as an exam task)
 comfortably hides that window behind however long a learner takes to
 reach the last task.
 
+**Full end-to-end confirmation (2026-09-03, later run):** with
+Tag-to-Label Mapping and Application Discovery also wired into
+`setup-cloud-client` (see below), a completely fresh track restart
+went from account onboarding to a fully resolved Application
+Definition with **zero manual steps of any kind** — not even Security
+Review needed touching:
+
+```
+21:17:48  Account onboarded (Terraform)
+21:41:53  Inventory synced + Tag-to-Label Mapping (role -> Role) +
+          Discovery Rule (aws-auto-discovery, aws:app) all auto-created
+21:42:29  Application Definition "crm" auto-resolved (~1.5s later)
+```
+
+~24 minutes of invisible background wait (the real inventory-sync
+delay this track exists to hide), then everything downstream resolved
+in under 2 seconds, automatically, with `created_by` on every object
+showing the automation's own service-account identity, not a human.
+
 ## How it works, step by step
 
 Two files matter here: `track_scripts/setup-cloud-client` (this
