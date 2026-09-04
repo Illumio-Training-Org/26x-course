@@ -16,7 +16,11 @@ provider "illumio-cloudsecure" {
   client_id     = var.illumio_cloudsecure_client_id
   client_secret = var.illumio_cloudsecure_client_secret
 
-  request_timeout = "60s"
+  # Live-verified 2026-09-04: the account-creation call can occasionally
+  # take longer than 60s on Illumio's backend, causing a hard
+  # "DeadlineExceeded" apply failure at exactly the 1m00s mark. Widened
+  # for headroom.
+  request_timeout = "180s"
 }
 
 provider "aws" {
