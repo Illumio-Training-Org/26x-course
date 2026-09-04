@@ -1,7 +1,12 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Creates Task9-DenyGlobal with both
-# directions - pure org-level objects.
+# Runs when the learner clicks Skip. Creates the Payment/LDN labels
+# (didn't exist in the org's pre-seeded content, confirmed 2026-09-02)
+# and Task9-RingfencePayment scoped correctly - pure org-level
+# objects.
+#
+# FIRST DRAFT - does not yet create the intra-scope rule itself. Detail
+# to be refined.
 
 . /root/.autoaccount_env
 
@@ -29,27 +34,17 @@ def find_or_create_label(key, value):
     created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
     return created['href'] if created else None
 
-app_href = find_or_create_label('app', 'ordering')
-dev_href = find_or_create_label('env', 'Development')
-prod_href = find_or_create_label('env', 'Production')
+app_href = find_or_create_label('app', 'Payment')
+loc_href = find_or_create_label('loc', 'LDN')
 
 rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets') or []
-if not any((r.get('name') or '').lower() == 'task9-denyglobal' for r in rulesets):
+if not any((r.get('name') or '').lower() == 'task9-ringfencepayment' for r in rulesets):
     call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
-        'name': 'Task9-DenyGlobal',
-        'scopes': [[]],
-        'deny_rules': [
-            {
-                'ingress_services': [{'port': 1, 'proto': 6, 'to_port': 65535}],
-                'consumers': [{'label': {'href': app_href}}, {'label': {'href': dev_href}}],
-                'providers': [{'label': {'href': app_href}}, {'label': {'href': prod_href}}],
-            },
-            {
-                'ingress_services': [{'port': 1, 'proto': 6, 'to_port': 65535}],
-                'consumers': [{'label': {'href': app_href}}, {'label': {'href': prod_href}}],
-                'providers': [{'label': {'href': app_href}}, {'label': {'href': dev_href}}],
-            },
-        ],
+        'name': 'Task9-RingfencePayment',
+        'scopes': [[
+            {'label': {'href': app_href}},
+            {'label': {'href': loc_href}},
+        ]],
     })
 "
 

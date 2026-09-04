@@ -1,12 +1,12 @@
 ---
 slug: task-6
-id: azq1aqjf9wr9
+id: juaj2gtfmdaq
 type: challenge
-title: 06-Deny Dev to Prod for Ordering in CA
+title: 06-Ringfence Ordering in Dev, CA
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Create a ruleset named `Task6-DenyDevProd` with a deny rule: from
+Create a ruleset named `Task6-RingfenceOrdering`, scoped to
 Application: `ordering`, Environment: `Development`, Location: `ca`,
-to Application: `ordering`, Environment: `Production`, Location: `ca`.
+with an intra-scope allow rule.

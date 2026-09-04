@@ -1,18 +1,12 @@
 ---
 slug: task-5
-id: vne76lcxc2xu
+id: azq1aqjf9wr9
 type: challenge
-title: 05-Onboard and Ringfence a Cloud Application
-tabs:
-- id: 1tuxobzdxdxr
-  title: AWS
-  type: service
-  hostname: cloud-client
-  port: 80
+title: 05-Deny Dev to Prod for Ordering in CA
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Onboard the AWS account to Illumio Cloud (region **us-east-1**), then
-create a ruleset named `Task5-CloudRingfence` scoping and ringfencing
-the onboarded application.
+Create a ruleset named `Task5-DenyDevProd` with a deny rule: from
+Application: `ordering`, Environment: `Development`, Location: `ca`,
+to Application: `ordering`, Environment: `Production`, Location: `ca`.

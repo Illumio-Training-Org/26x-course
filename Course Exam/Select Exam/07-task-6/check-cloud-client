@@ -2,6 +2,9 @@
 #
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
+#
+# FIRST DRAFT - checks scope only, not yet the intra-scope rule shape
+# (see Task 2's note - same caveat applies). Detail to refine.
 
 . /root/.autoaccount_env
 
@@ -17,33 +20,31 @@ def get(path):
     out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
     return json.loads(out)
 
-def resolve(entries):
-    out = {}
-    for e in entries:
-        href = (e.get('label') or {}).get('href')
-        if not href:
-            continue
-        lbl = get(href.replace('/api/v2', ''))
-        out[(lbl.get('key') or '').lower()] = (lbl.get('value') or '').lower()
-    return out
-
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
-rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-denydevprod'), None)
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-ringfenceordering'), None)
 if not rs:
-    print('Ruleset \"Task6-DenyDevProd\" not found')
+    print('Ruleset \"Task6-RingfenceOrdering\" not found')
     sys.exit(1)
 
-want_consumer = {'app': 'ordering', 'env': 'development', 'loc': 'ca'}
-want_provider = {'app': 'ordering', 'env': 'production', 'loc': 'ca'}
-for dr in rs.get('deny_rules', []):
-    consumers = resolve(dr.get('consumers', []))
-    providers = resolve(dr.get('providers', []))
-    if all(consumers.get(k) == v for k, v in want_consumer.items()) and all(providers.get(k) == v for k, v in want_provider.items()):
-        print('Found the Dev->Prod deny rule for ordering in ca')
-        sys.exit(0)
+scope_labels = set()
+for scope in rs.get('scopes', []):
+    for entry in scope:
+        href = (entry.get('label') or {}).get('href')
+        if href:
+            lbl = get(href.replace('/api/v2', ''))
+            scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
 
-print('Task6-DenyDevProd exists but has no rule denying Dev->Prod for ordering in ca')
-sys.exit(1)
+expected = {('app', 'ordering'), ('env', 'development'), ('loc', 'ca')}
+if not expected.issubset(scope_labels):
+    print('Task6-RingfenceOrdering scope should include Application=ordering, Environment=Development, Location=ca, found ' + str(sorted(scope_labels)))
+    sys.exit(1)
+has_all_services_rule = any(not rule.get('ingress_services') for rule in rs.get('rules', []))
+if not has_all_services_rule:
+    print('Task6-RingfenceOrdering needs an intra-scope allow rule for All Services, not restricted to a specific service')
+    sys.exit(1)
+
+print('Task6-RingfenceOrdering is scoped and has a rule')
+sys.exit(0)
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

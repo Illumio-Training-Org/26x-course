@@ -1,12 +1,12 @@
 ---
 slug: task-9
-id: xcsdwb5xkzcv
+id: ygq47xpbgjse
 type: challenge
-title: 09-Deny Dev to Prod for Ordering Globally
+title: 09-Ringfence Payment in LDN
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Create a ruleset named `Task9-DenyGlobal` with deny rules blocking all
-communication between Development and Production for the `ordering`
-application, in both directions, with no Location restriction.
+Create a ruleset named `Task9-RingfencePayment`, scoped to
+Application: `Payment`, Location: `LDN`, with an intra-scope allow
+rule. Create these labels if they don't already exist.

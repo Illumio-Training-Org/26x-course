@@ -3,8 +3,8 @@
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
 #
-# FIRST DRAFT - checks scope only, not yet the intra-scope rule shape
-# (see Task 2's note - same caveat applies). Detail to refine.
+# FIRST DRAFT - label_group-in-scope shape not yet live-verified.
+# Detail to refine.
 
 . /root/.autoaccount_env
 
@@ -20,30 +20,40 @@ def get(path):
     out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
     return json.loads(out)
 
-rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
-rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task7-ringfenceordering'), None)
-if not rs:
-    print('Ruleset \"Task7-RingfenceOrdering\" not found')
+label_groups = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups')
+lg = next((g for g in label_groups if (g.get('name') or '').lower() == 'dev-prod'), None)
+if not lg:
+    print('Label Group \"dev-prod\" not found')
     sys.exit(1)
 
-scope_labels = set()
+values = set()
+for l in lg.get('labels', []):
+    href = l.get('href')
+    if href:
+        lbl = get(href.replace('/api/v2', ''))
+        values.add((lbl.get('value') or '').lower())
+if not {'development', 'production'}.issubset(values):
+    print('Label Group \"dev-prod\" should contain Development and Production, found ' + str(sorted(values)))
+    sys.exit(1)
+
+rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-ringfenceordering'), None)
+if not rs:
+    print('Ruleset \"Task6-RingfenceOrdering\" not found - do Task 7 first')
+    sys.exit(1)
+
+uses_group = False
 for scope in rs.get('scopes', []):
     for entry in scope:
-        href = (entry.get('label') or {}).get('href')
-        if href:
-            lbl = get(href.replace('/api/v2', ''))
-            scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
+        href = (entry.get('label_group') or {}).get('href')
+        if href == lg.get('href'):
+            uses_group = True
 
-expected = {('app', 'ordering'), ('env', 'development'), ('loc', 'ca')}
-if not expected.issubset(scope_labels):
-    print('Task7-RingfenceOrdering scope should include Application=ordering, Environment=Development, Location=ca, found ' + str(sorted(scope_labels)))
-    sys.exit(1)
-has_all_services_rule = any(not rule.get('ingress_services') for rule in rs.get('rules', []))
-if not has_all_services_rule:
-    print('Task7-RingfenceOrdering needs an intra-scope allow rule for All Services, not restricted to a specific service')
+if not uses_group:
+    print('Task6-RingfenceOrdering scope does not yet use the dev-prod Label Group')
     sys.exit(1)
 
-print('Task7-RingfenceOrdering is scoped and has a rule')
+print('dev-prod Label Group exists and is used in Task6-RingfenceOrdering scope')
 sys.exit(0)
 ")
 status=$?

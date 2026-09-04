@@ -1,11 +1,7 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Creates the dev-prod Label Group
-# and updates Task7-RingfenceOrdering's scope to use it, replacing the
-# single Development label - no-ops if Task 7's ruleset doesn't exist
-# yet (run its own solve/skip first).
-#
-# FIRST DRAFT - detail to be refined.
+# Runs when the learner clicks Skip. Creates Task8-DenyGlobal with both
+# directions - pure org-level objects.
 
 . /root/.autoaccount_env
 
@@ -33,29 +29,27 @@ def find_or_create_label(key, value):
     created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
     return created['href'] if created else None
 
+app_href = find_or_create_label('app', 'ordering')
 dev_href = find_or_create_label('env', 'Development')
 prod_href = find_or_create_label('env', 'Production')
 
-label_groups = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups') or []
-lg = next((g for g in label_groups if (g.get('name') or '').lower() == 'dev-prod'), None)
-if not lg:
-    lg = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups', {
-        'name': 'dev-prod',
-        'key': 'env',
-        'labels': [{'href': dev_href}, {'href': prod_href}],
-    })
-
 rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets') or []
-rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task7-ringfenceordering'), None)
-if rs and lg:
-    app_href = find_or_create_label('app', 'ordering')
-    loc_href = find_or_create_label('loc', 'ca')
-    call('PUT', rs['href'], {
-        'scopes': [[
-            {'label': {'href': app_href}},
-            {'label_group': {'href': lg['href']}},
-            {'label': {'href': loc_href}},
-        ]],
+if not any((r.get('name') or '').lower() == 'task8-denyglobal' for r in rulesets):
+    call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
+        'name': 'Task8-DenyGlobal',
+        'scopes': [[]],
+        'deny_rules': [
+            {
+                'ingress_services': [{'port': 1, 'proto': 6, 'to_port': 65535}],
+                'consumers': [{'label': {'href': app_href}}, {'label': {'href': dev_href}}],
+                'providers': [{'label': {'href': app_href}}, {'label': {'href': prod_href}}],
+            },
+            {
+                'ingress_services': [{'port': 1, 'proto': 6, 'to_port': 65535}],
+                'consumers': [{'label': {'href': app_href}}, {'label': {'href': prod_href}}],
+                'providers': [{'label': {'href': app_href}}, {'label': {'href': dev_href}}],
+            },
+        ],
     })
 "
 

@@ -142,4 +142,105 @@ nohup bash -c "
   exec bash \"$STARTUP_REPO_DIR/vensimscheduler.sh\"
 " > /var/log/vensim-startup.log 2>&1 < /dev/null &
 
+# ---------------------------------------
+# AWS BUILD (Terraform) + AUTOMATED CLOUDSECURE ONBOARDING - runs in
+# background, adapted from the confirmed-working
+# "! 26.x AWS Automated Onboard Testing" prototype. Only builds the
+# shared AWS infra (the tagged crm app) and gets the account onboarded
+# to Illumio Cloud - deliberately stops there. Task 10 itself is where
+# the learner creates the Application Discovery rule; that step stays
+# a real, graded learner action, not something this script does for
+# them.
+# ---------------------------------------
+nohup bash -c "
+  set -ex
+  export AWS_REGION=us-east-1
+  export AWS_DEFAULT_REGION=us-east-1
+
+  # Defensive re-clean: AUTOACCOUNT_SAAPIKEY_KEYID/SECRET/TENANT_ID can
+  # arrive in THIS subshell still JSON-array-wrapped despite being
+  # cleaned earlier in the parent script - live-observed 2026-09-03 in
+  # the prototype track, caused oauth2 invalid_client every time.
+  AUTOACCOUNT_SAAPIKEY_KEYID=\$(echo \"\$AUTOACCOUNT_SAAPIKEY_KEYID\" | tr -d '{}[]\"')
+  AUTOACCOUNT_SAAPIKEY_SECRET=\$(echo \"\$AUTOACCOUNT_SAAPIKEY_SECRET\" | tr -d '{}[]\"')
+  AUTOACCOUNT_TENANT_ID=\$(echo \"\$AUTOACCOUNT_TENANT_ID\" | tr -d '{}[]\"')
+
+  cd /root
+  git clone https://github.com/Illumio-Training-Org/26x-course.git
+  cd /root/26x-course/terraform
+
+  # Install Terraform
+  curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  echo \"deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com \$(lsb_release -cs) main\" > /etc/apt/sources.list.d/hashicorp.list
+  apt-get update -o Dir::Etc::sourcelist=\"sources.list.d/hashicorp.list\" -o Dir::Etc::sourceparts=\"-\" -o APT::Get::List-Cleanup=\"0\"
+  apt-get install -y terraform
+
+  terraform init -input=false
+  terraform plan -out=tfplan -input=false
+  terraform apply -input=false -auto-approve tfplan
+
+  echo '### TERRAFORM APPLY COMPLETE ###'
+  date
+
+  echo '### STARTING AUTOMATED CLOUDSECURE ONBOARDING ###'
+  date
+  cd /root/26x-course/terraform-cloudsecure-aws
+
+  # Wait for the freshly-minted SAAPIKEY to actually be accepted by
+  # Illumio's OAuth token endpoint before handing it to terraform -
+  # live-observed 2026-09-03 that a brand-new key can get
+  # invalid_client for a short window right after minting.
+  echo '### WAITING FOR CLOUDSECURE CREDENTIALS TO ACTIVATE ###'
+  date
+  cloudsecure_ready=0
+  for attempt in \$(seq 1 30); do
+    http_code=\$(curl -s -o /dev/null -w '%{http_code}' -X POST \"https://cloud.illum.io/api/v1/authenticate\" \
+      -H \"Content-Type: application/x-www-form-urlencoded\" \
+      --data-urlencode \"grant_type=client_credentials\" \
+      --data-urlencode \"client_id=\$AUTOACCOUNT_SAAPIKEY_KEYID\" \
+      --data-urlencode \"client_secret=\$AUTOACCOUNT_SAAPIKEY_SECRET\")
+    if [ \"\$http_code\" = \"200\" ]; then
+      echo \"CloudSecure credentials active after \$attempt attempt(s)\"
+      cloudsecure_ready=1
+      break
+    fi
+    echo \"Attempt \$attempt: token endpoint returned \$http_code, retrying in 10s...\"
+    sleep 10
+  done
+  if [ \"\$cloudsecure_ready\" != \"1\" ]; then
+    echo '### CLOUDSECURE CREDENTIALS NEVER ACTIVATED - ABORTING ONBOARDING ###'
+    date
+    exit 1
+  fi
+  date
+
+  terraform init -input=false
+  terraform plan -out=tfplan -input=false \
+    -var \"illumio_cloudsecure_client_id=\$AUTOACCOUNT_SAAPIKEY_KEYID\" \
+    -var \"illumio_cloudsecure_client_secret=\$AUTOACCOUNT_SAAPIKEY_SECRET\"
+  terraform apply -input=false -auto-approve tfplan
+
+  echo '### AUTOMATED CLOUDSECURE ONBOARDING APPLY COMPLETE ###'
+  date
+
+  # REGISTER CLOUD CREDENTIALS - the illumio-cloudsecure_aws_account
+  # resource above is not enough on its own: the account shows
+  # ONBOARDING_COMPLETE, but roleArn stays empty and inventory never
+  # populates without this replayed CFT registration call (see the
+  # prototype track's README for the full explanation).
+  echo '### REGISTERING CLOUD CREDENTIALS WITH CLOUDSECURE ###'
+  date
+  ROLE_ARN=\$(terraform output -raw role_arn)
+  ROLE_EXTERNAL_ID=\$(terraform output -raw role_external_id)
+  AWS_ACCT_ID=\$(terraform output -raw aws_account_id)
+  curl -sf -X POST \"https://cloud.illum.io/api/v1/integrations/cloud_credentials\" \
+    -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+    -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+    -H \"Content-Type: application/json\" \
+    -d \"{\\\"account_id\\\":\\\"\$AWS_ACCT_ID\\\",\\\"role_arn\\\":\\\"\$ROLE_ARN\\\",\\\"external_id\\\":\\\"\$ROLE_EXTERNAL_ID\\\",\\\"type\\\":\\\"AWSRole\\\"}\"
+  echo '### CLOUD CREDENTIALS REGISTRATION COMPLETE - AWS ACCOUNT READY FOR TASK 10 ###'
+  date
+
+" > /var/log/aws-onboard-startup.log 2>&1 < /dev/null &
+
 echo "===== MAGIC LINK + ACCOUNT SETUP END ====="

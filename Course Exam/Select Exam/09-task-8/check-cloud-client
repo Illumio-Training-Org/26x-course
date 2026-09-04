@@ -2,9 +2,6 @@
 #
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
-#
-# FIRST DRAFT - label_group-in-scope shape not yet live-verified.
-# Detail to refine.
 
 . /root/.autoaccount_env
 
@@ -20,41 +17,44 @@ def get(path):
     out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
     return json.loads(out)
 
-label_groups = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups')
-lg = next((g for g in label_groups if (g.get('name') or '').lower() == 'dev-prod'), None)
-if not lg:
-    print('Label Group \"dev-prod\" not found')
-    sys.exit(1)
-
-values = set()
-for l in lg.get('labels', []):
-    href = l.get('href')
-    if href:
+def resolve(entries):
+    out = {}
+    for e in entries:
+        href = (e.get('label') or {}).get('href')
+        if not href:
+            continue
         lbl = get(href.replace('/api/v2', ''))
-        values.add((lbl.get('value') or '').lower())
-if not {'development', 'production'}.issubset(values):
-    print('Label Group \"dev-prod\" should contain Development and Production, found ' + str(sorted(values)))
-    sys.exit(1)
+        out[(lbl.get('key') or '').lower()] = (lbl.get('value') or '').lower()
+    return out
 
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
-rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task7-ringfenceordering'), None)
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task8-denyglobal'), None)
 if not rs:
-    print('Ruleset \"Task7-RingfenceOrdering\" not found - do Task 7 first')
+    print('Ruleset \"Task8-DenyGlobal\" not found')
     sys.exit(1)
 
-uses_group = False
-for scope in rs.get('scopes', []):
-    for entry in scope:
-        href = (entry.get('label_group') or {}).get('href')
-        if href == lg.get('href'):
-            uses_group = True
+dev_to_prod = False
+prod_to_dev = False
+for dr in rs.get('deny_rules', []):
+    consumers = resolve(dr.get('consumers', []))
+    providers = resolve(dr.get('providers', []))
+    if consumers.get('app') == 'ordering' and providers.get('app') == 'ordering':
+        if consumers.get('env') == 'development' and providers.get('env') == 'production':
+            dev_to_prod = True
+        if consumers.get('env') == 'production' and providers.get('env') == 'development':
+            prod_to_dev = True
 
-if not uses_group:
-    print('Task7-RingfenceOrdering scope does not yet use the dev-prod Label Group')
-    sys.exit(1)
+if dev_to_prod and prod_to_dev:
+    print('Found both Dev->Prod and Prod->Dev deny rules for ordering (global)')
+    sys.exit(0)
 
-print('dev-prod Label Group exists and is used in Task7-RingfenceOrdering scope')
-sys.exit(0)
+missing = []
+if not dev_to_prod:
+    missing.append('Dev->Prod')
+if not prod_to_dev:
+    missing.append('Prod->Dev')
+print('Task8-DenyGlobal is missing: ' + ', '.join(missing))
+sys.exit(1)
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

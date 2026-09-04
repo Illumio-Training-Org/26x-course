@@ -1,7 +1,10 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Creates Task6-DenyDevProd - pure
-# org-level objects, no dependency on workload pairing state.
+# Runs when the learner clicks Skip. Creates Task6-RingfenceOrdering
+# scoped correctly - pure org-level objects.
+#
+# FIRST DRAFT - does not yet create the intra-scope rule itself. Detail
+# to be refined.
 
 . /root/.autoaccount_env
 
@@ -31,27 +34,17 @@ def find_or_create_label(key, value):
 
 app_href = find_or_create_label('app', 'ordering')
 dev_href = find_or_create_label('env', 'Development')
-prod_href = find_or_create_label('env', 'Production')
 loc_href = find_or_create_label('loc', 'ca')
 
 rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets') or []
-if not any((r.get('name') or '').lower() == 'task6-denydevprod' for r in rulesets):
+if not any((r.get('name') or '').lower() == 'task6-ringfenceordering' for r in rulesets):
     call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
-        'name': 'Task6-DenyDevProd',
-        'scopes': [[]],
-        'deny_rules': [{
-            'ingress_services': [{'port': 1, 'proto': 6, 'to_port': 65535}],
-            'consumers': [
-                {'label': {'href': app_href}},
-                {'label': {'href': dev_href}},
-                {'label': {'href': loc_href}},
-            ],
-            'providers': [
-                {'label': {'href': app_href}},
-                {'label': {'href': prod_href}},
-                {'label': {'href': loc_href}},
-            ],
-        }],
+        'name': 'Task6-RingfenceOrdering',
+        'scopes': [[
+            {'label': {'href': app_href}},
+            {'label': {'href': dev_href}},
+            {'label': {'href': loc_href}},
+        ]],
     })
 "
 

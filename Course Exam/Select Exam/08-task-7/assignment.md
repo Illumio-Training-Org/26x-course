@@ -1,12 +1,14 @@
 ---
 slug: task-7
-id: juaj2gtfmdaq
+id: chzwbpic6mrr
 type: challenge
-title: 07-Ringfence Ordering in Dev, CA
+title: 07-Extend the Ringfence to Cover Both Instances
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Create a ruleset named `Task7-RingfenceOrdering`, scoped to
-Application: `ordering`, Environment: `Development`, Location: `ca`,
-with an intra-scope allow rule.
+Create a Label Group named `dev-prod` containing the Environment labels
+`Development` and `Production`. Update `Task6-RingfenceOrdering`'s
+scope to use this Label Group instead of just Development, so both the
+Dev and Prod instances of the `ordering` application are ringfenced by
+the same policy.

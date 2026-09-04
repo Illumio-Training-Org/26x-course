@@ -2,6 +2,9 @@
 #
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
+#
+# FIRST DRAFT - checks scope only, not the intra-scope rule shape
+# (same caveat as Task 2/7). Detail to refine.
 
 . /root/.autoaccount_env
 
@@ -17,44 +20,31 @@ def get(path):
     out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
     return json.loads(out)
 
-def resolve(entries):
-    out = {}
-    for e in entries:
-        href = (e.get('label') or {}).get('href')
-        if not href:
-            continue
-        lbl = get(href.replace('/api/v2', ''))
-        out[(lbl.get('key') or '').lower()] = (lbl.get('value') or '').lower()
-    return out
-
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
-rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task9-denyglobal'), None)
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task9-ringfencepayment'), None)
 if not rs:
-    print('Ruleset \"Task9-DenyGlobal\" not found')
+    print('Ruleset \"Task9-RingfencePayment\" not found')
     sys.exit(1)
 
-dev_to_prod = False
-prod_to_dev = False
-for dr in rs.get('deny_rules', []):
-    consumers = resolve(dr.get('consumers', []))
-    providers = resolve(dr.get('providers', []))
-    if consumers.get('app') == 'ordering' and providers.get('app') == 'ordering':
-        if consumers.get('env') == 'development' and providers.get('env') == 'production':
-            dev_to_prod = True
-        if consumers.get('env') == 'production' and providers.get('env') == 'development':
-            prod_to_dev = True
+scope_labels = set()
+for scope in rs.get('scopes', []):
+    for entry in scope:
+        href = (entry.get('label') or {}).get('href')
+        if href:
+            lbl = get(href.replace('/api/v2', ''))
+            scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
 
-if dev_to_prod and prod_to_dev:
-    print('Found both Dev->Prod and Prod->Dev deny rules for ordering (global)')
-    sys.exit(0)
+expected = {('app', 'payment'), ('loc', 'ldn')}
+if not expected.issubset(scope_labels):
+    print('Task9-RingfencePayment scope should include Application=Payment, Location=LDN, found ' + str(sorted(scope_labels)))
+    sys.exit(1)
+has_all_services_rule = any(not rule.get('ingress_services') for rule in rs.get('rules', []))
+if not has_all_services_rule:
+    print('Task9-RingfencePayment needs an intra-scope allow rule for All Services, not restricted to a specific service')
+    sys.exit(1)
 
-missing = []
-if not dev_to_prod:
-    missing.append('Dev->Prod')
-if not prod_to_dev:
-    missing.append('Prod->Dev')
-print('Task9-DenyGlobal is missing: ' + ', '.join(missing))
-sys.exit(1)
+print('Task9-RingfencePayment is scoped and has a rule')
+sys.exit(0)
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

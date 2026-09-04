@@ -1,51 +1,16 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Creates the Payment/LDN labels
-# (didn't exist in the org's pre-seeded content, confirmed 2026-09-02)
-# and Task10-RingfencePayment scoped correctly - pure org-level
-# objects.
-#
-# FIRST DRAFT - does not yet create the intra-scope rule itself. Detail
-# to be refined.
+# Runs when the learner clicks Skip. Creates an Application Discovery
+# Rule on the aws:app cloud tag with Auto Approve enabled, using the
+# same CloudSecure REST call confirmed working in the
+# "! 26.x AWS Automated Onboard Testing" prototype.
 
 . /root/.autoaccount_env
 
-AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
-FQDN="$AUTOACCOUNT_PCE_FQDN"
+AUTH="${AUTOACCOUNT_SAAPIKEY_KEYID}:${AUTOACCOUNT_SAAPIKEY_SECRET}"
 
-python3 -c "
-import json, subprocess
-
-def call(method, path, body=None):
-    cmd = ['curl', '-s', '-u', '$AUTH', '-X', method, 'https://$FQDN/api/v2' + path]
-    if body is not None:
-        cmd += ['-H', 'Content-Type: application/json', '-d', json.dumps(body)]
-    out = subprocess.run(cmd, capture_output=True, text=True).stdout
-    try:
-        return json.loads(out)
-    except Exception:
-        return None
-
-def find_or_create_label(key, value):
-    labels = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
-    for l in labels:
-        if l.get('key') == key and (l.get('value') or '').lower() == value.lower():
-            return l['href']
-    created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
-    return created['href'] if created else None
-
-app_href = find_or_create_label('app', 'Payment')
-loc_href = find_or_create_label('loc', 'LDN')
-
-rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets') or []
-if not any((r.get('name') or '').lower() == 'task10-ringfencepayment' for r in rulesets):
-    call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
-        'name': 'Task10-RingfencePayment',
-        'scopes': [[
-            {'label': {'href': app_href}},
-            {'label': {'href': loc_href}},
-        ]],
-    })
-"
-
-exit 0
+curl -s -X POST "https://cloud.illum.io/api/v1/discovery_rules" \
+  -u "$AUTH" \
+  -H "X-Tenant-Id: $AUTOACCOUNT_TENANT_ID" \
+  -H "Content-Type: application/json" \
+  -d '{"auto_approve_applications":true,"name":"select-exam-discovery","prefix":"","rule_type":"TAG","tag_keys":[{"cloud":"aws","key":"app"}]}'
