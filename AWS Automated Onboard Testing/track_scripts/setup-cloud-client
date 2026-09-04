@@ -211,8 +211,11 @@ nohup bash -c "
   # TAG-TO-LABEL MAPPING + APPLICATION DISCOVERY - both confirmed
   # automatable live 2026-09-03 with the same SAAPIKEY Basic auth. Waits
   # for inventory to actually exist first (bridge/resources non-empty) -
-  # the real ~15-25 min propagation window this whole track exists to
-  # hide - before attempting either, since both need indexed tag data to
+  # the real ~15-32 min propagation window this whole track exists to
+  # hide (observed range as of 2026-09-04; the wait-loop below is
+  # budgeted to 50 min for margin, after a run that took 32m14s nearly
+  # exhausted the previous 30-min budget and missed by under a minute)
+  # - before attempting either, since both need indexed tag data to
   # mean anything. Role/Location go through Tag-to-Label Mapping
   # (POST /api/v1/tags_to_label) - confirmed live that 'app'/'env' are
   # deliberately REJECTED there ('cannot be used for tag to label
@@ -223,7 +226,7 @@ nohup bash -c "
   echo '### WAITING FOR INVENTORY TO SYNC ###'
   date
   inventory_ready=0
-  for attempt in \$(seq 1 90); do
+  for attempt in \$(seq 1 150); do
     item_count=\$(curl -s -X POST \"https://cloud.illum.io/api/v1/bridge/resources\" \
       -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
       -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
@@ -337,7 +340,7 @@ nohup bash -c "
       echo '### COULD NOT RESOLVE VPC/SUBNET IDS - SKIPPING DEPLOYMENTS ###'
     fi
   else
-    echo '### INVENTORY NEVER SYNCED WITHIN 30 MIN - SKIPPING TAG MAPPING / DISCOVERY / DEPLOYMENTS ###'
+    echo '### INVENTORY NEVER SYNCED WITHIN 50 MIN - SKIPPING TAG MAPPING / DISCOVERY / DEPLOYMENTS ###'
   fi
   echo '### TAG-TO-LABEL MAPPING + APPLICATION DISCOVERY + DEPLOYMENTS STEP COMPLETE ###'
   date
