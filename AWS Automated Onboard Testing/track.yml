@@ -5,11 +5,19 @@ description: |-
   Lab Name: 26.x AWS AUTOMATED ONBOARD TESTING
 
   Outcome:
-  Prototype lab testing whether AWS onboarding to Illumio Cloud can be
-  triggered automatically in the background at track start (no vensim,
-  no VMs - just the magic link, the AWS Terraform build, and an
-  automated onboarding attempt), to see if the propagation delay can
-  be hidden before an exam task ever needs the onboarded account.
+  Prototype lab automating the AWS onboarding build process to reduce
+  wait times, forming the basis of content that may get reused
+  elsewhere across 26.x.
+
+  What's automated, hands-free, no learner/instructor action needed:
+  AWS infrastructure build, AWS account onboarding to Illumio Cloud,
+  Tag-to-Label Mapping (Role, Location), Application Discovery (the
+  `crm` app), and Deployments (Production/Development). Security
+  Review stays a manual step, by design.
+
+  Rough timing: ~20-33 min for onboarding through configuration, then
+  another ~10-15 min before it's all visible on the Map - budget up to
+  ~50 min total from track start.
 icon: ./assets/logo.png
 tags:
 - ilt
@@ -26,5 +34,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "9832970436224096377"
+checksum: "6224400437890966818"
 enhanced_loading: false
