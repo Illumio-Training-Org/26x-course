@@ -1,9 +1,12 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Creates Task9-NanoSegmentPayment
-# scoped to Payment/LDN, plus the two nano-segmented intra-scope rules
-# that match the app's real traffic flows: web -> processing (TCP/8070)
-# and processing -> db (TCP/3306), each one-directional.
+# Runs when the learner clicks Skip. Creates the Payment/LDN labels
+# (didn't exist in the org's pre-seeded content, confirmed 2026-09-02)
+# and Task9-RingfencePayment as a scopeless ruleset with an allow rule
+# that has Application=Payment, Location=LDN on both source and
+# destination - the realistic answer given Scopes aren't taught in the
+# 5-day class. check-cloud-client also accepts the Scope-based
+# equivalent for a learner who already knows Scopes.
 
 . /root/.autoaccount_env
 
@@ -31,48 +34,33 @@ def find_or_create_label(key, value):
     created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
     return created['href'] if created else None
 
+def find_all_services_href():
+    services = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/services?max_results=1000') or []
+    for s in services:
+        if (s.get('name') or '').lower() == 'all services':
+            return s['href']
+    return None
+
 app_href = find_or_create_label('app', 'Payment')
 loc_href = find_or_create_label('loc', 'LDN')
-web_href = find_or_create_label('role', 'web')
-processing_href = find_or_create_label('role', 'processing')
-db_href = find_or_create_label('role', 'db')
+all_services_href = find_all_services_href()
 
 rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets?max_results=1000') or []
-rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task9-nanosegmentpayment'), None)
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task9-ringfencepayment'), None)
 if not rs:
     rs = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
-        'name': 'Task9-NanoSegmentPayment',
-        'scopes': [[
-            {'label': {'href': app_href}},
-            {'label': {'href': loc_href}},
-        ]],
+        'name': 'Task9-RingfencePayment',
+        'scopes': [[]],
     })
-
-def label_set(entries):
-    return {(l.get('label') or {}).get('href') for l in entries}
-
-def has_pair(existing, cdir, pdir):
-    for e in existing:
-        if cdir <= label_set(e.get('consumers', [])) and pdir <= label_set(e.get('providers', [])):
-            return True
-    return False
 
 if rs and rs.get('href'):
     existing_rules = rs.get('rules', [])
-    if not has_pair(existing_rules, {web_href}, {processing_href}):
+    if not any(rule.get('enabled', True) for rule in existing_rules):
         call('POST', rs['href'] + '/sec_rules', {
             'enabled': True,
-            'consumers': [{'label': {'href': web_href}}],
-            'providers': [{'label': {'href': processing_href}}],
-            'ingress_services': [{'port': 8070, 'proto': 6}],
-            'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
-        })
-    if not has_pair(existing_rules, {processing_href}, {db_href}):
-        call('POST', rs['href'] + '/sec_rules', {
-            'enabled': True,
-            'consumers': [{'label': {'href': processing_href}}],
-            'providers': [{'label': {'href': db_href}}],
-            'ingress_services': [{'port': 3306, 'proto': 6}],
+            'providers': [{'label': {'href': app_href}}, {'label': {'href': loc_href}}],
+            'consumers': [{'label': {'href': app_href}}, {'label': {'href': loc_href}}],
+            'ingress_services': [{'href': all_services_href}] if all_services_href else [],
             'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
         })
 "

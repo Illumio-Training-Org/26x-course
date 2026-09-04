@@ -2,6 +2,13 @@
 #
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
+#
+# Scopes aren't taught in the 5-day class, so the task doesn't ask for
+# one by name - but a learner who already knows Scopes might still use
+# one, so this accepts either: a real Scope (Application=Payment,
+# Location=LDN) with an intra-scope All Workloads/All Services allow
+# rule, or a scopeless ruleset with an allow rule that has the same two
+# labels repeated on both source and destination.
 
 . /root/.autoaccount_env
 
@@ -18,22 +25,9 @@ def get(path):
     return json.loads(out)
 
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
-rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task9-nanosegmentpayment'), None)
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task9-ringfencepayment'), None)
 if not rs:
-    print('Ruleset \"Task9-NanoSegmentPayment\" not found')
-    sys.exit(1)
-
-scope_labels = set()
-for scope in rs.get('scopes', []):
-    for entry in scope:
-        href = (entry.get('label') or {}).get('href')
-        if href:
-            lbl = get(href.replace('/api/v2', ''))
-            scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
-
-expected = {('app', 'payment'), ('loc', 'ldn')}
-if scope_labels != expected:
-    print('Task9-NanoSegmentPayment scope should be exactly Application=Payment, Location=LDN (no extra labels like an Environment), found ' + str(sorted(scope_labels)))
+    print('Ruleset \"Task9-RingfencePayment\" not found')
     sys.exit(1)
 
 def resolve_labels(entries):
@@ -45,59 +39,61 @@ def resolve_labels(entries):
             out.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
     return out
 
-def service_matches(ingress_services, target_port, target_proto):
-    for entry in ingress_services or []:
+expected = {('app', 'payment'), ('loc', 'ldn')}
+
+scope_labels = set()
+for scope in rs.get('scopes', []):
+    for entry in scope:
+        href = (entry.get('label') or {}).get('href')
+        if href:
+            lbl = get(href.replace('/api/v2', ''))
+            scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
+
+if scope_labels and scope_labels != expected:
+    print('Task9-RingfencePayment scope should be exactly Application=Payment, Location=LDN (or no scope at all), found ' + str(sorted(scope_labels)))
+    sys.exit(1)
+scoped_mode = bool(scope_labels)
+
+def is_all_workloads(actors):
+    return any(a.get('actors') == 'ams' for a in actors)
+
+def is_all_services(ingress_services):
+    if not ingress_services:
+        return True
+    for entry in ingress_services:
         href = entry.get('href')
         if href:
             svc = get(href.replace('/api/v2', ''))
-            for p in svc.get('service_ports') or []:
-                lo = p.get('port')
-                hi = p.get('to_port', lo)
-                if p.get('proto') == target_proto and lo is not None and lo <= target_port <= hi:
-                    return True
-        else:
-            lo = entry.get('port')
-            hi = entry.get('to_port', lo)
-            if entry.get('proto') == target_proto and lo is not None and lo <= target_port <= hi:
+            if (svc.get('name') or '').lower() == 'all services':
                 return True
     return False
 
 enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
-if len(enabled_rules) != 2:
-    print('Task9-NanoSegmentPayment should have exactly two enabled intra-scope rules (one per traffic flow), found ' + str(len(enabled_rules)))
+if len(enabled_rules) != 1:
+    print('Task9-RingfencePayment should have exactly one enabled allow rule, found ' + str(len(enabled_rules)))
     sys.exit(1)
 
-web_to_processing = False
-processing_to_db = False
-other_issues = []
-for rule in enabled_rules:
-    cons = resolve_labels(rule.get('consumers', []))
-    provs = resolve_labels(rule.get('providers', []))
-    svc = rule.get('ingress_services')
-    if ('role', 'web') in cons and ('role', 'processing') in provs:
-        if service_matches(svc, 8070, 6):
-            web_to_processing = True
-        else:
-            other_issues.append('web->processing rule found but service is not TCP/8070')
-    elif ('role', 'processing') in cons and ('role', 'db') in provs:
-        if service_matches(svc, 3306, 6):
-            processing_to_db = True
-        else:
-            other_issues.append('processing->db rule found but service is not TCP/3306')
-    else:
-        other_issues.append('found a rule that does not match either expected flow (check source/destination roles and direction)')
+rule = enabled_rules[0]
+if scoped_mode:
+    src_ok = is_all_workloads(rule.get('consumers', []))
+    dst_ok = is_all_workloads(rule.get('providers', []))
+else:
+    src_ok = resolve_labels(rule.get('consumers', [])) == expected
+    dst_ok = resolve_labels(rule.get('providers', [])) == expected
+svc_ok = is_all_services(rule.get('ingress_services'))
 
-if web_to_processing and processing_to_db:
-    print('Task9-NanoSegmentPayment has both required flows: web->processing (TCP/8070) and processing->db (TCP/3306)')
+if src_ok and dst_ok and svc_ok:
+    print('Task9-RingfencePayment ringfences the Payment/LDN application correctly')
     sys.exit(0)
 
 missing = []
-if not web_to_processing:
-    missing.append('missing web -> processing on TCP/8070')
-if not processing_to_db:
-    missing.append('missing processing -> db on TCP/3306')
-missing += other_issues
-print('Task9-NanoSegmentPayment: ' + '; '.join(missing))
+if not src_ok:
+    missing.append('source is wrong' + (' - should be All Workloads (inside the scope)' if scoped_mode else ' - should be Application=Payment, Location=LDN'))
+if not dst_ok:
+    missing.append('destination is wrong' + (' - should be All Workloads (inside the scope)' if scoped_mode else ' - should be Application=Payment, Location=LDN'))
+if not svc_ok:
+    missing.append('service should be All Services, not restricted to a specific service')
+print('Task9-RingfencePayment has a rule but: ' + '; '.join(missing))
 sys.exit(1)
 ")
 status=$?
