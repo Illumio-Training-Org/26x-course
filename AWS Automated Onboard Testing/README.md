@@ -413,10 +413,16 @@ background head-start.
 
 The pulled colleague-lab reference (`CX-NEW/Illumivers lab example aug
 2026/`) contains a live, hardcoded GitHub Personal Access Token
-embedded in two `git clone` URLs. It was never used here. Nathan was
-told to have the colleague rotate it. That folder is deliberately kept
-outside this git repo (and outside `26x-course` entirely) so it's
-never at risk of being committed or pushed.
+embedded in two `git clone` URLs — noted while reading through it for
+this prototype's own research, not something this lab did anything
+with. It was never used here. That folder is deliberately kept outside
+this git repo (and outside `26x-course` entirely) so it's never at risk
+of being committed or pushed.
+
+Separately: this repo (`26x-course`) is currently public. Worth
+considering later whether it should be made private, with fixed/scoped
+keys for whatever needs repo access — not an issue specific to this
+prototype, just a general point worth revisiting at some stage.
 
 ## Open next steps
 
