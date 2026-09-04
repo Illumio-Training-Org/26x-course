@@ -7,6 +7,5 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Create a ruleset named `Task6-RingfenceOrdering`, scoped to
-Application: `ordering`, Environment: `Development`, Location: `ca`,
-with an intra-scope allow rule.
+Create a ruleset named `Task6-RingfenceOrdering`, using a Scope, with
+an intra-scope allow rule.

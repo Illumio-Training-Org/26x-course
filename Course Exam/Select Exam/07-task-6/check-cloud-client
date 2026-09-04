@@ -61,29 +61,27 @@ def is_all_services(ingress_services):
                 return True
     return False
 
-reasons = []
-for rule in rs.get('rules', []):
-    if not rule.get('enabled', True):
-        continue
-    src_ok = is_all_workloads(rule.get('consumers', []))
-    dst_ok = is_all_workloads(rule.get('providers', []))
-    svc_ok = is_all_services(rule.get('ingress_services'))
-    if src_ok and dst_ok and svc_ok:
-        print('Task6-RingfenceOrdering is scoped and has an intra-scope All Workloads / All Services allow rule')
-        sys.exit(0)
-    missing = []
-    if not src_ok:
-        missing.append('source should be All Workloads, not a specific IP list/workload/label')
-    if not dst_ok:
-        missing.append('destination should be All Workloads, not a specific IP list/workload/label')
-    if not svc_ok:
-        missing.append('service should be All Services, not restricted to a specific service')
-    reasons.append('; '.join(missing))
+enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
+if len(enabled_rules) != 1:
+    print('Task6-RingfenceOrdering should have exactly one enabled intra-scope allow rule, found ' + str(len(enabled_rules)))
+    sys.exit(1)
 
-if reasons:
-    print('Task6-RingfenceOrdering has a rule in scope but: ' + '; '.join(reasons))
-else:
-    print('Task6-RingfenceOrdering needs an enabled intra-scope allow rule for All Workloads to All Workloads, All Services')
+rule = enabled_rules[0]
+src_ok = is_all_workloads(rule.get('consumers', []))
+dst_ok = is_all_workloads(rule.get('providers', []))
+svc_ok = is_all_services(rule.get('ingress_services'))
+if src_ok and dst_ok and svc_ok:
+    print('Task6-RingfenceOrdering is scoped and has an intra-scope All Workloads / All Services allow rule')
+    sys.exit(0)
+
+missing = []
+if not src_ok:
+    missing.append('source should be All Workloads, not a specific IP list/workload/label')
+if not dst_ok:
+    missing.append('destination should be All Workloads, not a specific IP list/workload/label')
+if not svc_ok:
+    missing.append('service should be All Services, not restricted to a specific service')
+print('Task6-RingfenceOrdering has a rule in scope but: ' + '; '.join(missing))
 sys.exit(1)
 ")
 status=$?
