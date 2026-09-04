@@ -208,45 +208,6 @@ nohup bash -c "
   date
 
   # -----------------------------------------------------------------
-  # AUTO-APPROVE SECURITY REVIEW - not required for inventory (confirmed
-  # live 2026-09-03: a run's inventory populated fully with Security
-  # Review still PENDING). Still wanted for real: subsequent policy
-  # enforcement needs it approved. Captured the real call the Approve
-  # button makes (POST /api/v1/security_review/approve) and confirmed
-  # the exact same payload/auth this loop uses succeeds once the review
-  # is genuinely ready (live-verified 2026-09-03: an identical retry
-  # after a manual UI approval correctly returned 406 'already
-  # completed', not an error - proving the syntax was always correct).
-  # The real problem was window length, not syntax: readiness can take
-  # as long as inventory itself (~20-25 min observed), well past this
-  # loop's original 10-minute budget, so it was giving up before the
-  # review was ever actually ready. Widened to match the inventory
-  # wait-loop's own 30-minute budget below.
-  # -----------------------------------------------------------------
-  echo '### WAITING FOR SECURITY REVIEW TO BE READY, THEN AUTO-APPROVING ###'
-  date
-  sr_approved=0
-  for attempt in \$(seq 1 120); do
-    http_code=\$(curl -s -o /dev/null -w '%{http_code}' -X POST \"https://cloud.illum.io/api/v1/security_review/approve\" \
-      -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
-      -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
-      -H \"Content-Type: application/json\" \
-      -d \"{\\\"account_id\\\":\\\"\$AWS_ACCT_ID\\\",\\\"cloud\\\":\\\"aws\\\",\\\"enable_account_rw\\\":false,\\\"security_review_status\\\":\\\"APPROVED\\\"}\")
-    if [ \"\$http_code\" = \"200\" ]; then
-      echo \"Security Review approved after \$attempt attempt(s)\"
-      sr_approved=1
-      break
-    fi
-    echo \"Attempt \$attempt: security_review/approve returned \$http_code, retrying in 15s...\"
-    sleep 15
-  done
-  if [ \"\$sr_approved\" != \"1\" ]; then
-    echo '### SECURITY REVIEW APPROVAL NEVER SUCCEEDED - inventory may stay empty ###'
-  fi
-  echo '### SECURITY REVIEW AUTO-APPROVAL STEP COMPLETE ###'
-  date
-
-  # -----------------------------------------------------------------
   # TAG-TO-LABEL MAPPING + APPLICATION DISCOVERY - both confirmed
   # automatable live 2026-09-03 with the same SAAPIKEY Basic auth. Waits
   # for inventory to actually exist first (bridge/resources non-empty) -
@@ -349,6 +310,19 @@ nohup bash -c "
   fi
   echo '### TAG-TO-LABEL MAPPING + APPLICATION DISCOVERY + DEPLOYMENTS STEP COMPLETE ###'
   date
+
+  # Security Review auto-approve deliberately removed for now (was here,
+  # up to 2026-09-04) - confirmed it's not a timing problem: the real
+  # browser sequence was captured in full (just a display-only GET
+  # /api/v1/credential then the approve POST, nothing hidden), and the
+  # official illumio-cloudsecure Terraform provider's full resource list
+  # has no security_review resource at all - Illumio hasn't built
+  # automation tooling for this action on either the REST or Terraform
+  # side. Best guess: the backend's 'ruleset summaries' computation only
+  # works for a real logged-in user session, not a service account. Not
+  # required for anything above (inventory/tag mapping/discovery/
+  # deployments all confirmed independent of it) - only relevant if a
+  # future task needs actual cloud-side write/enforcement.
 
 " > /var/log/aws-onboard-startup.log 2>&1 < /dev/null &
 
