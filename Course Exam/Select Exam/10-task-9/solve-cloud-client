@@ -1,11 +1,13 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Creates the Payment/LDN labels
-# (didn't exist in the org's pre-seeded content, confirmed 2026-09-02)
-# and Task9-RingfencePayment as a scopeless ruleset with an allow rule
-# that has Application=Payment, Location=LDN on both source and
-# destination - the realistic answer given Scopes aren't taught in the
-# 5-day class. check-cloud-client also accepts the Scope-based
+# Runs when the learner clicks Skip. Creates the Payment/LDN and
+# Ordering labels (Payment/LDN didn't exist in the org's pre-seeded
+# content, confirmed 2026-09-02) and Task9-RingfencePayment as a
+# scopeless ruleset with two allow rules: the intra-Payment ringfence
+# (Application=Payment, Location=LDN on both source and destination -
+# the realistic answer given Scopes aren't taught in the 5-day class)
+# plus an inbound rule from Ordering to Payment/LDN on TCP/443
+# (HTTPS). check-cloud-client also accepts the Scope-based ringfence
 # equivalent for a learner who already knows Scopes.
 
 . /root/.autoaccount_env
@@ -43,6 +45,7 @@ def find_all_services_href():
 
 app_href = find_or_create_label('app', 'Payment')
 loc_href = find_or_create_label('loc', 'LDN')
+ordering_href = find_or_create_label('app', 'ordering')
 all_services_href = find_all_services_href()
 
 rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets?max_results=1000') or []
@@ -54,13 +57,36 @@ if not rs:
     })
 
 if rs and rs.get('href'):
-    existing_rules = rs.get('rules', [])
-    if not any(rule.get('enabled', True) for rule in existing_rules):
+    def has_tcp_443(ingress_services):
+        for entry in ingress_services or []:
+            if entry.get('port') == 443 and entry.get('proto') == 6:
+                return True
+        return False
+
+    def is_all_services(ingress_services):
+        if not ingress_services:
+            return True
+        for entry in ingress_services or []:
+            href = entry.get('href')
+            if href == all_services_href:
+                return True
+        return False
+
+    existing_rules = [r for r in rs.get('rules', []) if r.get('enabled', True)]
+    if not any(is_all_services(r.get('ingress_services')) for r in existing_rules):
         call('POST', rs['href'] + '/sec_rules', {
             'enabled': True,
             'providers': [{'label': {'href': app_href}}, {'label': {'href': loc_href}}],
             'consumers': [{'label': {'href': app_href}}, {'label': {'href': loc_href}}],
             'ingress_services': [{'href': all_services_href}] if all_services_href else [],
+            'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
+        })
+    if not any(has_tcp_443(r.get('ingress_services')) for r in existing_rules):
+        call('POST', rs['href'] + '/sec_rules', {
+            'enabled': True,
+            'providers': [{'label': {'href': app_href}}, {'label': {'href': loc_href}}],
+            'consumers': [{'label': {'href': ordering_href}}],
+            'ingress_services': [{'port': 443, 'proto': 6}],
             'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
         })
 "

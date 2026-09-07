@@ -3,12 +3,15 @@
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
 #
-# Scopes aren't taught in the 5-day class, so the task doesn't ask for
-# one by name - but a learner who already knows Scopes might still use
-# one, so this accepts either: a real Scope (Application=Payment,
-# Location=LDN) with an intra-scope All Workloads/All Services allow
-# rule, or a scopeless ruleset with an allow rule that has the same two
-# labels repeated on both source and destination.
+# Scopes aren't taught in the 5-day class, so the ringfence rule
+# doesn't require one by name - but a learner who already knows Scopes
+# might still use one, so this accepts either: a real Scope
+# (Application=Payment, Location=LDN) with an intra-scope All
+# Workloads/All Services allow rule, or a scopeless ruleset with an
+# allow rule that has the same two labels repeated on both source and
+# destination. Also requires a second rule allowing inbound HTTPS from
+# Ordering to Payment/LDN - a plain label-to-label rule regardless of
+# scope mode, since Ordering sits outside Payment's scope either way.
 
 . /root/.autoaccount_env
 
@@ -68,33 +71,61 @@ def is_all_services(ingress_services):
                 return True
     return False
 
+def has_tcp_443(ingress_services):
+    for entry in ingress_services or []:
+        if entry.get('port') == 443 and entry.get('proto') == 6:
+            return True
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            for sp in svc.get('service_ports', []):
+                if sp.get('port') == 443 and sp.get('proto') == 6:
+                    return True
+    return False
+
 enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
-if len(enabled_rules) != 1:
-    print('Task9-RingfencePayment should have exactly one enabled allow rule, found ' + str(len(enabled_rules)))
+if len(enabled_rules) != 2:
+    print('Task9-RingfencePayment should have exactly two enabled rules (the ringfence allow rule, and the inbound Ordering->Payment rule), found ' + str(len(enabled_rules)))
     sys.exit(1)
 
-rule = enabled_rules[0]
-if scoped_mode:
-    src_ok = is_all_workloads(rule.get('consumers', []))
-    dst_ok = is_all_workloads(rule.get('providers', []))
+ringfence_rule = next((r for r in enabled_rules if is_all_services(r.get('ingress_services'))), None)
+inbound_rule = next((r for r in enabled_rules if has_tcp_443(r.get('ingress_services'))), None)
+
+reasons = []
+
+if not ringfence_rule:
+    reasons.append('missing the intra-Payment ringfence rule for All Services')
 else:
-    src_ok = resolve_labels(rule.get('consumers', [])) == expected
-    dst_ok = resolve_labels(rule.get('providers', [])) == expected
-svc_ok = is_all_services(rule.get('ingress_services'))
+    if scoped_mode:
+        src_ok = is_all_workloads(ringfence_rule.get('consumers', []))
+        dst_ok = is_all_workloads(ringfence_rule.get('providers', []))
+    else:
+        src_ok = resolve_labels(ringfence_rule.get('consumers', [])) == expected
+        dst_ok = resolve_labels(ringfence_rule.get('providers', [])) == expected
+    if not src_ok:
+        reasons.append('ringfence rule source is wrong' + (' - should be All Workloads (inside the scope)' if scoped_mode else ' - should be Application=Payment, Location=LDN'))
+    if not dst_ok:
+        reasons.append('ringfence rule destination is wrong' + (' - should be All Workloads (inside the scope)' if scoped_mode else ' - should be Application=Payment, Location=LDN'))
 
-if src_ok and dst_ok and svc_ok:
-    print('Task9-RingfencePayment ringfences the Payment/LDN application correctly')
-    sys.exit(0)
+if not inbound_rule:
+    reasons.append('missing the inbound allow rule for Ordering -> Payment on TCP/443 (HTTPS)')
+else:
+    consumer_labels = resolve_labels(inbound_rule.get('consumers', []))
+    if ('app', 'ordering') not in consumer_labels:
+        reasons.append('inbound rule source should be Application=Ordering, found ' + str(sorted(consumer_labels)))
+    if scoped_mode:
+        dst_ok = is_all_workloads(inbound_rule.get('providers', []))
+    else:
+        dst_ok = expected.issubset(resolve_labels(inbound_rule.get('providers', [])))
+    if not dst_ok:
+        reasons.append('inbound rule destination should be Payment, Location=LDN' + (' (All Workloads, inside the scope)' if scoped_mode else ''))
 
-missing = []
-if not src_ok:
-    missing.append('source is wrong' + (' - should be All Workloads (inside the scope)' if scoped_mode else ' - should be Application=Payment, Location=LDN'))
-if not dst_ok:
-    missing.append('destination is wrong' + (' - should be All Workloads (inside the scope)' if scoped_mode else ' - should be Application=Payment, Location=LDN'))
-if not svc_ok:
-    missing.append('service should be All Services, not restricted to a specific service')
-print('Task9-RingfencePayment has a rule but: ' + '; '.join(missing))
-sys.exit(1)
+if reasons:
+    print('; '.join(reasons))
+    sys.exit(1)
+
+print('Task9-RingfencePayment ringfences Payment/LDN and allows inbound HTTPS from Ordering')
+sys.exit(0)
 ")
 status=$?
 if [ "$status" -ne 0 ]; then
