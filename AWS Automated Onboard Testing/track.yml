@@ -12,8 +12,10 @@ description: |-
   What's automated, hands-free, no learner/instructor action needed:
   AWS infrastructure build, AWS account onboarding to Illumio Cloud,
   Tag-to-Label Mapping (Role, Location), Application Discovery (the
-  `crm` app), and Deployments (Production/Development). Security
-  Review stays a manual step, by design.
+  `crm` app), Deployments (Production/Development), and traffic
+  generation + Flow Log ingestion (security group rules, VPC Flow
+  Logs to S3, CloudSecure Flow Log Access). Security Review stays a
+  manual step, by design.
 
   Rough timing: ~20-33 min for onboarding through configuration, then
   another ~10-15 min before it's all visible on the Map - budget up to
@@ -37,5 +39,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "4513717131011841354"
+checksum: "15730684312497926374"
 enhanced_loading: false

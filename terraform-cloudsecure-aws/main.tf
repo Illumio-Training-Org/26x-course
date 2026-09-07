@@ -240,6 +240,119 @@ resource "aws_iam_role_policy" "protection" {
 # the CFT's exact policy content) and never use any of the module's own
 # role-creation logic, calling the resource directly avoids the module's
 # count entirely and is simpler besides.
+# -----------------------------------------------------------------
+# TRAFFIC GENERATION + FLOW LOG INGESTION - live-verified 2026-09-07
+# against org 4138914/AWS account 869935077306. The base terraform/
+# build's crm app only allows SSH (22) between instances, so no real
+# traffic exists for Flow Logs to ever capture. Opens the two ports
+# needed for realistic contrived traffic (internet->web HTTPS,
+# web->db MySQL) and wires up the full Flow Log pipeline: VPC Flow
+# Logs -> S3 (already has a bucket for this, aws_s3_bucket.illumio_flows
+# in the shared terraform/ build - originally named "...forflows"
+# before trimming) -> CloudSecure's "Flow Log Access" grant, which is
+# a manual UI button (Cloud -> Onboarding -> Flow Log Access) unless
+# automated here via the illumio-cloudsecure_aws_flow_logs_s3_bucket
+# resource. Data sources reference the shared terraform/ build's VPC/
+# SGs by name/tag rather than a cross-state reference, keeping this
+# config's isolation from the shared build intact (see the file-level
+# comment above for why that isolation matters).
+# -----------------------------------------------------------------
+data "aws_vpc" "lab" {
+  tags = {
+    Name = "illumio_lab"
+  }
+}
+
+data "aws_security_group" "web_sg" {
+  name = "web_sg"
+}
+
+data "aws_security_group" "db_sg" {
+  name = "db_sg"
+}
+
+resource "aws_security_group_rule" "web_https_ingress" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = data.aws_security_group.web_sg.id
+  description       = "Inbound HTTPS from the internet - real traffic for CloudSecure flow log ingestion testing"
+}
+
+resource "aws_security_group_rule" "db_mysql_ingress" {
+  type                     = "ingress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
+  source_security_group_id = data.aws_security_group.web_sg.id
+  security_group_id        = data.aws_security_group.db_sg.id
+  description              = "Inbound MySQL from the web tier only - real traffic for CloudSecure flow log ingestion testing"
+}
+
+# Live-verified 2026-09-07: this exact field list (V2+V3+V4+V5
+# attributes, AWS's standard order) matches Illumio's documented
+# custom-format requirement for CloudSecure ingestion. Terraform
+# requires doubling '$' to escape its own interpolation syntax and
+# emit a literal '${...}' in the log format string.
+resource "aws_flow_log" "vpc_flow_logs" {
+  vpc_id                   = data.aws_vpc.lab.id
+  traffic_type             = "ALL"
+  log_destination_type     = "s3"
+  log_destination          = "arn:aws:s3:::${var.s3_bucket_name}/flow-logs/"
+  max_aggregation_interval = 60
+  log_format               = "$${version} $${account-id} $${interface-id} $${srcaddr} $${dstaddr} $${srcport} $${dstport} $${protocol} $${packets} $${bytes} $${start} $${end} $${action} $${log-status} $${vpc-id} $${subnet-id} $${instance-id} $${tcp-flags} $${type} $${pkt-srcaddr} $${pkt-dstaddr} $${region} $${az-id} $${sublocation-type} $${sublocation-id} $${pkt-src-aws-service} $${pkt-dst-aws-service} $${flow-direction} $${traffic-path}"
+
+  destination_options {
+    file_format = "plain-text"
+  }
+}
+
+resource "aws_iam_role_policy" "flow_logs_list" {
+  name = "${var.account_name_prefix}FlowLogsListPolicy"
+  role = aws_iam_role.cloudsecure_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["s3:ListBucket"]
+        Resource = ["arn:aws:s3:::${var.s3_bucket_name}"]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "flow_logs_read" {
+  name = "${var.account_name_prefix}FlowLogsReadPolicy"
+  role = aws_iam_role.cloudsecure_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["s3:GetObject"]
+        Resource = ["arn:aws:s3:::${var.s3_bucket_name}/*"]
+      }
+    ]
+  })
+}
+
+# The actual "Flow Log Access" grant - replaces the manual button in
+# Cloud -> Onboarding. Depends on the two IAM policies above so
+# CloudSecure's own verification of the grant (it checks it can
+# actually list/read the bucket) doesn't race their creation.
+resource "illumio-cloudsecure_aws_flow_logs_s3_bucket" "flow_log_bucket" {
+  account_id    = data.aws_caller_identity.current.account_id
+  s3_bucket_arn = "arn:aws:s3:::${var.s3_bucket_name}"
+
+  depends_on = [
+    aws_iam_role_policy.flow_logs_list,
+    aws_iam_role_policy.flow_logs_read,
+  ]
+}
+
 resource "illumio-cloudsecure_aws_account" "account" {
   account_id = data.aws_caller_identity.current.account_id
   mode       = "ReadWrite"

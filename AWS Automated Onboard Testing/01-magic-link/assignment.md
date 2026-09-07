@@ -84,6 +84,10 @@ Advanced
    Application Definition.
 5. **Deployments** - `Production` and `Development`, each tied to the
    correct subnet and an `env` Cloud Tags stack.
+6. **Traffic generation + Flow Log ingestion** - security group rules
+   opening inbound HTTPS (web) and MySQL (web -> db), a VPC Flow Log
+   to S3 in CloudSecure's required custom format, and the CloudSecure
+   Flow Log Access grant (normally a manual Cloud -> Onboarding button).
 
 No learner or instructor action is required for any of this - it all
 happens automatically in the background. The one deliberate exception

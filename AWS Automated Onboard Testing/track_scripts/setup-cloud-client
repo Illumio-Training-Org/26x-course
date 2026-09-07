@@ -131,12 +131,23 @@ nohup bash -c "
   echo '### TERRAFORM APPLY COMPLETE ###'
   date
 
+  # Resolve the flows S3 bucket name created by the apply above - it
+  # has a random suffix and lives in a separate Terraform state
+  # (terraform/, not terraform-cloudsecure-aws/), so it's looked up
+  # directly via the AWS API rather than a cross-state reference.
+  # Only one bucket in the account matches this prefix.
+  S3_BUCKET_NAME=\$(aws s3api list-buckets --query \"Buckets[?starts_with(Name, 'illumios3bucket')].Name | [0]\" --output text)
+  echo \"Resolved flows S3 bucket: \$S3_BUCKET_NAME\"
+
   # -----------------------------------------------------------------
   # AUTOMATED ILLUMIO CLOUD ONBOARDING - separate, isolated Terraform
   # config (not the shared terraform/ folder, so this experiment can't
   # break Course Lab or any exam track). Uses the official
   # illumio/illumio-cloudsecure Terraform provider, modeled on a
-  # colleague's working example (Instruqt track grsxrhaf37xt).
+  # colleague's working example (Instruqt track grsxrhaf37xt). Also
+  # wires up traffic generation + Flow Log ingestion (SG rules, VPC
+  # Flow Log, Flow Log Access grant) - see main.tf's comment block for
+  # the full live-verified detail.
   # -----------------------------------------------------------------
   echo '### STARTING AUTOMATED CLOUDSECURE ONBOARDING ###'
   date
@@ -176,7 +187,8 @@ nohup bash -c "
   terraform init -input=false
   terraform plan -out=tfplan -input=false \
     -var \"illumio_cloudsecure_client_id=\$AUTOACCOUNT_SAAPIKEY_KEYID\" \
-    -var \"illumio_cloudsecure_client_secret=\$AUTOACCOUNT_SAAPIKEY_SECRET\"
+    -var \"illumio_cloudsecure_client_secret=\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+    -var \"s3_bucket_name=\$S3_BUCKET_NAME\"
   terraform apply -input=false -auto-approve tfplan
 
   echo '### AUTOMATED CLOUDSECURE ONBOARDING APPLY COMPLETE ###'
@@ -193,17 +205,40 @@ nohup bash -c "
   # downloaded from the Console's 'Add AWS Cloud Organization' wizard),
   # using the same SAAPIKEY Basic auth already used for every other
   # CloudSecure REST call in this project.
+  #
+  # Retried with visible status logging (up to 5 attempts, 15s apart) -
+  # a bare 'curl -sf' here previously failed silently on org 4138914
+  # (2026-09-07) and, combined with 'set -e' at the top of this block,
+  # aborted the rest of the script (tag-to-label mapping, discovery
+  # rule, deployments) with no trace in the log of why. Root cause not
+  # confirmed (possibly the same brief post-mint credential-activation
+  # window the wait-loop above already handles for the token endpoint,
+  # just not long enough here) - the retry is defensive either way.
   # -----------------------------------------------------------------
   echo '### REGISTERING CLOUD CREDENTIALS WITH CLOUDSECURE ###'
   date
   ROLE_ARN=\$(terraform output -raw role_arn)
   ROLE_EXTERNAL_ID=\$(terraform output -raw role_external_id)
   AWS_ACCT_ID=\$(terraform output -raw aws_account_id)
-  curl -sf -X POST \"https://cloud.illum.io/api/v1/integrations/cloud_credentials\" \
-    -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
-    -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
-    -H \"Content-Type: application/json\" \
-    -d \"{\\\"account_id\\\":\\\"\$AWS_ACCT_ID\\\",\\\"role_arn\\\":\\\"\$ROLE_ARN\\\",\\\"external_id\\\":\\\"\$ROLE_EXTERNAL_ID\\\",\\\"type\\\":\\\"AWSRole\\\"}\"
+  cloud_credentials_registered=0
+  for attempt in \$(seq 1 5); do
+    http_code=\$(curl -s -o /tmp/cloud_credentials_response.json -w '%{http_code}' -X POST \"https://cloud.illum.io/api/v1/integrations/cloud_credentials\" \
+      -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+      -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+      -H \"Content-Type: application/json\" \
+      -d \"{\\\"account_id\\\":\\\"\$AWS_ACCT_ID\\\",\\\"role_arn\\\":\\\"\$ROLE_ARN\\\",\\\"external_id\\\":\\\"\$ROLE_EXTERNAL_ID\\\",\\\"type\\\":\\\"AWSRole\\\"}\")
+    if [ \"\$http_code\" = \"200\" ]; then
+      echo \"Cloud credentials registered after \$attempt attempt(s)\"
+      cloud_credentials_registered=1
+      break
+    fi
+    echo \"Attempt \$attempt: cloud_credentials returned \$http_code, body: \$(cat /tmp/cloud_credentials_response.json), retrying in 15s...\"
+    sleep 15
+  done
+  if [ \"\$cloud_credentials_registered\" != \"1\" ]; then
+    echo '### CLOUD CREDENTIALS REGISTRATION FAILED AFTER 5 ATTEMPTS - CONTINUING ANYWAY ###'
+    date
+  fi
   echo '### CLOUD CREDENTIALS REGISTRATION COMPLETE ###'
   date
 

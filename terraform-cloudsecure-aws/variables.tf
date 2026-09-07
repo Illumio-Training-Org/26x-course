@@ -22,3 +22,8 @@ variable "account_name_prefix" {
   description = "Unique-ish prefix for naming the onboarded account/IAM role, so re-runs against different sandboxes don't collide."
   default     = "aws-onboard-test"
 }
+
+variable "s3_bucket_name" {
+  type        = string
+  description = "Name of the pre-existing S3 bucket (created by the shared terraform/ build, aws_s3_bucket.illumio_flows) that VPC Flow Logs are delivered to. Resolved at apply time via 'aws s3api list-buckets' in setup-cloud-client, since the bucket name has a random suffix and lives in a separate Terraform state."
+}
