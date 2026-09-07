@@ -3,11 +3,13 @@
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
 #
-# FIRST DRAFT - scope/rule shape not yet live-verified against a real
-# sandbox (unlike Foundation Exam's checks). Deliberately loose:
-# confirms the ruleset exists, is scoped to the right 5 labels, and has
-# at least one rule - doesn't yet strictly validate "intra-scope" rule
-# semantics. Refine once ringfencing is live-tested.
+# Scopes aren't taught in the 5-day class, so the task doesn't ask for
+# one by name - but a learner who already knows Scopes might still use
+# one, so this accepts either: a real Scope (the 5 labels below) with
+# an intra-scope All Workloads/All Services allow rule, or a scopeless
+# ruleset with an allow rule that has the same 5 labels repeated on
+# both source and destination. NOT YET LIVE-VERIFIED against a real
+# sandbox - refine once tested.
 
 . /root/.autoaccount_env
 
@@ -24,13 +26,12 @@ def get(path):
     return json.loads(out)
 
 def resolve_labels(entries):
-    out = {}
+    out = set()
     for e in entries:
-        href = e.get('href')
-        if not href:
-            continue
-        lbl = get(href.replace('/api/v2', ''))
-        out[(lbl.get('key') or '').lower()] = (lbl.get('value') or '').lower()
+        href = (e.get('label') or {}).get('href') or e.get('href')
+        if href:
+            lbl = get(href.replace('/api/v2', ''))
+            out.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
     return out
 
 ws = {w.get('hostname'): w for w in get('/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')}
@@ -41,38 +42,77 @@ for host in ('linux-vm', 'windows-vm'):
         reasons.append(host + ' not found')
         continue
     labels = resolve_labels(wl.get('labels', []))
-    if labels.get('type') != 'server':
+    if ('type', 'server') not in labels:
         reasons.append(host + \" missing Type='server'\")
-    if labels.get('dfirbubble') != 'ir-cleanbubble':
+    if ('dfirbubble', 'ir-cleanbubble') not in labels:
         reasons.append(host + \" missing IR='IR-CLEANBUBBLE'\")
-
-rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
-rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task2-ringfence'), None)
-if not rs:
-    reasons.append('Ruleset \"Task2-Ringfence\" not found')
-else:
-    scope_labels = set()
-    for scope in rs.get('scopes', []):
-        for entry in scope:
-            href = (entry.get('label') or {}).get('href')
-            if href:
-                lbl = get(href.replace('/api/v2', ''))
-                scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
-    expected_scope = {('app', 'portal'), ('env', 'production'), ('loc', 'ca'), ('type', 'server'), ('dfirbubble', 'ir-cleanbubble')}
-    if not expected_scope.issubset(scope_labels):
-        reasons.append('Task2-Ringfence scope should include Application=portal, Environment=Production, Location=ca, Type=server, IR=IR-CLEANBUBBLE, found ' + str(sorted(scope_labels)))
-    has_all_services_rule = any(
-        not rule.get('ingress_services')
-        for rule in rs.get('rules', [])
-    )
-    if not has_all_services_rule:
-        reasons.append('Task2-Ringfence needs an intra-scope allow rule for All Services, not restricted to a specific service')
 
 if reasons:
     print('; '.join(reasons))
     sys.exit(1)
-print('Both workloads have the 2 extra labels, and Task2-Ringfence is scoped correctly with a rule')
-sys.exit(0)
+
+rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task2-ringfence'), None)
+if not rs:
+    print('Ruleset \"Task2-Ringfence\" not found')
+    sys.exit(1)
+
+expected = {('app', 'portal'), ('env', 'production'), ('loc', 'ca'), ('type', 'server'), ('dfirbubble', 'ir-cleanbubble')}
+
+scope_labels = set()
+for scope in rs.get('scopes', []):
+    for entry in scope:
+        href = (entry.get('label') or {}).get('href')
+        if href:
+            lbl = get(href.replace('/api/v2', ''))
+            scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
+
+if scope_labels and scope_labels != expected:
+    print('Task2-Ringfence scope should be exactly Application=portal, Environment=Production, Location=ca, Type=server, IR=IR-CLEANBUBBLE (or no scope at all), found ' + str(sorted(scope_labels)))
+    sys.exit(1)
+scoped_mode = bool(scope_labels)
+
+def is_all_workloads(actors):
+    return any(a.get('actors') == 'ams' for a in actors)
+
+def is_all_services(ingress_services):
+    if not ingress_services:
+        return True
+    for entry in ingress_services:
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            if (svc.get('name') or '').lower() == 'all services':
+                return True
+    return False
+
+enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
+if len(enabled_rules) != 1:
+    print('Task2-Ringfence should have exactly one enabled allow rule, found ' + str(len(enabled_rules)))
+    sys.exit(1)
+
+rule = enabled_rules[0]
+if scoped_mode:
+    src_ok = is_all_workloads(rule.get('consumers', []))
+    dst_ok = is_all_workloads(rule.get('providers', []))
+else:
+    src_ok = resolve_labels(rule.get('consumers', [])) == expected
+    dst_ok = resolve_labels(rule.get('providers', [])) == expected
+svc_ok = is_all_services(rule.get('ingress_services'))
+
+if src_ok and dst_ok and svc_ok:
+    print('Both workloads have the 2 extra labels, and Task2-Ringfence ringfences the portal application correctly')
+    sys.exit(0)
+
+missing = []
+if not src_ok:
+    missing.append('source is wrong' + (' - should be All Workloads (inside the scope)' if scoped_mode else ' - should have all 5 labels'))
+if not dst_ok:
+    missing.append('destination is wrong' + (' - should be All Workloads (inside the scope)' if scoped_mode else ' - should have all 5 labels'))
+if not svc_ok:
+    missing.append('service should be All Services, not restricted to a specific service')
+print('Task2-Ringfence has a rule but: ' + '; '.join(missing))
+sys.exit(1)
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

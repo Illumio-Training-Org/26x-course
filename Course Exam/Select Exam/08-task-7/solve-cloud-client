@@ -1,11 +1,12 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Creates the dev-prod Label Group
-# and updates Task6-RingfenceOrdering's scope to use it, replacing the
-# single Development label - no-ops if Task 7's ruleset doesn't exist
-# yet (run its own solve/skip first).
-#
-# FIRST DRAFT - detail to be refined.
+# Runs when the learner clicks Skip. Creates the dev-prod Label Group,
+# then updates Task6-RingfenceOrdering to use it instead of the plain
+# Development label - on the ruleset's scope if Task 6 used a real
+# Scope, otherwise on the rule's consumers/providers (the realistic
+# default, since Scopes aren't taught in the 5-day class). No-ops if
+# Task 6's ruleset doesn't exist yet (run its own solve/skip first).
+# NOT YET LIVE-VERIFIED against a real sandbox.
 
 . /root/.autoaccount_env
 
@@ -45,18 +46,31 @@ if not lg:
         'labels': [{'href': dev_href}, {'href': prod_href}],
     })
 
-rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets') or []
+rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets?max_results=1000') or []
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-ringfenceordering'), None)
 if rs and lg:
     app_href = find_or_create_label('app', 'ordering')
     loc_href = find_or_create_label('loc', 'ca')
-    call('PUT', rs['href'], {
-        'scopes': [[
-            {'label': {'href': app_href}},
-            {'label_group': {'href': lg['href']}},
-            {'label': {'href': loc_href}},
-        ]],
-    })
+    scopes = rs.get('scopes', [])
+    scoped_mode = any(len(group) > 0 for group in scopes)
+    if scoped_mode:
+        call('PUT', rs['href'], {
+            'scopes': [[
+                {'label': {'href': app_href}},
+                {'label_group': {'href': lg['href']}},
+                {'label': {'href': loc_href}},
+            ]],
+        })
+    else:
+        enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
+        if enabled_rules:
+            rule = enabled_rules[0]
+            entries = [
+                {'label': {'href': app_href}},
+                {'label_group': {'href': lg['href']}},
+                {'label': {'href': loc_href}},
+            ]
+            call('PUT', rule['href'], {'consumers': entries, 'providers': entries})
 "
 
 exit 0

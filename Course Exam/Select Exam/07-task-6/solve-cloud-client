@@ -1,9 +1,12 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Creates Task6-RingfenceOrdering
-# scoped correctly, plus the intra-scope All Workloads -> All Workloads,
-# All Services allow rule itself - Task 7 extends this same ruleset, so
-# it needs to already have this rule in place if Task 6 was skipped.
+# Runs when the learner clicks Skip. Creates Task6-RingfenceOrdering as
+# a scopeless ruleset with an allow rule that has Application=ordering,
+# Environment=Development, Location=ca on both source and destination -
+# the realistic answer given Scopes aren't taught in the 5-day class.
+# check-cloud-client also accepts the Scope-based equivalent for a
+# learner who already knows Scopes. Task 7 extends this same ruleset,
+# so it needs to already have this rule in place if Task 6 was skipped.
 
 . /root/.autoaccount_env
 
@@ -55,20 +58,21 @@ rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-ringfe
 if not rs:
     rs = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
         'name': 'Task6-RingfenceOrdering',
-        'scopes': [[
-            {'label': {'href': app_href}},
-            {'label': {'href': dev_href}},
-            {'label': {'href': loc_href}},
-        ]],
+        'scopes': [[]],
     })
 
 if rs and rs.get('href'):
     existing_rules = rs.get('rules', [])
     if not any(rule.get('enabled', True) for rule in existing_rules):
+        entries = [
+            {'label': {'href': app_href}},
+            {'label': {'href': dev_href}},
+            {'label': {'href': loc_href}},
+        ]
         call('POST', rs['href'] + '/sec_rules', {
             'enabled': True,
-            'providers': [{'actors': 'ams'}],
-            'consumers': [{'actors': 'ams'}],
+            'providers': entries,
+            'consumers': entries,
             'ingress_services': [{'href': all_services_href}] if all_services_href else [],
             'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
         })

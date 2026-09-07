@@ -8,7 +8,7 @@ timelimit: 0
 enhanced_loading: null
 ---
 Create a Label Group named `dev-prod` containing the Environment labels
-`Development` and `Production`. Update `Task6-RingfenceOrdering`'s
-scope to use this Label Group instead of just Development, so both the
-Dev and Prod instances of the `ordering` application are ringfenced by
-the same policy.
+`Development` and `Production`. Update `Task6-RingfenceOrdering` to use
+this Label Group instead of just Development, so both the Dev and Prod
+instances of the `ordering` application are ringfenced by the same
+policy.
