@@ -6,6 +6,15 @@
 # Idempotent: merges in only whatever pieces are missing if the
 # ruleset already partially exists (e.g. the learner built some of it
 # by hand before skipping).
+#
+# Live-verified 2026-09-07 (org 4138910): re-PUTing an existing
+# ruleset's own deny_rules array (read straight from GET) fails with a
+# 406 - GET returns each deny_rule with read-only fields (href,
+# created_at, updated_by, caps, etc.) that the PUT schema rejects as
+# "additional properties". Only bites the idempotent-append path (a
+# ruleset that already has a deny_rule when Skip runs), not a
+# from-scratch run - fixed by stripping each existing entry down to
+# just the writable fields before re-sending.
 
 . /root/.autoaccount_env
 
@@ -49,6 +58,15 @@ def has_pair(existing, cdir, pdir):
             return True
     return False
 
+DENY_RULE_WRITABLE_FIELDS = [
+    'enabled', 'providers', 'consumers', 'ingress_services', 'network_type',
+    'override', 'egress_services', 'unscoped_consumers',
+    'all_ips_except_for_in_consumers', 'all_ips_except_for_in_providers',
+]
+
+def clean_deny_rule(d):
+    return {k: d[k] for k in DENY_RULE_WRITABLE_FIELDS if k in d}
+
 app_href = find_or_create_label('app', 'ordering')
 dev_href = find_or_create_label('env', 'Development')
 prod_href = find_or_create_label('env', 'Production')
@@ -70,7 +88,7 @@ if rs and rs.get('href'):
     deny_rules = rs.get('deny_rules', [])
     if not has_pair(deny_rules, dev_to_prod, prod_to_dev):
         call('PUT', rs['href'], {
-            'deny_rules': deny_rules + [{
+            'deny_rules': [clean_deny_rule(d) for d in deny_rules] + [{
                 'enabled': True,
                 'providers': [{'label': {'href': app_href}, 'exclusion': False}, {'label': {'href': prod_href}, 'exclusion': False}],
                 'consumers': [{'label': {'href': app_href}, 'exclusion': False}, {'label': {'href': dev_href}, 'exclusion': False}],
