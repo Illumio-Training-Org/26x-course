@@ -41,17 +41,33 @@ for scope_group in rs.get('scopes', []):
         print('Task5-DenyDevProd should not use a Scope - repeat Location=ca explicitly on both sides of the deny rule instead')
         sys.exit(1)
 
+def is_all_services(ingress_services):
+    if not ingress_services:
+        return True
+    for entry in ingress_services:
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            if (svc.get('name') or '').lower() == 'all services':
+                return True
+    return False
+
 want_consumer = {'app': 'ordering', 'env': 'development', 'loc': 'ca'}
 want_provider = {'app': 'ordering', 'env': 'production', 'loc': 'ca'}
 
+best_reasons = None
 for dr in rs.get('deny_rules', []):
     consumers = resolve(dr.get('consumers', []))
     providers = resolve(dr.get('providers', []))
-    if all(consumers.get(k) == v for k, v in want_consumer.items()) and all(providers.get(k) == v for k, v in want_provider.items()):
-        print('Found the Dev->Prod deny rule for ordering in ca')
+    labels_ok = all(consumers.get(k) == v for k, v in want_consumer.items()) and all(providers.get(k) == v for k, v in want_provider.items())
+    service_ok = is_all_services(dr.get('ingress_services'))
+    if labels_ok and service_ok:
+        print('Found the Dev->Prod deny rule for ordering in ca, All Services')
         sys.exit(0)
+    if labels_ok:
+        best_reasons = 'the Dev->Prod deny rule for ordering in ca exists but should be for All Services, not a specific service/port range'
 
-print('Task5-DenyDevProd exists but has no rule denying Dev->Prod for ordering in ca')
+print(best_reasons or 'Task5-DenyDevProd exists but has no rule denying Dev->Prod for ordering in ca')
 sys.exit(1)
 ")
 status=$?
