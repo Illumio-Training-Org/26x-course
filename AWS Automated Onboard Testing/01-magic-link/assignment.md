@@ -114,6 +114,8 @@ echo $AUTOACCOUNT_APIKEY_SECRET
 echo $AUTOACCOUNT_TENANT_ID
 echo $AUTOACCOUNT_SAAPIKEY_KEYID
 echo $AUTOACCOUNT_SAAPIKEY_SECRET
+echo $AWS_ACCESS_KEY_ID
+echo $AWS_SECRET_ACCESS_KEY
 ```
 
 To watch the background build/onboarding progress live:
