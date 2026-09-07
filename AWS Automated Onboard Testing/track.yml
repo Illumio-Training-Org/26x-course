@@ -17,7 +17,10 @@ description: |-
 
   Rough timing: ~20-33 min for onboarding through configuration, then
   another ~10-15 min before it's all visible on the Map - budget up to
-  ~50 min total from track start.
+  ~50 min total from track start. Traffic flow ingestion (VPC Flow
+  Logs -> S3 -> CloudSecure) is separate and can take significantly
+  longer - track sized to 4 hours to allow full margin for this plus
+  time to actually test with the resulting traffic afterward.
 icon: ./assets/logo.png
 tags:
 - ilt
@@ -25,8 +28,8 @@ owner: illumio-training
 developers:
 - nathan.mitchell@illumio.com
 show_timer: true
-idle_timeout: 7200
-timelimit: 7200
+idle_timeout: 14400
+timelimit: 14400
 lab_config:
   sidebar_enabled: true
   feedback_recap_enabled: true
@@ -34,5 +37,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "817819444111383947"
+checksum: "4513717131011841354"
 enhanced_loading: false
