@@ -49,7 +49,7 @@ for host in ('linux-vm', 'windows-vm'):
     wl = by_host.get(host)
     if not wl:
         continue
-    existing = [l for l in wl.get('labels', [])]
+    existing = [{'href': l['href']} for l in wl.get('labels', [])]
     call('PUT', wl['href'], {'labels': existing + [{'href': type_href}, {'href': ir_href}]})
 
 app_href = find_or_create_label('app', 'portal')

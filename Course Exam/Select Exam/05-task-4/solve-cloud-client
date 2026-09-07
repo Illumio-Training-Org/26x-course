@@ -1,7 +1,15 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Best-effort: applies the
-# strict-quarantine label to linux-vm. No-ops if not paired yet.
+# Runs when the learner clicks Skip. Applies the strict-quarantine
+# label to linux-vm. No-ops if not paired yet.
+#
+# Live-verified 2026-09-07 (org 4138910): a workload's existing
+# `labels` entries come back from GET with `key`/`value` resolved
+# inline, but PUT's schema only allows `{href}` on each entry - sending
+# them straight back caused a 406 ("contains additional properties
+# [key, value]"), so the whole label update silently failed (this is
+# what a learner hit on Skip). Fixed by stripping existing entries down
+# to `{href}` before re-sending.
 
 . /root/.autoaccount_env
 
@@ -28,7 +36,7 @@ ws = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000') or []
 wl = next((w for w in ws if w.get('hostname') == 'linux-vm'), None)
 
 if wl and q_href:
-    existing = wl.get('labels', [])
+    existing = [{'href': l['href']} for l in wl.get('labels', [])]
     call('PUT', wl['href'], {'labels': existing + [{'href': q_href}]})
 "
 
