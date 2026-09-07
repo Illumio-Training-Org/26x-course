@@ -3,10 +3,9 @@
 # Runs when the learner clicks Skip. Creates Task6-RingfenceOrdering as
 # a scopeless ruleset with an allow rule that has Application=ordering,
 # Environment=Development, Location=ca on both source and destination -
-# the realistic answer given Scopes aren't taught in the 5-day class.
-# check-cloud-client also accepts the Scope-based equivalent for a
-# learner who already knows Scopes. Task 7 extends this same ruleset,
-# so it needs to already have this rule in place if Task 6 was skipped.
+# Scopes aren't taught in this course and check-cloud-client does not
+# accept a Scope-based equivalent. Task 7 extends this same ruleset, so
+# it needs to already have this rule in place if Task 6 was skipped.
 
 . /root/.autoaccount_env
 

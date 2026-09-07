@@ -3,10 +3,9 @@
 # Runs when the learner clicks Skip. Adds the 2 extra labels to both
 # workloads (no-ops per workload if not paired yet) and creates
 # Task2-Ringfence as a scopeless ruleset with an allow rule that has
-# all 5 labels on both source and destination - the realistic answer
-# given Scopes aren't taught in the 5-day class. check-cloud-client
-# also accepts the Scope-based equivalent for a learner who already
-# knows Scopes. NOT YET LIVE-VERIFIED against a real sandbox.
+# all 5 labels on both source and destination - Scopes aren't taught
+# in this course and check-cloud-client does not accept a Scope-based
+# equivalent. NOT YET LIVE-VERIFIED against a real sandbox.
 
 . /root/.autoaccount_env
 

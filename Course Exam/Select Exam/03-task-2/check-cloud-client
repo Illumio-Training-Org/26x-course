@@ -3,13 +3,10 @@
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
 #
-# Scopes aren't taught in the 5-day class, so the task doesn't ask for
-# one by name - but a learner who already knows Scopes might still use
-# one, so this accepts either: a real Scope (the 5 labels below) with
-# an intra-scope All Workloads/All Services allow rule, or a scopeless
-# ruleset with an allow rule that has the same 5 labels repeated on
-# both source and destination. NOT YET LIVE-VERIFIED against a real
-# sandbox - refine once tested.
+# Scopes aren't taught in this course, so this task does NOT accept a
+# Scope-based ruleset - it requires a plain rule with all 5 labels
+# repeated on both source and destination. NOT YET LIVE-VERIFIED
+# against a real sandbox - refine once tested.
 
 . /root/.autoaccount_env
 
@@ -57,8 +54,6 @@ if not rs:
     print('Ruleset \"Task2-Ringfence\" not found')
     sys.exit(1)
 
-expected = {('app', 'portal'), ('env', 'production'), ('loc', 'ca'), ('type', 'server'), ('dfirbubble', 'ir-cleanbubble')}
-
 scope_labels = set()
 for scope in rs.get('scopes', []):
     for entry in scope:
@@ -66,14 +61,13 @@ for scope in rs.get('scopes', []):
         if href:
             lbl = get(href.replace('/api/v2', ''))
             scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
-
-if scope_labels and scope_labels != expected:
-    print('Task2-Ringfence scope should be exactly Application=portal, Environment=Production, Location=ca, Type=server, IR=IR-CLEANBUBBLE (or no scope at all), found ' + str(sorted(scope_labels)))
+        if entry.get('label_group'):
+            scope_labels.add(('label_group', 'used'))
+if scope_labels:
+    print('Task2-Ringfence should not use a Scope - build the rule with all 5 labels on both source and destination instead')
     sys.exit(1)
-scoped_mode = bool(scope_labels)
 
-def is_all_workloads(actors):
-    return any(a.get('actors') == 'ams' for a in actors)
+expected = {('app', 'portal'), ('env', 'production'), ('loc', 'ca'), ('type', 'server'), ('dfirbubble', 'ir-cleanbubble')}
 
 def is_all_services(ingress_services):
     if not ingress_services:
@@ -92,12 +86,8 @@ if len(enabled_rules) != 1:
     sys.exit(1)
 
 rule = enabled_rules[0]
-if scoped_mode:
-    src_ok = is_all_workloads(rule.get('consumers', []))
-    dst_ok = is_all_workloads(rule.get('providers', []))
-else:
-    src_ok = resolve_labels(rule.get('consumers', [])) == expected
-    dst_ok = resolve_labels(rule.get('providers', [])) == expected
+src_ok = resolve_labels(rule.get('consumers', [])) == expected
+dst_ok = resolve_labels(rule.get('providers', [])) == expected
 svc_ok = is_all_services(rule.get('ingress_services'))
 
 if src_ok and dst_ok and svc_ok:
@@ -106,9 +96,9 @@ if src_ok and dst_ok and svc_ok:
 
 missing = []
 if not src_ok:
-    missing.append('source is wrong' + (' - should be All Workloads (inside the scope)' if scoped_mode else ' - should have all 5 labels'))
+    missing.append('source is wrong - should have all 5 labels (Application=portal, Environment=Production, Location=ca, Type=server, IR=IR-CLEANBUBBLE)')
 if not dst_ok:
-    missing.append('destination is wrong' + (' - should be All Workloads (inside the scope)' if scoped_mode else ' - should have all 5 labels'))
+    missing.append('destination is wrong - should have all 5 labels')
 if not svc_ok:
     missing.append('service should be All Services, not restricted to a specific service')
 print('Task2-Ringfence has a rule but: ' + '; '.join(missing))

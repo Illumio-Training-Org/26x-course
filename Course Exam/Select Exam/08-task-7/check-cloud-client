@@ -3,12 +3,11 @@
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
 #
-# Scopes aren't taught in the 5-day class (see Task 6), so this checks
-# whichever mode Task 6 ended up in: a real Scope (replace the
-# Development label in the ruleset's scope with the dev-prod Label
-# Group) or a scopeless rule (replace the Development label on the
-# rule's consumers/providers with the dev-prod Label Group). Either
-# way, Application=ordering and Location=ca must still be present.
+# Scopes aren't taught in this course, so Task 6's ruleset is always
+# scopeless - this checks that Task6-RingfenceOrdering's rule now uses
+# the dev-prod Label Group in place of the plain Development label on
+# both source and destination, with Application=ordering and
+# Location=ca still present.
 
 . /root/.autoaccount_env
 
@@ -46,6 +45,11 @@ if not rs:
     print('Ruleset \"Task6-RingfenceOrdering\" not found - do Task 6 first')
     sys.exit(1)
 
+for scope in rs.get('scopes', []):
+    if scope:
+        print('Task6-RingfenceOrdering should not use a Scope - update the rule\'s labels directly instead')
+        sys.exit(1)
+
 def entry_kv(entry):
     href = (entry.get('label') or {}).get('href')
     if not href:
@@ -56,57 +60,33 @@ def entry_kv(entry):
 def entry_group_href(entry):
     return (entry.get('label_group') or {}).get('href')
 
-scopes = rs.get('scopes', [])
-scoped_mode = any(len(group) > 0 for group in scopes)
+enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
+if len(enabled_rules) != 1:
+    print('Task6-RingfenceOrdering should have exactly one enabled rule, found ' + str(len(enabled_rules)))
+    sys.exit(1)
+rule = enabled_rules[0]
 
-if scoped_mode:
-    group = scopes[0]
-    kvs = {kv for kv in (entry_kv(e) for e in group) if kv}
-    group_hrefs = {entry_group_href(e) for e in group if entry_group_href(e)}
+def side_ok(entries):
+    kvs = {kv for kv in (entry_kv(e) for e in entries) if kv}
+    group_hrefs = {entry_group_href(e) for e in entries if entry_group_href(e)}
     has_app = ('app', 'ordering') in kvs
     has_loc = ('loc', 'ca') in kvs
     has_group = lg.get('href') in group_hrefs
     has_stale_env = any(k == 'env' for k, v in kvs)
-    if has_app and has_loc and has_group and not has_stale_env:
-        print('dev-prod Label Group exists and Task6-RingfenceOrdering\'s scope now uses it instead of Development')
-        sys.exit(0)
-    missing = []
-    if not has_app or not has_loc:
-        missing.append('scope should still include Application=ordering and Location=ca')
-    if not has_group:
-        missing.append('scope does not yet use the dev-prod Label Group')
-    if has_stale_env:
-        missing.append('scope still has a plain Development label instead of the dev-prod Label Group')
-    print('; '.join(missing))
-    sys.exit(1)
-else:
-    enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
-    if len(enabled_rules) != 1:
-        print('Task6-RingfenceOrdering should have exactly one enabled rule, found ' + str(len(enabled_rules)))
-        sys.exit(1)
-    rule = enabled_rules[0]
+    return has_app and has_loc and has_group and not has_stale_env
 
-    def side_ok(entries):
-        kvs = {kv for kv in (entry_kv(e) for e in entries) if kv}
-        group_hrefs = {entry_group_href(e) for e in entries if entry_group_href(e)}
-        has_app = ('app', 'ordering') in kvs
-        has_loc = ('loc', 'ca') in kvs
-        has_group = lg.get('href') in group_hrefs
-        has_stale_env = any(k == 'env' for k, v in kvs)
-        return has_app and has_loc and has_group and not has_stale_env
-
-    src_ok = side_ok(rule.get('consumers', []))
-    dst_ok = side_ok(rule.get('providers', []))
-    if src_ok and dst_ok:
-        print('dev-prod Label Group exists and Task6-RingfenceOrdering\'s rule now uses it instead of Development')
-        sys.exit(0)
-    missing = []
-    if not src_ok:
-        missing.append('source should have Application=ordering, Location=ca, and the dev-prod Label Group (not a plain Development label)')
-    if not dst_ok:
-        missing.append('destination should have Application=ordering, Location=ca, and the dev-prod Label Group (not a plain Development label)')
-    print('; '.join(missing))
-    sys.exit(1)
+src_ok = side_ok(rule.get('consumers', []))
+dst_ok = side_ok(rule.get('providers', []))
+if src_ok and dst_ok:
+    print('dev-prod Label Group exists and Task6-RingfenceOrdering\'s rule now uses it instead of Development')
+    sys.exit(0)
+missing = []
+if not src_ok:
+    missing.append('source should have Application=ordering, Location=ca, and the dev-prod Label Group (not a plain Development label)')
+if not dst_ok:
+    missing.append('destination should have Application=ordering, Location=ca, and the dev-prod Label Group (not a plain Development label)')
+print('; '.join(missing))
+sys.exit(1)
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

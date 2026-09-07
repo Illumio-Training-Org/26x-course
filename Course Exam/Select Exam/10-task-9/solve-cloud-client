@@ -4,11 +4,10 @@
 # Ordering labels (Payment/LDN didn't exist in the org's pre-seeded
 # content, confirmed 2026-09-02) and Task9-RingfencePayment as a
 # scopeless ruleset with two allow rules: the intra-Payment ringfence
-# (Application=Payment, Location=LDN on both source and destination -
-# the realistic answer given Scopes aren't taught in the 5-day class)
+# (Application=Payment, Location=LDN on both source and destination)
 # plus an inbound rule from Ordering to Payment/LDN on TCP/443
-# (HTTPS). check-cloud-client also accepts the Scope-based ringfence
-# equivalent for a learner who already knows Scopes.
+# (HTTPS). Scopes aren't taught in this course and check-cloud-client
+# does not accept a Scope-based equivalent.
 
 . /root/.autoaccount_env
 

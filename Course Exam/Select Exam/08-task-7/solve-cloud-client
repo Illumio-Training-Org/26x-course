@@ -1,10 +1,10 @@
 #!/bin/sh
 #
 # Runs when the learner clicks Skip. Creates the dev-prod Label Group,
-# then updates Task6-RingfenceOrdering to use it instead of the plain
-# Development label - on the ruleset's scope if Task 6 used a real
-# Scope, otherwise on the rule's consumers/providers (the realistic
-# default, since Scopes aren't taught in the 5-day class). No-ops if
+# then updates Task6-RingfenceOrdering's rule to use it instead of the
+# plain Development label on both consumers and providers - Scopes
+# aren't taught in this course, so Task 6's ruleset is always
+# scopeless and this always edits the rule, never a scope. No-ops if
 # Task 6's ruleset doesn't exist yet (run its own solve/skip first).
 # NOT YET LIVE-VERIFIED against a real sandbox.
 
@@ -51,26 +51,15 @@ rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-ringfe
 if rs and lg:
     app_href = find_or_create_label('app', 'ordering')
     loc_href = find_or_create_label('loc', 'ca')
-    scopes = rs.get('scopes', [])
-    scoped_mode = any(len(group) > 0 for group in scopes)
-    if scoped_mode:
-        call('PUT', rs['href'], {
-            'scopes': [[
-                {'label': {'href': app_href}},
-                {'label_group': {'href': lg['href']}},
-                {'label': {'href': loc_href}},
-            ]],
-        })
-    else:
-        enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
-        if enabled_rules:
-            rule = enabled_rules[0]
-            entries = [
-                {'label': {'href': app_href}},
-                {'label_group': {'href': lg['href']}},
-                {'label': {'href': loc_href}},
-            ]
-            call('PUT', rule['href'], {'consumers': entries, 'providers': entries})
+    enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
+    if enabled_rules:
+        rule = enabled_rules[0]
+        entries = [
+            {'label': {'href': app_href}},
+            {'label_group': {'href': lg['href']}},
+            {'label': {'href': loc_href}},
+        ]
+        call('PUT', rule['href'], {'consumers': entries, 'providers': entries})
 "
 
 exit 0

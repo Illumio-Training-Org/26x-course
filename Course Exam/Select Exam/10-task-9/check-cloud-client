@@ -3,15 +3,11 @@
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
 #
-# Scopes aren't taught in the 5-day class, so the ringfence rule
-# doesn't require one by name - but a learner who already knows Scopes
-# might still use one, so this accepts either: a real Scope
-# (Application=Payment, Location=LDN) with an intra-scope All
-# Workloads/All Services allow rule, or a scopeless ruleset with an
-# allow rule that has the same two labels repeated on both source and
-# destination. Also requires a second rule allowing inbound HTTPS from
-# Ordering to Payment/LDN - a plain label-to-label rule regardless of
-# scope mode, since Ordering sits outside Payment's scope either way.
+# Scopes aren't taught in this course, so this task does NOT accept a
+# Scope-based ruleset - it requires two plain rules: the intra-Payment
+# ringfence (Application=Payment, Location=LDN repeated on both source
+# and destination) and the inbound Ordering->Payment/LDN rule on
+# TCP/443 (HTTPS).
 
 . /root/.autoaccount_env
 
@@ -33,6 +29,11 @@ if not rs:
     print('Ruleset \"Task9-RingfencePayment\" not found')
     sys.exit(1)
 
+for scope in rs.get('scopes', []):
+    if scope:
+        print('Task9-RingfencePayment should not use a Scope - build the ringfence rule with Application=Payment, Location=LDN on both source and destination instead')
+        sys.exit(1)
+
 def resolve_labels(entries):
     out = set()
     for e in entries:
@@ -43,22 +44,6 @@ def resolve_labels(entries):
     return out
 
 expected = {('app', 'payment'), ('loc', 'ldn')}
-
-scope_labels = set()
-for scope in rs.get('scopes', []):
-    for entry in scope:
-        href = (entry.get('label') or {}).get('href')
-        if href:
-            lbl = get(href.replace('/api/v2', ''))
-            scope_labels.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
-
-if scope_labels and scope_labels != expected:
-    print('Task9-RingfencePayment scope should be exactly Application=Payment, Location=LDN (or no scope at all), found ' + str(sorted(scope_labels)))
-    sys.exit(1)
-scoped_mode = bool(scope_labels)
-
-def is_all_workloads(actors):
-    return any(a.get('actors') == 'ams' for a in actors)
 
 def is_all_services(ingress_services):
     if not ingress_services:
@@ -96,16 +81,12 @@ reasons = []
 if not ringfence_rule:
     reasons.append('missing the intra-Payment ringfence rule for All Services')
 else:
-    if scoped_mode:
-        src_ok = is_all_workloads(ringfence_rule.get('consumers', []))
-        dst_ok = is_all_workloads(ringfence_rule.get('providers', []))
-    else:
-        src_ok = resolve_labels(ringfence_rule.get('consumers', [])) == expected
-        dst_ok = resolve_labels(ringfence_rule.get('providers', [])) == expected
+    src_ok = resolve_labels(ringfence_rule.get('consumers', [])) == expected
+    dst_ok = resolve_labels(ringfence_rule.get('providers', [])) == expected
     if not src_ok:
-        reasons.append('ringfence rule source is wrong' + (' - should be All Workloads (inside the scope)' if scoped_mode else ' - should be Application=Payment, Location=LDN'))
+        reasons.append('ringfence rule source is wrong - should be Application=Payment, Location=LDN')
     if not dst_ok:
-        reasons.append('ringfence rule destination is wrong' + (' - should be All Workloads (inside the scope)' if scoped_mode else ' - should be Application=Payment, Location=LDN'))
+        reasons.append('ringfence rule destination is wrong - should be Application=Payment, Location=LDN')
 
 if not inbound_rule:
     reasons.append('missing the inbound allow rule for Ordering -> Payment on TCP/443 (HTTPS)')
@@ -113,12 +94,9 @@ else:
     consumer_labels = resolve_labels(inbound_rule.get('consumers', []))
     if ('app', 'ordering') not in consumer_labels:
         reasons.append('inbound rule source should be Application=Ordering, found ' + str(sorted(consumer_labels)))
-    if scoped_mode:
-        dst_ok = is_all_workloads(inbound_rule.get('providers', []))
-    else:
-        dst_ok = expected.issubset(resolve_labels(inbound_rule.get('providers', [])))
+    dst_ok = expected.issubset(resolve_labels(inbound_rule.get('providers', [])))
     if not dst_ok:
-        reasons.append('inbound rule destination should be Payment, Location=LDN' + (' (All Workloads, inside the scope)' if scoped_mode else ''))
+        reasons.append('inbound rule destination should be Payment, Location=LDN')
 
 if reasons:
     print('; '.join(reasons))
