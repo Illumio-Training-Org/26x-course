@@ -68,3 +68,24 @@ Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostnam
 **2 )** Verify the Illumio Console dashboard is visible
 
 **3 )** Welcome to your **26.x Select Exam** — you have **150 minutes (2 hours 30)** to complete it. Once you're logged into the Console, return to this lab window and press **NEXT** to begin. Good luck!
+
+---
+
+Advanced
+===
+
+> [!WARNING]
+> Advanced options below. Typically used in troubleshooting:
+
+To show the PCE and Cloud API credentials for this account, run the
+following in the **cloud console** tab:
+
+```run
+echo "PCE_FQDN=$AUTOACCOUNT_PCE_FQDN"
+echo "ORG_ID=$AUTOACCOUNT_ORG_ID"
+echo "APIKEY_ID=$AUTOACCOUNT_APIKEY_ID"
+echo "APIKEY_SECRET=$AUTOACCOUNT_APIKEY_SECRET"
+echo "SAKEYID=$AUTOACCOUNT_SAAPIKEY_KEYID"
+echo "SASECRET=$AUTOACCOUNT_SAAPIKEY_SECRET"
+echo "TENANT=$AUTOACCOUNT_TENANT_ID"
+```
