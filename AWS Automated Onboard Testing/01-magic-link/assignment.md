@@ -66,6 +66,14 @@ The AWS Terraform build is running in the background (`tail -f
 it) - no vensim, no VMs, just the AWS account build and (once built)
 an automated onboarding attempt.
 
+---
+
+Advanced
+===
+
+> [!WARNING]
+> Advanced options below. Typically used in troubleshooting:
+
 ## What gets built and automated, hands-free
 
 1. **AWS infrastructure** - a `crm` app (4 EC2 instances: web/db, in
@@ -94,7 +102,7 @@ expecting to see the full topology on the Map.
 
 To grab the sandbox's credentials, run this in the cloud console tab:
 
-```
+```run
 echo $AUTOACCOUNT_PCE_FQDN
 echo $AUTOACCOUNT_ORG_ID
 echo $AUTOACCOUNT_APIKEY_ID
@@ -106,6 +114,6 @@ echo $AUTOACCOUNT_SAAPIKEY_SECRET
 
 To watch the background build/onboarding progress live:
 
-```
+```run
 tail -f /var/log/aws-onboard-startup.log
 ```
