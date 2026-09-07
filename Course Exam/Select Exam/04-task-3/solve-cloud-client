@@ -4,7 +4,11 @@
 # the nagios -> portal allow rule - pure org-level objects, no
 # dependency on linux-vm/windows-vm pairing state.
 #
-# FIRST DRAFT - detail to be refined once live-verified.
+# Live-verified 2026-09-07 (org 4138910): the embedded rule in the
+# ruleset POST body requires both 'enabled' and 'resolve_labels_as' -
+# without them the whole POST 406s ("did not contain a required
+# property of 'enabled'/'resolve_labels_as'"), silently failing to
+# create the ruleset at all (this is what a learner hit on Skip).
 
 . /root/.autoaccount_env
 
@@ -44,6 +48,7 @@ if not any((r.get('name') or '').lower() == 'task3-coreservices' for r in rulese
         'name': 'Task3-CoreServices',
         'scopes': [[]],
         'rules': [{
+            'enabled': True,
             'ingress_services': [{'port': 5666, 'proto': 6}],
             'providers': [
                 {'label': {'href': app_href}},
@@ -51,6 +56,7 @@ if not any((r.get('name') or '').lower() == 'task3-coreservices' for r in rulese
                 {'label': {'href': loc_href}},
             ],
             'consumers': [{'label': {'href': nagios_href}}],
+            'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
         }],
     })
 "
