@@ -84,15 +84,19 @@ Advanced
    Application Definition.
 5. **Deployments** - `Production` and `Development`, each tied to the
    correct subnet and an `env` Cloud Tags stack.
-6. **Traffic generation + Flow Log ingestion** - security group rules
-   opening inbound HTTPS (web) and MySQL (web -> db), a VPC Flow Log
-   to S3 in CloudSecure's required custom format, and the CloudSecure
-   Flow Log Access grant (normally a manual Cloud -> Onboarding button).
+6. **Traffic generation** - security group rules opening inbound HTTPS
+   (web) and MySQL (web -> db), and a VPC Flow Log delivering that
+   traffic to S3 in CloudSecure's required custom format.
 
 No learner or instructor action is required for any of this - it all
-happens automatically in the background. The one deliberate exception
-is **Security Review** (Cloud → Security Review → Approve), which is
-left as a manual step by design (see the track's `README.md` for why).
+happens automatically in the background. Two deliberate exceptions:
+
+- **Security Review** (Cloud → Security Review → Approve), left as a
+  manual step by design (see the track's `README.md` for why).
+- **CloudSecure's Flow Log Access grant** (Cloud → Onboarding → Flow
+  Log Access) - left manual this round to test whether granting it
+  through the real Console wizard/CloudFormation stack behaves
+  differently than the previous Terraform-automated grant did.
 
 ## Rough timing
 

@@ -13,9 +13,13 @@ description: |-
   AWS infrastructure build, AWS account onboarding to Illumio Cloud,
   Tag-to-Label Mapping (Role, Location), Application Discovery (the
   `crm` app), Deployments (Production/Development), and traffic
-  generation + Flow Log ingestion (security group rules, VPC Flow
-  Logs to S3, CloudSecure Flow Log Access). Security Review stays a
-  manual step, by design.
+  generation (security group rules opening real HTTPS/MySQL traffic,
+  a VPC Flow Log delivering it to S3). Two deliberate manual steps:
+  Security Review (Cloud -> Security Review -> Approve) and
+  CloudSecure's Flow Log Access grant (Cloud -> Onboarding -> Flow
+  Log Access) - the latter left manual on purpose this round, to test
+  whether granting it through the real Console wizard/CloudFormation
+  stack behaves differently than the Terraform-automated grant did.
 
   Rough timing: ~20-33 min for onboarding through configuration, then
   another ~10-15 min before it's all visible on the Map - budget up to
@@ -39,5 +43,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "6270087744959635623"
+checksum: "17242971780692740757"
 enhanced_loading: false
