@@ -2,6 +2,12 @@
 #
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
+#
+# Fixed 2026-09-08: previously only checked that the strict-quarantine
+# label was present, so a learner could pass by adding quarantine
+# while also changing/removing one of linux-vm's other labels (e.g.
+# Environment) - live-caught by Nathan. Now verifies the full expected
+# label set (everything from Tasks 1/2 plus quarantine) is intact.
 
 . /root/.autoaccount_env
 
@@ -23,13 +29,30 @@ if not wl:
     print('linux-vm not found')
     sys.exit(1)
 
-for e in wl.get('labels', []):
-    if (e.get('key') or '').lower() == 'quarantine.illumio.com' and (e.get('value') or '').lower() == 'strict-quarantine':
-        print('linux-vm is quarantined (strict-quarantine)')
-        sys.exit(0)
+labels = {(e.get('key') or '').lower(): (e.get('value') or '').lower() for e in wl.get('labels', [])}
 
-print('linux-vm does not have the strict-quarantine label yet')
-sys.exit(1)
+expected = {
+    'role': 'web',
+    'app': 'portal',
+    'env': 'production',
+    'loc': 'ca',
+    'type': 'server',
+    'dfirbubble': 'ir-cleanbubble',
+    'quarantine.illumio.com': 'strict-quarantine',
+}
+
+wrong = []
+for key, want in expected.items():
+    got = labels.get(key)
+    if got != want:
+        wrong.append(key + ' should be ' + want + ', found ' + (got or 'missing'))
+
+if wrong:
+    print('linux-vm labels are not all correct: ' + '; '.join(wrong))
+    sys.exit(1)
+
+print('linux-vm is quarantined (strict-quarantine) and its other labels are intact')
+sys.exit(0)
 ")
 status=$?
 if [ "$status" -ne 0 ]; then
