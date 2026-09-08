@@ -8,6 +8,11 @@
 # the dev-prod Label Group in place of the plain Development label on
 # both source and destination, with Application=ordering and
 # Location=ca still present.
+#
+# Fixed 2026-09-08: previously gave one generic "should have X, Y, Z"
+# message per side with no indication of which specific piece was
+# actually wrong - same feedback gap Nathan reported on Task 6. Now
+# reports each missing/wrong piece individually.
 
 . /root/.autoaccount_env
 
@@ -66,26 +71,26 @@ if len(enabled_rules) != 1:
     sys.exit(1)
 rule = enabled_rules[0]
 
-def side_ok(entries):
+def side_problems(side_name, entries):
     kvs = {kv for kv in (entry_kv(e) for e in entries) if kv}
+    kv_dict = dict(kvs)
     group_hrefs = {entry_group_href(e) for e in entries if entry_group_href(e)}
-    has_app = ('app', 'ordering') in kvs
-    has_loc = ('loc', 'ca') in kvs
-    has_group = lg.get('href') in group_hrefs
-    has_stale_env = any(k == 'env' for k, v in kvs)
-    return has_app and has_loc and has_group and not has_stale_env
+    problems = []
+    if ('app', 'ordering') not in kvs:
+        problems.append(side_name + ' app should be ordering, found ' + (kv_dict.get('app') or 'missing'))
+    if ('loc', 'ca') not in kvs:
+        problems.append(side_name + ' loc should be ca, found ' + (kv_dict.get('loc') or 'missing'))
+    if lg.get('href') not in group_hrefs:
+        problems.append(side_name + ' is missing the dev-prod Label Group')
+    if 'env' in kv_dict:
+        problems.append(side_name + ' still has a plain env=' + kv_dict['env'] + ' label - remove it, the dev-prod Label Group replaces it')
+    return problems
 
-src_ok = side_ok(rule.get('consumers', []))
-dst_ok = side_ok(rule.get('providers', []))
-if src_ok and dst_ok:
+problems = side_problems('source', rule.get('consumers', [])) + side_problems('destination', rule.get('providers', []))
+if not problems:
     print('dev-prod Label Group exists and Task6-RingfenceOrdering\'s rule now uses it instead of Development')
     sys.exit(0)
-missing = []
-if not src_ok:
-    missing.append('source should have Application=ordering, Location=ca, and the dev-prod Label Group (not a plain Development label)')
-if not dst_ok:
-    missing.append('destination should have Application=ordering, Location=ca, and the dev-prod Label Group (not a plain Development label)')
-print('; '.join(missing))
+print('; '.join(problems))
 sys.exit(1)
 ")
 status=$?
