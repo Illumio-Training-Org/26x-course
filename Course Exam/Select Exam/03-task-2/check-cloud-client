@@ -7,6 +7,12 @@
 # Scope-based ruleset - it requires a plain rule with all 5 labels
 # repeated on both source and destination. NOT YET LIVE-VERIFIED
 # against a real sandbox - refine once tested.
+#
+# Fixed 2026-09-08: the per-workload label check previously only
+# looked for the 2 new labels (Type/IR) added this task, so a learner
+# could pass while having changed/removed one of the labels from Task
+# 1 (e.g. Role, Environment) - same bug class Nathan caught live in
+# Task 4. Now verifies each workload's full expected label set.
 
 . /root/.autoaccount_env
 
@@ -33,16 +39,19 @@ def resolve_labels(entries):
 
 ws = {w.get('hostname'): w for w in get('/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')}
 reasons = []
-for host in ('linux-vm', 'windows-vm'):
+expected_per_host = {
+    'linux-vm': {'role': 'web', 'app': 'portal', 'env': 'production', 'loc': 'ca', 'type': 'server', 'dfirbubble': 'ir-cleanbubble'},
+    'windows-vm': {'role': 'db', 'app': 'portal', 'env': 'production', 'loc': 'ca', 'type': 'server', 'dfirbubble': 'ir-cleanbubble'},
+}
+for host, want in expected_per_host.items():
     wl = ws.get(host)
     if not wl:
         reasons.append(host + ' not found')
         continue
-    labels = resolve_labels(wl.get('labels', []))
-    if ('type', 'server') not in labels:
-        reasons.append(host + \" missing Type='server'\")
-    if ('dfirbubble', 'ir-cleanbubble') not in labels:
-        reasons.append(host + \" missing IR='IR-CLEANBUBBLE'\")
+    labels = dict(resolve_labels(wl.get('labels', [])))
+    for key, val in want.items():
+        if labels.get(key) != val:
+            reasons.append(host + ' ' + key + ' should be ' + val + ', found ' + (labels.get(key) or 'missing'))
 
 if reasons:
     print('; '.join(reasons))
