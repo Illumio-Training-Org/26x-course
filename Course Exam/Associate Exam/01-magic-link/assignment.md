@@ -57,6 +57,8 @@ enhanced_loading: null
 > [!IMPORTANT]
 > This exam is **45 minutes**.
 
+**Please note: There is no requirement to provision any of the rules or objects in this exam.**
+
 **1 )** Open the following link in a new browser tab
 
 ```
