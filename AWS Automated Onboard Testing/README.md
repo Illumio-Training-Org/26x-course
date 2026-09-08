@@ -417,6 +417,73 @@ considering later whether it should be made private, with fixed/scoped
 keys for whatever needs repo access — not an issue specific to this
 prototype, just a general point worth revisiting at some stage.
 
+## Flow Log Access / traffic ingestion — confirmed broken on these ephemeral accounts (2026-09-07/08)
+
+The base `crm` app only ever allowed SSH between instances, so a
+second automation goal was added: generate real traffic and get it
+visible on the Map via CloudSecure's flow-log ingestion pipeline
+(VPC Flow Logs → S3 → CloudSecure). The traffic-generation half of
+this works perfectly; the ingestion half does not, and the evidence
+now rules out every fixable cause.
+
+**What's confirmed working, automated in `terraform-cloudsecure-aws/`:**
+- Security group rules opening real traffic: inbound HTTPS (443) on
+  `web_sg` from the internet, inbound MySQL (3306) on `db_sg` scoped
+  to `web_sg` only.
+- A VPC Flow Log delivering to the S3 bucket
+  (`aws_s3_bucket.illumio_flows` in the shared `terraform/` build —
+  originally named "...forflows" before trimming, so this was always
+  its intended purpose) in the exact V2+V3+V4+V5 custom format
+  Illumio's docs require. Live-verified: real traffic sent, S3 objects
+  landed with correct ACCEPT/REJECT entries in ~3 minutes, and kept
+  delivering reliably every ~5 minutes for 4+ hours straight.
+
+**What does not work, and is not a bug in our automation:** granting
+CloudSecure "Flow Log Access" (Cloud → Onboarding → Flow Log Access) —
+the step that lets CloudSecure actually read the bucket. Tested via
+**two completely independent methods**, both objectively successful on
+the AWS side, both silently ignored by CloudSecure:
+
+1. **Terraform automation** (`illumio-cloudsecure_aws_flow_logs_s3_bucket`
+   resource + two hand-written IAM policies) — created successfully,
+   UI briefly showed "Full access granted" right after creation, but
+   traffic never appeared in CloudSecure's Traffic view even after a
+   full 4-hour test (org 4138915) with everything else (inventory,
+   discovery, tag-to-label mapping) confirmed healthy in the same
+   window.
+2. **The real Console wizard + CloudFormation stack** (org 4138919,
+   done manually, not automated) — the CFT reached `CREATE_COMPLETE`,
+   and its own Lambda custom resource ("eventual consistency check")
+   also completed successfully. The wizard attaches three inline
+   policies to the account's IAM role
+   (`IllumioCloudBucketGetLocationPolicy`, `IllumioCloudBucketListPolicy`
+   scoped to the `flow-logs/*` prefix, `IllumioCloudBucketReadPolicy`
+   scoped to `flow-logs/*` objects) — confirmed via
+   `aws iam simulate-principal-policy` against real object paths that
+   all three actions (`GetBucketLocation`, `ListBucket`, `GetObject`)
+   evaluate to **allowed**. Despite this, the Console's own Flow Log
+   Access page still showed "No access granted" across **7 checks over
+   1h24min**, including two fresh re-logins and multiple full page
+   reloads (ruling out UI caching) — and a second wizard attempt to
+   "fix" it just failed with a duplicate-resource error, itself proof
+   the first attempt's policies had genuinely persisted the whole time.
+
+**Conclusion**: this isn't an automation bug, a permissions bug, or a
+UI caching artifact — two independently-created, independently-verified
+AWS-side grants were both ignored by CloudSecure's backend for hours.
+This points at flow log ingestion being disabled or restricted on
+these ephemeral/trial-type CloudSecure tenants specifically. Worth
+raising with whoever owns the CloudSecure vendor relationship, with
+this section as the evidence trail (org IDs, stack names/timestamps,
+and the exact IAM policy documents are all above for reference).
+
+**Decision**: leave the lab as-is. `terraform-cloudsecure-aws/main.tf`
+keeps the SG rules and VPC Flow Log automated (both proven reliable)
+but deliberately does **not** attempt to grant Flow Log Access — that
+step is left out entirely rather than re-attempted, since both
+available methods of granting it are now confirmed non-functional on
+these accounts.
+
 ## Open next steps
 
 - Apply this same background-automation pattern to the actual Select
@@ -429,3 +496,6 @@ prototype, just a general point worth revisiting at some stage.
 - Flag the Security Review `500 "failed to set ruleset summaries"`
   AWS-account-reuse collision to the platform team, separate from this
   prototype's own scope.
+- Raise the Flow Log Access finding above with whoever owns the
+  CloudSecure vendor relationship - not something fixable from this
+  track's side.

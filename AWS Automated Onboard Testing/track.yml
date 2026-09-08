@@ -17,9 +17,12 @@ description: |-
   a VPC Flow Log delivering it to S3). Two deliberate manual steps:
   Security Review (Cloud -> Security Review -> Approve) and
   CloudSecure's Flow Log Access grant (Cloud -> Onboarding -> Flow
-  Log Access) - the latter left manual on purpose this round, to test
-  whether granting it through the real Console wizard/CloudFormation
-  stack behaves differently than the Terraform-automated grant did.
+  Log Access). Confirmed 2026-09-08: the latter is left out entirely,
+  not just manual - both a Terraform-automated grant and the real
+  Console wizard/CFT were tested independently, both produced
+  verified-correct AWS-side IAM permissions, and both were silently
+  ignored by CloudSecure for hours. See the track's README.md for
+  the full evidence trail.
 
   Rough timing: ~20-33 min for onboarding through configuration, then
   another ~10-15 min before it's all visible on the Map - budget up to
@@ -43,5 +46,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "17242971780692740757"
+checksum: "12868770677470493998"
 enhanced_loading: false

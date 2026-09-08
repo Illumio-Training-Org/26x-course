@@ -94,9 +94,17 @@ happens automatically in the background. Two deliberate exceptions:
 - **Security Review** (Cloud → Security Review → Approve), left as a
   manual step by design (see the track's `README.md` for why).
 - **CloudSecure's Flow Log Access grant** (Cloud → Onboarding → Flow
-  Log Access) - left manual this round to test whether granting it
-  through the real Console wizard/CloudFormation stack behaves
-  differently than the previous Terraform-automated grant did.
+  Log Access) - left out of the automation entirely. **Confirmed
+  2026-09-08: don't bother trying to grant this manually either** -
+  both the Terraform-automated grant and the real Console wizard/CFT
+  were tested independently, both produced verified-correct AWS-side
+  IAM permissions (confirmed via `aws iam simulate-principal-policy`),
+  and both were silently ignored by CloudSecure for hours. This looks
+  like flow log ingestion being disabled/restricted on these
+  ephemeral accounts, not something fixable here - see the track's
+  `README.md` for the full evidence trail. Security groups + the VPC
+  Flow Log itself still work fine and are still automated; it's only
+  this specific grant step that's a dead end.
 
 ## Rough timing
 
