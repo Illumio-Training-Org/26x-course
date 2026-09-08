@@ -17,12 +17,19 @@ description: |-
   a VPC Flow Log delivering it to S3). Two deliberate manual steps:
   Security Review (Cloud -> Security Review -> Approve) and
   CloudSecure's Flow Log Access grant (Cloud -> Onboarding -> Flow
-  Log Access). Confirmed 2026-09-08: the latter is left out entirely,
-  not just manual - both a Terraform-automated grant and the real
-  Console wizard/CFT were tested independently, both produced
+  Log Access).
+
+  **Traffic flow ingestion into CloudSecure is not working, because it
+  is disabled on the backend for these ephemeral tenants.** Confirmed
+  2026-09-08: both a Terraform-automated Flow Log Access grant and the
+  real Console wizard/CFT were tested independently, both produced
   verified-correct AWS-side IAM permissions, and both were silently
-  ignored by CloudSecure for hours. See the track's README.md for
-  the full evidence trail.
+  ignored by CloudSecure for hours - not an automation or permissions
+  bug on our side. The security group rules and VPC Flow Log itself
+  still build and deliver real traffic to S3 automatically, ready for
+  ingestion whenever this is fixed on Illumio's end - only the Flow
+  Log Access grant step is left out for now. See the track's
+  README.md for the full evidence trail.
 
   Rough timing: ~20-33 min for onboarding through configuration, then
   another ~10-15 min before it's all visible on the Map - budget up to
@@ -46,5 +53,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "12868770677470493998"
+checksum: "9069875865477983006"
 enhanced_loading: false
