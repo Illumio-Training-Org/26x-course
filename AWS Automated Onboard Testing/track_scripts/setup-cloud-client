@@ -148,7 +148,7 @@ nohup bash -c "
   SSH_KEY=/root/26x-course/terraform/my-keypair.pem
   SSH_OPTS=\"-i \$SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5\"
   INSTANCES_JSON=\$(terraform output -json ec2_instances_info)
-  SCRIPTS_DIR=\"/root/26x-course/AWS Automated Onboard Testing/track_scripts\"
+  SCRIPTS_DIR=\"/root/26x-course/AWS Automated Onboard Testing/helper_scripts\"
 
   get_field() {
     echo \"\$INSTANCES_JSON\" | python3 -c \"import json,sys; print(json.load(sys.stdin)['\$1']['\$2'])\"
