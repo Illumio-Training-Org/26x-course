@@ -84,25 +84,23 @@ Advanced
    Application Definition.
 5. **Deployments** - `Production` and `Development`, each tied to the
    correct subnet and an `env` Cloud Tags stack.
-6. **Traffic generation + Flow Log ingestion** - security group rules
-   opening real HTTPS (web) and MySQL (web -> db) traffic, a real
-   web->db MySQL heartbeat within each environment (`crm-dev-web` ->
-   `crm-dev-db`, `crm-prod-web` -> `crm-prod-db`, every 30s), a VPC
-   Flow Log to S3 in CloudSecure's required custom format, and the
-   CloudSecure Flow Log Access grant (normally a manual Cloud ->
-   Onboarding button).
+6. **Traffic generation** - security group rules opening real HTTPS
+   (web) and MySQL (web -> db) traffic, a real web->db MySQL heartbeat
+   within each environment (`crm-dev-web` -> `crm-dev-db`,
+   `crm-prod-web` -> `crm-prod-db`, every 30s), and a VPC Flow Log
+   delivering it all to S3 in CloudSecure's required custom format.
 
 No learner or instructor action is required for any of this - it all
-happens automatically in the background. The one deliberate exception
-is **Security Review** (Cloud → Security Review → Approve), which is
-left as a manual step by design (see the track's `README.md` for why).
+happens automatically in the background. Two deliberate exceptions:
 
-Note: CloudSecure's ingestion of this traffic into the Map/Traffic
-explorer runs on its own backend timing that varies day to day -
-sometimes under an hour, sometimes noticeably longer, independent of
-whether the Flow Log Access grant was made via this automation or by
-hand. That's a platform-side delay, not a sign anything here is
-broken - see the track's `README.md` for the evidence.
+- **Security Review** (Cloud → Security Review → Approve), left as a
+  manual step by design (see the track's `README.md` for why).
+- **CloudSecure's Flow Log Access grant** (Cloud → Onboarding → Flow
+  Log Access) - left manual. This was briefly automated, but the
+  track record so far is that the Terraform-created grant has never
+  once resulted in visible traffic (two attempts, 4 hours and 3+
+  hours, zero both times), while the manual Console wizard has - see
+  the track's `README.md` for the full evidence trail.
 
 ## Rough timing
 

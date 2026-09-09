@@ -417,7 +417,7 @@ considering later whether it should be made private, with fixed/scoped
 keys for whatever needs repo access — not an issue specific to this
 prototype, just a general point worth revisiting at some stage.
 
-## Flow Log Access / traffic ingestion — backend timing varies, not broken (2026-09-07/09)
+## Flow Log Access / traffic ingestion — manual grant only, automation doesn't work (2026-09-07/09)
 
 The base `crm` app only ever allowed SSH between instances, so a
 second automation goal was added: open real traffic on two new ports
@@ -429,8 +429,8 @@ security group rules - nothing sent synthetic application traffic, so
 whatever landed in the flow logs was organic (internet port-scanners
 hitting the newly-opened public port, plus pre-existing SSH exposure
 from the base build). **Added 2026-09-09**: a real per-environment
-web→db heartbeat (`track_scripts/db-setup.sh` +
-`track_scripts/web-heartbeat.sh`, run over SSH from
+web→db heartbeat (`helper_scripts/db-setup.sh` +
+`helper_scripts/web-heartbeat.sh`, run over SSH from
 `setup-cloud-client` after the shared `terraform/` apply completes) -
 `crm-dev-web` queries `crm-dev-db` and `crm-prod-web` queries
 `crm-prod-db` over real MySQL protocol (a MariaDB server + `SELECT
@@ -438,7 +438,10 @@ NOW()` every 30s) on port 3306, entirely within each environment. This
 is deliberately done via SSH provisioning rather than `user_data` on
 the shared `terraform/main.tf` - that build is also the base for
 Course Lab and Select Exam, so this stays isolated to this track only.
-Not yet live-tested end to end.
+**Live-tested successfully 2026-09-09** (org 4138968): 903 dev
+connections and 903 prod connections confirmed in the real flow log
+contents over a 3-hour monitored window, zero cross-environment
+leakage, no anomalies.
 
 **What's automated in `terraform-cloudsecure-aws/`, confirmed reliable:**
 - Security group rules: inbound HTTPS (443) on `web_sg` from the
@@ -451,45 +454,54 @@ Not yet live-tested end to end.
   S3 objects land with correct ACCEPT/REJECT entries in ~3 minutes,
   delivering reliably every ~5 minutes for hours straight, every time
   tested. This part has never failed.
-- CloudSecure's "Flow Log Access" grant itself
-  (`illumio-cloudsecure_aws_flow_logs_s3_bucket` resource + two IAM
-  policies) — re-automated 2026-09-09 after being pulled out
-  2026-09-07 for a since-resolved debugging question (see history
-  below).
 
-**What varies, and why it's not treated as broken:** CloudSecure's own
-ingestion of that S3 data into the Map/Traffic explorer — the part
-after the grant is made — runs on inconsistent backend timing:
+**What is NOT automated, and shouldn't be**: CloudSecure's "Flow Log
+Access" grant itself (Cloud → Onboarding → Flow Log Access). The
+actual track record across every attempt:
 
-- **2026-09-07**, org 4138914/4138915: AWS-side delivery confirmed
-  100% healthy for 4 straight hours (Flow Log `ACTIVE`,
-  `DeliverLogsStatus SUCCESS`, 90 objects delivered); CloudSecure's
-  other ingestion paths (inventory, discovery) worked fine in the same
-  window; traffic in the Map/Traffic explorer: zero, the entire time.
-- **2026-09-08**, org 4138919: tried the real Console wizard/CFT by
-  hand instead of the Terraform grant, to isolate whether the grant
-  *method* mattered. CFT reached `CREATE_COMPLETE`; IAM permissions
-  independently verified via `aws iam simulate-principal-policy`
-  (`GetBucketLocation`/`ListBucket`/`GetObject` all `allowed`); Cloud →
-  Onboarding → Flow Log Access still showed "No access granted" across
-  7 checks over 1h24min, ruling out UI caching.
+- **2026-09-07**, org 4138915: Terraform-automated grant
+  (`illumio-cloudsecure_aws_flow_logs_s3_bucket` + two IAM policies).
+  AWS-side delivery confirmed 100% healthy for 4 straight hours (Flow
+  Log `ACTIVE`, `DeliverLogsStatus SUCCESS`, 90 objects delivered);
+  CloudSecure's other ingestion paths (inventory, discovery) worked
+  fine in the same window; traffic in the Map/Traffic explorer: zero,
+  the entire time.
+- **2026-09-08**, org 4138919: real Console wizard/CFT by hand
+  instead, to isolate whether the grant *method* mattered. CFT reached
+  `CREATE_COMPLETE`; IAM permissions independently verified via
+  `aws iam simulate-principal-policy` (`GetBucketLocation`/
+  `ListBucket`/`GetObject` all `allowed`); Cloud → Onboarding → Flow
+  Log Access still showed "No access granted" across 7 checks over
+  1h24min, ruling out UI caching.
 - **2026-09-09**, org 4138964: same manual wizard grant, and this time
   traffic appeared within roughly an hour — 204 real rows in the
   Traffic explorer, live connections visible on the Map, confirmed
-  independently from the AWS side (Flow Log `ACTIVE`/`SUCCESS`,
-  objects landing every ~5 min) and by downloading and inspecting the
-  actual flow log contents.
+  independently from the AWS side and by downloading and inspecting
+  the actual flow log contents. Based on this result, the grant was
+  briefly re-automated (commit `d09784a`) on the theory that both
+  methods showed equal timing variance.
+- **2026-09-09 (same day)**, org 4138968: re-tested the
+  Terraform-automated grant specifically to check that theory, running
+  the same live-monitored session as the traffic-generator test above.
+  Checked continuously for 3+ hours: zero traffic in the Map/Traffic
+  explorer the entire time, despite the web→db heartbeat producing 900+
+  real connections per environment at the AWS/flow-log layer in the
+  same window.
 
-**Conclusion**: two different orgs, same grant method (the manual
-wizard), two different outcomes — hours of nothing vs. ~1hr to
-success. That rules out a hard platform block; it points at
-inconsistent/slow propagation on CloudSecure's backend for these
-ephemeral tenants, which is no different whether the grant is made by
-this automation or by hand. Given that, there's no reason to keep the
-grant manual, so it's back to fully automated. Budget the lab's 4-hour
-timelimit as before — ingestion can still take anywhere from under an
-hour to several hours, and there's no reliable way to predict which on
-a given day.
+**Conclusion**: the automated Terraform grant is now 0 for 2, every
+single time it's been tried (4 hours, then 3+ hours - zero both). The
+manual Console wizard is 1 for 2. That's not consistent with "both
+methods behave identically" - it's re-reverted back to manual
+(`terraform-cloudsecure-aws/main.tf` no longer creates the grant; do
+it by hand via Cloud → Onboarding → Flow Log Access). Best working
+theory, not confirmed: the wizard's CloudFormation stack includes a
+Lambda "eventual consistency check" that may actively notify
+CloudSecure's backend to start polling S3, which the Terraform
+resource's plain API call may not trigger. Manual is the only method
+with any confirmed success, so it stays manual until that changes.
+Budget the lab's 4-hour timelimit as before — even via the manual
+wizard, ingestion can take anywhere from under an hour to several
+hours, or may not succeed at all on a given attempt.
 
 **Decision**: leave the lab as-is. `terraform-cloudsecure-aws/main.tf`
 keeps the SG rules and VPC Flow Log automated (both proven reliable)
