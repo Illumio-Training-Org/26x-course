@@ -7,12 +7,12 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Ringfence the `Payment` application in `LDN`: create a ruleset named
+Ringfence the `Payment` application in `LDN`: create a Policy named
 `Task9-RingfencePayment` with an allow rule so workloads in the
 `Payment` application (Location: `LDN`) can communicate freely with
 each other.
 
-Then add a second allow rule to the same ruleset permitting inbound
+Then add a second allow rule to the same Policy permitting inbound
 traffic from the `Ordering` application to `Payment` (Location: `LDN`)
 for HTTPS, TCP port `443`, so Ordering can still reach Payment once
 it's ringfenced.
