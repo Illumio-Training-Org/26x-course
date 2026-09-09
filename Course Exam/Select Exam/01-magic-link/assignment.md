@@ -91,3 +91,15 @@ echo "SAKEYID=$AUTOACCOUNT_SAAPIKEY_KEYID"
 echo "SASECRET=$AUTOACCOUNT_SAAPIKEY_SECRET"
 echo "TENANT=$AUTOACCOUNT_TENANT_ID"
 ```
+
+To check the PCE REST API is up (HTTP 200 = healthy):
+
+```run
+curl -s -o /dev/null -w "PCE API: HTTP %{http_code}\n" -u "api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}" "https://${AUTOACCOUNT_PCE_FQDN}/api/v2/orgs/${AUTOACCOUNT_ORG_ID}/workloads?max_results=1"
+```
+
+To check the CloudSecure API is up (HTTP 200 = healthy):
+
+```run
+curl -s -o /dev/null -w "Cloud API: HTTP %{http_code}\n" -u "${AUTOACCOUNT_SAAPIKEY_KEYID}:${AUTOACCOUNT_SAAPIKEY_SECRET}" -H "X-Tenant-Id: ${AUTOACCOUNT_TENANT_ID}" "https://cloud.illum.io/api/v1/integrations"
+```
