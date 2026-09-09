@@ -84,27 +84,25 @@ Advanced
    Application Definition.
 5. **Deployments** - `Production` and `Development`, each tied to the
    correct subnet and an `env` Cloud Tags stack.
-6. **Traffic generation** - security group rules opening inbound HTTPS
-   (web) and MySQL (web -> db), and a VPC Flow Log delivering that
-   traffic to S3 in CloudSecure's required custom format.
+6. **Traffic generation + Flow Log ingestion** - security group rules
+   opening real HTTPS (web) and MySQL (web -> db) traffic, a real
+   web->db MySQL heartbeat within each environment (`crm-dev-web` ->
+   `crm-dev-db`, `crm-prod-web` -> `crm-prod-db`, every 30s), a VPC
+   Flow Log to S3 in CloudSecure's required custom format, and the
+   CloudSecure Flow Log Access grant (normally a manual Cloud ->
+   Onboarding button).
 
 No learner or instructor action is required for any of this - it all
-happens automatically in the background. Two deliberate exceptions:
+happens automatically in the background. The one deliberate exception
+is **Security Review** (Cloud → Security Review → Approve), which is
+left as a manual step by design (see the track's `README.md` for why).
 
-- **Security Review** (Cloud → Security Review → Approve), left as a
-  manual step by design (see the track's `README.md` for why).
-- **CloudSecure's Flow Log Access grant** (Cloud → Onboarding → Flow
-  Log Access) - left out of the automation entirely. **Confirmed
-  2026-09-08: don't bother trying to grant this manually either** -
-  both the Terraform-automated grant and the real Console wizard/CFT
-  were tested independently, both produced verified-correct AWS-side
-  IAM permissions (confirmed via `aws iam simulate-principal-policy`),
-  and both were silently ignored by CloudSecure for hours. This looks
-  like flow log ingestion being disabled/restricted on these
-  ephemeral accounts, not something fixable here - see the track's
-  `README.md` for the full evidence trail. Security groups + the VPC
-  Flow Log itself still work fine and are still automated; it's only
-  this specific grant step that's a dead end.
+Note: CloudSecure's ingestion of this traffic into the Map/Traffic
+explorer runs on its own backend timing that varies day to day -
+sometimes under an hour, sometimes noticeably longer, independent of
+whether the Flow Log Access grant was made via this automation or by
+hand. That's a platform-side delay, not a sign anything here is
+broken - see the track's `README.md` for the evidence.
 
 ## Rough timing
 

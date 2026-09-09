@@ -417,65 +417,79 @@ considering later whether it should be made private, with fixed/scoped
 keys for whatever needs repo access — not an issue specific to this
 prototype, just a general point worth revisiting at some stage.
 
-## Flow Log Access / traffic ingestion — confirmed broken on these ephemeral accounts (2026-09-07/08)
+## Flow Log Access / traffic ingestion — backend timing varies, not broken (2026-09-07/09)
 
 The base `crm` app only ever allowed SSH between instances, so a
-second automation goal was added: generate real traffic and get it
-visible on the Map via CloudSecure's flow-log ingestion pipeline
-(VPC Flow Logs → S3 → CloudSecure). The traffic-generation half of
-this works perfectly; the ingestion half does not, and the evidence
-now rules out every fixable cause.
+second automation goal was added: open real traffic on two new ports
+and get it visible on the Map via CloudSecure's flow-log ingestion
+pipeline (VPC Flow Logs → S3 → CloudSecure).
 
-**What's confirmed working, automated in `terraform-cloudsecure-aws/`:**
-- Security group rules opening real traffic: inbound HTTPS (443) on
-  `web_sg` from the internet, inbound MySQL (3306) on `db_sg` scoped
-  to `web_sg` only.
+Through 2026-09-09, "traffic generation" only meant opening two
+security group rules - nothing sent synthetic application traffic, so
+whatever landed in the flow logs was organic (internet port-scanners
+hitting the newly-opened public port, plus pre-existing SSH exposure
+from the base build). **Added 2026-09-09**: a real per-environment
+web→db heartbeat (`track_scripts/db-setup.sh` +
+`track_scripts/web-heartbeat.sh`, run over SSH from
+`setup-cloud-client` after the shared `terraform/` apply completes) -
+`crm-dev-web` queries `crm-dev-db` and `crm-prod-web` queries
+`crm-prod-db` over real MySQL protocol (a MariaDB server + `SELECT
+NOW()` every 30s) on port 3306, entirely within each environment. This
+is deliberately done via SSH provisioning rather than `user_data` on
+the shared `terraform/main.tf` - that build is also the base for
+Course Lab and Select Exam, so this stays isolated to this track only.
+Not yet live-tested end to end.
+
+**What's automated in `terraform-cloudsecure-aws/`, confirmed reliable:**
+- Security group rules: inbound HTTPS (443) on `web_sg` from the
+  internet, inbound MySQL (3306) on `db_sg` scoped to `web_sg` only.
 - A VPC Flow Log delivering to the S3 bucket
   (`aws_s3_bucket.illumio_flows` in the shared `terraform/` build —
   originally named "...forflows" before trimming, so this was always
   its intended purpose) in the exact V2+V3+V4+V5 custom format
-  Illumio's docs require. Live-verified: real traffic sent, S3 objects
-  landed with correct ACCEPT/REJECT entries in ~3 minutes, and kept
-  delivering reliably every ~5 minutes for 4+ hours straight.
+  Illumio's docs require. Live-verified repeatedly: real traffic sent,
+  S3 objects land with correct ACCEPT/REJECT entries in ~3 minutes,
+  delivering reliably every ~5 minutes for hours straight, every time
+  tested. This part has never failed.
+- CloudSecure's "Flow Log Access" grant itself
+  (`illumio-cloudsecure_aws_flow_logs_s3_bucket` resource + two IAM
+  policies) — re-automated 2026-09-09 after being pulled out
+  2026-09-07 for a since-resolved debugging question (see history
+  below).
 
-**What does not work, and is not a bug in our automation:** granting
-CloudSecure "Flow Log Access" (Cloud → Onboarding → Flow Log Access) —
-the step that lets CloudSecure actually read the bucket. Tested via
-**two completely independent methods**, both objectively successful on
-the AWS side, both silently ignored by CloudSecure:
+**What varies, and why it's not treated as broken:** CloudSecure's own
+ingestion of that S3 data into the Map/Traffic explorer — the part
+after the grant is made — runs on inconsistent backend timing:
 
-1. **Terraform automation** (`illumio-cloudsecure_aws_flow_logs_s3_bucket`
-   resource + two hand-written IAM policies) — created successfully,
-   UI briefly showed "Full access granted" right after creation, but
-   traffic never appeared in CloudSecure's Traffic view even after a
-   full 4-hour test (org 4138915) with everything else (inventory,
-   discovery, tag-to-label mapping) confirmed healthy in the same
-   window.
-2. **The real Console wizard + CloudFormation stack** (org 4138919,
-   done manually, not automated) — the CFT reached `CREATE_COMPLETE`,
-   and its own Lambda custom resource ("eventual consistency check")
-   also completed successfully. The wizard attaches three inline
-   policies to the account's IAM role
-   (`IllumioCloudBucketGetLocationPolicy`, `IllumioCloudBucketListPolicy`
-   scoped to the `flow-logs/*` prefix, `IllumioCloudBucketReadPolicy`
-   scoped to `flow-logs/*` objects) — confirmed via
-   `aws iam simulate-principal-policy` against real object paths that
-   all three actions (`GetBucketLocation`, `ListBucket`, `GetObject`)
-   evaluate to **allowed**. Despite this, the Console's own Flow Log
-   Access page still showed "No access granted" across **7 checks over
-   1h24min**, including two fresh re-logins and multiple full page
-   reloads (ruling out UI caching) — and a second wizard attempt to
-   "fix" it just failed with a duplicate-resource error, itself proof
-   the first attempt's policies had genuinely persisted the whole time.
+- **2026-09-07**, org 4138914/4138915: AWS-side delivery confirmed
+  100% healthy for 4 straight hours (Flow Log `ACTIVE`,
+  `DeliverLogsStatus SUCCESS`, 90 objects delivered); CloudSecure's
+  other ingestion paths (inventory, discovery) worked fine in the same
+  window; traffic in the Map/Traffic explorer: zero, the entire time.
+- **2026-09-08**, org 4138919: tried the real Console wizard/CFT by
+  hand instead of the Terraform grant, to isolate whether the grant
+  *method* mattered. CFT reached `CREATE_COMPLETE`; IAM permissions
+  independently verified via `aws iam simulate-principal-policy`
+  (`GetBucketLocation`/`ListBucket`/`GetObject` all `allowed`); Cloud →
+  Onboarding → Flow Log Access still showed "No access granted" across
+  7 checks over 1h24min, ruling out UI caching.
+- **2026-09-09**, org 4138964: same manual wizard grant, and this time
+  traffic appeared within roughly an hour — 204 real rows in the
+  Traffic explorer, live connections visible on the Map, confirmed
+  independently from the AWS side (Flow Log `ACTIVE`/`SUCCESS`,
+  objects landing every ~5 min) and by downloading and inspecting the
+  actual flow log contents.
 
-**Conclusion**: this isn't an automation bug, a permissions bug, or a
-UI caching artifact — two independently-created, independently-verified
-AWS-side grants were both ignored by CloudSecure's backend for hours.
-This points at flow log ingestion being disabled or restricted on
-these ephemeral/trial-type CloudSecure tenants specifically. Worth
-raising with whoever owns the CloudSecure vendor relationship, with
-this section as the evidence trail (org IDs, stack names/timestamps,
-and the exact IAM policy documents are all above for reference).
+**Conclusion**: two different orgs, same grant method (the manual
+wizard), two different outcomes — hours of nothing vs. ~1hr to
+success. That rules out a hard platform block; it points at
+inconsistent/slow propagation on CloudSecure's backend for these
+ephemeral tenants, which is no different whether the grant is made by
+this automation or by hand. Given that, there's no reason to keep the
+grant manual, so it's back to fully automated. Budget the lab's 4-hour
+timelimit as before — ingestion can still take anywhere from under an
+hour to several hours, and there's no reliable way to predict which on
+a given day.
 
 **Decision**: leave the lab as-is. `terraform-cloudsecure-aws/main.tf`
 keeps the SG rules and VPC Flow Log automated (both proven reliable)

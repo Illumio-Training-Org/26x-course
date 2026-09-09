@@ -131,6 +131,62 @@ nohup bash -c "
   echo '### TERRAFORM APPLY COMPLETE ###'
   date
 
+  # -----------------------------------------------------------------
+  # WEB -> DB TRAFFIC GENERATOR - real MySQL traffic per environment
+  # (crm-dev-web -> crm-dev-db, crm-prod-web -> crm-prod-db, port
+  # 3306), so CloudSecure's Map/Traffic explorer has actual
+  # application traffic to show, not just internet scan noise on the
+  # opened SG ports. Provisioned by SSHing directly into the 4
+  # instances post-build (Amazon Linux 2023, ec2-user, the shared
+  # keypair the terraform/ apply above writes to ./my-keypair.pem)
+  # rather than adding user_data to the shared terraform/main.tf -
+  # that file is also the base build for Course Lab and Select Exam,
+  # so keeping this SSH-based and track-scoped avoids touching either.
+  # -----------------------------------------------------------------
+  echo '### PROVISIONING WEB->DB TRAFFIC GENERATOR ###'
+  date
+  SSH_KEY=/root/26x-course/terraform/my-keypair.pem
+  SSH_OPTS=\"-i \$SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5\"
+  INSTANCES_JSON=\$(terraform output -json ec2_instances_info)
+  SCRIPTS_DIR=\"/root/26x-course/AWS Automated Onboard Testing/track_scripts\"
+
+  get_field() {
+    echo \"\$INSTANCES_JSON\" | python3 -c \"import json,sys; print(json.load(sys.stdin)['\$1']['\$2'])\"
+  }
+
+  wait_for_ssh() {
+    for attempt in \$(seq 1 30); do
+      if ssh \$SSH_OPTS ec2-user@\"\$1\" true 2>/dev/null; then
+        return 0
+      fi
+      sleep 10
+    done
+    echo \"SSH never came up on \$1\"
+    return 1
+  }
+
+  for env in dev prod; do
+    db_public=\$(get_field \"crm-\${env}-db\" public_ip)
+    db_private=\$(get_field \"crm-\${env}-db\" private_ip)
+    web_public=\$(get_field \"crm-\${env}-web\" public_ip)
+
+    if wait_for_ssh \"\$db_public\"; then
+      scp \$SSH_OPTS \"\$SCRIPTS_DIR/db-setup.sh\" ec2-user@\"\$db_public\":/tmp/db-setup.sh
+      ssh \$SSH_OPTS ec2-user@\"\$db_public\" 'bash /tmp/db-setup.sh' || echo \"db-setup.sh failed on \$env db (\$db_public) - continuing\"
+    else
+      echo \"Skipping \$env db setup - SSH never came up\"
+    fi
+
+    if wait_for_ssh \"\$web_public\"; then
+      scp \$SSH_OPTS \"\$SCRIPTS_DIR/web-heartbeat.sh\" ec2-user@\"\$web_public\":/tmp/web-heartbeat.sh
+      ssh \$SSH_OPTS ec2-user@\"\$web_public\" \"bash /tmp/web-heartbeat.sh \$db_private\" || echo \"web-heartbeat.sh failed on \$env web (\$web_public) - continuing\"
+    else
+      echo \"Skipping \$env web setup - SSH never came up\"
+    fi
+  done
+  echo '### WEB->DB TRAFFIC GENERATOR PROVISIONING COMPLETE ###'
+  date
+
   # Resolve the flows S3 bucket name created by the apply above - it
   # has a random suffix and lives in a separate Terraform state
   # (terraform/, not terraform-cloudsecure-aws/), so it's looked up

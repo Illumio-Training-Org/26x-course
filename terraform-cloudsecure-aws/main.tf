@@ -241,38 +241,34 @@ resource "aws_iam_role_policy" "protection" {
 # role-creation logic, calling the resource directly avoids the module's
 # count entirely and is simpler besides.
 # -----------------------------------------------------------------
-# TRAFFIC GENERATION + FLOW LOG DELIVERY - live-verified 2026-09-07
-# against org 4138914/4138915. The base terraform/ build's crm app
-# only allows SSH (22) between instances, so no real traffic exists
-# for Flow Logs to ever capture. Opens the two ports needed for
-# realistic contrived traffic (internet->web HTTPS, web->db MySQL)
-# and creates the VPC Flow Log delivering to S3 (already has a bucket
-# for this, aws_s3_bucket.illumio_flows in the shared terraform/
-# build - originally named "...forflows" before trimming). Data
-# sources reference the shared terraform/ build's VPC/SGs by name/tag
-# rather than a cross-state reference, keeping this config's
-# isolation from the shared build intact (see the file-level comment
-# above for why that isolation matters).
+# TRAFFIC GENERATION + FLOW LOG INGESTION - live-verified 2026-09-07
+# against org 4138914/AWS account 869935077306. The base terraform/
+# build's crm app only allows SSH (22) between instances, so no real
+# traffic exists for Flow Logs to ever capture. Opens the two ports
+# needed for realistic contrived traffic (internet->web HTTPS,
+# web->db MySQL) and wires up the full Flow Log pipeline: VPC Flow
+# Logs -> S3 (already has a bucket for this, aws_s3_bucket.illumio_flows
+# in the shared terraform/ build - originally named "...forflows"
+# before trimming) -> CloudSecure's "Flow Log Access" grant, which is
+# a manual UI button (Cloud -> Onboarding -> Flow Log Access) unless
+# automated here via the illumio-cloudsecure_aws_flow_logs_s3_bucket
+# resource. Data sources reference the shared terraform/ build's VPC/
+# SGs by name/tag rather than a cross-state reference, keeping this
+# config's isolation from the shared build intact (see the file-level
+# comment above for why that isolation matters).
 #
-# DELIBERATELY STOPS SHORT of CloudSecure's "Flow Log Access" grant
-# (Cloud -> Onboarding -> Flow Log Access) - this was automated via
-# the illumio-cloudsecure_aws_flow_logs_s3_bucket resource + two IAM
-# policies through 2026-09-07, and traffic never appeared in
-# CloudSecure after a full 4-hour test despite the AWS side (Flow Log
-# delivery) and CloudSecure's other ingestion paths (inventory,
-# discovery) all confirmed healthy - IAM permissions were even
-# independently verified correct via `aws iam simulate-principal-
-# policy`. Nathan's next test: grant Flow Log Access manually through
-# the real Console wizard (which likely deploys its own CloudFormation
-# stack, same pattern as the account-onboarding wizard - see the
-# file-level comment above) to isolate whether the wizard/CFT path
-# behaves differently than the Terraform-created grant did. If it
-# does, that points at something specific to how the automated grant
-# was created; if it doesn't, that's stronger evidence of a genuine
-# platform restriction on ephemeral accounts. Re-add the
-# flow_logs_list/flow_logs_read policies and the
-# illumio-cloudsecure_aws_flow_logs_s3_bucket resource (removed here)
-# if the automated path is ever wanted back.
+# History: this grant was pulled out and made manual on 2026-09-07 to
+# isolate whether the Terraform-created grant behaved differently from
+# the real Console wizard/CFT - it didn't. Both the automated grant
+# (org 4138915, 4h test) and the manual wizard (org 4138919, 1h24min)
+# sat at "No access granted" with zero traffic; then on 2026-09-09 the
+# *same* manual wizard succeeded within ~1hr on a different org
+# (4138964), producing 204 real flow rows in the Map/Traffic explorer.
+# Conclusion: this is backend-side timing/propagation variance on
+# CloudSecure's ephemeral tenants, not a defect in either grant method
+# - so there's no reason left to keep this manual. Re-automated here;
+# revert to the manual-wizard version (git commit 3550d08) only if a
+# real difference between the two methods is ever found again.
 # -----------------------------------------------------------------
 data "aws_vpc" "lab" {
   tags = {
@@ -324,6 +320,50 @@ resource "aws_flow_log" "vpc_flow_logs" {
   destination_options {
     file_format = "plain-text"
   }
+}
+
+resource "aws_iam_role_policy" "flow_logs_list" {
+  name = "${var.account_name_prefix}FlowLogsListPolicy"
+  role = aws_iam_role.cloudsecure_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["s3:ListBucket"]
+        Resource = ["arn:aws:s3:::${var.s3_bucket_name}"]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "flow_logs_read" {
+  name = "${var.account_name_prefix}FlowLogsReadPolicy"
+  role = aws_iam_role.cloudsecure_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["s3:GetObject"]
+        Resource = ["arn:aws:s3:::${var.s3_bucket_name}/*"]
+      }
+    ]
+  })
+}
+
+# The actual "Flow Log Access" grant - replaces the manual button in
+# Cloud -> Onboarding. Depends on the two IAM policies above so
+# CloudSecure's own verification of the grant (it checks it can
+# actually list/read the bucket) doesn't race their creation.
+resource "illumio-cloudsecure_aws_flow_logs_s3_bucket" "flow_log_bucket" {
+  account_id    = data.aws_caller_identity.current.account_id
+  s3_bucket_arn = "arn:aws:s3:::${var.s3_bucket_name}"
+
+  depends_on = [
+    aws_iam_role_policy.flow_logs_list,
+    aws_iam_role_policy.flow_logs_read,
+  ]
 }
 
 resource "illumio-cloudsecure_aws_account" "account" {

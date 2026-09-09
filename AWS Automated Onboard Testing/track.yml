@@ -13,30 +13,30 @@ description: |-
   AWS infrastructure build, AWS account onboarding to Illumio Cloud,
   Tag-to-Label Mapping (Role, Location), Application Discovery (the
   `crm` app), Deployments (Production/Development), and traffic
-  generation (security group rules opening real HTTPS/MySQL traffic,
-  a VPC Flow Log delivering it to S3). Two deliberate manual steps:
-  Security Review (Cloud -> Security Review -> Approve) and
-  CloudSecure's Flow Log Access grant (Cloud -> Onboarding -> Flow
-  Log Access).
+  generation + Flow Log ingestion (security group rules, a real
+  per-environment web->db MySQL heartbeat every 30s, VPC Flow Logs to
+  S3, CloudSecure Flow Log Access). Security Review stays a manual
+  step, by design.
 
-  **Traffic flow ingestion into CloudSecure is not working, because it
-  is disabled on the backend for these ephemeral tenants.** Confirmed
-  2026-09-08: both a Terraform-automated Flow Log Access grant and the
-  real Console wizard/CFT were tested independently, both produced
-  verified-correct AWS-side IAM permissions, and both were silently
-  ignored by CloudSecure for hours - not an automation or permissions
-  bug on our side. The security group rules and VPC Flow Log itself
-  still build and deliver real traffic to S3 automatically, ready for
-  ingestion whenever this is fixed on Illumio's end - only the Flow
-  Log Access grant step is left out for now. See the track's
-  README.md for the full evidence trail.
+  **Traffic flow ingestion into CloudSecure's Map/Traffic explorer
+  runs on backend timing that varies day to day** - confirmed
+  2026-09-09 it does eventually arrive (one run took ~1hr; an earlier
+  run on a different org sat at zero for 4+ hours). This is the same
+  regardless of whether the Flow Log Access grant is made by this
+  automation or by hand through the real Console wizard - both were
+  independently tested and behave identically. The security group
+  rules and VPC Flow Log delivery to S3 are 100% reliable and fast
+  (~3 min); it's only CloudSecure's own ingestion of that S3 data that
+  is slow/inconsistent. See the track's README.md for the full
+  evidence trail.
 
   Rough timing: ~20-33 min for onboarding through configuration, then
   another ~10-15 min before it's all visible on the Map - budget up to
   ~50 min total from track start. Traffic flow ingestion (VPC Flow
-  Logs -> S3 -> CloudSecure) is separate and can take significantly
-  longer - track sized to 4 hours to allow full margin for this plus
-  time to actually test with the resulting traffic afterward.
+  Logs -> S3 -> CloudSecure) is separate and can take anywhere from
+  under an hour to several hours - track sized to 4 hours to allow
+  full margin for this plus time to actually test with the resulting
+  traffic afterward.
 icon: ./assets/logo.png
 tags:
 - ilt
