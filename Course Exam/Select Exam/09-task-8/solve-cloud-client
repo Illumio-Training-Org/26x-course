@@ -3,9 +3,6 @@
 # Runs when the learner clicks Skip. Creates Task8-DenyGlobal with a
 # Dev->Prod deny (All Services) for ordering, plus a plain Dev->Prod
 # Allow Rule that permits SSH - pure org-level objects, no scope.
-# Idempotent: merges in only whatever pieces are missing if the
-# ruleset already partially exists (e.g. the learner built some of it
-# by hand before skipping).
 #
 # Live-verified 2026-09-07 (org 4138910): re-PUTing an existing
 # ruleset's own deny_rules array (read straight from GET) fails with a
@@ -15,6 +12,15 @@
 # ruleset that already has a deny_rule when Skip runs), not a
 # from-scratch run - fixed by stripping each existing entry down to
 # just the writable fields before re-sending.
+#
+# Fixed 2026-09-10: previously only added the correct deny/allow rule
+# if an exact-match pair wasn't already present, so a learner's own
+# close-but-wrong attempt (e.g. missing the App=ordering label) was
+# left in place alongside the newly-added correct one, leaving 2 deny
+# rules - live-caught by Nathan. This task expects exactly one deny
+# rule and one allow rule in this ruleset, so Skip now REPLACES
+# deny_rules and rules outright with the single correct entry each,
+# rather than merging/appending.
 
 . /root/.autoaccount_env
 
@@ -49,32 +55,11 @@ def find_service_href(name_contains):
             return s['href']
     return None
 
-def label_set(entries):
-    return {(l.get('label') or {}).get('href') for l in entries}
-
-def has_pair(existing, cdir, pdir):
-    for e in existing:
-        if cdir <= label_set(e.get('consumers', [])) and pdir <= label_set(e.get('providers', [])):
-            return True
-    return False
-
-DENY_RULE_WRITABLE_FIELDS = [
-    'enabled', 'providers', 'consumers', 'ingress_services', 'network_type',
-    'override', 'egress_services', 'unscoped_consumers',
-    'all_ips_except_for_in_consumers', 'all_ips_except_for_in_providers',
-]
-
-def clean_deny_rule(d):
-    return {k: d[k] for k in DENY_RULE_WRITABLE_FIELDS if k in d}
-
 app_href = find_or_create_label('app', 'ordering')
 dev_href = find_or_create_label('env', 'Development')
 prod_href = find_or_create_label('env', 'Production')
 all_services_href = find_service_href('all services')
 ssh_href = find_service_href('ssh')
-
-dev_to_prod = {app_href, dev_href}
-prod_to_dev = {app_href, prod_href}
 
 rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets?max_results=1000') or []
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task8-denyglobal'), None)
@@ -85,32 +70,38 @@ if not rs:
     })
 
 if rs and rs.get('href'):
-    deny_rules = rs.get('deny_rules', [])
-    if not has_pair(deny_rules, dev_to_prod, prod_to_dev):
-        call('PUT', rs['href'], {
-            'deny_rules': [clean_deny_rule(d) for d in deny_rules] + [{
-                'enabled': True,
-                'providers': [{'label': {'href': app_href}, 'exclusion': False}, {'label': {'href': prod_href}, 'exclusion': False}],
-                'consumers': [{'label': {'href': app_href}, 'exclusion': False}, {'label': {'href': dev_href}, 'exclusion': False}],
-                'ingress_services': [{'href': all_services_href}] if all_services_href else [],
-                'network_type': 'brn',
-                'override': False,
-                'egress_services': [],
-                'unscoped_consumers': False,
-                'all_ips_except_for_in_consumers': False,
-                'all_ips_except_for_in_providers': False,
-            }],
-        })
-
-    rules = rs.get('rules', [])
-    if not has_pair(rules, dev_to_prod, prod_to_dev):
-        call('POST', rs['href'] + '/sec_rules', {
+    # Replace deny_rules outright - this task expects exactly one deny
+    # rule, so any existing close-but-wrong attempt is discarded rather
+    # than kept alongside the correct one.
+    call('PUT', rs['href'], {
+        'deny_rules': [{
             'enabled': True,
-            'ingress_services': [{'href': ssh_href}] if ssh_href else [],
-            'consumers': [{'label': {'href': app_href}}, {'label': {'href': dev_href}}],
-            'providers': [{'label': {'href': app_href}}, {'label': {'href': prod_href}}],
-            'resolve_labels_as': {'consumers': ['workloads'], 'providers': ['workloads']},
-        })
+            'providers': [{'label': {'href': app_href}, 'exclusion': False}, {'label': {'href': prod_href}, 'exclusion': False}],
+            'consumers': [{'label': {'href': app_href}, 'exclusion': False}, {'label': {'href': dev_href}, 'exclusion': False}],
+            'ingress_services': [{'href': all_services_href}] if all_services_href else [],
+            'network_type': 'brn',
+            'override': False,
+            'egress_services': [],
+            'unscoped_consumers': False,
+            'all_ips_except_for_in_consumers': False,
+            'all_ips_except_for_in_providers': False,
+        }],
+    })
+
+    # Same for the allow rule - delete any existing rule(s) in this
+    # ruleset first, then create exactly the one correct one, so a
+    # learner's wrong attempt doesn't survive alongside it.
+    for rule in rs.get('rules', []):
+        href = rule.get('href')
+        if href:
+            call('DELETE', href)
+    call('POST', rs['href'] + '/sec_rules', {
+        'enabled': True,
+        'ingress_services': [{'href': ssh_href}] if ssh_href else [],
+        'consumers': [{'label': {'href': app_href}}, {'label': {'href': dev_href}}],
+        'providers': [{'label': {'href': app_href}}, {'label': {'href': prod_href}}],
+        'resolve_labels_as': {'consumers': ['workloads'], 'providers': ['workloads']},
+    })
 "
 
 exit 0

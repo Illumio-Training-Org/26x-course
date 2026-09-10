@@ -2,7 +2,7 @@
 slug: task-5
 id: azq1aqjf9wr9
 type: challenge
-title: 05-Deny Dev to Prod for Ordering in CA
+title: 05-Deny Traffic Between Development and Production for the Ordering Application
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
