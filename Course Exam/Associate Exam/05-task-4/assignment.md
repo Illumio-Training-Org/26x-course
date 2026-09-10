@@ -13,7 +13,7 @@ Application: `ordering`, Environment: `Production`, Location: `ca`.
 These are the same labels you assigned to the `linux-vm` in Task 2.
 
 > [!NOTE]
-> Leave the ruleset in draft — do not provision it for this task.
+> Leave the Policy in draft — do not provision it for this task.
 
 > [!NOTE]
 > If you add port 22 manually instead of using the built-in SSH

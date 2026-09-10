@@ -39,7 +39,7 @@ def resolve_labels(entries):
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-ringfenceordering'), None)
 if not rs:
-    print('Ruleset \"Task6-RingfenceOrdering\" not found')
+    print('Policy \"Task6-RingfenceOrdering\" not found')
     sys.exit(1)
 
 for scope in rs.get('scopes', []):

@@ -38,7 +38,7 @@ for policy in ('draft', 'active'):
 
 named = [rs for rs in rulesets if (rs.get('name') or '').lower() == 'task4-denypolicy']
 if not named:
-    print('Ruleset Task4-DenyPolicy not found')
+    print('Policy Task4-DenyPolicy not found')
     sys.exit(1)
 
 def has_tcp_22(ingress_services):

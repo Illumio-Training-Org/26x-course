@@ -8,6 +8,6 @@ timelimit: 0
 enhanced_loading: null
 ---
 Ringfence the `ordering` application in `Development`, `ca`: create a
-ruleset named `Task6-RingfenceOrdering` with an allow rule so
+Policy named `Task6-RingfenceOrdering` with an allow rule so
 workloads in the `ordering` application (Environment: `Development`,
 Location: `ca`) can communicate freely with each other.

@@ -66,7 +66,7 @@ def run():
     rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
     rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task8-denyglobal'), None)
     if not rs:
-        print('Ruleset \"Task8-DenyGlobal\" not found')
+        print('Policy \"Task8-DenyGlobal\" not found')
         sys.exit(1)
 
     dev_to_prod = False

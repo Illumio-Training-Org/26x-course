@@ -13,5 +13,5 @@ workloads: Role, Application, Environment, Location, Type, IR).
 
 Ringfence the `portal` application (Environment: `Production`,
 Location: `ca`, Type: `server`, IR: `IR-CLEANBUBBLE`): create a
-ruleset named `Task2-Ringfence` with an allow rule so workloads
+Policy named `Task2-Ringfence` with an allow rule so workloads
 matching all five labels can communicate freely with each other.

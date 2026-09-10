@@ -32,7 +32,7 @@ def resolve(entries):
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task3-coreservices'), None)
 if not rs:
-    print('Ruleset \"Task3-CoreServices\" not found')
+    print('Policy \"Task3-CoreServices\" not found')
     sys.exit(1)
 
 def has_tcp_5666(ingress_services):

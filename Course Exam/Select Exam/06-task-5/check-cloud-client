@@ -30,7 +30,7 @@ def resolve(entries):
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task5-denydevprod'), None)
 if not rs:
-    print('Ruleset \"Task5-DenyDevProd\" not found')
+    print('Policy \"Task5-DenyDevProd\" not found')
     sys.exit(1)
 
 # Scopes aren't taught in this course - this task does NOT accept a

@@ -7,6 +7,6 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Create a ruleset named `Task5-DenyDevProd` with a deny rule: from
+Create a Policy named `Task5-DenyDevProd` with a deny rule: from
 Application: `ordering`, Environment: `Development`, Location: `ca`,
 to Application: `ordering`, Environment: `Production`, Location: `ca`.
