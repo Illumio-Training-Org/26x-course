@@ -231,10 +231,16 @@ nohup bash -c "
 
   # Resolve the flows S3 bucket name created by the apply above - it
   # has a random suffix and lives in a separate Terraform state
-  # (terraform/, not terraform-cloudsecure-aws/), so it's looked up
-  # directly via the AWS API rather than a cross-state reference. Only
-  # one bucket in the account matches this prefix.
-  S3_BUCKET_NAME=\$(aws s3api list-buckets --query \"Buckets[?starts_with(Name, 'illumios3bucket')].Name | [0]\" --output text)
+  # (terraform/, not terraform-cloudsecure-aws/). Read it straight out
+  # of this state (we're still in /root/26x-course/terraform here)
+  # rather than asking AWS to list buckets - live-caught 2026-09-10:
+  # aws s3api list-buckets (s3:ListAllMyBuckets) is explicitly denied
+  # by an AWS Organizations SCP on this exam's sandbox account type,
+  # so that approach (which works fine on the AWS Automated Onboard
+  # Testing prototype's own sandbox account) silently resolved empty
+  # here and broke the Flow Log resource downstream. Reading from
+  # Terraform's own state needs no extra AWS permissions at all.
+  S3_BUCKET_NAME=\$(terraform state show aws_s3_bucket.illumio_flows | grep -E '^ *bucket *=' | head -1 | cut -d'\"' -f2)
   echo \"Resolved flows S3 bucket: \$S3_BUCKET_NAME\"
 
   echo '### STARTING AUTOMATED CLOUDSECURE ONBOARDING ###'
