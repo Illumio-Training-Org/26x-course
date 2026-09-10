@@ -1,11 +1,17 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Adds the 2 extra labels to both
-# workloads (no-ops per workload if not paired yet) and creates
-# Task2-Ringfence as a scopeless ruleset with an allow rule that has
-# all 5 labels on both source and destination - Scopes aren't taught
-# in this course and check-cloud-client does not accept a Scope-based
-# equivalent. NOT YET LIVE-VERIFIED against a real sandbox.
+# Runs when the learner clicks Skip. Corrects the FULL expected label
+# set (role, app, env, loc, type, DFIRBubble) on both workloads -
+# overwriting any wrong/missing value for those 6 keys rather than
+# just appending the 2 new ones - since a learner who paired the VENs
+# without the right Role label (or any of the other 4 base labels)
+# would otherwise be left in a state check-cloud-client can never
+# pass even after Skip. Any other, unrelated label on the workload is
+# left untouched. Also creates Task2-Ringfence as a scopeless ruleset
+# with an allow rule that has all 5 labels on both source and
+# destination - Scopes aren't taught in this course and
+# check-cloud-client does not accept a Scope-based equivalent.
+# NOT YET LIVE-VERIFIED against a real sandbox.
 
 . /root/.autoaccount_env
 
@@ -42,19 +48,41 @@ def find_all_services_href():
 
 type_href = find_or_create_label('type', 'server')
 ir_href = find_or_create_label('DFIRBubble', 'IR-CLEANBUBBLE')
+app_href_shared = find_or_create_label('app', 'portal')
+env_href_shared = find_or_create_label('env', 'Production')
+loc_href_shared = find_or_create_label('loc', 'ca')
+role_href_by_host = {
+    'linux-vm': find_or_create_label('role', 'web'),
+    'windows-vm': find_or_create_label('role', 'db'),
+}
+expected_hrefs_by_host = {
+    host: {'role': role_href_by_host[host], 'app': app_href_shared, 'env': env_href_shared, 'loc': loc_href_shared, 'type': type_href, 'dfirbubble': ir_href}
+    for host in ('linux-vm', 'windows-vm')
+}
 
 ws = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000') or []
 by_host = {w.get('hostname'): w for w in ws}
+label_cache = {}
 for host in ('linux-vm', 'windows-vm'):
     wl = by_host.get(host)
     if not wl:
         continue
-    existing = [{'href': l['href']} for l in wl.get('labels', [])]
-    call('PUT', wl['href'], {'labels': existing + [{'href': type_href}, {'href': ir_href}]})
+    expected = expected_hrefs_by_host[host]
+    kept = []
+    for l in wl.get('labels', []):
+        href = l.get('href')
+        if not href:
+            continue
+        if href not in label_cache:
+            label_cache[href] = call('GET', href.replace('/api/v2', '')) or {}
+        key = (label_cache[href].get('key') or '').lower()
+        if key not in expected:
+            kept.append({'href': href})
+    call('PUT', wl['href'], {'labels': kept + [{'href': h} for h in expected.values() if h]})
 
-app_href = find_or_create_label('app', 'portal')
-env_href = find_or_create_label('env', 'Production')
-loc_href = find_or_create_label('loc', 'ca')
+app_href = app_href_shared
+env_href = env_href_shared
+loc_href = loc_href_shared
 all_services_href = find_all_services_href()
 
 rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets?max_results=1000') or []
