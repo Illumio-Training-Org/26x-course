@@ -3,11 +3,17 @@
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
 #
-# Fixed 2026-09-08: previously only checked that the strict-quarantine
-# label was present, so a learner could pass by adding quarantine
-# while also changing/removing one of linux-vm's other labels (e.g.
-# Environment) - live-caught by Nathan. Now verifies the full expected
-# label set (everything from Tasks 1/2 plus quarantine) is intact.
+# Fixed 2026-09-08: previously only checked that the quarantine label
+# was present, so a learner could pass by adding it while also
+# changing/removing one of linux-vm's other labels (e.g. Environment)
+# - live-caught by Nathan. Now verifies the full expected label set
+# (everything from Tasks 1/2, with DFIRBubble updated) is intact.
+#
+# Changed 2026-09-10: swapped the native PCE Quarantine label
+# (quarantine.illumio.com=strict-quarantine) for changing the
+# existing DFIRBubble label from IR-CLEANBUBBLE to IR-DIRTYBUBBLE -
+# consistent with the DFIR-bubble scheme already taught in Task 2,
+# rather than a second, unrelated labeling mechanism.
 
 . /root/.autoaccount_env
 
@@ -37,8 +43,7 @@ expected = {
     'env': 'production',
     'loc': 'ca',
     'type': 'server',
-    'dfirbubble': 'ir-cleanbubble',
-    'quarantine.illumio.com': 'strict-quarantine',
+    'dfirbubble': 'ir-dirtybubble',
 }
 
 wrong = []
@@ -51,7 +56,7 @@ if wrong:
     print('linux-vm labels are not all correct: ' + '; '.join(wrong))
     sys.exit(1)
 
-print('linux-vm is quarantined (strict-quarantine) and its other labels are intact')
+print('linux-vm is marked as breached (IR-DIRTYBUBBLE) and its other labels are intact')
 sys.exit(0)
 ")
 status=$?

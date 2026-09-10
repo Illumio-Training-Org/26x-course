@@ -1,7 +1,8 @@
 #!/bin/sh
 #
-# Runs when the learner clicks Skip. Applies the strict-quarantine
-# label to linux-vm. No-ops if not paired yet.
+# Runs when the learner clicks Skip. Changes linux-vm's DFIRBubble
+# label from IR-CLEANBUBBLE to IR-DIRTYBUBBLE (creating the label if
+# it doesn't exist yet). No-ops if not paired yet.
 #
 # Live-verified 2026-09-07 (org 4138910): a workload's existing
 # `labels` entries come back from GET with `key`/`value` resolved
@@ -29,15 +30,32 @@ def call(method, path, body=None):
     except Exception:
         return None
 
-labels = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
-q_href = next((l['href'] for l in labels if l.get('key') == 'quarantine.illumio.com' and (l.get('value') or '').lower() == 'strict-quarantine'), None)
+def find_or_create_label(key, value):
+    labels = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
+    for l in labels:
+        if l.get('key') == key and (l.get('value') or '').lower() == value.lower():
+            return l['href']
+    created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
+    return created['href'] if created else None
+
+dirty_href = find_or_create_label('DFIRBubble', 'IR-DIRTYBUBBLE')
 
 ws = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000') or []
 wl = next((w for w in ws if w.get('hostname') == 'linux-vm'), None)
 
-if wl and q_href:
-    existing = [{'href': l['href']} for l in wl.get('labels', [])]
-    call('PUT', wl['href'], {'labels': existing + [{'href': q_href}]})
+if wl and dirty_href:
+    label_cache = {}
+    kept = []
+    for l in wl.get('labels', []):
+        href = l.get('href')
+        if not href:
+            continue
+        if href not in label_cache:
+            label_cache[href] = call('GET', href.replace('/api/v2', '')) or {}
+        key = (label_cache[href].get('key') or '').lower()
+        if key != 'dfirbubble':
+            kept.append({'href': href})
+    call('PUT', wl['href'], {'labels': kept + [{'href': dirty_href}]})
 "
 
 exit 0
