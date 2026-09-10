@@ -143,6 +143,53 @@ nohup bash -c "
 " > /var/log/vensim-startup.log 2>&1 < /dev/null &
 
 # ---------------------------------------
+# DISABLE DEFAULT (NON-TASK) POLICIES - newstartup.sh seeds a library of
+# demo rulesets (numbered "1. ..." through "15. ...", plus "Quarantine
+# Policy: Strict") that aren't part of any task in this exam. Left
+# enabled, they can interfere with (or mask problems in) the policies
+# learners actually build. Waits for newstartup.sh's own completion
+# signal (/tmp/startup.done, already relied on above) before running,
+# since that's what seeds this content; only disables rulesets whose
+# name does NOT start with "Task" (case-insensitive), so every
+# exam-created policy - whenever in the exam it gets created - is left
+# untouched.
+# ---------------------------------------
+cat > /root/disable-default-policies.py <<'PYEOF'
+import json, os, subprocess
+
+fqdn_port = os.environ['AUTOACCOUNT_PCE_FQDN']
+org_id = os.environ['AUTOACCOUNT_ORG_ID']
+auth = 'api_' + os.environ['AUTOACCOUNT_APIKEY_ID'] + ':' + os.environ['AUTOACCOUNT_APIKEY_SECRET']
+base = 'https://' + fqdn_port + '/api/v2'
+
+def call(method, path, body=None):
+    cmd = ['curl', '-s', '-u', auth, '-X', method, base + path]
+    if body is not None:
+        cmd += ['-H', 'Content-Type: application/json', '-d', json.dumps(body)]
+    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    try:
+        return json.loads(out)
+    except Exception:
+        return out
+
+rulesets = call('GET', '/orgs/' + org_id + '/sec_policy/draft/rule_sets?max_results=1000') or []
+for rs in rulesets:
+    name = rs.get('name') or ''
+    if name.lower().startswith('task'):
+        continue
+    href = rs.get('href')
+    if not href:
+        continue
+    call('PUT', href, {'enabled': False})
+    print('Disabled default policy:', name)
+PYEOF
+
+nohup bash -c '
+  while [ ! -f /tmp/startup.done ]; do sleep 5; done
+  python3 /root/disable-default-policies.py
+' > /var/log/disable-default-policies.log 2>&1 < /dev/null &
+
+# ---------------------------------------
 # AWS BUILD (Terraform) + AUTOMATED CLOUDSECURE ONBOARDING - runs in
 # background, adapted from the confirmed-working
 # "! 26.x AWS Automated Onboard Testing" prototype. Only builds the
