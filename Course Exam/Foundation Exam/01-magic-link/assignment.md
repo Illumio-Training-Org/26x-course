@@ -62,6 +62,7 @@ Welcome to your **26.x Foundation Exam**.
 **Please note:**
 - There is no requirement to provision any of the rules or objects in this exam.
 - All pre-existing default policies in this org are automatically disabled before you start - only policies you create as part of the exam's tasks are active. You don't need to do anything about them.
+- Please ensure that the name of any Policies that you create are correct and there are no additional spaces in their names.
 
 **1 )** Open the following link in a new browser tab
 
