@@ -2,6 +2,12 @@
 #
 # This script runs when the platform checks the challenge.
 # Exit 0 = pass, non-zero = fail.
+#
+# Fixed 2026-09-11: previously only checked that the 3 required labels
+# were present on each side, so an extra label (e.g. Role=web added to
+# the destination) went undetected and the rule still passed -
+# live-caught by Nathan. The task wants exactly these 3 labels on each
+# side, nothing else - now rejects any extra label too.
 
 . /root/.autoaccount_env
 
@@ -55,19 +61,35 @@ def is_all_services(ingress_services):
 want_consumer = {'app': 'ordering', 'env': 'development', 'loc': 'ca'}
 want_provider = {'app': 'ordering', 'env': 'production', 'loc': 'ca'}
 
+def label_problems(name, found, expected):
+    problems = []
+    for key, want in expected.items():
+        got = found.get(key)
+        if got != want:
+            problems.append(name + ' ' + key + ' should be ' + want + ', found ' + (got or 'missing'))
+    extra = set(found) - set(expected)
+    if extra:
+        problems.append(name + ' has unexpected extra label(s): ' + ', '.join(sorted(extra)))
+    return problems
+
 best_reasons = None
 for dr in rs.get('deny_rules', []):
     consumers = resolve(dr.get('consumers', []))
     providers = resolve(dr.get('providers', []))
-    labels_ok = all(consumers.get(k) == v for k, v in want_consumer.items()) and all(providers.get(k) == v for k, v in want_provider.items())
+    problems = label_problems('source', consumers, want_consumer) + label_problems('destination', providers, want_provider)
     service_ok = is_all_services(dr.get('ingress_services'))
-    if labels_ok and service_ok:
+    if not problems and service_ok:
         print('Found the Dev->Prod deny rule for ordering in ca, All Services')
         sys.exit(0)
-    if labels_ok:
-        best_reasons = 'the Dev->Prod deny rule for ordering in ca exists but should be for All Services, not a specific service/port range'
+    if not problems and not service_ok:
+        problems = ['should be for All Services, not a specific service/port range']
+    if best_reasons is None or len(problems) < len(best_reasons):
+        best_reasons = problems
 
-print(best_reasons or 'Task5-DenyDevProd exists but has no rule denying Dev->Prod for ordering in ca')
+if best_reasons:
+    print('Task5-DenyDevProd rule is close but: ' + '; '.join(best_reasons))
+else:
+    print('Task5-DenyDevProd exists but has no rule denying Dev->Prod for ordering in ca')
 sys.exit(1)
 ")
 status=$?
