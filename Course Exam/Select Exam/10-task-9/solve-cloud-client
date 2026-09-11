@@ -8,6 +8,13 @@
 # plus an inbound rule from Ordering to Payment/LDN on TCP/443
 # (HTTPS). Scopes aren't taught in this course and check-cloud-client
 # does not accept a Scope-based equivalent.
+#
+# Fixed 2026-09-11: previously only added each rule when no existing
+# rule already satisfied its service shape (is_all_services /
+# has_tcp_443) - so a learner's close-but-wrong attempt (extra label
+# on the right service) already satisfied that check and Skip left it
+# untouched, same bug class already fixed on Tasks 6 and 8. Now always
+# replaces whatever rules exist with exactly the two correct ones.
 
 . /root/.autoaccount_env
 
@@ -56,38 +63,24 @@ if not rs:
     })
 
 if rs and rs.get('href'):
-    def has_tcp_443(ingress_services):
-        for entry in ingress_services or []:
-            if entry.get('port') == 443 and entry.get('proto') == 6:
-                return True
-        return False
-
-    def is_all_services(ingress_services):
-        if not ingress_services:
-            return True
-        for entry in ingress_services or []:
-            href = entry.get('href')
-            if href == all_services_href:
-                return True
-        return False
-
-    existing_rules = [r for r in rs.get('rules', []) if r.get('enabled', True)]
-    if not any(is_all_services(r.get('ingress_services')) for r in existing_rules):
-        call('POST', rs['href'] + '/sec_rules', {
-            'enabled': True,
-            'providers': [{'label': {'href': app_href}}, {'label': {'href': loc_href}}],
-            'consumers': [{'label': {'href': app_href}}, {'label': {'href': loc_href}}],
-            'ingress_services': [{'href': all_services_href}] if all_services_href else [],
-            'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
-        })
-    if not any(has_tcp_443(r.get('ingress_services')) for r in existing_rules):
-        call('POST', rs['href'] + '/sec_rules', {
-            'enabled': True,
-            'providers': [{'label': {'href': app_href}}, {'label': {'href': loc_href}}],
-            'consumers': [{'label': {'href': ordering_href}}],
-            'ingress_services': [{'port': 443, 'proto': 6}],
-            'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
-        })
+    for rule in rs.get('rules', []):
+        href = rule.get('href')
+        if href:
+            call('DELETE', href)
+    call('POST', rs['href'] + '/sec_rules', {
+        'enabled': True,
+        'providers': [{'label': {'href': app_href}}, {'label': {'href': loc_href}}],
+        'consumers': [{'label': {'href': app_href}}, {'label': {'href': loc_href}}],
+        'ingress_services': [{'href': all_services_href}] if all_services_href else [],
+        'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
+    })
+    call('POST', rs['href'] + '/sec_rules', {
+        'enabled': True,
+        'providers': [{'label': {'href': app_href}}, {'label': {'href': loc_href}}],
+        'consumers': [{'label': {'href': ordering_href}}],
+        'ingress_services': [{'port': 443, 'proto': 6}],
+        'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
+    })
 "
 
 exit 0

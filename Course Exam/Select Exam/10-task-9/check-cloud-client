@@ -8,6 +8,14 @@
 # ringfence (Application=Payment, Location=LDN repeated on both source
 # and destination) and the inbound Ordering->Payment/LDN rule on
 # TCP/443 (HTTPS).
+#
+# Fixed 2026-09-11: the inbound rule's source only checked that
+# Application=Ordering was present (extras allowed) and its
+# destination used a subset check (extras allowed there too) -
+# live-caught by Nathan, who wants no other labels on either side.
+# Both now require an exact label match, same as the ringfence rule
+# already did. Confirmed the service check already accepts either a
+# named HTTPS service or a raw TCP/443 entry - either is correct.
 
 . /root/.autoaccount_env
 
@@ -92,11 +100,11 @@ if not inbound_rule:
     reasons.append('missing the inbound allow rule for Ordering -> Payment on TCP/443 (HTTPS)')
 else:
     consumer_labels = resolve_labels(inbound_rule.get('consumers', []))
-    if ('app', 'ordering') not in consumer_labels:
-        reasons.append('inbound rule source should be Application=Ordering, found ' + str(sorted(consumer_labels)))
-    dst_ok = expected.issubset(resolve_labels(inbound_rule.get('providers', [])))
-    if not dst_ok:
-        reasons.append('inbound rule destination should be Payment, Location=LDN')
+    if consumer_labels != {('app', 'ordering')}:
+        reasons.append('inbound rule source is wrong - should be exactly Application=Ordering, no other labels, found ' + str(sorted(consumer_labels)))
+    provider_labels = resolve_labels(inbound_rule.get('providers', []))
+    if provider_labels != expected:
+        reasons.append('inbound rule destination is wrong - should be exactly Application=Payment, Location=LDN, no other labels, found ' + str(sorted(provider_labels)))
 
 if reasons:
     print('; '.join(reasons))
