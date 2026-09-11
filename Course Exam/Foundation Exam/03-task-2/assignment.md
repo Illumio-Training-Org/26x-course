@@ -13,3 +13,6 @@ Label the `linux-vm` workload with 4 labels:
 - Application: `ordering`
 - Environment: `Production`
 - Location: `ca`
+
+Use the Map to confirm `linux-vm` now appears grouped under the
+`ordering` application.

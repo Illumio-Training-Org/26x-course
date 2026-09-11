@@ -17,3 +17,5 @@ Onboard the AWS account to Illumio Cloud.
 
 > [!IMPORTANT]
 > Use **us-east-1** (N. Virginia) as the region.
+
+Once onboarded, use the Map to confirm the new AWS resource appears.
