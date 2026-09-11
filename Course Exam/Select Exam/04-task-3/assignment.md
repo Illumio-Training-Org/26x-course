@@ -14,5 +14,5 @@ TCP port `5666`, so monitoring traffic isn't denied once the
 application is ringfenced.
 
 Use the Map to find the correct Nagios instance in California and
-confirm its labels before building the rule: Location `ca`,
-Environment `Production`, Application `monitoring`, Role `nagios`.
+confirm its labels before building the rule. The source side of the
+rule should include Location, Environment, Application, and Role.
