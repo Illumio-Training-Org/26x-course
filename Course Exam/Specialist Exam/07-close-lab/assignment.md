@@ -19,8 +19,6 @@ lab, so your results can be collected.
 Please take a moment to complete our survey:
 [Take the survey](https://forms.office.com/r/9whfE2CDwq)
 
-If you got here by mistake, go back — click **Overview** at the top of the screen, and make sure you've completed every task in this exam before returning here.
-
 Clicking **NEXT** below will permanently end this session — the PCE org, AWS account, VMs, and k3s cluster will all be destroyed. There is no way to resume once this happens.
 
 Only click **NEXT** once you have notified your instructor and are completely finished with the exam.
