@@ -19,6 +19,14 @@
 # single label (e.g. App=ordering) - live-caught by Nathan. Now tracks
 # the closest-matching deny rule across the ruleset's deny_rules and
 # reports exactly which label(s) on which side are wrong or missing.
+#
+# Fixed 2026-09-11: neither the deny rule nor the SSH allow rule
+# rejected extra labels (e.g. Location=ca added to both sides) - this
+# task's rules are meant to be location-agnostic, so an extra Location
+# label wrongly narrows their scope and should fail - live-caught by
+# Nathan. Both now reject any extra label, and the SSH allow-rule
+# check reports specific reasons the same way the deny-rule check
+# already did.
 
 . /root/.autoaccount_env
 
@@ -74,6 +82,9 @@ def side_problems(name, found, expected):
         got = found.get(key)
         if got != want:
             probs.append(name + ' ' + key + ' should be ' + want + ', found ' + (got or 'missing'))
+    extra = set(found) - set(expected)
+    if extra:
+        probs.append(name + ' has unexpected extra label(s): ' + ', '.join(sorted(extra)))
     return probs
 
 def run():
@@ -105,16 +116,20 @@ def run():
             best_deny_reasons = reasons
 
     ssh_dev_to_prod = False
-    for rule in rs.get('rules', []):
-        if not rule.get('enabled', True):
-            continue
+    best_ssh_reasons = None
+    enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
+    for rule in enabled_rules:
         consumers = resolve(rule.get('consumers', []))
         providers = resolve(rule.get('providers', []))
-        if consumers.get('app') != 'ordering' or providers.get('app') != 'ordering':
-            continue
-        if consumers.get('env') == 'development' and providers.get('env') == 'production':
-            if is_ssh_only(rule.get('ingress_services')):
-                ssh_dev_to_prod = True
+        reasons = side_problems('source', consumers, expected_consumer) + side_problems('destination', providers, expected_provider)
+        if not reasons and is_ssh_only(rule.get('ingress_services')):
+            ssh_dev_to_prod = True
+            best_ssh_reasons = []
+            break
+        if not reasons:
+            reasons = ['should permit only SSH, not All Services or a different specific service']
+        if best_ssh_reasons is None or len(reasons) < len(best_ssh_reasons):
+            best_ssh_reasons = reasons
 
     missing = []
     if not (dev_to_prod and dev_to_prod_all_services):
@@ -123,7 +138,10 @@ def run():
         else:
             missing.append('Dev->Prod deny rule is close but: ' + '; '.join(best_deny_reasons))
     if not ssh_dev_to_prod:
-        missing.append('missing an Allow Rule permitting SSH from Development to Production for ordering')
+        if not enabled_rules:
+            missing.append('missing an Allow Rule permitting SSH from Development to Production for ordering')
+        else:
+            missing.append('SSH allow rule is close but: ' + '; '.join(best_ssh_reasons))
 
     if not missing:
         print('Found Dev->Prod deny (All Services) for ordering, plus an SSH allow rule')
