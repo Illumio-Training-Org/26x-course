@@ -6,6 +6,13 @@
 # Scopes aren't taught in this course and check-cloud-client does not
 # accept a Scope-based equivalent. Task 7 extends this same ruleset, so
 # it needs to already have this rule in place if Task 6 was skipped.
+#
+# Fixed 2026-09-11: previously only added the correct rule when there
+# was no enabled rule at all - so a learner's own close-but-wrong
+# attempt (e.g. a Label Group used instead of a plain Environment
+# label) was already "enabled", and Skip did nothing at all -
+# live-caught by Nathan. Now always replaces whatever rule(s) exist
+# with exactly the one correct rule.
 
 . /root/.autoaccount_env
 
@@ -61,20 +68,26 @@ if not rs:
     })
 
 if rs and rs.get('href'):
-    existing_rules = rs.get('rules', [])
-    if not any(rule.get('enabled', True) for rule in existing_rules):
-        entries = [
-            {'label': {'href': app_href}},
-            {'label': {'href': dev_href}},
-            {'label': {'href': loc_href}},
-        ]
-        call('POST', rs['href'] + '/sec_rules', {
-            'enabled': True,
-            'providers': entries,
-            'consumers': entries,
-            'ingress_services': [{'href': all_services_href}] if all_services_href else [],
-            'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
-        })
+    # Replace whatever rule(s) exist with exactly the one correct rule
+    # - a learner's own close-but-wrong attempt (wrong label, or a
+    # Label Group used instead of a plain label) is deleted rather
+    # than left in place alongside/instead of the correct one.
+    for rule in rs.get('rules', []):
+        href = rule.get('href')
+        if href:
+            call('DELETE', href)
+    entries = [
+        {'label': {'href': app_href}},
+        {'label': {'href': dev_href}},
+        {'label': {'href': loc_href}},
+    ]
+    call('POST', rs['href'] + '/sec_rules', {
+        'enabled': True,
+        'providers': entries,
+        'consumers': entries,
+        'ingress_services': [{'href': all_services_href}] if all_services_href else [],
+        'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
+    })
 "
 
 exit 0
