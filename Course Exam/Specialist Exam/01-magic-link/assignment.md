@@ -54,6 +54,8 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
+Welcome to your **26.x Specialist Exam**.
+
 > [!IMPORTANT]
 > This exam is **120 minutes (2 hours)**.
 
@@ -71,4 +73,4 @@ Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostnam
 
 **2 )** Verify the Illumio Console dashboard is visible
 
-**3 )** Welcome to your **26.x Specialist Exam**. Once you're logged into the Console, return to this lab window and press **NEXT** to begin. Good luck!
+**3 )** Once you're logged into the Console, return to this lab window and press **NEXT** to begin. Good luck!
