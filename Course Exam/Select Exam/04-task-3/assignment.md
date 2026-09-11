@@ -12,3 +12,7 @@ Role: `nagios` to the `portal` application (Application: `portal`,
 Environment: `Production`, Location: `ca`) for the Nagios NRPE service,
 TCP port `5666`, so monitoring traffic isn't denied once the
 application is ringfenced.
+
+Use the Map to find the correct Nagios instance in California and
+confirm its labels before building the rule: Location `ca`,
+Environment `Production`, Application `monitoring`, Role `nagios`.
