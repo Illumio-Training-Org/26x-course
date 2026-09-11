@@ -12,5 +12,5 @@ application - group by Application labels first.
 
 Ringfence the `ordering` application in `Development`, `ca`: create a
 Policy named `Task6-RingfenceOrdering` with an allow rule so
-workloads in the `ordering` application (Environment: `Development`,
-Location: `ca`) can communicate freely with each other.
+workloads in the `ordering` application, Environment: `Development`,
+Location: `ca`, can communicate freely with each other.
