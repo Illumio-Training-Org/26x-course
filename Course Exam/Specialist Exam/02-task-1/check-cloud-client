@@ -10,6 +10,19 @@
 
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+
+# Safety net: default (non-Task) policies are disabled automatically
+# in the background during setup, but a fast learner could reach this
+# check before that background job finishes - disable any still-
+# enabled ones here too, so it's guaranteed correct by the time
+# Task 1 is actually being checked (cheap no-op once nothing's left).
+curl -s -u "$AUTH" "$BASE/sec_policy/draft/rule_sets?max_results=1000" | python3 -c "
+import json, subprocess, sys
+for rs in json.load(sys.stdin):
+    name = (rs.get('name') or '')
+    if not name.lower().startswith('task') and rs.get('enabled', True):
+        subprocess.run(['curl', '-s', '-o', '/dev/null', '-u', '$AUTH', '-X', 'PUT', 'https://$AUTOACCOUNT_PCE_FQDN/api/v2' + rs['href'], '-H', 'Content-Type: application/json', '-d', '{\"enabled\": false}'])
+" > /dev/null 2>&1
 FQDN="$AUTOACCOUNT_PCE_FQDN"
 
 result=$(python3 -c "
