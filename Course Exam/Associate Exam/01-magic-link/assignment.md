@@ -2,7 +2,7 @@
 slug: magic-link
 id: nwax7wpyvsq2
 type: challenge
-title: Illumio-Console
+title: 26.x Associate Exam
 teaser: Access the Illumio Console
 notes:
 - type: text
@@ -71,4 +71,4 @@ Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostnam
 
 **2 )** Verify the Illumio Console dashboard is visible
 
-**3 )** Welcome to your **26.x Associate Exam** — you have **45 minutes** to complete it. Once you're logged into the Console, return to this lab window and press **NEXT** to begin. Good luck!
+**3 )** Welcome to your **26.x Associate Exam**. Once you're logged into the Console, return to this lab window and press **NEXT** to begin. Good luck!

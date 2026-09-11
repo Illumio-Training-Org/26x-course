@@ -2,7 +2,7 @@
 slug: magic-link
 id: uod15nfxodo0
 type: challenge
-title: Illumio-Console
+title: 26.x Specialist Exam
 teaser: Access the Illumio Console
 notes:
 - type: text
@@ -54,8 +54,6 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# Illumio-Console
-
 > [!IMPORTANT]
 > This exam is **120 minutes (2 hours)**.
 
@@ -73,4 +71,4 @@ Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostnam
 
 **2 )** Verify the Illumio Console dashboard is visible
 
-**3 )** Welcome to your **26.x Specialist Exam** — you have **120 minutes (2 hours)** to complete it. Once you're logged into the Console, return to this lab window and press **NEXT** to begin. Good luck!
+**3 )** Welcome to your **26.x Specialist Exam**. Once you're logged into the Console, return to this lab window and press **NEXT** to begin. Good luck!
