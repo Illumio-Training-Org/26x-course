@@ -5,9 +5,11 @@ description: |-
   Lab Name: 26.x SELECT EXAM
 
   Outcome:
-  This exam has 10 questions. The first task must be completed to
-  continue. Subsequent tasks can be skipped. In order to pass the exam
-  you need a score of at least 80% or 8 out of 10 correct answers.
+  This exam has 10 questions. The first task (pairing the workloads)
+  must be completed to continue and cannot be skipped. Any other task
+  can be skipped, but skipping counts against your score. In order to
+  pass the exam you need a score of at least 80% or 8 out of 10 correct
+  answers.
 icon: ./assets/logo.png
 tags:
 - ilt
@@ -25,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "2648097981267224652"
+checksum: "14717893639715558577"
 enhanced_loading: false
