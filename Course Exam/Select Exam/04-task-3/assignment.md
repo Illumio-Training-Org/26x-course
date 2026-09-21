@@ -13,6 +13,6 @@ Environment: `Production`, Location: `ca`) for the Nagios NRPE service,
 TCP port `5666`, so monitoring traffic isn't denied once the
 application is ringfenced.
 
-Use the Map to find the correct Nagios instance in California and
+Use the Map to find the Nagios instance in California and
 confirm its labels before building the rule. The source side of the
 rule should include Location, Environment, Application, and Role.
