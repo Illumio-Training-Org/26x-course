@@ -11,7 +11,11 @@ Add two more labels to both `linux-vm` and `windows-vm`: Type: `server`,
 IR: `IR-CLEANBUBBLE` (6 label categories total across the two
 workloads: Role, Application, Environment, Location, Type, IR).
 
-Create a Policy named `Task2-Ringfence`, scoped to Application:
-`portal`, Environment: `Production`, Location: `ca`, Type: `server`,
-IR: `IR-CLEANBUBBLE`, with an intra-scope allow rule so workloads
-inside the scope can communicate freely with each other.
+Ringfence the `portal` application. Create a Policy named
+`Task2-Ringfence` with an allow rule so workloads matching all five
+labels can communicate freely with each other.
+
+- Environment: `Production`
+- Location: `ca`
+- Type: `server`
+- IR: `IR-CLEANBUBBLE`
