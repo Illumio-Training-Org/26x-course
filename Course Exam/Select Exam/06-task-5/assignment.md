@@ -7,6 +7,9 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
+> [!NOTE]
+> do we want info boxes here - i.e to suggest looking at the map
+
 Use the Map to inspect traffic flowing between Development and
 Production in the `ca` location.
 
