@@ -2,7 +2,7 @@
 slug: task-6
 id: juaj2gtfmdaq
 type: challenge
-title: 06-Ringfence Ordering in Dev, CA
+title: '06-Ringfence Ordering: ca | Development'
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
