@@ -2,7 +2,7 @@
 slug: task-6
 id: juaj2gtfmdaq
 type: challenge
-title: '06-Ringfence Ordering: ca | Development'
+title: 06-Ringfence the Ordering Application
 difficulty: ""
 timelimit: 0
 enhanced_loading: null

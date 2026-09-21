@@ -2,7 +2,7 @@
 slug: task-5
 id: azq1aqjf9wr9
 type: challenge
-title: '05-Deny Traffic for Ordering: ca | Development & Production'
+title: 05-Deny Traffic for the Ordering Application
 difficulty: ""
 timelimit: 0
 enhanced_loading: null

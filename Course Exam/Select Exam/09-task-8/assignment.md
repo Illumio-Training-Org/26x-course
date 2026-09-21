@@ -2,7 +2,7 @@
 slug: task-8
 id: xcsdwb5xkzcv
 type: challenge
-title: '08-Deny Ordering Globally: Development & Production'
+title: 08-Deny the Ordering Application Globally
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
