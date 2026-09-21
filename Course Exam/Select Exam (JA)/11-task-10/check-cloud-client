@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+
+. /root/.autoaccount_env
+
+AUTH="${AUTOACCOUNT_SAAPIKEY_KEYID}:${AUTOACCOUNT_SAAPIKEY_SECRET}"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://cloud.illum.io' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', '-H', 'X-Tenant-Id: $AUTOACCOUNT_TENANT_ID', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+rules = get('/api/v1/discovery_rules').get('discovery_rules', [])
+
+def matches_app_tag(rule):
+    if rule.get('rule_type') != 'TAG':
+        return False
+    for tk in rule.get('tag_keys', []):
+        if tk.get('cloud') == 'aws' and tk.get('key') == 'app':
+            return True
+    return False
+
+matching = [r for r in rules if matches_app_tag(r)]
+if not matching:
+    print('No Application Discovery Rule found matching the aws:app cloud tag')
+    sys.exit(1)
+
+if not any(r.get('auto_approve_applications') for r in matching):
+    print('Discovery Rule found for aws:app, but Auto Approve is not enabled')
+    sys.exit(1)
+
+print('Found Application Discovery Rule on aws:app with Auto Approve enabled')
+sys.exit(0)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

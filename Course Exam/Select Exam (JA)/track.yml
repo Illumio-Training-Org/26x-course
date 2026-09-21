@@ -1,0 +1,27 @@
+slug: 26x-select-exam-ja
+id: ysifbekqa3zk
+title: '! 26.x Select Exam (JA)'
+description: |-
+  Lab Name: 26.x SELECT EXAM (JA)
+
+  Outcome:
+  この試験には10問の課題があります。最初の課題(ワークロードのペアリング)は必ず完了する必要があり、スキップできません。それ以外の課題はスキップできますが、スキップするとスコアに影響します。合格するには、少なくとも80%(10問中8問正解)のスコアが必要です。
+icon: ./assets/logo.png
+tags:
+- ilt
+owner: illumio-training
+developers:
+- nathan.mitchell@illumio.com
+show_timer: true
+skipping_enabled: true
+idle_timeout: 3600
+timelimit: 9000
+lab_config:
+  sidebar_enabled: true
+  feedback_recap_enabled: true
+  feedback_tab_enabled: false
+  loadingMessages: true
+  override_challenge_layout: false
+  hideStopButton: false
+checksum: "4209934406759412733"
+enhanced_loading: false

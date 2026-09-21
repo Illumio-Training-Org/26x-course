@@ -1,0 +1,308 @@
+#!/bin/bash
+set -exo
+
+echo "===== MAGIC LINK + ACCOUNT SETUP START ====="
+date
+
+# ---------------------------------------
+# Ensure required tools are present and updated
+# ---------------------------------------
+
+# update package index only
+apt-get update -y
+
+# upgrade only existing core tools (no installs)
+apt-get install --only-upgrade -y curl git
+
+
+# ---------------------------------------
+# Sanitize AUTOACCOUNT_* values
+# ---------------------------------------
+# Instruqt's autoaccount custom resource emits these as JSON-array-literal
+# strings (e.g. '["value"]') even with account_count: 1, not bare scalars.
+# AUTOACCOUNT_MAGICLINK already got this same tr -d treatment further
+# below; extend it to every other AUTOACCOUNT_* value up front so nothing
+# downstream (the PCE FQDN split, the agent variables, or the vensim
+# block) parses a value with stray brackets/quotes still in it.
+for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+           AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+           AUTOACCOUNT_SAAPIKEY_SECRET; do
+  cleaned="$(echo "${!var}" | tr -d '{}[]"')"
+  export "$var=$cleaned"
+done
+
+# Also make the cleaned values visible to any new terminal tab the
+# learner opens (e.g. the Advanced "echo $AUTOACCOUNT_APIKEY_ID" step) —
+# the container's own injected env vars are still the raw/dirty ones, so
+# override them for every future interactive shell via .bashrc.
+{
+  for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+             AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+             AUTOACCOUNT_SAAPIKEY_SECRET; do
+    printf 'export %s=%q\n' "$var" "${!var}"
+  done
+} >> /root/.bashrc
+
+# Also write the same cleaned values to a plain, guard-free env file that
+# non-interactive contexts can source directly — specifically Instruqt's
+# own check-script execution (check-cloud-client), which does not source
+# .bashrc (that only loads for interactive shells). Every check-cloud-client
+# script sources this file explicitly before using any $AUTOACCOUNT_* var.
+{
+  for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+             AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+             AUTOACCOUNT_SAAPIKEY_SECRET; do
+    printf 'export %s=%q\n' "$var" "${!var}"
+  done
+} > /root/.autoaccount_env
+
+# ---------------------------------------
+# Parse PCE FQDN
+# ---------------------------------------
+if [[ "$AUTOACCOUNT_PCE_FQDN" == *:* ]]; then
+  pceFqdn=${AUTOACCOUNT_PCE_FQDN%%:*}
+  pcePort=${AUTOACCOUNT_PCE_FQDN##*:}
+else
+  echo "ERROR: AUTOACCOUNT_PCE_FQDN does not contain a port."
+  exit 1
+fi
+
+# ---------------------------------------
+# Save variables for later use (Instruqt state)
+# ---------------------------------------
+agent variable set ACCOUNTID "$AUTOACCOUNT_TENANT_ID"
+agent variable set APINAME "api_${AUTOACCOUNT_APIKEY_ID}"
+agent variable set APISECRET "$AUTOACCOUNT_APIKEY_SECRET"
+agent variable set ORGID "$AUTOACCOUNT_ORG_ID"
+agent variable set PCEFQDN "$pceFqdn"
+agent variable set PCEPort "$pcePort"
+agent variable set SACLIENT "$AUTOACCOUNT_SAAPIKEY_KEYID"
+agent variable set SASECRET "$AUTOACCOUNT_SAAPIKEY_SECRET"
+
+# ---------------------------------------
+# MAGIC LINK SETUP
+# ---------------------------------------
+MAGIC_LINK=$(echo "${AUTOACCOUNT_MAGICLINK}" | tr -d '{}[]"')
+
+echo "Generated MAGIC LINK:"
+echo "$MAGIC_LINK"
+
+# ---------------------------------------
+# Save MAGIC LINK (Instruqt state)
+# ---------------------------------------
+agent variable set MAGICURL "$MAGIC_LINK"
+
+# ---------------------------------------
+# Render tile (gomplate) - unchanged source repo, per Nathan's instruction
+# ---------------------------------------
+git clone https://github.com/jdschmitz15/illumio-instruqt-terraform-template.git
+AUTOACCOUNT_MAGICLINK="$MAGIC_LINK"
+gomplate -f ~/illumio-instruqt-terraform-template/index.html.tmpl -o /var/www/html/index.html
+date
+
+# ---------------------------------------
+# VENSIM TRAFFIC GENERATION
+# ---------------------------------------
+STARTUP_REPO_DIR=~/manual-instruqt-startup
+VENSIM_FILES_DIR=~/vensim_files
+
+git clone https://github.com/Illumio-Training-Org/manual-instruqt-startup "$STARTUP_REPO_DIR"
+git clone https://github.com/Illumio-Training-Org/vensim_files.git "$VENSIM_FILES_DIR"
+
+mkdir -p "$STARTUP_REPO_DIR/vensim-templates"
+rm -rf "$STARTUP_REPO_DIR/vensim-templates/standard-demo"
+ln -s "$VENSIM_FILES_DIR/files" "$STARTUP_REPO_DIR/vensim-templates/standard-demo"
+
+cp -f "$VENSIM_FILES_DIR/workloader" "$STARTUP_REPO_DIR/workloader"
+cp -f "$VENSIM_FILES_DIR/vensim" "$STARTUP_REPO_DIR/vensim"
+chmod +x "$STARTUP_REPO_DIR/workloader" "$STARTUP_REPO_DIR/vensim" \
+         "$STARTUP_REPO_DIR/vensimscheduler.sh"
+
+# Call newstartup.sh directly (unmodified) rather than maintaining our
+# own copy of its steps — deliberately matches uc-orgs-5-vs's own
+# behavior now, deletes included: any pre-existing pairing profiles/
+# labels/services on the org get wiped before vensim's own content goes
+# in, so the org ends up with vensim's content only, not vensim's
+# content layered on top of the platform's defaults. Calling the file
+# directly (rather than hand-copying its steps) also means we can't
+# silently drift from upstream if it changes later. newstartup.sh
+# already signals /tmp/startup.done itself at its own end; we wait for
+# it to finish (no backgrounding here) before handing off to
+# vensimscheduler.sh, avoiding the race in uc-orgs-5-vs's own script
+# (which launches newstartup.sh and vensimscheduler.sh concurrently and
+# touches /tmp/startup.done itself immediately, before newstartup.sh has
+# actually finished).
+nohup bash -c "
+  cd \"$STARTUP_REPO_DIR\"
+
+  bash \"$STARTUP_REPO_DIR/newstartup.sh\" -f \"$pceFqdn\" -P \"$pcePort\" \
+    -u \"api_${AUTOACCOUNT_APIKEY_ID}\" -s \"$AUTOACCOUNT_APIKEY_SECRET\" \
+    -o \"$AUTOACCOUNT_ORG_ID\"
+
+  exec bash \"$STARTUP_REPO_DIR/vensimscheduler.sh\"
+" > /var/log/vensim-startup.log 2>&1 < /dev/null &
+
+# ---------------------------------------
+# DISABLE DEFAULT (NON-TASK) POLICIES - newstartup.sh seeds a library of
+# demo rulesets (numbered "1. ..." through "15. ...", plus "Quarantine
+# Policy: Strict") that aren't part of any task in this exam. Left
+# enabled, they can interfere with (or mask problems in) the policies
+# learners actually build. Waits for newstartup.sh's own completion
+# signal (/tmp/startup.done, already relied on above) before running,
+# since that's what seeds this content; only disables rulesets whose
+# name does NOT start with "Task" (case-insensitive), so every
+# exam-created policy - whenever in the exam it gets created - is left
+# untouched.
+# ---------------------------------------
+cat > /root/disable-default-policies.py <<'PYEOF'
+import json, os, subprocess
+
+fqdn_port = os.environ['AUTOACCOUNT_PCE_FQDN']
+org_id = os.environ['AUTOACCOUNT_ORG_ID']
+auth = 'api_' + os.environ['AUTOACCOUNT_APIKEY_ID'] + ':' + os.environ['AUTOACCOUNT_APIKEY_SECRET']
+base = 'https://' + fqdn_port + '/api/v2'
+
+def call(method, path, body=None):
+    cmd = ['curl', '-s', '-u', auth, '-X', method, base + path]
+    if body is not None:
+        cmd += ['-H', 'Content-Type: application/json', '-d', json.dumps(body)]
+    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    try:
+        return json.loads(out)
+    except Exception:
+        return out
+
+rulesets = call('GET', '/orgs/' + org_id + '/sec_policy/draft/rule_sets?max_results=1000') or []
+for rs in rulesets:
+    name = rs.get('name') or ''
+    if name.lower().startswith('task'):
+        continue
+    href = rs.get('href')
+    if not href:
+        continue
+    call('PUT', href, {'enabled': False})
+    print('Disabled default policy:', name)
+PYEOF
+
+nohup bash -c '
+  while [ ! -f /tmp/startup.done ]; do sleep 5; done
+  python3 /root/disable-default-policies.py
+' > /var/log/disable-default-policies.log 2>&1 < /dev/null &
+
+# ---------------------------------------
+# AWS BUILD (Terraform) + AUTOMATED CLOUDSECURE ONBOARDING - runs in
+# background, adapted from the confirmed-working
+# "! 26.x AWS Automated Onboard Testing" prototype. Only builds the
+# shared AWS infra (the tagged crm app) and gets the account onboarded
+# to Illumio Cloud - deliberately stops there. Task 10 itself is where
+# the learner creates the Application Discovery rule; that step stays
+# a real, graded learner action, not something this script does for
+# them.
+# ---------------------------------------
+nohup bash -c "
+  set -ex
+  export AWS_REGION=us-east-1
+  export AWS_DEFAULT_REGION=us-east-1
+
+  # Defensive re-clean: AUTOACCOUNT_SAAPIKEY_KEYID/SECRET/TENANT_ID can
+  # arrive in THIS subshell still JSON-array-wrapped despite being
+  # cleaned earlier in the parent script - live-observed 2026-09-03 in
+  # the prototype track, caused oauth2 invalid_client every time.
+  AUTOACCOUNT_SAAPIKEY_KEYID=\$(echo \"\$AUTOACCOUNT_SAAPIKEY_KEYID\" | tr -d '{}[]\"')
+  AUTOACCOUNT_SAAPIKEY_SECRET=\$(echo \"\$AUTOACCOUNT_SAAPIKEY_SECRET\" | tr -d '{}[]\"')
+  AUTOACCOUNT_TENANT_ID=\$(echo \"\$AUTOACCOUNT_TENANT_ID\" | tr -d '{}[]\"')
+
+  cd /root
+  git clone https://github.com/Illumio-Training-Org/26x-course.git
+  cd /root/26x-course/terraform
+
+  # Install Terraform
+  curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  echo \"deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com \$(lsb_release -cs) main\" > /etc/apt/sources.list.d/hashicorp.list
+  apt-get update -o Dir::Etc::sourcelist=\"sources.list.d/hashicorp.list\" -o Dir::Etc::sourceparts=\"-\" -o APT::Get::List-Cleanup=\"0\"
+  apt-get install -y terraform
+
+  terraform init -input=false
+  terraform plan -out=tfplan -input=false
+  terraform apply -input=false -auto-approve tfplan
+
+  echo '### TERRAFORM APPLY COMPLETE ###'
+  date
+
+  # Resolve the flows S3 bucket name created by the apply above - it
+  # has a random suffix and lives in a separate Terraform state
+  # (terraform/, not terraform-cloudsecure-aws/). Read it straight out
+  # of this state (we're still in /root/26x-course/terraform here)
+  # rather than asking AWS to list buckets - live-caught 2026-09-10:
+  # aws s3api list-buckets (s3:ListAllMyBuckets) is explicitly denied
+  # by an AWS Organizations SCP on this exam's sandbox account type,
+  # so that approach (which works fine on the AWS Automated Onboard
+  # Testing prototype's own sandbox account) silently resolved empty
+  # here and broke the Flow Log resource downstream. Reading from
+  # Terraform's own state needs no extra AWS permissions at all.
+  S3_BUCKET_NAME=\$(terraform state show aws_s3_bucket.illumio_flows | grep -E '^ *bucket *=' | head -1 | cut -d'\"' -f2)
+  echo \"Resolved flows S3 bucket: \$S3_BUCKET_NAME\"
+
+  echo '### STARTING AUTOMATED CLOUDSECURE ONBOARDING ###'
+  date
+  cd /root/26x-course/terraform-cloudsecure-aws
+
+  # Wait for the freshly-minted SAAPIKEY to actually be accepted by
+  # Illumio's OAuth token endpoint before handing it to terraform -
+  # live-observed 2026-09-03 that a brand-new key can get
+  # invalid_client for a short window right after minting.
+  echo '### WAITING FOR CLOUDSECURE CREDENTIALS TO ACTIVATE ###'
+  date
+  cloudsecure_ready=0
+  for attempt in \$(seq 1 30); do
+    http_code=\$(curl -s -o /dev/null -w '%{http_code}' -X POST \"https://cloud.illum.io/api/v1/authenticate\" \
+      -H \"Content-Type: application/x-www-form-urlencoded\" \
+      --data-urlencode \"grant_type=client_credentials\" \
+      --data-urlencode \"client_id=\$AUTOACCOUNT_SAAPIKEY_KEYID\" \
+      --data-urlencode \"client_secret=\$AUTOACCOUNT_SAAPIKEY_SECRET\")
+    if [ \"\$http_code\" = \"200\" ]; then
+      echo \"CloudSecure credentials active after \$attempt attempt(s)\"
+      cloudsecure_ready=1
+      break
+    fi
+    echo \"Attempt \$attempt: token endpoint returned \$http_code, retrying in 10s...\"
+    sleep 10
+  done
+  if [ \"\$cloudsecure_ready\" != \"1\" ]; then
+    echo '### CLOUDSECURE CREDENTIALS NEVER ACTIVATED - ABORTING ONBOARDING ###'
+    date
+    exit 1
+  fi
+  date
+
+  terraform init -input=false
+  terraform plan -out=tfplan -input=false \
+    -var \"illumio_cloudsecure_client_id=\$AUTOACCOUNT_SAAPIKEY_KEYID\" \
+    -var \"illumio_cloudsecure_client_secret=\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+    -var \"s3_bucket_name=\$S3_BUCKET_NAME\"
+  terraform apply -input=false -auto-approve tfplan
+
+  echo '### AUTOMATED CLOUDSECURE ONBOARDING APPLY COMPLETE ###'
+  date
+
+  # REGISTER CLOUD CREDENTIALS - the illumio-cloudsecure_aws_account
+  # resource above is not enough on its own: the account shows
+  # ONBOARDING_COMPLETE, but roleArn stays empty and inventory never
+  # populates without this replayed CFT registration call (see the
+  # prototype track's README for the full explanation).
+  echo '### REGISTERING CLOUD CREDENTIALS WITH CLOUDSECURE ###'
+  date
+  ROLE_ARN=\$(terraform output -raw role_arn)
+  ROLE_EXTERNAL_ID=\$(terraform output -raw role_external_id)
+  AWS_ACCT_ID=\$(terraform output -raw aws_account_id)
+  curl -sf -X POST \"https://cloud.illum.io/api/v1/integrations/cloud_credentials\" \
+    -u \"\$AUTOACCOUNT_SAAPIKEY_KEYID:\$AUTOACCOUNT_SAAPIKEY_SECRET\" \
+    -H \"X-Tenant-Id: \$AUTOACCOUNT_TENANT_ID\" \
+    -H \"Content-Type: application/json\" \
+    -d \"{\\\"account_id\\\":\\\"\$AWS_ACCT_ID\\\",\\\"role_arn\\\":\\\"\$ROLE_ARN\\\",\\\"external_id\\\":\\\"\$ROLE_EXTERNAL_ID\\\",\\\"type\\\":\\\"AWSRole\\\"}\"
+  echo '### CLOUD CREDENTIALS REGISTRATION COMPLETE - AWS ACCOUNT READY FOR TASK 10 ###'
+  date
+
+" > /var/log/aws-onboard-startup.log 2>&1 < /dev/null &
+
+echo "===== MAGIC LINK + ACCOUNT SETUP END ====="

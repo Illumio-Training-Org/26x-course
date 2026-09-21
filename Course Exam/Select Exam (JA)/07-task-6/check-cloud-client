@@ -1,0 +1,103 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+# Scopes aren't taught in this course, so this task does NOT accept a
+# Scope-based ruleset - it requires a plain allow rule with
+# Application=ordering, Environment=Development, Location=ca repeated
+# on both source and destination.
+#
+# Fixed 2026-09-08: previously just said "source/destination is wrong"
+# with no detail - Nathan reported this gave no useful feedback when
+# labels were mistyped/wrong. Now reports exactly which label(s) are
+# wrong or missing per side, and what was found instead.
+
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+def resolve_labels(entries):
+    out = {}
+    for e in entries:
+        href = (e.get('label') or {}).get('href') or e.get('href')
+        if href:
+            lbl = get(href.replace('/api/v2', ''))
+            out[(lbl.get('key') or '').lower()] = (lbl.get('value') or '').lower()
+    return out
+
+rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-ringfenceordering'), None)
+if not rs:
+    print('Policy \"Task6-RingfenceOrdering\" not found')
+    sys.exit(1)
+
+for scope in rs.get('scopes', []):
+    if scope:
+        print('Task6-RingfenceOrdering should not use a Scope - build the rule with Application=ordering, Environment=Development, Location=ca on both source and destination instead')
+        sys.exit(1)
+
+expected = {'app': 'ordering', 'env': 'development', 'loc': 'ca'}
+
+def label_problems(side_name, entries):
+    found = resolve_labels(entries)
+    problems = []
+    for key, want in expected.items():
+        got = found.get(key)
+        if got != want:
+            problems.append(side_name + ' ' + key + ' should be ' + want + ', found ' + (got or 'missing'))
+    extra = set(found) - set(expected)
+    if extra:
+        problems.append(side_name + ' has unexpected extra label(s): ' + ', '.join(sorted(extra)))
+    return problems
+
+def is_all_services(ingress_services):
+    # 'All Services' can be an empty ingress_services list, or a linked
+    # service object whose real name is literally 'All Services' -
+    # live-verified 2026-09-04 that the PCE models it as the latter
+    # (a real service href), not just an empty list.
+    if not ingress_services:
+        return True
+    for entry in ingress_services:
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            if (svc.get('name') or '').lower() == 'all services':
+                return True
+    return False
+
+enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
+if len(enabled_rules) != 1:
+    print('Task6-RingfenceOrdering should have exactly one enabled allow rule, found ' + str(len(enabled_rules)))
+    sys.exit(1)
+
+rule = enabled_rules[0]
+problems = label_problems('source', rule.get('consumers', [])) + label_problems('destination', rule.get('providers', []))
+svc_ok = is_all_services(rule.get('ingress_services'))
+if not svc_ok:
+    problems.append('service should be All Services, not restricted to a specific service')
+
+if not problems:
+    print('Task6-RingfenceOrdering ringfences the ordering application (Development, ca) correctly')
+    sys.exit(0)
+
+print('Task6-RingfenceOrdering has a rule but: ' + '; '.join(problems))
+sys.exit(1)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

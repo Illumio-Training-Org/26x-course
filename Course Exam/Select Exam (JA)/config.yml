@@ -1,0 +1,156 @@
+version: "3"
+containers:
+- name: cloud-client
+  image: gcr.io/instruqt/cloud-client
+  shell: /bin/bash
+  memory: 2048
+  ports:
+  - 80
+virtualmachines:
+- name: linux-vm
+  image: rocky-linux-cloud/rocky-linux-9-optimized-gcp-v20241009
+  memory: 4096
+  cpus: 1
+- name: windows-vm
+  image: instruqt/windows-server
+  memory: 4096
+  cpus: 2
+- name: host
+  image: illumio-training/k3scilium
+  memory: 2048
+  cpus: 2
+aws_accounts:
+- name: aws-iam-track
+  services:
+  - cloudfront
+  - ec2
+  - iam
+  - lambda
+  - logs
+  - s3
+  - sns
+  - cloudformation
+  - autoscaling
+  - elasticloadbalancing
+  - applicationinsights
+  - cloudtrail
+  - cloudwatch
+  - dynamodb
+  - apigateway
+  - eks-auth
+  - access-analyzer
+  - es
+  - ebs
+  - servicecatalog
+  - elasticfilesystem
+  - cloudtrail-data
+  - sts
+  - eks
+  - kms
+  - sqs
+  - rds-data
+  - amplify
+  - amplifybackend
+  - amplifyuibuilder
+  - drs
+  - ecr
+  - ecr-public
+  - ecs
+  - elasticache
+  - events
+  - firehose
+  - internetmonitor
+  - kinesis
+  - networkmonitor
+  - oam
+  - route53
+  - route53resolver
+  - rum
+  - ssm
+  - synthetics
+  - rds
+  - networkmanager
+  regions:
+  - us-east-1
+  - eu-north-1
+  iam_policy: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": "*",
+          "Resource": "*"
+        }
+      ]
+    }
+  managed_policies:
+  - arn:aws:iam::aws:policy/AdministratorAccess
+  scp_policy: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": "*",
+          "Resource": "*"
+        }
+      ]
+    }
+  admin_iam_policy: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": "*",
+          "Resource": "*"
+        }
+      ]
+    }
+  admin_managed_policies:
+  - arn:aws:iam::aws:policy/AdministratorAccess
+secrets:
+- name: pce_cluster_name
+- name: base_url
+- name: api_token
+custom_resources:
+- name: autoaccount
+  custom_resource: magiclinktenantcreatev2
+  inputs:
+  - name: insights_workloads
+    source: user_defined
+    value: "0"
+  - name: license_days
+    source: user_defined
+    value: "1"
+  - name: expiration_days
+    source: user_defined
+    value: "1"
+  - name: account_count
+    source: user_defined
+    value: "1"
+  - name: country_code
+    source: user_defined
+    value: US
+  - name: segmentation_type
+    source: user_defined
+    value: FREE_TRIAL
+  - name: segmentation_workloads
+    source: user_defined
+    value: "0"
+  - name: api_token
+    source: secret
+    value: api_token
+  - name: base_url
+    source: secret
+    value: base_url
+  - name: preferred_region
+    source: user_defined
+    value: amer
+  - name: pce_cluster_name
+    source: secret
+    value: pce_cluster_name
+  - name: insights_type
+    source: user_defined
+    value: FREE_TRIAL
