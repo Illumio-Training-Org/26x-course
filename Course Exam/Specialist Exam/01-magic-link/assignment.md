@@ -60,6 +60,7 @@ Welcome to your **26.x Specialist Exam**.
 > This exam is **120 minutes (2 hours)**.
 
 **Please note:**
+- The first task (pairing the workloads) must be completed and cannot be skipped. Any other task can be skipped, but skipping counts against your score. To pass, you need a score of at least **80%** (4 out of 5 correct answers).
 - There is no requirement to provision any of the rules or objects in this exam.
 - All pre-existing default policies in this org are automatically disabled before you start - only policies you create as part of the exam's tasks are active. You don't need to do anything about them.
 - Please ensure that the name of any Policies that you create are correct and there are no additional spaces in their names.
