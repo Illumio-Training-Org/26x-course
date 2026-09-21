@@ -17,8 +17,9 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Pair both `linux-vm` and `windows-vm` as VENs, and label them into a
-single application:
+Create a new Pairing Profile with its Enforcement Mode set to **Idle**
+(not Visibility Only), then use it to pair both `linux-vm` and
+`windows-vm` as VENs, and label them into a single application:
 
 - `linux-vm` — Role: `web`
 - `windows-vm` — Role: `db`

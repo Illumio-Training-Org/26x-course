@@ -13,5 +13,5 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Create a new Pairing Profile with its Enforcement Mode set to **Idle**,
-then use it to pair the `linux-vm` workload.
+Create a new Pairing Profile with its Enforcement Mode set to **Idle**
+(not Visibility Only), then use it to pair the `linux-vm` workload.
