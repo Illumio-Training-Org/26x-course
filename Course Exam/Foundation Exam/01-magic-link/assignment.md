@@ -23,7 +23,7 @@ notes:
     <div class="splash-wrap">
       <img class="splash-img" src="../assets/splashscreenblank.png" alt="Illumio training splash background" />
       <div class="splash-overlay">
-        <h1>Welcome to your 26.x Foundation Exam</h1>
+        <h1>Welcome to your Foundation Exam</h1>
         <p>This is your opportunity to:</p>
         <ul>
           <li>Demonstrate your Zero Trust Segmentation skills</li>
