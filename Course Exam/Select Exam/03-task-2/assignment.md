@@ -8,7 +8,7 @@ timelimit: 0
 enhanced_loading: null
 ---
 **Variation 1**
-
+nm and je disucssion HERE
 Add two more labels to both `linux-vm` and `windows-vm`: Type: `server`,
 IR: `IR-CLEANBUBBLE` (6 label categories total across the two
 workloads: Role, Application, Environment, Location, Type, IR).
