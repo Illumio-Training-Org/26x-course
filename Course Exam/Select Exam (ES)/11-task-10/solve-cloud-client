@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Runs when the learner clicks Skip. Creates an Application Discovery
+# Rule on the aws:app cloud tag with Auto Approve enabled, using the
+# same CloudSecure REST call confirmed working in the
+# "! 26.x AWS Automated Onboard Testing" prototype.
+
+. /root/.autoaccount_env
+
+AUTH="${AUTOACCOUNT_SAAPIKEY_KEYID}:${AUTOACCOUNT_SAAPIKEY_SECRET}"
+
+curl -s -X POST "https://cloud.illum.io/api/v1/discovery_rules" \
+  -u "$AUTH" \
+  -H "X-Tenant-Id: $AUTOACCOUNT_TENANT_ID" \
+  -H "Content-Type: application/json" \
+  -d '{"auto_approve_applications":true,"name":"select-exam-discovery","prefix":"","rule_type":"TAG","tag_keys":[{"cloud":"aws","key":"app"}]}'
