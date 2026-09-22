@@ -1,0 +1,25 @@
+#!/bin/bash
+set -ex
+
+echo "===== PROJECT CRYSTAL TEARDOWN START ====="
+
+# Stops the Crystal deployment created in setup-cloud-client. Only
+# calls /stop (not delete) for now - the deployment stays listed in
+# the Crystal dashboard as "stopped" rather than being removed. See
+# github.com/justinvid/pc-connector/teardown for the module source.
+
+CRYSTALDEPLOYMENT="$(agent variable get CRYSTALDEPLOYMENT)"
+CRYSTALBASEURL="$(agent variable get CRYSTALBASEURL)"
+
+if [ -z "$CRYSTALDEPLOYMENT" ]; then
+  echo "No CRYSTALDEPLOYMENT variable set - nothing to tear down"
+else
+  cd ~/pc-connector/teardown
+  terraform init
+  terraform apply -auto-approve -input=false \
+    -var "crystal_api_key=$CRYSTAL_API_KEY" \
+    -var "crystal_base_url=$CRYSTALBASEURL" \
+    -var "deployment_id=$CRYSTALDEPLOYMENT"
+fi
+
+echo "===== PROJECT CRYSTAL TEARDOWN END ====="
