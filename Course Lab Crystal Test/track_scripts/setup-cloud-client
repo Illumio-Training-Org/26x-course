@@ -43,15 +43,15 @@ done
   done
 } >> /root/.bashrc
 
-# CRYSTAL_API_KEY is an Instruqt secret (config.yml `secrets:`) -
-# guaranteed available to this script's own process, but not
-# automatically exported to a learner's interactive terminal tab
-# (same class of problem the AUTOACCOUNT_* values had above, before
-# being given this same .bashrc treatment). Confirmed live: the
-# Advanced section's diagnostic curl silently returned nothing when
-# run interactively, because $CRYSTAL_API_KEY was empty there even
-# though it works fine inside this script's own execution.
-printf 'export CRYSTAL_API_KEY=%q\n' "$CRYSTAL_API_KEY" >> /root/.bashrc
+# Deliberately NOT exporting CRYSTAL_API_KEY into .bashrc the way the
+# AUTOACCOUNT_* values above are. Unlike those (each scoped to one
+# learner's own single-use, ephemeral PCE org), CRYSTAL_API_KEY is a
+# single team-level secret shared across every learner session - if
+# it were exposed to an interactive shell, any learner could extract
+# it and get full account-wide Crystal access (list/create/stop/
+# delete any deployment for the whole team) from outside the sandbox
+# entirely. It stays available only within this script's own process,
+# which is all it's actually needed for.
 
 # ---------------------------------------
 # Parse PCE FQDN
