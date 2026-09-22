@@ -202,18 +202,32 @@ chmod +x /usr/local/bin/check-cloud
 # deployment via its own REST API (using CRYSTAL_API_KEY, a team-level
 # Instruqt secret - not tenant-specific), binds it live to THIS
 # sandbox's own freshly-provisioned PCE org (the AUTOACCOUNT_* values
-# below), applies the built-in "Default" vensim-style template, and
+# below), applies the built-in "default" vensim-style template, and
 # starts it. See github.com/justinvid/pc-connector for the module
 # source - main.tf does 4 API calls: POST /api/deployments, PUT
 # .../config, POST .../vensim-template, POST .../start.
 
 # Install Terraform
-curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
-apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main" -y
-apt -y install terraform
+# apt-key is removed on this image's Debian version (trixie) - use the
+# modern keyring-file method instead of the colleague's original
+# apt-key add call.
+curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/hashicorp.list
+apt-get update -y
+apt-get -y install terraform
 
-CRYSTAL_BASE_URL="https://crystal.illum.io"
-TEMPLATE_NAME="Default"
+CRYSTAL_BASE_URL="https://crystal.illumio.com"
+TEMPLATE_NAME="default"
+
+# Diagnostics: confirm this sandbox container can actually reach
+# Crystal before handing off to terraform, since terraform's own
+# error on a network-level failure is an opaque "context deadline
+# exceeded" with no detail on which stage (DNS/TCP/TLS) failed.
+echo "--- Crystal reachability diagnostics ---"
+getent hosts crystal.illum.io || echo "DNS resolution FAILED for crystal.illum.io"
+curl -v --connect-timeout 5 -m 8 -o /dev/null -w "HTTP %{http_code}\n" \
+  -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" || echo "curl exit code: $?"
+echo "--- end diagnostics ---"
 
 cd ~
 git clone https://github.com/justinvid/pc-connector.git
@@ -229,7 +243,28 @@ terraform apply -auto-approve -input=false \
   -var "template_name=$TEMPLATE_NAME" \
   -var "pce_fqdn=$pceFqdn"
 
-agent variable set CRYSTALDEPLOYMENT "$(terraform output -raw deployment_id)"
+CRYSTAL_DEPLOYMENT_ID="$(terraform output -raw deployment_id)"
+agent variable set CRYSTALDEPLOYMENT "$CRYSTAL_DEPLOYMENT_ID"
 agent variable set CRYSTALBASEURL "$CRYSTAL_BASE_URL"
+
+# The module's own start_request fires immediately after
+# template_request with no delay, but the CSV/object import behind
+# the template takes a few seconds to actually finish on Crystal's
+# backend - calling /start that fast returns 200 but silently doesn't
+# launch anything (confirmed live: same call worked once retried a
+# few minutes later). Poll status and retry /start until it's
+# actually running, rather than trusting the first 200.
+for i in 1 2 3 4 5 6; do
+  status="$(curl -s -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID" | python3 -c "import json,sys; print(json.load(sys.stdin).get('status'))")"
+  if [ "$status" = "running" ]; then
+    echo "Crystal deployment is running (attempt $i)"
+    break
+  fi
+  echo "Crystal deployment status is '$status' (attempt $i) - retrying /start"
+  curl -s -o /dev/null -X POST -H "X-API-Key: $CRYSTAL_API_KEY" -H "Content-Type: application/json" \
+    -d '{"interval":"5m","auto_attacks":false}' \
+    "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID/start"
+  sleep 10
+done
 
 echo "===== MAGIC LINK + ACCOUNT SETUP END ====="

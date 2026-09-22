@@ -5,8 +5,14 @@ echo "===== PROJECT CRYSTAL TEARDOWN START ====="
 
 # Stops the Crystal deployment created in setup-cloud-client. Only
 # calls /stop (not delete) for now - the deployment stays listed in
-# the Crystal dashboard as "stopped" rather than being removed. See
-# github.com/justinvid/pc-connector/teardown for the module source.
+# the Crystal dashboard as "stopped" rather than being removed.
+#
+# Calls the API directly rather than via github.com/justinvid/
+# pc-connector/teardown's Terraform module - that module's main.tf has
+# a path bug (singular "/api/deployment/{id}/stop", 405 Method Not
+# Allowed) where every other confirmed-working endpoint in this API
+# uses the plural "/api/deployments/...". A single POST doesn't need
+# Terraform anyway.
 
 CRYSTALDEPLOYMENT="$(agent variable get CRYSTALDEPLOYMENT)"
 CRYSTALBASEURL="$(agent variable get CRYSTALBASEURL)"
@@ -14,12 +20,11 @@ CRYSTALBASEURL="$(agent variable get CRYSTALBASEURL)"
 if [ -z "$CRYSTALDEPLOYMENT" ]; then
   echo "No CRYSTALDEPLOYMENT variable set - nothing to tear down"
 else
-  cd ~/pc-connector/teardown
-  terraform init
-  terraform apply -auto-approve -input=false \
-    -var "crystal_api_key=$CRYSTAL_API_KEY" \
-    -var "crystal_base_url=$CRYSTALBASEURL" \
-    -var "deployment_id=$CRYSTALDEPLOYMENT"
+  curl -s -w "\nHTTP %{http_code}\n" -X POST \
+    -H "X-API-Key: $CRYSTAL_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{}' \
+    "$CRYSTALBASEURL/api/deployments/$CRYSTALDEPLOYMENT/stop"
 fi
 
 echo "===== PROJECT CRYSTAL TEARDOWN END ====="

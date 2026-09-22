@@ -136,22 +136,31 @@ print(f'Rules:             {rules}')
 "
 ```
 
-| Object | Endpoint |
-|---|---|
-| Labels | `curl -s -u "$AUTH" "$BASE/labels"` |
-| Label Dimensions | `curl -s -u "$AUTH" "$BASE/label_dimensions"` |
-| Pairing Profiles | `curl -s -u "$AUTH" "$BASE/pairing_profiles"` |
-| Workloads | `curl -s -u "$AUTH" "$BASE/workloads?max_results=1000"` |
-| Services | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/services"` |
-| IP Lists | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/ip_lists"` |
-| User Groups | `curl -s -u "$AUTH" "$BASE/security_principals"` |
-| Rulesets | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/rule_sets"` |
+| Object | Endpoint | Example count (clean run) |
+|---|---|---|
+| Labels | `/labels` | 109 |
+| | `curl -s -u "$AUTH" "$BASE/labels"` | |
+| Label Dimensions | `/label_dimensions` | 14 |
+| | `curl -s -u "$AUTH" "$BASE/label_dimensions"` | |
+| Pairing Profiles | `/pairing_profiles` | 4 |
+| | `curl -s -u "$AUTH" "$BASE/pairing_profiles"` | |
+| Workloads | `/workloads` | 182 |
+| | `curl -s -u "$AUTH" "$BASE/workloads?max_results=1000"` | |
+| Services | `/sec_policy/draft/services` | 90 |
+| | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/services"` | |
+| IP Lists | `/sec_policy/draft/ip_lists` | 1 |
+| | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/ip_lists"` | |
+| User Groups | `/security_principals` | 5 |
+| | `curl -s -u "$AUTH" "$BASE/security_principals"` | |
+| Rulesets | `/sec_policy/draft/rule_sets` | 16 |
+| | `curl -s -u "$AUTH" "$BASE/sec_policy/draft/rule_sets"` | |
 
 > [!NOTE]
-> This is a first test build - expected object counts for Project
-> Crystal's `Default` template haven't been established yet. Once
-> this lab has been run and verified, worth recording real counts
-> here.
+> Rulesets and User Groups can read as **0** if checked in the first
+> few minutes after the sandbox boots - Project Crystal's ruleset
+> import runs asynchronously and can briefly fail with a benign
+> HTTP 406 before self-recovering. If those two show 0, wait a few
+> minutes and check again before assuming something is wrong.
 
 Each call follows the same pattern:
 
