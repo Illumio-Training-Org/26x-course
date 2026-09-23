@@ -2,15 +2,20 @@
 slug: task-6
 id: mrux8oom2gya
 type: challenge
-title: 06-Ringfence Ordering in Dev, CA
+title: 06-Ordering Application Ringfencing
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Usa el Map para filtrar e inspeccionar el trafico dentro de la
-aplicacion `ordering` - agrupa primero por labels de Application.
+Usa el Map para inspeccionar las comunicaciones dentro de la
+aplicacion `ordering`.
 
-Ringfence la aplicacion `ordering` en `Development`, `ca`: crea una
-Policy llamada `Task6-RingfenceOrdering` con una allow rule para que
-los workloads de la aplicacion `ordering`, Environment: `Development`,
-Location: `ca`, puedan comunicarse libremente entre si.
+Ringfence la instancia de Development de la aplicacion creando una
+Policy llamada `Task6-RingfenceOrdering`.
+
+Crea una allow rule que permita a los workloads que coincidan con los
+siguientes labels comunicarse libremente entre si:
+
+- Application: `ordering`
+- Environment: `Development`
+- Location: `ca`

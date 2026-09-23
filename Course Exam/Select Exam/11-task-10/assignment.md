@@ -2,7 +2,7 @@
 slug: task-10
 id: vne76lcxc2xu
 type: challenge
-title: 10-Onboard a Cloud Application
+title: 10-Cloud Application Onboarding
 tabs:
 - id: 1tuxobzdxdxr
   title: AWS
@@ -13,9 +13,16 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-The AWS account has already been onboarded to Illumio Cloud
-automatically in the background (region **us-east-1**).
+The AWS account in region `us-east-1` has already been onboarded to
+Illumio Cloud.
 
-Create an Application Discovery Rule using Cloud Tags, matching the
-`app` tag key, with Auto Approve enabled, to onboard the application
-running in that account.
+Create an **Application Discovery Rule** that identifies and onboards
+the application running within the AWS account.
+
+Configure the rule to:
+
+- Use **Cloud Tags**
+- Match the tag key: `app`
+- Enable **Auto Approve**
+
+Verify that the discovered application is successfully onboarded.

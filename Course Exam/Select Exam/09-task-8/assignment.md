@@ -2,16 +2,34 @@
 slug: task-8
 id: xcsdwb5xkzcv
 type: challenge
-title: 08-Deny the Ordering Application Globally
+title: 08-Global Development and Production Segmentation
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Create a Policy named `Task8-DenyGlobal` with a deny rule blocking
-all communication **one-way, from Development to Production only**,
-for the `ordering` application. This is a **global** rule with no
-Location restriction, so it applies across every location, not just
-`ca`.
+Create a Policy named `Task8-DenyGlobal`.
 
-Then add an exception: an Allow Rule permitting SSH one-way, from
-Development to Production, for `ordering`.
+Configure a **global**, **one-way** deny rule preventing
+communication from Development to Production for the `ordering`
+application.
+
+Source:
+
+- Application: `ordering`
+- Environment: `Development`
+
+Destination:
+
+- Application: `ordering`
+- Environment: `Production`
+
+The rule must:
+
+- Deny **All Services**
+- Apply **globally**
+
+Within the same Policy, create an exception that permits **SSH**
+traffic from Development to Production for the `ordering` application.
+
+The **SSH** exception must also be **one-way** from Development to
+Production and have no Location restriction.

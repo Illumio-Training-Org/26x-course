@@ -2,37 +2,27 @@
 slug: task-2
 id: crk5ip4r2kjh
 type: challenge
-title: 02-Ringfence the Application
+title: 02-Application Ringfencing
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-**Variation 1**
-nm and je disucssion HERE
-`linux-vm` と `windows-vm` の両方にさらに2つのlabelを追加してください: Type: `server`,
-IR: `IR-CLEANBUBBLE`(両方のworkloadで合計6つのlabelカテゴリ: Role, Application,
-Environment, Location, Type, IR)。
+`linux-vm` と `windows-vm` の両方に以下のlabelを追加してください:
 
-`portal` アプリケーションをringfenceしてください(Environment: `Production`,
-Location: `ca`, Type: `server`, IR: `IR-CLEANBUBBLE`): `Task2-Ringfence`
-という名前のPolicyを作成し、5つすべてのlabelが一致するworkload同士が自由に
-通信できるようallow ruleを設定してください。
+- Type: `server`
+- DFIR: `IR-CLEANBUBBLE`
 
+これでworkloadは、Role、Application、Environment、Location、Type、
+DFIRの6つすべてのlabelカテゴリで分類されているはずです。
 
-**Variation 2**
+`Task2-Ringfence` という名前のPolicyを作成して、`portal` アプリケー
+ションをringfenceしてください。
 
-`portal` アプリケーションをringfenceしてください。`Task2-Ringfence` という
-名前のPolicyを作成し、5つすべてのlabelが一致するworkload同士が自由に通信
-できるようallow ruleを設定してください。
+以下の5つのlabelが一致するworkload同士が自由に通信できるよう、allow
+ruleを作成してください:
 
+- Application: `portal`
 - Environment: `Production`
 - Location: `ca`
 - Type: `server`
-- IR: `IR-CLEANBUBBLE`
-
-
-**Variation 3**
-
-`portal` アプリケーションを、5つのlabelを使ってringfenceしてください。
-`Task2-Ringfence` という名前のPolicyを作成し、5つすべてのlabelが一致する
-workload同士が自由に通信できるようallow ruleを設定してください。
+- DFIR: `IR-CLEANBUBBLE`

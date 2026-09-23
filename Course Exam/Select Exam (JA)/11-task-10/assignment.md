@@ -2,7 +2,7 @@
 slug: task-10
 id: 8llhpepumew3
 type: challenge
-title: 10-Onboard a Cloud Application
+title: 10-Cloud Application Onboarding
 tabs:
 - id: z2l9lzhogvnt
   title: AWS
@@ -13,9 +13,17 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-AWSアカウントは、バックグラウンドで既に自動的にIllumio Cloudにオンボード
-されています(region **us-east-1**)。
+region `us-east-1` のAWSアカウントは、既にIllumio Cloudにオンボード
+されています。
 
-Cloud Tagsを使用し、`app` タグキーに一致し、Auto Approveを有効にした
-Application Discovery Ruleを作成して、そのアカウントで実行されている
-アプリケーションをオンボードしてください。
+AWSアカウント内で実行されているアプリケーションを特定してオンボード
+する **Application Discovery Rule** を作成してください。
+
+以下のようにruleを設定してください:
+
+- **Cloud Tags** を使用する
+- タグキー `app` に一致させる
+- **Auto Approve** を有効にする
+
+検出されたアプリケーションが正常にオンボードされたことを確認して
+ください。

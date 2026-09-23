@@ -2,20 +2,28 @@
 slug: task-5
 id: m5ha6l7ymyja
 type: challenge
-title: 05-Deny Traffic for the Ordering Application
+title: 05-Environment Segmentation
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-> [!NOTE]
-> do we want info boxes here - i.e to suggest looking at the map
+`ca` ロケーションにある `ordering` アプリケーションについて、
+DevelopmentとProduction環境間の通信をMapで確認してください。
 
-Mapを使って、`ca` ロケーションにあるDevelopmentとProduction間を流れる
-トラフィックを確認してください。
+`Task5-DenyDevProd` という名前のPolicyを作成してください。
 
-Application: `ordering`, Environment: `Development`, Location: `ca` から、
-Application: `ordering`, Environment: `Production`, Location: `ca` への
-All Servicesを対象とするdeny ruleを持つ `Task5-DenyDevProd` という名前の
-Policyを作成してください。
+以下の設定で **All Services** を対象とするdeny ruleを構成してください:
 
-Policyが機能していることを確認するため、もう一度Mapを確認してください。
+送信元:
+
+- Application: `ordering`
+- Environment: `Development`
+- Location: `ca`
+
+宛先:
+
+- Application: `ordering`
+- Environment: `Production`
+- Location: `ca`
+
+Mapを使って、policyの効果を確認してください。

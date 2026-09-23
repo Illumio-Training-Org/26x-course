@@ -2,39 +2,28 @@
 slug: task-2
 id: 5ukxz3uovkzc
 type: challenge
-title: 02-Ringfence the Application
+title: 02-Application Ringfencing
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-**Variacion 1**
+Anade los siguientes labels tanto a `linux-vm` como a `windows-vm`:
 
-Anade dos labels mas tanto a `linux-vm` como a `windows-vm`: Type:
-`server`, IR: `IR-CLEANBUBBLE` (6 categorias de label en total entre
-los dos workloads: Role, Application, Environment, Location, Type,
-IR).
+- Type: `server`
+- DFIR: `IR-CLEANBUBBLE`
 
-Ringfence la aplicacion `portal` (Environment: `Production`, Location:
-`ca`, Type: `server`, IR: `IR-CLEANBUBBLE`): crea una Policy llamada
-`Task2-Ringfence` con una allow rule para que los workloads que
-coincidan con los cinco labels puedan comunicarse libremente entre si.
+Los workloads ahora deberian estar clasificados usando las seis
+categorias de label: Role, Application, Environment, Location, Type
+y DFIR.
 
+Ringfence la aplicacion `portal` creando una Policy llamada
+`Task2-Ringfence`.
 
-**Variacion 2**
+Crea una allow rule que permita a los workloads que coincidan con los
+siguientes cinco labels comunicarse libremente entre si:
 
-Ringfence la aplicacion `portal`. Crea una Policy llamada
-`Task2-Ringfence` con una allow rule para que los workloads que
-coincidan con los cinco labels puedan comunicarse libremente entre si.
-
+- Application: `portal`
 - Environment: `Production`
 - Location: `ca`
 - Type: `server`
-- IR: `IR-CLEANBUBBLE`
-
-
-**Variacion 3**
-
-Ringfence la aplicacion `portal`, usando 5 labels. Crea una Policy
-llamada `Task2-Ringfence` con una allow rule para que los workloads
-que coincidan con los cinco labels puedan comunicarse libremente entre
-si.
+- DFIR: `IR-CLEANBUBBLE`

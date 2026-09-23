@@ -2,15 +2,19 @@
 slug: task-6
 id: abfnbqzllxgw
 type: challenge
-title: 06-Ringfence the Ordering Application
+title: 06-Ordering Application Ringfencing
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Mapを使って `ordering` アプリケーション内のトラフィックをフィルタリングして
-確認してください - まずApplication labelでグループ化してください。
+Mapを使って `ordering` アプリケーション内の通信を確認してください。
 
-`ordering` アプリケーションを `Development`、`ca` でringfenceしてください:
-`Task6-RingfenceOrdering` という名前のPolicyを作成し、`ordering`
-アプリケーション、Environment: `Development`、Location: `ca` に属する
-workload同士が自由に通信できるようallow ruleを設定してください。
+`Task6-RingfenceOrdering` という名前のPolicyを作成し、アプリケー
+ションのDevelopmentインスタンスをringfenceしてください。
+
+以下のlabelが一致するworkload同士が自由に通信できるよう、allow
+ruleを作成してください:
+
+- Application: `ordering`
+- Environment: `Development`
+- Location: `ca`

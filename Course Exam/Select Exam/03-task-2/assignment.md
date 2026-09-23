@@ -2,37 +2,27 @@
 slug: task-2
 id: 7smxonkgxco4
 type: challenge
-title: 02-Ringfence the Application
+title: 02-Application Ringfencing
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-**Variation 1**
-nm and je disucssion HERE
-Add two more labels to both `linux-vm` and `windows-vm`: Type: `server`,
-IR: `IR-CLEANBUBBLE` (6 label categories total across the two
-workloads: Role, Application, Environment, Location, Type, IR).
+Add the following labels to both `linux-vm` and `windows-vm`:
 
-Ringfence the `portal` application (Environment: `Production`,
-Location: `ca`, Type: `server`, IR: `IR-CLEANBUBBLE`): create a
-Policy named `Task2-Ringfence` with an allow rule so workloads
-matching all five labels can communicate freely with each other.
+- Type: `server`
+- DFIR: `IR-CLEANBUBBLE`
 
+The workloads should now be classified using all six label
+categories: Role, Application, Environment, Location, Type, and DFIR.
 
-**Variation 2**
+Ringfence the `portal` application by creating a Policy named
+`Task2-Ringfence`.
 
-Ringfence the `portal` application. Create a Policy named
-`Task2-Ringfence` with an allow rule so workloads matching all five
-labels can communicate freely with each other.
+Create an allow rule that permits workloads matching the following
+five labels to communicate freely with each other:
 
+- Application: `portal`
 - Environment: `Production`
 - Location: `ca`
 - Type: `server`
-- IR: `IR-CLEANBUBBLE`
-
-
-**Variation 3**
-
-Ringfence the `portal` application, using 5 labels. Create a Policy
-named `Task2-Ringfence` with an allow rule so workloads matching all
-five labels can communicate freely with each other.
+- DFIR: `IR-CLEANBUBBLE`

@@ -2,7 +2,7 @@
 slug: task-10
 id: dgtnxmcudfwu
 type: challenge
-title: 10-Onboard a Cloud Instance
+title: 10-Cloud Instance Onboarding
 tabs:
 - id: 6egz5grzhtok
   title: AWS
@@ -13,9 +13,11 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Onboard the AWS account to Illumio Cloud.
+Onboard the provided AWS account to Illumio.
 
 > [!IMPORTANT]
-> Use **us-east-1** (N. Virginia) as the region.
+> During onboarding, configure the AWS integration to use Region:
+> `us-east-1` (N. Virginia).
 
-Once onboarded, use the Map to confirm the new AWS resource appears.
+Complete the onboarding process and use the Map to confirm that the
+new AWS resource appears successfully.

@@ -2,17 +2,17 @@
 slug: task-2
 id: zi3xxapqk6nr
 type: challenge
-title: 02-Label the Workload
+title: 02-Workload Labeling
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Label the `linux-vm` workload with 4 labels:
+Assign the following labels to the `linux-vm` workload:
 
-- Role: any Role label
+- Role: any appropriate Role label
 - Application: `ordering`
 - Environment: `Production`
 - Location: `ca`
 
-Use the Map to confirm `linux-vm` now appears grouped under the
+Use the Map to confirm that `linux-vm` appears grouped under the
 `ordering` application.

@@ -2,10 +2,16 @@
 slug: task-4
 id: xq2qchknsq89
 type: challenge
-title: 04-Isolate a Breached Workload
+title: 04-Compromised Workload Isolation
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-`linux-vm`(Web)workloadが侵害されました。IR labelを `IR-CLEANBUBBLE` から
-`IR-DIRTYBUBBLE` に変更して、侵害されたものとしてマークしてください。
+WebのworkloadがCompromiseされたと想定してください。
+
+`linux-vm` のDFIR labelを以下のように変更して、侵害されたものとして
+マークしてください:
+
+`IR-CLEANBUBBLE` → `IR-DIRTYBUBBLE`
+
+workloadに `IR-CLEANBUBBLE` labelが残っていないことを確認してください。

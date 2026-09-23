@@ -2,7 +2,7 @@
 slug: task-1
 id: uitadka2xxhg
 type: challenge
-title: 01-Pair 2 Workloads
+title: 01-Workload Pairing and Application Classification
 tabs:
 - id: vom1yighkcnt
   title: Linux
@@ -18,10 +18,25 @@ timelimit: 0
 enhanced_loading: null
 ---
 Crea un nuevo Pairing Profile con su Enforcement Mode configurado en
-**Idle**, luego usalo para emparejar `linux-vm` y `windows-vm` como
-VENs, y etiquetalos en una sola aplicacion:
+**Idle**.
 
-- `linux-vm` — Role: `web`
-- `windows-vm` — Role: `db`
-- Ambos workloads — Application: `portal`, Environment: `Production`,
-  Location: `ca`
+Usa el Pairing Profile para emparejar tanto `linux-vm` como
+`windows-vm` como VENs y clasificalos como parte de la misma
+aplicacion usando los siguientes labels:
+
+`linux-vm`
+
+- Role: `web`
+- Application: `portal`
+- Environment: `Production`
+- Location: `ca`
+
+`windows-vm`
+
+- Role: `db`
+- Application: `portal`
+- Environment: `Production`
+- Location: `ca`
+
+Verifica que ambos workloads se hayan emparejado correctamente y usa
+el Map para confirmar que aparecen dentro de la aplicacion `portal`.

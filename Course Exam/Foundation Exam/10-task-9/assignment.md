@@ -2,13 +2,14 @@
 slug: task-9
 id: 0onotmlhytun
 type: challenge
-title: 09-Remove a Rogue Label
+title: 09-Rogue Label Identification and Remediation
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-A rogue Role label has been planted somewhere in your organization.
-Find it and delete it.
+A rogue Role label has been introduced somewhere within the
+organization.
 
-Use the Map to help locate it - group by Role labels to spot the one
-that doesn't belong.
+Identify the rogue Role label and delete it from the organization.
+
+Ensure that legitimate Role labels are not removed.

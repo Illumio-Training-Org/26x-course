@@ -2,15 +2,33 @@
 slug: task-8
 id: h7fxwfypcb4a
 type: challenge
-title: 08-Deny the Ordering Application Globally
+title: 08-Global Development and Production Segmentation
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-`ordering` アプリケーションについて、**Development から Production への
-一方向のみ** の全通信をブロックするdeny ruleを持つ `Task8-DenyGlobal`
-という名前のPolicyを作成してください。これはLocationの制限がない
-**global** ruleであり、`ca` だけでなくすべてのlocationに適用されます。
+`Task8-DenyGlobal` という名前のPolicyを作成してください。
 
-次に例外を追加してください: `ordering` について、Development から
-Productionへの一方向のSSHを許可するAllow Ruleです。
+`ordering` アプリケーションについて、DevelopmentからProductionへの
+通信を防ぐ **global** かつ **一方向** のdeny ruleを構成してください。
+
+送信元:
+
+- Application: `ordering`
+- Environment: `Development`
+
+宛先:
+
+- Application: `ordering`
+- Environment: `Production`
+
+このruleは以下を満たす必要があります:
+
+- **All Services** を拒否する
+- **globally**(すべてのlocationに)適用される
+
+同じPolicy内に、`ordering` アプリケーションについてDevelopmentから
+Productionへの **SSH** トラフィックを許可する例外を作成してください。
+
+この **SSH** の例外もDevelopmentからProductionへの **一方向** である
+必要があり、Locationの制限を持たない必要があります。
