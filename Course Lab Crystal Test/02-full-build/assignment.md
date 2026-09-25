@@ -360,52 +360,7 @@ check-containers
 
 Containment workflows, emergency policy, validation, rollback, and operational decision-making.
 
-**Part 1 — Incident Response & Readiness**
-
-**Scenario**
-
-A pre-built Incident Response policy, **15. IR**, already exists in this environment — currently **disabled**. It's designed to contain any workload labeled `IR-DIRTYBUBBLE`, cutting it off from the network almost entirely while still allowing exactly the connections needed to investigate and recover it.
-
----
-
-**1) Review the IR policy**
-
-**Policies → All Policies → 15. IR**. Review its three rule groups:
-
-- **Override Deny Rules**: `IR-CLEANBUBBLE` and `IR-DIRTYBUBBLE` can never talk to each other, in either direction — this takes precedence over every other rule in the policy.
-- **Allow Rules**: `IR-DIRTYBUBBLE` workloads can still reach a small set of IP Lists needed to investigate and remediate them (`IPL-MICROSOFT-WINDOWS-UPDATE`, `IPL-DFIR-ARTIFACT-STORAGE`, `IPL-EDR-CROWDSTRIKE-FALCON`, `IPL-EDR-MICROSOFT-DEFENDER-ENDPOINT`, `IPL-GOOGLE-NTP`) — so EDR and forensics tooling keeps working on a contained box. `IR-RECOVERY-TEAM` can reach `IR-DIRTYBUBBLE` workloads, so your recovery team keeps access while everything else is locked out.
-- **Deny Rules**: `IR-DIRTYBUBBLE` is denied to and from everywhere else — including *other* `IR-DIRTYBUBBLE` workloads, so two contained machines can't talk to each other either.
-
----
-
-**2) Enable the policy**
-
-Select the checkbox for **15. IR** → **Enable**.
-
----
-
-**3) Pick a workload and apply containment**
-
-Choose a workload to act as your "compromised machine" for this exercise — the **mailserver** in **ny**. **Servers and Endpoints → Workloads**, filter Role `mailserver`, Location `ny`, pick the result. **Edit Labels** → add the `IR-DIRTYBUBBLE` label → **OK**.
-
-> [!NOTE]
-> Deliberately not `linux-vm`/`windows-vm`, and not one of the Acme Hospital medical devices — this exercise stays independent of the Workloads section and separate from the Acme Hospital scenario used later.
-
----
-
-**4) Test it on the Map**
-
-**Explore → Map**, locate the workload. Confirm its traffic now matches the policy: blocked from everything else, but still able to reach the allowed IP Lists above (and reachable by anything labeled `IR-RECOVERY-TEAM`, if present in this environment).
-
----
-
-**5) Revert**
-
-**Labels**, remove the `IR-DIRTYBUBBLE` label from the workload → **OK**. Confirm on the Map that normal traffic resumes.
-
----
-
-**Part 2 — Ransomware Protection**
+**Part 1 — Ransomware Protection**
 
 Practical ransomware use cases & high-risk services.
 
@@ -448,6 +403,77 @@ Inside the ruleset, add a **Deny Rule**:
 **3) Recognize the dashboard's scope**
 
 The Ransomware Protection Dashboard reports on **managed server workloads only** — workloads running a VEN. Endpoints and containers are not included in its coverage or exposure scoring, even though they can still carry ransomware-risky traffic of their own.
+
+---
+
+**Part 2 — Investigation**
+
+Live traffic investigation and containment.
+
+**Scenario**
+
+An attacker has harvested credentials from one or more endpoints and is using them to move through this environment. The pattern follows a typical chain: **credential harvesting** on endpoints, **RDP** into shared jump infrastructure using those credentials, an **SSH pivot** from the jump host into the application tier, and from there, **unusual traffic** spreading outward — application workloads that have no normal reason to do so suddenly authenticating against domain controllers.
+
+Your job is to find each stage of this chain using **Explore → Traffic**, work out how far it's spread, and contain it using a pre-built Incident Response policy, **15. IR** — currently **disabled** in this environment. It's designed to contain any workload labeled `IR-DIRTYBUBBLE`: an **Override Deny** rule blocks `IR-CLEANBUBBLE` ↔ `IR-DIRTYBUBBLE` traffic in both directions ahead of everything else in the policy; a small set of **Allow** rules keep EDR, forensics, and your recovery team's access open on a contained box; and a broad **Deny** rule blocks everything else — including two contained machines from reaching each other.
+
+There are 4 domain controllers (`acd-dc01-prd` through `acd-dc04-prd`) and 2 jump hosts (`inf-jh01-prd`, `inf-jh02-prd`) in this environment — all 6 are potential targets in this exercise.
+
+---
+
+**1) Enable the containment policy**
+
+**Policies → All Policies**, select the checkbox for **15. IR** → **Enable**.
+
+---
+
+**2) RDP — find the credential harvesting landing on the jump hosts**
+
+**Explore → Traffic**. Set Destination to Role `jumpbox`, Service `RDP` (`3389`). Note the sources — you should see a wide spread of `win-endpoint-*` and `mac-endpoint-*` workloads all RDPing into `inf-jh01-prd`/`inf-jh02-prd` that don't normally do so. This is the harvested-credential access landing on shared infrastructure.
+
+---
+
+**3) SSH — find the pivot**
+
+Clear Destination, set **Source** to Role `jumpbox`, Service `SSH` (`22`). This shows the jump hosts reaching *out* into the application tier — the pivot point, not just an entry point. You should find outbound SSH from a jump host to at least one process-tier workload (e.g. an `*-proc*-prd`) it doesn't normally reach.
+
+> [!NOTE]
+> Check the **First Detected** timestamp on an inbound RDP session vs. the jump host's outbound SSH connections. An outbound SSH connection first detected only shortly after — minutes, not hours — an inbound RDP session the jump host doesn't normally receive is the pivot in action, not routine admin activity.
+
+---
+
+**4) Unusual traffic — find where it spread**
+
+Set Destination filters to Role `dc`, Application `ad`. Leave Source blank so every source shows. Group the results by **Applications** and **Roles** (top toolbar). Look for:
+
+- **Kerberos** (`88`) and **LDAP** (`389`) hits from web/processing-tier workloads in applications that have no business reason to authenticate directly against a domain controller — e.g. `pos`, `ord`, `pay`, `cat`, `ecm` workloads, not just `ad`/IT-owned ones
+- **DNS** (`53`) queries from database-tier workloads (`*-db*-prd`) straight to a DC — a DB server doing its own DNS lookups against a domain controller is unusual
+- Any **SMB** (`445`) hits — SMB to a DC is the highest-priority one to flag, it's the classic ransomware-propagation port
+
+A handful of sources talking to a DC is routine; many *different, otherwise-unrelated* applications suddenly doing so, across all 4 DCs, is the sign this has already spread beyond the initial pivot.
+
+---
+
+**5) Identify a workload to contain**
+
+The jump host itself is the clearest containment target — it's the actual pivot point from steps 2-3, not just a symptom. **Contain `inf-jh01-prd`** (or `inf-jh02-prd`, whichever showed the outbound SSH pivot in step 3).
+
+**Servers and Endpoints → Workloads**, filter for `inf-jh01-prd`, **Edit Labels** → add `IR-DIRTYBUBBLE` → **OK**.
+
+---
+
+**6) Confirm containment**
+
+**Explore → Map**, locate `inf-jh01-prd`. Confirm:
+
+- The inbound RDP sessions from `win-endpoint-*`/`mac-endpoint-*` now show as **blocked**
+- The outbound SSH pivot to the application tier now shows as **blocked**
+- The jump host's own normal management/monitoring traffic (if any) is unaffected
+
+---
+
+**7) Revert**
+
+**Labels**, remove the `IR-DIRTYBUBBLE` label from `inf-jh01-prd` → **OK**. Confirm on the Map that normal traffic resumes.
 
 ---
 
