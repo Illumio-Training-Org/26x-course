@@ -16,7 +16,7 @@ developers:
 - nathan.mitchell@illumio.com
 show_timer: true
 skipping_enabled: true
-idle_timeout: 3600
+idle_timeout: 21600
 timelimit: 21600
 lab_config:
   sidebar_enabled: true
@@ -25,5 +25,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "8625934507780725561"
+checksum: "5545056155118597843"
 enhanced_loading: false

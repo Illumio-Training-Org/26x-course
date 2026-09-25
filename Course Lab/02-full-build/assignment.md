@@ -354,3 +354,101 @@ check-containers
 ---
 
 **Lab Complete**
+
+🧩 Incident Response
+==========
+
+Containment workflows, emergency policy, validation, rollback, and operational decision-making.
+
+**Part 1 — Incident Response & Readiness**
+
+**Scenario**
+
+A pre-built Incident Response policy, **15. IR**, already exists in this environment — currently **disabled**. It's designed to contain any workload labeled `IR-DIRTYBUBBLE`, cutting it off from the network almost entirely while still allowing exactly the connections needed to investigate and recover it.
+
+---
+
+**1) Review the IR policy**
+
+**Policies → All Policies → 15. IR**. Review its three rule groups:
+
+- **Override Deny Rules**: `IR-CLEANBUBBLE` and `IR-DIRTYBUBBLE` can never talk to each other, in either direction — this takes precedence over every other rule in the policy.
+- **Allow Rules**: `IR-DIRTYBUBBLE` workloads can still reach a small set of IP Lists needed to investigate and remediate them (`IPL-MICROSOFT-WINDOWS-UPDATE`, `IPL-DFIR-ARTIFACT-STORAGE`, `IPL-EDR-CROWDSTRIKE-FALCON`, `IPL-EDR-MICROSOFT-DEFENDER-ENDPOINT`, `IPL-GOOGLE-NTP`) — so EDR and forensics tooling keeps working on a contained box. `IR-RECOVERY-TEAM` can reach `IR-DIRTYBUBBLE` workloads, so your recovery team keeps access while everything else is locked out.
+- **Deny Rules**: `IR-DIRTYBUBBLE` is denied to and from everywhere else — including *other* `IR-DIRTYBUBBLE` workloads, so two contained machines can't talk to each other either.
+
+---
+
+**2) Enable the policy**
+
+Select the checkbox for **15. IR** → **Enable**.
+
+---
+
+**3) Pick a workload and apply containment**
+
+Choose a workload to act as your "compromised machine" for this exercise — the **mailserver** in **ny**. **Servers and Endpoints → Workloads**, filter Role `mailserver`, Location `ny`, pick the result. **Edit Labels** → add the `IR-DIRTYBUBBLE` label → **OK**.
+
+> [!NOTE]
+> Deliberately not `linux-vm`/`windows-vm`, and not one of the Acme Hospital medical devices — this exercise stays independent of the Workloads section and separate from the Acme Hospital scenario used later.
+
+---
+
+**4) Test it on the Map**
+
+**Explore → Map**, locate the workload. Confirm its traffic now matches the policy: blocked from everything else, but still able to reach the allowed IP Lists above (and reachable by anything labeled `IR-RECOVERY-TEAM`, if present in this environment).
+
+---
+
+**5) Revert**
+
+**Labels**, remove the `IR-DIRTYBUBBLE` label from the workload → **OK**. Confirm on the Map that normal traffic resumes.
+
+---
+
+**Part 2 — Ransomware Protection**
+
+Practical ransomware use cases & high-risk services.
+
+**Scenario**
+
+Ransomware relies on a small set of well-known services to move laterally once it lands on a machine. Your jumphosts (`inf-jh01-prd`, `inf-jh02-prd`) are high-value targets — if one is compromised, an attacker will try to pivot to the other, and from there, further into the environment. Before writing a policy, you need to know exactly which services are considered highest risk.
+
+---
+
+**1) Identify the critical-severity ransomware-risky services**
+
+**Dashboard → Ransomware Protection**. Review the **Top 5 Risky Applications and Services** panel, then locate the full risky-services table.
+
+Identify the **critical-severity** services:
+
+- RDP — `3389`
+- SMB — `445`
+- MSFT RPC — `135` *(optional)*
+- WinRM — `5985` / `5986`
+
+---
+
+**2) Create a policy protecting jumphosts from lateral movement**
+
+**Rulesets and Rules → Segmentation Rulesets → Add**:
+
+- Name: `Jumphost-Ransomware-Protection`
+- Scope — Application: `jump-infra`, Environment: `Production`, Location: `ca`
+
+Inside the ruleset, add a **Deny Rule**:
+
+- Consumers (Source): Role `jumpbox`
+- Providers (Destination): Role `jumpbox`
+- Services: `RDP` (3389), `SMB` (445), `MSFT RPC` (135), `WinRM` (5985, 5986)
+
+**Provision** the ruleset. This blocks jumphost-to-jumphost traffic on every ransomware-critical service — `inf-jh01-prd` and `inf-jh02-prd` can no longer reach each other over RDP, SMB, RPC, or WinRM, containing lateral movement between them if one is compromised.
+
+---
+
+**3) Recognize the dashboard's scope**
+
+The Ransomware Protection Dashboard reports on **managed server workloads only** — workloads running a VEN. Endpoints and containers are not included in its coverage or exposure scoring, even though they can still carry ransomware-risky traffic of their own.
+
+---
+
+**Lab Complete**
