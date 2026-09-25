@@ -4,13 +4,17 @@
 # Exit 0 = pass, non-zero = fail.
 #
 # Checks the PCE's /permissions endpoint for a role assignment scoped
-# to Environment=Production, Location=ca with the Ruleset Manager role.
+# to Environment=Production, Location=ca with the Ruleset Manager role,
+# AND that the same user still has their default Viewer role (All scope)
+# untouched alongside it - the assignment explicitly says not to remove it.
 # Confirmed live 2026-08-28 against a real /permissions response:
 #   [{"href":..., "role":{"href":".../roles/ruleset_manager"},
 #     "scope":[{"label":{"href":...}}, {"label":{"href":...}}],
 #     "auth_security_principal":{"href":...}}, ...]
 # scope is a FLAT list of {"label":{"href":...}} entries (not a list
 # of groups), and auth_security_principal has no "type" field.
+# "Viewer" in the Console UI is role href fragment "read_only", not
+# "viewer" - confirmed live 2026-09-24 against GET /orgs/{org}/roles.
 
 # setup-cloud-client writes cleaned AUTOACCOUNT_* values here since this
 # script's execution context doesn't source .bashrc (interactive-only).
@@ -61,7 +65,22 @@ for p in perms:
         if kv:
             matched[kv[0]] = kv[1]
     if matched == expected_scope:
-        print('Found a user with Ruleset Manager scoped to exactly Environment=Production, Location=ca')
+        principal_href = (p.get('auth_security_principal') or {}).get('href')
+        has_viewer = False
+        for v in perms:
+            v_role_href = (v.get('role') or {}).get('href', '')
+            if 'read_only' not in v_role_href:
+                continue
+            v_principal_href = (v.get('auth_security_principal') or {}).get('href')
+            if v_principal_href != principal_href:
+                continue
+            if not (v.get('scope') or []):
+                has_viewer = True
+                break
+        if not has_viewer:
+            print('Found the scoped Ruleset Manager role, but the same user no longer has their default Viewer role with All scope - it must stay in place alongside the new role')
+            sys.exit(1)
+        print('Found a user with Ruleset Manager scoped to exactly Environment=Production, Location=ca, and the default Viewer role (All scope) is still in place')
         sys.exit(0)
     if all(matched.get(k) == v for k, v in expected_scope.items()):
         too_broad = sorted(matched.keys())
