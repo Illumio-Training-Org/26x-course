@@ -206,6 +206,61 @@ CHECKEOF
 chmod +x /usr/local/bin/check-cloud
 
 # ---------------------------------------
+# DISABLE ALL RULESETS (lab start state)
+# ---------------------------------------
+# Learners must start with every ruleset disabled - they manually enable
+# "15. IR" and build the PPTP block themselves during the IR exercise.
+# Crystal's "default" template creates every ruleset enabled by default
+# except "15. IR", so explicitly disable all of them rather than relying
+# on the template's own state. Called below once the Crystal deployment
+# reports "running"; retries a few times defensively in case ruleset
+# population is still settling at that point (the template import is
+# itself asynchronous - see the comment on the /start retry loop below).
+cat > /usr/local/bin/disable-all-rulesets << 'DISABLEEOF'
+#!/bin/bash
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+
+RS_JSON=""
+for attempt in 1 2 3 4 5 6; do
+  RS_JSON="$(curl -s -u "$AUTH" "$BASE/sec_policy/draft/rule_sets")"
+  COUNT="$(echo "$RS_JSON" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))" 2>/dev/null || echo 0)"
+  if [ "$COUNT" -gt 0 ]; then
+    echo "Found $COUNT ruleset(s) on attempt $attempt"
+    break
+  fi
+  echo "No rulesets found yet (attempt $attempt) - retrying"
+  sleep 10
+done
+
+RS_HREFS="$(echo "$RS_JSON" | python3 -c "
+import json, sys
+for rs in json.load(sys.stdin):
+    if rs.get('enabled'):
+        print(rs['href'])
+" 2>/dev/null)"
+
+if [ -z "$RS_HREFS" ]; then
+  echo "No enabled rulesets to disable"
+  exit 0
+fi
+
+echo "$RS_HREFS" | while IFS= read -r href; do
+  [ -z "$href" ] && continue
+  code=$(curl -s -o /dev/null -w "%{http_code}" -u "$AUTH" -X PUT \
+    -H "Content-Type: application/json" -d '{"enabled": false}' \
+    "https://$AUTOACCOUNT_PCE_FQDN$href")
+  echo "disabled $href -> HTTP $code"
+done
+
+curl -s -o /dev/null -w "provision -> HTTP %{http_code}\n" -u "$AUTH" -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"update_description": "Disable all rulesets for lab start"}' \
+  "$BASE/sec_policy"
+DISABLEEOF
+chmod +x /usr/local/bin/disable-all-rulesets
+
+# ---------------------------------------
 # PROJECT CRYSTAL TRAFFIC GENERATION
 # ---------------------------------------
 # Replaces vensim for this lab variant. Project Crystal creates a new
@@ -308,5 +363,7 @@ for i in 1 2 3 4 5 6; do
     "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID/start"
   sleep 10
 done
+
+bash /usr/local/bin/disable-all-rulesets
 
 echo "===== MAGIC LINK + ACCOUNT SETUP END ====="
