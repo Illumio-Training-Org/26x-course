@@ -1,6 +1,6 @@
 ---
 slug: getting-started
-id: bxdtzyu8xajc
+id: 75gtvcfar9vh
 type: challenge
 title: 01-Getting Started
 notes:
@@ -40,7 +40,7 @@ notes:
 - type: video
   url: https://www.youtube.com/embed/_QALLe3DJpk
 tabs:
-- id: v2xupy0w9mlh
+- id: tadfmsrygrqq
   title: terminal
   type: terminal
   hostname: rockyvm

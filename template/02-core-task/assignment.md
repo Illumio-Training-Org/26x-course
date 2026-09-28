@@ -1,10 +1,10 @@
 ---
 slug: core-task
-id: ysehaboetwky
+id: tf4nnvbeb2vq
 type: challenge
 title: 02-Core Task
 tabs:
-- id: slnxbnuc7egq
+- id: hzeqija9ispd
   title: terminal
   type: terminal
   hostname: rockyvm

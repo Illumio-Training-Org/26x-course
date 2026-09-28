@@ -1,10 +1,10 @@
 ---
 slug: wrap-up-verification
-id: o0ebsf7hxdm4
+id: ghsklxma4u66
 type: challenge
 title: Verification for the Student
 tabs:
-- id: teznvs8kuxz1
+- id: 27abhffuzru9
   title: terminal
   type: terminal
   hostname: rockyvm

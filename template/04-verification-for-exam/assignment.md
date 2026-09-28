@@ -1,10 +1,10 @@
 ---
 slug: verification-for-exam
-id: 0muzhqpkopac
+id: psxv0i7dx6ib
 type: challenge
 title: Verification for Exam
 tabs:
-- id: 6jqfq2muazwe
+- id: hpwmob5vdcls
   title: terminal
   type: terminal
   hostname: rockyvm

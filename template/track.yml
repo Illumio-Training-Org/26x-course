@@ -1,6 +1,6 @@
-slug: template-for-cx
-id: h4xmabcokcrx
-title: '! 000-Template for CX'
+slug: 26x-test-template
+id: rgwxyseocyrd
+title: '! 26.x Test: Template'
 description: |-
   Lab Name: FOLLOW CONVENTION
 
@@ -34,7 +34,6 @@ show_timer: true
 skipping_enabled: true
 idle_timeout: 1800
 timelimit: 5400
-sandbox_preset: base-image
 lab_config:
   extend_ttl: 600
   sidebar_enabled: true
@@ -43,5 +42,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "16709979921719387383"
+checksum: "2468860658099503444"
 enhanced_loading: false
