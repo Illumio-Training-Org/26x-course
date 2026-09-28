@@ -30,17 +30,22 @@ if not lg:
     print('Label Group \"pci-staging\" not found')
     sys.exit(1)
 
+labels = lg.get('labels', [])
+if len(labels) != 2:
+    print('Label Group \"pci-staging\" should contain exactly 2 labels, found ' + str(len(labels)))
+    sys.exit(1)
+
 values = set()
-for l in lg.get('labels', []):
+for l in labels:
     href = l.get('href')
     if href:
         values.add(resolve_label_value(href))
 
-if not {'pci', 'staging'}.issubset(values):
-    print('Label Group \"pci-staging\" should contain the Environment labels PCI and Staging, found ' + str(sorted(values)))
+if values != {'pci', 'staging'}:
+    print('Label Group \"pci-staging\" should contain only the Environment labels PCI and Staging, found ' + str(sorted(values)))
     sys.exit(1)
 
-print('Label Group pci-staging found with PCI and Staging labels')
+print('Label Group pci-staging found with exactly PCI and Staging labels')
 sys.exit(0)
 ")
 status=$?
