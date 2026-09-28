@@ -77,7 +77,7 @@ Advanced
 > [!WARNING]
 > These commands are only for use in troubleshooting, if required by the instructor.
 
-To show the Account Identities, run the following command:
+To show the Account Identities:
 
 ```run
 echo $AUTOACCOUNT_APIKEY_ID
