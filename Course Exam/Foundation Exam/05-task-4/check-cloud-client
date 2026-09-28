@@ -109,7 +109,7 @@ def describe_consumers(consumers):
             ref = c.get(key)
             if ref and ref.get('href'):
                 obj = get(ref['href'].replace('/api/v2', ''))
-                out.append(obj.get('name') or ref['href'])
+                out.append(obj.get('name') or obj.get('value') or ref['href'])
                 described = True
                 break
         if not described:
