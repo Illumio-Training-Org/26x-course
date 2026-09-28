@@ -26,9 +26,9 @@ In this lab you will successfully [outcome — e.g. pair the Illumio VEN to the 
 
 ## Track configuration
 
-- **Slug:** `template-for-cx`
+- **Title / slug:** `! 26.x Test: Template` / `26x-test-template` (was `! 000-Template for CX` / `template-for-cx` until 2026-09-29)
 - **Icon:** `./assets/logo.png` — the Illumio logo (same file used in 331-Containers)
-- **Sandbox preset:** `bookworm-preset` — PLACEHOLDER, change to match this lab's actual infra
+- **Sandbox:** one plain Rocky Linux 9 VM named `rockyvm`, defined in `config.yml` — PLACEHOLDER, change to match this lab's actual infra
 - **Idle timeout:** 1800s (30 min)
 - **Time limit:** 5400s (90 min)
 - **Extend allowance:** 600s (10 min)

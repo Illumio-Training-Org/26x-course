@@ -14,10 +14,12 @@ copying it for a new lab:
   ships a real `check-rockyvm`/`solve-rockyvm` pair specifically to teach
   the fail-message check-script pattern — remove that challenge entirely
   for labs that don't need auto-graded exam-style checks.
-- **`hostname` must match whatever host name the chosen `sandbox_preset`
-  actually defines** — it is NOT always the same value across presets.
-  `base-image` (this template's current preset — a plain basic Linux
-  shell) names its host `rockyvm`. `bookworm-preset` names its host
+- **`hostname` must match the machine name defined in `config.yml` (or,
+  if you switch to a `sandbox_preset`, whatever host that preset defines)**
+  — it is NOT always the same value across presets. This template defines
+  its own plain Rocky Linux 9 VM named `rockyvm` in `config.yml` (it used
+  the `base-image` preset until 2026-09-29, when that preset stopped being
+  readable by our team's CLI - "graphql: Unauthorized"). Other presets: `bookworm-preset` names its host
   `bookworm`. `ks3-ready-for-cilium` (used by 331-Containers) names its
   host `host`. `instruqt track push` will fail with "references unknown
   host" if these don't match — confirmed by testing this template's first
@@ -36,9 +38,9 @@ copying it for a new lab:
 
 ## Things you MUST change per new lab
 - `track.yml`: `slug`, `title`, `description` (`Lab Name:` + `Outcome:`),
-  `tags`, `sandbox_preset` (currently `base-image` — a generic plain-Linux
-  placeholder, not a real preset for any specific product/infra) plus the
-  matching `hostname: rockyvm` in every challenge's `tabs[]`, `timelimit`,
+  `tags`, the machines in `config.yml` (currently one generic plain Rocky
+  Linux VM, `rockyvm` - a placeholder, not real infra for any product)
+  plus the matching `hostname:` in every challenge's `tabs[]`, `timelimit`,
   `idle_timeout`.
 - `assets/splash%20...%20jan.png` and `assets/logo.png` — replace with the
   new lab's own splash image if desired, or keep the shared Illumio
