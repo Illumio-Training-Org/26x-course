@@ -1,6 +1,6 @@
 ---
 slug: task-6
-id: bt2oouurdigh
+id: azxhubfwyt1v
 type: challenge
 title: 06-IP List Creation
 difficulty: ""

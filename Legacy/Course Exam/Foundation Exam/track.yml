@@ -1,6 +1,6 @@
-slug: 26x-legacy-foundation-exam
-id: p61hddjgvah8
-title: '! 26.x Legacy: Foundation Exam'
+slug: 26x-superseded-foundation-exam
+id: gxjje2s7qsqe
+title: '! 26.x Superseded: Foundation Exam'
 description: |-
   Lab Name: 26.x FOUNDATION EXAM
 
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "14794982941831470287"
+checksum: "794459756691274756"
 enhanced_loading: false
