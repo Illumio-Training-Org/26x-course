@@ -305,37 +305,13 @@ curl -sS --connect-timeout 5 -m 8 -o /dev/null \
   -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" || echo "curl exit code: $?"
 echo "--- end diagnostics ---"
 
-# Deployment naming: <track_slug>_<DDMMYY>_<XX>, XX incrementing per
-# track per day (e.g. 26x_lab_crystal_test_220926_01). No atomic
-# counter service exists to make this race-proof against many
-# learners starting at once (up to ~15 concurrent sessions expected),
-# so this adds a random jitter delay plus a check-and-retry loop
-# rather than a naive "count existing, +1" - reduces collisions
-# without guaranteeing zero, since Crystal deployments are keyed by
-# their own UUID, not name, so a collision would only ever be
-# cosmetic, never functionally broken.
-TRACK_SLUG_CLEAN="${INSTRUQT_TRACK_SLUG//-/_}"
-DATE_STR="$(date -u +%d%m%y)"
-NAME_PREFIX="${TRACK_SLUG_CLEAN}_${DATE_STR}_"
-
-sleep "0.$((RANDOM % 900 + 100))"
-
-DEPLOYMENT_NAME=""
-for attempt in 1 2 3 4 5; do
-  EXISTING_NAMES="$(curl -s -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" | python3 -c "
-import json, sys
-prefix = '$NAME_PREFIX'
-print('\n'.join(d.get('name','') for d in json.load(sys.stdin) if d.get('name','').startswith(prefix)))
-" 2>/dev/null)"
-  NEXT_NUM=$(printf "%02d" $(( $(echo "$EXISTING_NAMES" | grep -c "^${NAME_PREFIX}") + attempt )))
-  CANDIDATE="${NAME_PREFIX}${NEXT_NUM}"
-  if ! echo "$EXISTING_NAMES" | grep -qx "$CANDIDATE"; then
-    DEPLOYMENT_NAME="$CANDIDATE"
-    break
-  fi
-  sleep "0.$((RANDOM % 500 + 200))"
-done
-[ -z "$DEPLOYMENT_NAME" ] && DEPLOYMENT_NAME="${NAME_PREFIX}${AUTOACCOUNT_ORG_ID}"
+# Deployment naming: Lab_<DDMM>_<PCE org ID>, e.g. Lab_2809_4140290.
+# The org ID is unique per session and is the same number the learner
+# sees in their Console and the Advanced section, so an instructor can
+# match a learner's lab to its Crystal deployment directly. No counter
+# or collision check needed.
+DEPLOYMENT_NAME="Lab_$(date -u +%d%m)_${AUTOACCOUNT_ORG_ID}"
+echo "Crystal deployment name: $DEPLOYMENT_NAME"
 
 cd ~
 git clone https://github.com/justinvid/pc-connector.git
