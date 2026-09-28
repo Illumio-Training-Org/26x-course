@@ -1,6 +1,6 @@
-slug: 26x-legacy-lab
-id: j71v5jbeqhqy
-title: '! 26.x Legacy: Lab'
+slug: 26x-superseded-lab
+id: vzyybjwcpnxm
+title: '! 26.x Superseded: Lab'
 description: |-
   This lab provides access to:
 
@@ -25,5 +25,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "6279956744276464753"
+checksum: "2962385767614770145"
 enhanced_loading: false

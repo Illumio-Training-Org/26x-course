@@ -1,30 +1,30 @@
 ---
 slug: full-build
-id: rzycpc9i0bdo
+id: tnzezsufq5xb
 type: challenge
 title: Onboarding Workloads-Cloud-Containers
 teaser: Pair workloads, onboard AWS, and connect a container cluster to Illumio
 tabs:
-- id: wolr2bve4azy
+- id: rhxpv77lllax
   title: Linux
   type: terminal
   hostname: linux-vm
   cmd: bash
-- id: kh0kiq8oqyir
+- id: wevxsfg6taxe
   title: Windows
   type: terminal
   hostname: windows-vm
-- id: cpskixfcyzxs
+- id: gyeg5xkr2jdi
   title: CloudCLI
   type: terminal
   hostname: cloud-client
   cmd: bash
-- id: txyuiwjn3hya
+- id: sqpyc9stvxsk
   title: AWS
   type: service
   hostname: cloud-client
   port: 80
-- id: yvxxijn8pqr4
+- id: yt5x3nbqpei2
   title: k3s console
   type: terminal
   hostname: host
