@@ -114,7 +114,6 @@ secrets:
 - name: pce_cluster_name
 - name: base_url
 - name: api_token
-- name: CRYSTAL_API_KEY
 custom_resources:
 - name: autoaccount
   custom_resource: magiclinktenantcreatev2

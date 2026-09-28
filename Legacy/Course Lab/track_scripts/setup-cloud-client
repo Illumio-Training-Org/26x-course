@@ -43,16 +43,6 @@ done
   done
 } >> /root/.bashrc
 
-# Deliberately NOT exporting CRYSTAL_API_KEY into .bashrc the way the
-# AUTOACCOUNT_* values above are. Unlike those (each scoped to one
-# learner's own single-use, ephemeral PCE org), CRYSTAL_API_KEY is a
-# single team-level secret shared across every learner session - if
-# it were exposed to an interactive shell, any learner could extract
-# it and get full account-wide Crystal access (list/create/stop/
-# delete any deployment for the whole team) from outside the sandbox
-# entirely. It stays available only within this script's own process,
-# which is all it's actually needed for.
-
 # ---------------------------------------
 # Parse PCE FQDN
 # ---------------------------------------
@@ -210,12 +200,12 @@ chmod +x /usr/local/bin/check-cloud
 # ---------------------------------------
 # Learners must start with every ruleset disabled - they manually enable
 # "15. IR" and build the PPTP block themselves during the IR exercise.
-# Crystal's "default" template creates every ruleset enabled by default
-# except "15. IR", so explicitly disable all of them rather than relying
-# on the template's own state. Called below once the Crystal deployment
-# reports "running"; retries a few times defensively in case ruleset
-# population is still settling at that point (the template import is
-# itself asynchronous - see the comment on the /start retry loop below).
+# vensim's own template creates every ruleset enabled by default except
+# "15. IR", so explicitly disable all of them rather than relying on the
+# template's own state. Called after newstartup.sh finishes (see the
+# vensim block below) so rulesets actually exist by the time this runs;
+# still retries a few times defensively in case population is still
+# settling.
 cat > /usr/local/bin/disable-all-rulesets << 'DISABLEEOF'
 #!/bin/bash
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
@@ -261,148 +251,47 @@ DISABLEEOF
 chmod +x /usr/local/bin/disable-all-rulesets
 
 # ---------------------------------------
-# PROJECT CRYSTAL TRAFFIC GENERATION
+# VENSIM TRAFFIC GENERATION
 # ---------------------------------------
-# Replaces vensim for this lab variant. Project Crystal creates a new
-# deployment via its own REST API (using CRYSTAL_API_KEY, a team-level
-# Instruqt secret - not tenant-specific), binds it live to THIS
-# sandbox's own freshly-provisioned PCE org (the AUTOACCOUNT_* values
-# below), applies the built-in "default" vensim-style template, and
-# starts it. See github.com/justinvid/pc-connector for the module
-# source - main.tf does 4 API calls: POST /api/deployments, PUT
-# .../config, POST .../vensim-template, POST .../start.
+STARTUP_REPO_DIR=~/manual-instruqt-startup
+VENSIM_FILES_DIR=~/vensim_files
 
-# Install Terraform
-# apt-key is removed on this image's Debian version (trixie) - use the
-# modern keyring-file method instead of the colleague's original
-# apt-key add call.
-curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/hashicorp.list
-apt-get update -y
-apt-get -y install terraform
+git clone https://github.com/Illumio-Training-Org/manual-instruqt-startup "$STARTUP_REPO_DIR"
+git clone https://github.com/Illumio-Training-Org/vensim_files.git "$VENSIM_FILES_DIR"
 
-# Command echoing (set -x) is switched off for the whole Crystal block
-# below, because every curl here carries CRYSTAL_API_KEY - a shared,
-# team-level secret - and xtrace would print it into the Instruqt
-# track logs. Progress is still logged via the echo lines. Switched
-# back on after the attack is fired.
-set +x
-echo "--- Crystal block start (command echo off to keep the API key out of logs) ---"
+mkdir -p "$STARTUP_REPO_DIR/vensim-templates"
+rm -rf "$STARTUP_REPO_DIR/vensim-templates/standard-demo"
+ln -s "$VENSIM_FILES_DIR/files" "$STARTUP_REPO_DIR/vensim-templates/standard-demo"
 
-CRYSTAL_BASE_URL="https://crystal.illumio.com"
-TEMPLATE_NAME="default"
+cp -f "$VENSIM_FILES_DIR/workloader" "$STARTUP_REPO_DIR/workloader"
+cp -f "$VENSIM_FILES_DIR/vensim" "$STARTUP_REPO_DIR/vensim"
+chmod +x "$STARTUP_REPO_DIR/workloader" "$STARTUP_REPO_DIR/vensim" \
+         "$STARTUP_REPO_DIR/vensimscheduler.sh"
 
-# Diagnostics: confirm this sandbox container can actually reach
-# Crystal before handing off to terraform, since terraform's own
-# error on a network-level failure is an opaque "context deadline
-# exceeded" with no detail on which stage (DNS/TCP/TLS) failed.
-echo "--- Crystal reachability diagnostics ---"
-getent hosts crystal.illumio.com || echo "DNS resolution FAILED for crystal.illumio.com"
-# -w timings instead of -v: -v prints request headers, including the
-# API key. Zero connect/tls time shows which stage failed.
-curl -sS --connect-timeout 5 -m 8 -o /dev/null \
-  -w "HTTP %{http_code} dns=%{time_namelookup}s connect=%{time_connect}s tls=%{time_appconnect}s\n" \
-  -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" || echo "curl exit code: $?"
-echo "--- end diagnostics ---"
+# Call newstartup.sh directly (unmodified) rather than maintaining our
+# own copy of its steps — deliberately matches uc-orgs-5-vs's own
+# behavior now, deletes included: any pre-existing pairing profiles/
+# labels/services on the org get wiped before vensim's own content goes
+# in, so the org ends up with vensim's content only, not vensim's
+# content layered on top of the platform's defaults. Calling the file
+# directly (rather than hand-copying its steps) also means we can't
+# silently drift from upstream if it changes later. newstartup.sh
+# already signals /tmp/startup.done itself at its own end; we wait for
+# it to finish (no backgrounding here) before handing off to
+# vensimscheduler.sh, avoiding the race in uc-orgs-5-vs's own script
+# (which launches newstartup.sh and vensimscheduler.sh concurrently and
+# touches /tmp/startup.done itself immediately, before newstartup.sh has
+# actually finished).
+nohup bash -c "
+  cd \"$STARTUP_REPO_DIR\"
 
-# Deployment naming: <track_slug>_<DDMMYY>_<XX>, XX incrementing per
-# track per day (e.g. 26x_lab_crystal_test_220926_01). No atomic
-# counter service exists to make this race-proof against many
-# learners starting at once (up to ~15 concurrent sessions expected),
-# so this adds a random jitter delay plus a check-and-retry loop
-# rather than a naive "count existing, +1" - reduces collisions
-# without guaranteeing zero, since Crystal deployments are keyed by
-# their own UUID, not name, so a collision would only ever be
-# cosmetic, never functionally broken.
-TRACK_SLUG_CLEAN="${INSTRUQT_TRACK_SLUG//-/_}"
-DATE_STR="$(date -u +%d%m%y)"
-NAME_PREFIX="${TRACK_SLUG_CLEAN}_${DATE_STR}_"
+  bash \"$STARTUP_REPO_DIR/newstartup.sh\" -f \"$pceFqdn\" -P \"$pcePort\" \
+    -u \"api_${AUTOACCOUNT_APIKEY_ID}\" -s \"$AUTOACCOUNT_APIKEY_SECRET\" \
+    -o \"$AUTOACCOUNT_ORG_ID\"
 
-sleep "0.$((RANDOM % 900 + 100))"
+  bash /usr/local/bin/disable-all-rulesets
 
-DEPLOYMENT_NAME=""
-for attempt in 1 2 3 4 5; do
-  EXISTING_NAMES="$(curl -s -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" | python3 -c "
-import json, sys
-prefix = '$NAME_PREFIX'
-print('\n'.join(d.get('name','') for d in json.load(sys.stdin) if d.get('name','').startswith(prefix)))
-" 2>/dev/null)"
-  NEXT_NUM=$(printf "%02d" $(( $(echo "$EXISTING_NAMES" | grep -c "^${NAME_PREFIX}") + attempt )))
-  CANDIDATE="${NAME_PREFIX}${NEXT_NUM}"
-  if ! echo "$EXISTING_NAMES" | grep -qx "$CANDIDATE"; then
-    DEPLOYMENT_NAME="$CANDIDATE"
-    break
-  fi
-  sleep "0.$((RANDOM % 500 + 200))"
-done
-[ -z "$DEPLOYMENT_NAME" ] && DEPLOYMENT_NAME="${NAME_PREFIX}${AUTOACCOUNT_ORG_ID}"
-
-cd ~
-git clone https://github.com/justinvid/pc-connector.git
-cd ~/pc-connector/
-terraform init
-terraform apply -auto-approve -input=false \
-  -var "crystal_api_key=$CRYSTAL_API_KEY" \
-  -var "crystal_base_url=$CRYSTAL_BASE_URL" \
-  -var "pce_api_user=api_${AUTOACCOUNT_APIKEY_ID}" \
-  -var "pce_api_secret=$AUTOACCOUNT_APIKEY_SECRET" \
-  -var "org_id=$AUTOACCOUNT_ORG_ID" \
-  -var "name=$DEPLOYMENT_NAME" \
-  -var "template_name=$TEMPLATE_NAME" \
-  -var "pce_fqdn=$pceFqdn"
-
-CRYSTAL_DEPLOYMENT_ID="$(terraform output -raw deployment_id)"
-agent variable set CRYSTALDEPLOYMENT "$CRYSTAL_DEPLOYMENT_ID"
-agent variable set CRYSTALBASEURL "$CRYSTAL_BASE_URL"
-
-# The module's own start_request fires immediately after
-# template_request with no delay, but the CSV/object import behind
-# the template takes a few seconds to actually finish on Crystal's
-# backend - calling /start that fast returns 200 but silently doesn't
-# launch anything (confirmed live: same call worked once retried a
-# few minutes later). Poll status and retry /start until it's
-# actually running, rather than trusting the first 200.
-for i in 1 2 3 4 5 6; do
-  status="$(curl -s -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID" | python3 -c "import json,sys; print(json.load(sys.stdin).get('status'))")"
-  if [ "$status" = "running" ]; then
-    echo "Crystal deployment is running (attempt $i)"
-    break
-  fi
-  echo "Crystal deployment status is '$status' (attempt $i) - retrying /start"
-  curl -s -o /dev/null -X POST -H "X-API-Key: $CRYSTAL_API_KEY" -H "Content-Type: application/json" \
-    -d '{"interval":"5m","auto_attacks":false}' \
-    "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID/start"
-  sleep 10
-done
-
-# Fire the Lateral Movement attack at boot so its traffic is already
-# in the PCE by the time learners reach the Incident Response
-# Investigation exercise, rather than relying on an instructor to hit
-# Fire Attack in Crystal. Same call as the UI button. 3h is Crystal's
-# default duration - the attack traffic stays in PCE traffic history
-# after it ends. auto_attacks stays false on /start above so only this
-# one scenario runs. The engine applies it on its next tick (up to
-# ~5m), so only the HTTP response is checked here; non-2xx is retried
-# and a final failure is logged, not fatal, so the rest of the lab
-# still builds.
-ATTACK_SCENARIO="lateralMovement_firstTimeConnection"
-for i in 1 2 3 4 5 6; do
-  attack_code="$(curl -s -o /tmp/crystal-attack.json -w "%{http_code}" -X POST \
-    -H "X-API-Key: $CRYSTAL_API_KEY" -H "Content-Type: application/json" \
-    -d "{\"scenario\":\"$ATTACK_SCENARIO\",\"duration\":\"3h\"}" \
-    "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID/attack" || echo "000")"
-  if [ "${attack_code:0:1}" = "2" ]; then
-    echo "Crystal attack '$ATTACK_SCENARIO' fired for 3h (attempt $i)"
-    break
-  fi
-  echo "Crystal attack fire returned HTTP $attack_code (attempt $i): $(cat /tmp/crystal-attack.json 2>/dev/null)"
-  [ "$i" = "6" ] && echo "WARNING: Lateral Movement attack NOT fired - fire it manually from Crystal"
-  sleep 10
-done
-
-echo "--- Crystal block end ---"
-set -x
-
-bash /usr/local/bin/disable-all-rulesets
+  exec bash \"$STARTUP_REPO_DIR/vensimscheduler.sh\"
+" > /var/log/vensim-startup.log 2>&1 < /dev/null &
 
 echo "===== MAGIC LINK + ACCOUNT SETUP END ====="
