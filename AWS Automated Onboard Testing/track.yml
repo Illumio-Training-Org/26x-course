@@ -1,6 +1,6 @@
-slug: 26x-aws-automated-onboard-testing
-id: ybvtzpk6ckuf
-title: '! 26.x AWS Automated Onboard Testing'
+slug: 26x-test-aws-automated-onboard-testing
+id: l1vdgbreblk0
+title: '! 26.x Test: AWS Automated Onboard Testing'
 description: |-
   Lab Name: 26.x AWS AUTOMATED ONBOARD TESTING
 
@@ -57,5 +57,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "17660691289710687834"
+checksum: "6498515652486627894"
 enhanced_loading: false

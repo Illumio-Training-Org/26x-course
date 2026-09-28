@@ -1,10 +1,10 @@
 ---
 slug: check-onboarding
-id: pb5thxmrs6df
+id: kk7ckuxgyzee
 type: challenge
 title: Check Automated Onboarding Status
 tabs:
-- id: qi7gjkps5qzy
+- id: hzt1dzys5wrw
   title: AWS
   type: service
   hostname: cloud-client
