@@ -1,6 +1,6 @@
-slug: 26x-legacy-associate-exam
-id: z9vyxquaupgd
-title: '! 26.x Legacy: Associate Exam'
+slug: 26x-superseded-associate-exam
+id: 6px1aiuadzpu
+title: '! 26.x Superseded: Associate Exam'
 description: |-
   Lab Name: 26.x ASSOCIATE EXAM
 
@@ -30,5 +30,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "12926102934649278001"
+checksum: "5792333267880767467"
 enhanced_loading: false

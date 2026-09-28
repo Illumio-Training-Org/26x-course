@@ -1,10 +1,10 @@
 ---
 slug: task-1
-id: bjxktfubqkmw
+id: qrypnm0xdyi6
 type: challenge
 title: 01-Workload Pairing
 tabs:
-- id: bpafucaz4rde
+- id: eshz7ttdz6zn
   title: Linux
   type: terminal
   hostname: linux-vm
