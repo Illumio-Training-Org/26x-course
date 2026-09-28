@@ -1,6 +1,6 @@
-slug: 26x-day1-base-lab-test
-id: fnybywvnettv
-title: '! 26.x Lab'
+slug: 26x-legacy-lab
+id: j71v5jbeqhqy
+title: '! 26.x Legacy: Lab'
 description: |-
   This lab provides access to:
 
@@ -25,5 +25,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "10626616143214105522"
+checksum: "6279956744276464753"
 enhanced_loading: false
