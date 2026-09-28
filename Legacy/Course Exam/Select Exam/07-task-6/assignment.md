@@ -1,6 +1,6 @@
 ---
 slug: task-6
-id: juaj2gtfmdaq
+id: 6b3vyx7xwdjs
 type: challenge
 title: 06-Ordering Application Ringfencing
 difficulty: ""

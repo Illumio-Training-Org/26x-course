@@ -1,6 +1,6 @@
-slug: 26x-select-exam
-id: yn8zc7xmrwvf
-title: '! 26.x Select Exam'
+slug: 26x-legacy-select-exam
+id: hyk03i701bjs
+title: '! 26.x Legacy: Select Exam'
 description: |-
   Lab Name: 26.x SELECT EXAM
 
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "12327759748291389805"
+checksum: "5978294225078560377"
 enhanced_loading: false

@@ -1,6 +1,6 @@
 ---
 slug: task-8
-id: xcsdwb5xkzcv
+id: jdktbxayl6s4
 type: challenge
 title: 08-Global Development and Production Segmentation
 difficulty: ""
