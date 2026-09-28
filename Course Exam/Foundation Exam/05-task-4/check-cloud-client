@@ -41,6 +41,14 @@ if not named:
     print('Policy Task4-DenyPolicy not found')
     sys.exit(1)
 
+# Must be a scopeless policy. A scope of ca/Production/ordering plus an
+# All Workloads -> All Workloads intra-scope deny rule blocks the same
+# traffic, but isn't what the task asks for. Scopeless = no scope rows,
+# or a single empty one.
+if any(any(scope for scope in (rs.get('scopes') or [])) for rs in named):
+    print('Task4-DenyPolicy should be a scopeless policy - remove the scope and put the Application, Environment and Location labels on the rule Destination instead')
+    sys.exit(1)
+
 def has_tcp_22(ingress_services):
     # Accept either a linked service object (student picked the
     # built-in 'SSH' service, which already bundles tcp/22 + udp/22
