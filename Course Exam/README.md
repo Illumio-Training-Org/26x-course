@@ -11,6 +11,10 @@ its own Instruqt track. The previous vensim-based versions are in
 | `Select Exam/` | `! 26.x Select Exam` / `26x-select-exam` | 10 | 150 min |
 | `Specialist Exam/` | `! 26.x Specialist Exam` / `26x-specialist-exam` | 5 (= Select 1-5) | 120 min |
 
+**Which exams each audience takes:** Customers take the Associate Exam
+(5 questions) then the Specialist Exam (5 questions). Partners take the
+Foundation Exam (10 questions) then the Specialist Exam (5 questions).
+
 **Sync rule:** Associate's tasks must stay identical to Foundation's first
 5, and Specialist's to Select's first 5 — any wording or check change in one
 goes into the other.

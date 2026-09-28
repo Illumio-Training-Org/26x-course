@@ -33,6 +33,10 @@ last. Any new current track must start with a word that sorts before
   demo (non-"Task") rulesets and, for Foundation, plants the Task 9 rogue
   label; log at `/var/log/exam-start-state.log`. Foundation/Associate Task 4
   requires a scopeless policy.
+
+  **Which exams each audience takes:** Customers take the Associate Exam
+  (5 questions) then the Specialist Exam (5 questions). Partners take the
+  Foundation Exam (10 questions) then the Specialist Exam (5 questions).
 - `Legacy/` — the previous vensim-based tracks, unchanged apart from
   names/slugs:
   - `Legacy/Course Lab/` — `! 26.x Superseded: Lab` (`26x-superseded-lab`)
