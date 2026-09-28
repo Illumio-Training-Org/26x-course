@@ -5,7 +5,33 @@ integration, separate from the general build history in git log.
 
 ## Traffic flows slow to appear in the PCE's Traffic Explorer / Map
 
-**Status:** open, timing not yet confirmed.
+**Status:** open. First clean timing run (2026-09-28): **~55 minutes**.
+
+**Clean run, 2026-09-28 (org 4140289, deployment
+`26x_lab_crystal_test_280926_01`)** - one deployment, nothing else run
+against the org, Lateral Movement attack auto-fired at boot. Times UTC
+(BST = +1):
+
+| Time (UTC) | Event |
+|---|---|
+| 08:03:39 | Crystal engine starts, VENs pair |
+| 08:09:26 | Tick 1 - ~880 flows/tick generated, attack active |
+| 08:09-08:43 | PCE rejects posts with `503 Waiting for database cache` / traffic query API returns `503 Waiting for cache initialization` |
+| 08:37:00 | Earliest `First Detected` of any flow that eventually shows - flows generated before this were never stored |
+| ~08:45 | Traffic query API stops returning 503, but returns 0 flows |
+| 08:57:39 | Still 0 flows |
+| 09:00:48 | **865 flows searchable**, full attack chain present (33 RDP-into-jump-host, 26 SSH-out-of-jump-host, 116 DC auth/DNS/SMB rows from 43 sources) |
+
+So the ~55 min is two PCE-side delays back to back: ~34 min before the
+new org accepts traffic at all, then ~20 min before accepted traffic is
+queryable. Nothing in Crystal's log changes when traffic appears -
+Crystal was sending the same way throughout. A consistent ~36-39 of
+121 simulated agents (incl. `mac-endpoint-1..6`) kept getting 503s on
+post-traffic/heartbeat/get-policy the whole time, but their attack
+flows still show up because the destination (jump host) VEN reports
+them too.
+
+**Earlier, less reliable measurement (2026-09-22):**
 
 Objects (labels, workloads, rulesets, etc.) and Crystal's own
 flows/tick counter populate quickly after a deployment starts, but the
