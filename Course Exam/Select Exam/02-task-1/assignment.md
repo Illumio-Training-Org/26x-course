@@ -1,15 +1,15 @@
 ---
 slug: task-1
-id: byky76fyi0rk
+id: fpux40yzfmu8
 type: challenge
 title: 01-Workload Pairing and Application Classification
 tabs:
-- id: jqc2anyb09wd
+- id: am3p2zv9n7u0
   title: Linux
   type: terminal
   hostname: linux-vm
   cmd: bash
-- id: x5etapyzde8q
+- id: qlf7utan54xk
   title: Windows
   type: terminal
   hostname: windows-vm

@@ -1,10 +1,10 @@
 ---
 slug: task-10
-id: c1rf6mui00nn
+id: d1cjvrwpvp90
 type: challenge
 title: 10-Cloud Application Onboarding
 tabs:
-- id: qstsjzz0rkoe
+- id: yuxjc6p0kj9k
   title: AWS
   type: service
   hostname: cloud-client
