@@ -1,6 +1,6 @@
 ---
 slug: close-lab
-id: o8fjugjxjqfg
+id: slgwxhhhu8y4
 type: challenge
 title: Close Lab
 teaser: セッションを終了する前にお読みください

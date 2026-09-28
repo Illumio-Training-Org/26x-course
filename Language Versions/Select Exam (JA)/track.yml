@@ -1,6 +1,6 @@
-slug: 26x-select-exam-ja
-id: ysifbekqa3zk
-title: '! 26.x Select Exam (JA)'
+slug: 26x-test-select-exam-ja
+id: ubqqgoxy5lh8
+title: '! 26.x Test: Select Exam (JA)'
 description: |-
   Lab Name: 26.x SELECT EXAM (JA)
 
@@ -23,5 +23,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "8058002491527031513"
+checksum: "11858226258469409811"
 enhanced_loading: false
