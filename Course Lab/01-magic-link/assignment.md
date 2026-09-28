@@ -77,6 +77,8 @@ Advanced
 > [!WARNING]
 > These commands are only for use in troubleshooting, if required by the instructor.
 
+Using the Cloud Console Tab
+
 To show the Account Identities:
 
 ```run
