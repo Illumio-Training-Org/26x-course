@@ -1,6 +1,6 @@
 ---
 slug: task-4
-id: ex2h4aimbvye
+id: v6hcqhdun5q0
 type: challenge
 title: 04-Basic Deny Policy
 difficulty: ""

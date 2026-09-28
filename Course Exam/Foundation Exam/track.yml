@@ -1,6 +1,6 @@
-slug: 26x-current-foundation-exam
-id: fakk7wjxqzpi
-title: '! 26.x Current: Foundation Exam'
+slug: 26x-foundation-exam
+id: rmsxhzxbxujt
+title: '! 26.x Foundation Exam'
 description: |-
   Lab Name: 26.x FOUNDATION EXAM
 
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "10786306780494121935"
+checksum: "874148646968684145"
 enhanced_loading: false

@@ -1,6 +1,6 @@
 ---
 slug: task-6
-id: 7ssxrtel8vak
+id: opvrieopoqnz
 type: challenge
 title: 06-IP List Creation
 difficulty: ""
