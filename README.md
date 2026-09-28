@@ -54,7 +54,7 @@ in the wider CX-NEW working folder for the maintained baseline).
 
 ## How the shared base lab is built
 
-Every day-track boots the same underlying infrastructure before its own
+Every track boots the same underlying infrastructure before its own
 day-specific content begins. All of this happens automatically as soon as
 the sandbox starts — learners never trigger any of it manually.
 
@@ -92,33 +92,82 @@ Container VEN (CVEN) onboarding exercise: creating the Container Cluster
 object in the PCE, generating a pairing profile, and deploying Illumio's
 Helm chart against the cluster.
 
-### 5. Synthetic traffic generation
+### 5. Synthetic objects and traffic (Project Crystal)
 
 So the learner has something realistic to look at in Illumination/Explorer
-from the moment they log in — rather than an empty PCE with nothing paired
-yet — the sandbox also populates the org with a full synthetic demo
-environment and ongoing simulated traffic. This uses two external,
-purpose-built tools:
+from the moment they log in, the org is populated with a full synthetic demo
+environment and ongoing simulated traffic. The current tracks do this with
+**Project Crystal** (`https://crystal.illumio.com`), Illumio's hosted
+traffic/object generator. It wraps the same underlying VEN-simulator engine
+and "default" dataset the old build used, but runs on Crystal's own
+infrastructure instead of as a background process inside the sandbox.
+
+What `setup-cloud-client` does, in order:
+
+1. Installs Terraform and runs the
+   [`justinvid/pc-connector`](https://github.com/justinvid/pc-connector)
+   module, which makes 4 Crystal API calls: create a deployment, bind it to
+   this sandbox's own PCE org (`AUTOACCOUNT_*` credentials), select the
+   `default` VEN-simulator template (lowercase - `Default` returns 400), and
+   start it with `auto_attacks: false`.
+2. Polls the deployment and re-calls `/start` until it really is `running`
+   (the first `/start` can return 200 without starting anything if the
+   template import hasn't finished).
+3. **Lab only:** fires the Lateral Movement attack
+   (`POST /api/deployments/{id}/attack`,
+   `lateralMovement_firstTimeConnection`, 3h) so the Incident Response
+   Investigation exercise has attack traffic without an instructor pressing
+   Fire Attack in Crystal.
+4. **Lab:** disables every ruleset once Crystal has created them (learners
+   enable what they need). **Exams:** a background job
+   (`/root/exam-start-state.py`, log `/var/log/exam-start-state.log`) waits
+   for the import to finish, then disables the demo (non-"Task") rulesets,
+   re-checking at +5 and +10 min; Foundation also plants the Task 9
+   `Rogue-DoNotUse` Role label.
+
+Crystal then pairs ~182 simulated VENs, imports labels, workloads,
+services, IP lists, user groups and rulesets, and posts ~850-900 flows
+every 5 minutes for the rest of the session.
+
+**Naming:** deployments are `Lab_<DDMM>_<PCE org ID>` or
+`Exam_<DDMM>_<PCE org ID>` (e.g. `Lab_2809_4140290`), so an instructor can
+match a learner's org ID (shown in the Console) to its Crystal deployment.
+
+**Cleanup:** the deployment is stopped and deleted automatically when the
+lab ends - on NEXT in the Close Lab challenge (challenge cleanup script) and
+on stop/expiry (track cleanup script). Both are safe to run twice.
+
+**Credential:** `CRYSTAL_API_KEY` is a team-level Instruqt secret
+(`illumio-training` team), shared by every session. It is deliberately
+**not** exported to the learner's shell, and command echo (`set -x`) is
+switched off around every command that uses it so it never appears in
+Instruqt's track logs. Rotate it in Crystal's API Keys screen and update the
+Instruqt secret (UI or `instruqt secrets update CRYSTAL_API_KEY`).
+
+**Known limitations** (full detail in `Course Lab/ISSUES.md` and the running
+platform issues report): Crystal cannot report traffic for unmanaged
+(no-VEN) workloads; and a new PCE org on the shared `poc4` platform can take
+anywhere from ~15 to ~60 minutes before traffic is queryable (two
+back-to-back PCE-side delays, attributed by engineering to poc4 overload,
+with a planned move to partner100).
+
+#### Superseded tracks (vensim)
+
+The `! 26.x Superseded:` tracks (in `Legacy/`) use the previous mechanism,
+which runs inside the sandbox instead of Crystal:
 
 - [`Illumio-Training-Org/manual-instruqt-startup`](https://github.com/Illumio-Training-Org/manual-instruqt-startup) —
-  a toolset combining `workloader` (Illumio's PCE bulk-operations CLI) and
-  a Virtual Environment Simulator ("vensim") for populating a PCE with demo
-  content and posting simulated traffic against it.
+  `workloader` (Illumio's PCE bulk-operations CLI) plus the Virtual
+  Environment Simulator ("vensim").
 - [`Illumio-Training-Org/vensim_files`](https://github.com/Illumio-Training-Org/vensim_files) —
-  the demo dataset itself: labels, roughly 180 synthetic workload
-  identities, services, IP lists, user groups, rulesets/rules, and traffic
-  flow records.
+  the demo dataset (labels, ~180 synthetic workloads, services, IP lists,
+  user groups, rulesets/rules, traffic records).
 
-At boot, the `cloud-client` container clones both repos, registers the
-newly-created PCE org, imports the label/service/IP-list/policy content,
-activates the synthetic workloads as simulated (non-real) VENs, and posts
-an initial batch of traffic. A background process then keeps posting
-fresh traffic, sending heartbeats, and pulling policy on a recurring
-cadence for the rest of the session — so Illumination/Explorer keeps
-showing live-looking activity throughout the lab, independent of anything
-the learner does. Everything created this way is purely additive: the
-handful of objects Illumio's platform pre-seeds on every new trial org
-(a few default labels, services, and pairing profiles) are left untouched.
+At boot the `cloud-client` container clones both repos, imports the
+content, activates the synthetic workloads as simulated VENs, posts an
+initial batch of traffic, and a background scheduler keeps posting traffic,
+heartbeats and policy pulls for the rest of the session. Unlike Crystal,
+vensim can report flows on behalf of unmanaged workloads.
 
 ## APIs used for self-checks
 
@@ -145,3 +194,114 @@ which one to use depends on what's being checked:
   live on this same backend and are not queryable from the Core PCE
   API at all, regardless of credential — a bare `curl` against
   `poc4.illum.io` will never see AWS-onboarded resources.
+
+## Troubleshooting reference (the lab's Advanced section)
+
+Everything below was previously shown to learners in the `01-magic-link`
+challenge's **Advanced** section and is kept here as the full reference.
+All commands run in the **CloudCLI** (`cloud-client`) terminal tab.
+
+### Show this sandbox's account identities
+
+```
+echo $AUTOACCOUNT_APIKEY_ID
+echo $AUTOACCOUNT_APIKEY_SECRET
+echo $AUTOACCOUNT_ORG_ID
+echo $AUTOACCOUNT_PCE_FQDN
+```
+
+### Why there's no local traffic-generator log
+
+With Crystal, the deployment is created and started once during sandbox
+setup and then runs on Crystal's own infrastructure - not as a local
+process on this container. So there is no local log to tail (vensim had
+one), and no learner-facing status check, because checking Crystal needs
+the team-wide `CRYSTAL_API_KEY`, which must not be exposed in a learner's
+terminal. Instructors can see the deployment (`Lab_<DDMM>_<org ID>`) and its
+logs in the Crystal dashboard; otherwise use the PCE-side checks below.
+
+### Is the PCE API responding?
+
+Useful while investigating the intermittent 401/503 platform issues.
+`200` means healthy.
+
+```
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+curl -s -o /dev/null -w "%{http_code}\n" -u "$AUTH" "$BASE/workloads?max_results=1"
+```
+
+### What did Crystal create? (object counts)
+
+```
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+
+count() { curl -s -u "$AUTH" "$BASE$1" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))"; }
+
+echo "Labels:            $(count /labels)"
+echo "Label Dimensions:  $(count /label_dimensions)"
+echo "Pairing Profiles:  $(count /pairing_profiles)"
+echo "Workloads:         $(count /workloads?max_results=1000)"
+echo "Services:          $(count /sec_policy/draft/services)"
+echo "IP Lists:          $(count /sec_policy/draft/ip_lists)"
+echo "User Groups:       $(count /security_principals)"
+
+curl -s -u "$AUTH" "$BASE/sec_policy/draft/rule_sets" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+rules = sum(len(r.get('rules', [])) + len(r.get('deny_rules', [])) for r in d)
+print(f'Rulesets:          {len(d)}')
+print(f'Rules:             {rules}')
+"
+```
+
+| Object | Endpoint | Example count (clean run, 2026-09-22) |
+|---|---|---|
+| Labels | `/labels` | 109 |
+| Label Dimensions | `/label_dimensions` | 14 |
+| Pairing Profiles | `/pairing_profiles` | 4 |
+| Workloads | `/workloads?max_results=1000` | 182 |
+| Services | `/sec_policy/draft/services` | 90 |
+| IP Lists | `/sec_policy/draft/ip_lists` | 1 |
+| User Groups | `/security_principals` | 5 |
+| Rulesets | `/sec_policy/draft/rule_sets` | 15-16 |
+
+To see the raw objects rather than counts, call the endpoint directly,
+e.g. `curl -s -u "$AUTH" "$BASE/labels"`.
+
+Rulesets and User Groups can read **0** for the first few minutes after
+boot - Crystal's ruleset import runs asynchronously and can briefly fail
+with a benign HTTP 406 before recovering on its own. If those show 0, wait
+a few minutes and check again.
+
+### Anatomy of a PCE API call
+
+Every call follows the same pattern:
+
+```
+https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID/<endpoint>
+```
+
+- `$AUTOACCOUNT_PCE_FQDN` - the PCE FQDN and port together (e.g.
+  `poc4.illum.io:443`)
+- `/api/v2` - Illumio's REST API version prefix
+- `/orgs/$AUTOACCOUNT_ORG_ID` - this org
+- `/<endpoint>` - the object collection (`/labels`, `/workloads`,
+  `/sec_policy/draft/rule_sets`, etc.)
+
+Authenticated with HTTP Basic Auth as `api_$AUTOACCOUNT_APIKEY_ID` /
+`$AUTOACCOUNT_APIKEY_SECRET` - the same credential pair Crystal is given to
+bind its deployment to this org.
+
+Fully resolved (illustrative values, not a real credential - every session
+gets different ones):
+
+```
+curl -s -u "api_a1b2c3d4e5f6g7h8i:9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e" "https://pce.example.illum.io:443/api/v2/orgs/1234567/labels"
+```
+
+- `pce.example.illum.io:443` -> `$AUTOACCOUNT_PCE_FQDN`
+- `1234567` -> `$AUTOACCOUNT_ORG_ID`
+- `api_a1b2c3d4e5f6g7h8i` -> `api_$AUTOACCOUNT_APIKEY_ID`
+- `9f8e7d6c...` -> `$AUTOACCOUNT_APIKEY_SECRET`
