@@ -1,6 +1,6 @@
-slug: 26x-current-specialist-exam
-id: mtqbwvjzm9bq
-title: '! 26.x Current: Specialist Exam'
+slug: 26x-specialist-exam
+id: hgnobc39s1qq
+title: '! 26.x Specialist Exam'
 description: |-
   Lab Name: 26.x SPECIALIST EXAM
 
@@ -29,5 +29,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "12651851328672114480"
+checksum: "14896322937242474416"
 enhanced_loading: false
