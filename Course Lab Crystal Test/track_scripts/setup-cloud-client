@@ -281,6 +281,14 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 apt-get update -y
 apt-get -y install terraform
 
+# Command echoing (set -x) is switched off for the whole Crystal block
+# below, because every curl here carries CRYSTAL_API_KEY - a shared,
+# team-level secret - and xtrace would print it into the Instruqt
+# track logs. Progress is still logged via the echo lines. Switched
+# back on after the attack is fired.
+set +x
+echo "--- Crystal block start (command echo off to keep the API key out of logs) ---"
+
 CRYSTAL_BASE_URL="https://crystal.illumio.com"
 TEMPLATE_NAME="default"
 
@@ -290,7 +298,10 @@ TEMPLATE_NAME="default"
 # exceeded" with no detail on which stage (DNS/TCP/TLS) failed.
 echo "--- Crystal reachability diagnostics ---"
 getent hosts crystal.illumio.com || echo "DNS resolution FAILED for crystal.illumio.com"
-curl -v --connect-timeout 5 -m 8 -o /dev/null -w "HTTP %{http_code}\n" \
+# -w timings instead of -v: -v prints request headers, including the
+# API key. Zero connect/tls time shows which stage failed.
+curl -sS --connect-timeout 5 -m 8 -o /dev/null \
+  -w "HTTP %{http_code} dns=%{time_namelookup}s connect=%{time_connect}s tls=%{time_appconnect}s\n" \
   -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" || echo "curl exit code: $?"
 echo "--- end diagnostics ---"
 
@@ -388,6 +399,9 @@ for i in 1 2 3 4 5 6; do
   [ "$i" = "6" ] && echo "WARNING: Lateral Movement attack NOT fired - fire it manually from Crystal"
   sleep 10
 done
+
+echo "--- Crystal block end ---"
+set -x
 
 bash /usr/local/bin/disable-all-rulesets
 

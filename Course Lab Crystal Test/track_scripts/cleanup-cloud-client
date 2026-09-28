@@ -1,5 +1,6 @@
 #!/bin/bash
-set -x
+# No set -x: the curls below carry CRYSTAL_API_KEY, a shared team-level
+# secret, and xtrace would print it into the Instruqt track logs.
 
 echo "===== PROJECT CRYSTAL TEARDOWN START ====="
 
