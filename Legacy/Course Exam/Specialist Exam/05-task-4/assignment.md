@@ -1,6 +1,6 @@
 ---
 slug: task-4
-id: zqyfr6pdnavi
+id: xx5s9pgbjzwe
 type: challenge
 title: 04-Compromised Workload Isolation
 difficulty: ""
