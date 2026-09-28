@@ -1,6 +1,6 @@
 ---
 slug: task-8
-id: gi44pdldjtql
+id: s76t51phzi8e
 type: challenge
 title: 08-Scoped User Creation
 difficulty: ""

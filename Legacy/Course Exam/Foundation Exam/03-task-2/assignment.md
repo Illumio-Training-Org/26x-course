@@ -1,6 +1,6 @@
 ---
 slug: task-2
-id: zi3xxapqk6nr
+id: zudz61zwvvbv
 type: challenge
 title: 02-Workload Labeling
 difficulty: ""
