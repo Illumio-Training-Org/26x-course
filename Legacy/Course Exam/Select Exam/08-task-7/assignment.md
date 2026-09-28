@@ -1,6 +1,6 @@
 ---
 slug: task-7
-id: 0jrjwcy6bp0o
+id: sw6bekzwtwzj
 type: challenge
 title: 07-Ringfencing Using a Label Group
 difficulty: ""

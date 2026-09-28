@@ -1,6 +1,6 @@
 ---
 slug: magic-link
-id: 8437synns6ee
+id: kytdgcsbwrjq
 type: challenge
 title: 26.x Select Exam
 teaser: Access the Illumio Console
@@ -40,13 +40,13 @@ notes:
 - type: video
   url: https://www.youtube.com/embed/_QALLe3DJpk
 tabs:
-- id: h3sygwvr9a3u
+- id: iyjclurrspmk
   title: Illumio Platform Link
   type: service
   hostname: cloud-client
   path: /
   port: 80
-- id: y3vsgclkvpw2
+- id: kqxofwgz7wev
   title: cloud console
   type: terminal
   hostname: cloud-client
