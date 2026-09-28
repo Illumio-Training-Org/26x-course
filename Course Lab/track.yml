@@ -1,6 +1,6 @@
-slug: 26x-current-lab
-id: waqxjnjyalzu
-title: '! 26.x Current: Lab'
+slug: 26x-lab
+id: 0xbtpyxm7lcu
+title: '! 26.x Lab'
 description: |-
   This lab provides access to:
 
@@ -28,5 +28,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "15497399029641652300"
+checksum: "15523631942203826661"
 enhanced_loading: false
