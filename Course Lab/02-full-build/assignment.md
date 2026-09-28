@@ -358,7 +358,7 @@ check-containers
 🧩 Incident Response
 ==========
 
-Containment workflows, emergency policy, validation, rollback, and operational decision-making.
+Investigate and Contain an Incident
 
 **Part 1 — Incident Response & Readiness**
 
@@ -411,24 +411,14 @@ Practical ransomware use cases & high-risk services.
 
 **Scenario**
 
-Ransomware relies on a small set of well-known services to move laterally once it lands on a machine. Your jumphosts (`inf-jh01-prd`, `inf-jh02-prd`) are high-value targets — if one is compromised, an attacker will try to pivot to the other, and from there, further into the environment. Before writing a policy, you need to know exactly which services are considered highest risk.
+Ransomware relies on a small set of well-known services to move laterally once it lands on a machine — the **critical-severity** ones are RDP (`3389`), SMB (`445`), MSFT RPC (`135`, optional), and WinRM (`5985`/`5986`). Your jumphosts (`inf-jh01-prd`, `inf-jh02-prd`) are high-value targets — if one is compromised, an attacker will try to pivot to the other, and from there, further into the environment.
+
+> [!NOTE]
+> The **Dashboard → Ransomware Protection** page shows this same risky-services data, but can take time to populate on a freshly-built lab — feel free to check it out, but don't wait on it before continuing.
 
 ---
 
-**1) Identify the critical-severity ransomware-risky services**
-
-**Dashboard → Ransomware Protection**. Review the **Top 5 Risky Applications and Services** panel, then locate the full risky-services table.
-
-Identify the **critical-severity** services:
-
-- RDP — `3389`
-- SMB — `445`
-- MSFT RPC — `135` *(optional)*
-- WinRM — `5985` / `5986`
-
----
-
-**2) Create a policy protecting jumphosts from lateral movement**
+**1) Create a policy protecting jumphosts from lateral movement**
 
 **Rulesets and Rules → Segmentation Rulesets → Add**:
 
@@ -437,17 +427,11 @@ Identify the **critical-severity** services:
 
 Inside the ruleset, add a **Deny Rule**:
 
-- Consumers (Source): Role `jumpbox`
-- Providers (Destination): Role `jumpbox`
+- Source: Role `jumpbox`
+- Destination: Role `jumpbox`
 - Services: `RDP` (3389), `SMB` (445), `MSFT RPC` (135), `WinRM` (5985, 5986)
 
-**Provision** the ruleset. This blocks jumphost-to-jumphost traffic on every ransomware-critical service — `inf-jh01-prd` and `inf-jh02-prd` can no longer reach each other over RDP, SMB, RPC, or WinRM, containing lateral movement between them if one is compromised.
-
----
-
-**3) Recognize the dashboard's scope**
-
-The Ransomware Protection Dashboard reports on **managed server workloads only** — workloads running a VEN. Endpoints and containers are not included in its coverage or exposure scoring, even though they can still carry ransomware-risky traffic of their own.
+No need to provision this policy in the lab — but in production, once provisioned, it would block jumphost-to-jumphost traffic on every ransomware-critical service, containing lateral movement between `inf-jh01-prd` and `inf-jh02-prd` if one is compromised.
 
 ---
 

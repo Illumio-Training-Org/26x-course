@@ -364,6 +364,31 @@ for i in 1 2 3 4 5 6; do
   sleep 10
 done
 
+# Fire the Lateral Movement attack at boot so its traffic is already
+# in the PCE by the time learners reach the Incident Response
+# Investigation exercise, rather than relying on an instructor to hit
+# Fire Attack in Crystal. Same call as the UI button. 3h is Crystal's
+# default duration - the attack traffic stays in PCE traffic history
+# after it ends. auto_attacks stays false on /start above so only this
+# one scenario runs. The engine applies it on its next tick (up to
+# ~5m), so only the HTTP response is checked here; non-2xx is retried
+# and a final failure is logged, not fatal, so the rest of the lab
+# still builds.
+ATTACK_SCENARIO="lateralMovement_firstTimeConnection"
+for i in 1 2 3 4 5 6; do
+  attack_code="$(curl -s -o /tmp/crystal-attack.json -w "%{http_code}" -X POST \
+    -H "X-API-Key: $CRYSTAL_API_KEY" -H "Content-Type: application/json" \
+    -d "{\"scenario\":\"$ATTACK_SCENARIO\",\"duration\":\"3h\"}" \
+    "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID/attack" || echo "000")"
+  if [ "${attack_code:0:1}" = "2" ]; then
+    echo "Crystal attack '$ATTACK_SCENARIO' fired for 3h (attempt $i)"
+    break
+  fi
+  echo "Crystal attack fire returned HTTP $attack_code (attempt $i): $(cat /tmp/crystal-attack.json 2>/dev/null)"
+  [ "$i" = "6" ] && echo "WARNING: Lateral Movement attack NOT fired - fire it manually from Crystal"
+  sleep 10
+done
+
 bash /usr/local/bin/disable-all-rulesets
 
 echo "===== MAGIC LINK + ACCOUNT SETUP END ====="
