@@ -7,7 +7,7 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Create a new Policy named `Task4-DenyPolicy`.
+Create a scopeless Policy named `Task4-DenyPolicy`.
 
 Within this Policy, create a rule that denies **SSH** traffic from all
 workloads to workloads matching the following labels:
