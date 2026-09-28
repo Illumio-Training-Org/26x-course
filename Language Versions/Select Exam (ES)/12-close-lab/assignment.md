@@ -1,6 +1,6 @@
 ---
 slug: close-lab
-id: 0dqu5vem2m9x
+id: amckngvej1pm
 type: challenge
 title: Close Lab
 teaser: Lee esto antes de finalizar tu sesion

@@ -1,6 +1,6 @@
-slug: 26x-select-exam-es
-id: q8itopkbnxzc
-title: '! 26.x Select Exam (ES)'
+slug: 26x-test-select-exam-es
+id: vuiwrkj4xezz
+title: '! 26.x Test: Select Exam (ES)'
 description: |-
   Lab Name: 26.x SELECT EXAM (ES)
 
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "1052333562558714378"
+checksum: "4088999261672438613"
 enhanced_loading: false
