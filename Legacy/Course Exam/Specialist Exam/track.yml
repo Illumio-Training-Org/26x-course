@@ -1,6 +1,6 @@
-slug: 26x-legacy-specialist-exam
-id: geyfmrrde7do
-title: '! 26.x Legacy: Specialist Exam'
+slug: 26x-superseded-specialist-exam
+id: bcdr9ohudyaj
+title: '! 26.x Superseded: Specialist Exam'
 description: |-
   Lab Name: 26.x SPECIALIST EXAM
 
@@ -29,5 +29,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "12745479382151479097"
+checksum: "15536988514882821873"
 enhanced_loading: false
