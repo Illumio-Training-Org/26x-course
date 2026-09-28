@@ -1,6 +1,6 @@
-slug: 26x-lab-crystal-test
-id: pl7hlakufx4e
-title: '! 26.x Lab Crystal Test'
+slug: 26x-current-lab
+id: waqxjnjyalzu
+title: '! 26.x Current: Lab'
 description: |-
   This lab provides access to:
 
@@ -28,5 +28,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "2520055166163558751"
+checksum: "2424904622465521400"
 enhanced_loading: false
