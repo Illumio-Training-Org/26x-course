@@ -1,0 +1,31 @@
+slug: 26x-current-foundation-exam
+id: fakk7wjxqzpi
+title: '! 26.x Current: Foundation Exam'
+description: |-
+  Lab Name: 26.x FOUNDATION EXAM
+
+  Outcome:
+  This exam has 10 questions. The first task (pairing the workloads)
+  must be completed to continue and cannot be skipped. Any other task
+  can be skipped, but skipping counts against your score. In order to
+  pass the exam you need a score of at least 80% or 8 out of 10 correct
+  answers.
+icon: ./assets/logo.png
+tags:
+- ilt
+owner: illumio-training
+developers:
+- nathan.mitchell@illumio.com
+show_timer: true
+skipping_enabled: true
+idle_timeout: 3600
+timelimit: 4500
+lab_config:
+  sidebar_enabled: true
+  feedback_recap_enabled: true
+  feedback_tab_enabled: false
+  loadingMessages: true
+  override_challenge_layout: false
+  hideStopButton: false
+checksum: "16135965075292077957"
+enhanced_loading: false

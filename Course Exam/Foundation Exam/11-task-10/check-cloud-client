@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+
+# setup-cloud-client writes cleaned AUTOACCOUNT_* values here since this
+# script's execution context doesn't source .bashrc (interactive-only).
+. /root/.autoaccount_env
+
+AUTH2="${AUTOACCOUNT_SAAPIKEY_KEYID}:${AUTOACCOUNT_SAAPIKEY_SECRET}"
+
+result=$(curl -s -u "$AUTH2" -H "X-Tenant-Id: $AUTOACCOUNT_TENANT_ID" "https://cloud.illum.io/api/v1/integrations" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+aws = d.get('aws', [])
+if not aws:
+    print('No AWS account onboarded yet - use Cloud -> Onboarding -> Add AWS')
+    sys.exit(1)
+print('AWS account onboarded: ' + str(aws[0].get('name')))
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

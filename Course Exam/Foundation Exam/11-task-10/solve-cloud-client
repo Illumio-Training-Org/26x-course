@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# Runs when the learner clicks Skip.
+#
+# NOTE: AWS onboarding can't be done from a script - it requires
+# actually running the CloudFormation stack creation in the real AWS
+# Console. This is a stub so Skip is at least available and doesn't
+# error; it does NOT actually onboard the AWS account.
+
+exit 0

@@ -1,0 +1,267 @@
+#!/bin/bash
+set -exo
+
+echo "===== MAGIC LINK + ACCOUNT SETUP START ====="
+date
+
+# ---------------------------------------
+# Ensure required tools are present and updated
+# ---------------------------------------
+
+# update package index only
+apt-get update -y
+
+# upgrade only existing core tools (no installs)
+apt-get install --only-upgrade -y curl git
+
+
+# ---------------------------------------
+# Sanitize AUTOACCOUNT_* values
+# ---------------------------------------
+# Instruqt's autoaccount custom resource emits these as JSON-array-literal
+# strings (e.g. '["value"]') even with account_count: 1, not bare scalars.
+# AUTOACCOUNT_MAGICLINK already got this same tr -d treatment further
+# below; extend it to every other AUTOACCOUNT_* value up front so nothing
+# downstream (the PCE FQDN split, the agent variables, or the vensim
+# block) parses a value with stray brackets/quotes still in it.
+for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+           AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+           AUTOACCOUNT_SAAPIKEY_SECRET; do
+  cleaned="$(echo "${!var}" | tr -d '{}[]"')"
+  export "$var=$cleaned"
+done
+
+# Also make the cleaned values visible to any new terminal tab the
+# learner opens (e.g. the Advanced "echo $AUTOACCOUNT_APIKEY_ID" step) —
+# the container's own injected env vars are still the raw/dirty ones, so
+# override them for every future interactive shell via .bashrc.
+{
+  for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+             AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+             AUTOACCOUNT_SAAPIKEY_SECRET; do
+    printf 'export %s=%q\n' "$var" "${!var}"
+  done
+} >> /root/.bashrc
+
+# Also write the same cleaned values to a plain, guard-free env file that
+# non-interactive contexts can source directly — specifically Instruqt's
+# own check-script execution (check-cloud-client), which does not source
+# .bashrc (that only loads for interactive shells). Every check-cloud-client
+# script sources this file explicitly before using any $AUTOACCOUNT_* var.
+{
+  for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+             AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+             AUTOACCOUNT_SAAPIKEY_SECRET; do
+    printf 'export %s=%q\n' "$var" "${!var}"
+  done
+} > /root/.autoaccount_env
+
+# Deliberately NOT exporting CRYSTAL_API_KEY into .bashrc the way the
+# AUTOACCOUNT_* values above are. Unlike those (each scoped to one
+# learner's own single-use, ephemeral PCE org), CRYSTAL_API_KEY is a
+# single team-level secret shared across every learner session - if
+# it were exposed to an interactive shell, any learner could extract
+# it and get full account-wide Crystal access (list/create/stop/
+# delete any deployment for the whole team) from outside the sandbox
+# entirely. It stays available only within this script's own process,
+# which is all it's actually needed for.
+
+# ---------------------------------------
+# Parse PCE FQDN
+# ---------------------------------------
+if [[ "$AUTOACCOUNT_PCE_FQDN" == *:* ]]; then
+  pceFqdn=${AUTOACCOUNT_PCE_FQDN%%:*}
+  pcePort=${AUTOACCOUNT_PCE_FQDN##*:}
+else
+  echo "ERROR: AUTOACCOUNT_PCE_FQDN does not contain a port."
+  exit 1
+fi
+
+# ---------------------------------------
+# Save variables for later use (Instruqt state)
+# ---------------------------------------
+agent variable set ACCOUNTID "$AUTOACCOUNT_TENANT_ID"
+agent variable set APINAME "api_${AUTOACCOUNT_APIKEY_ID}"
+agent variable set APISECRET "$AUTOACCOUNT_APIKEY_SECRET"
+agent variable set ORGID "$AUTOACCOUNT_ORG_ID"
+agent variable set PCEFQDN "$pceFqdn"
+agent variable set PCEPort "$pcePort"
+agent variable set SACLIENT "$AUTOACCOUNT_SAAPIKEY_KEYID"
+agent variable set SASECRET "$AUTOACCOUNT_SAAPIKEY_SECRET"
+
+# ---------------------------------------
+# MAGIC LINK SETUP
+# ---------------------------------------
+MAGIC_LINK=$(echo "${AUTOACCOUNT_MAGICLINK}" | tr -d '{}[]"')
+
+echo "Generated MAGIC LINK:"
+echo "$MAGIC_LINK"
+
+# ---------------------------------------
+# Save MAGIC LINK (Instruqt state)
+# ---------------------------------------
+agent variable set MAGICURL "$MAGIC_LINK"
+
+# ---------------------------------------
+# Render tile (gomplate) - unchanged source repo, per Nathan's instruction
+# ---------------------------------------
+git clone https://github.com/jdschmitz15/illumio-instruqt-terraform-template.git
+AUTOACCOUNT_MAGICLINK="$MAGIC_LINK"
+gomplate -f ~/illumio-instruqt-terraform-template/index.html.tmpl -o /var/www/html/index.html
+date
+
+# ---------------------------------------
+# PROJECT CRYSTAL TRAFFIC GENERATION
+# ---------------------------------------
+# Replaces vensim for this lab variant. Project Crystal creates a new
+# deployment via its own REST API (using CRYSTAL_API_KEY, a team-level
+# Instruqt secret - not tenant-specific), binds it live to THIS
+# sandbox's own freshly-provisioned PCE org (the AUTOACCOUNT_* values
+# below), applies the built-in "default" vensim-style template, and
+# starts it. See github.com/justinvid/pc-connector for the module
+# source - main.tf does 4 API calls: POST /api/deployments, PUT
+# .../config, POST .../vensim-template, POST .../start.
+
+# Install Terraform
+# apt-key is removed on this image's Debian version (trixie) - use the
+# modern keyring-file method instead of the colleague's original
+# apt-key add call.
+curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/hashicorp.list
+apt-get update -y
+apt-get -y install terraform
+
+# Command echoing (set -x) is switched off for the whole Crystal block
+# below, because every curl here carries CRYSTAL_API_KEY - a shared,
+# team-level secret - and xtrace would print it into the Instruqt
+# track logs. Progress is still logged via the echo lines. Switched
+# back on once the deployment is running.
+set +x
+echo "--- Crystal block start (command echo off to keep the API key out of logs) ---"
+
+CRYSTAL_BASE_URL="https://crystal.illumio.com"
+TEMPLATE_NAME="default"
+
+# Diagnostics: confirm this sandbox container can actually reach
+# Crystal before handing off to terraform, since terraform's own
+# error on a network-level failure is an opaque "context deadline
+# exceeded" with no detail on which stage (DNS/TCP/TLS) failed.
+echo "--- Crystal reachability diagnostics ---"
+getent hosts crystal.illumio.com || echo "DNS resolution FAILED for crystal.illumio.com"
+# -w timings instead of -v: -v prints request headers, including the
+# API key. Zero connect/tls time shows which stage failed.
+curl -sS --connect-timeout 5 -m 8 -o /dev/null \
+  -w "HTTP %{http_code} dns=%{time_namelookup}s connect=%{time_connect}s tls=%{time_appconnect}s\n" \
+  -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" || echo "curl exit code: $?"
+echo "--- end diagnostics ---"
+
+# Deployment naming: Exam_<DDMM>_<PCE org ID>, e.g. Exam_2809_4140290.
+# The org ID is unique per session and is the same number the learner
+# sees in their Console and the Advanced section, so an instructor can
+# match a learner's lab to its Crystal deployment directly. No counter
+# or collision check needed.
+DEPLOYMENT_NAME="Exam_$(date -u +%d%m)_${AUTOACCOUNT_ORG_ID}"
+echo "Crystal deployment name: $DEPLOYMENT_NAME"
+
+cd ~
+git clone https://github.com/justinvid/pc-connector.git
+cd ~/pc-connector/
+terraform init
+terraform apply -auto-approve -input=false \
+  -var "crystal_api_key=$CRYSTAL_API_KEY" \
+  -var "crystal_base_url=$CRYSTAL_BASE_URL" \
+  -var "pce_api_user=api_${AUTOACCOUNT_APIKEY_ID}" \
+  -var "pce_api_secret=$AUTOACCOUNT_APIKEY_SECRET" \
+  -var "org_id=$AUTOACCOUNT_ORG_ID" \
+  -var "name=$DEPLOYMENT_NAME" \
+  -var "template_name=$TEMPLATE_NAME" \
+  -var "pce_fqdn=$pceFqdn"
+
+CRYSTAL_DEPLOYMENT_ID="$(terraform output -raw deployment_id)"
+agent variable set CRYSTALDEPLOYMENT "$CRYSTAL_DEPLOYMENT_ID"
+agent variable set CRYSTALBASEURL "$CRYSTAL_BASE_URL"
+
+# The module's own start_request fires immediately after
+# template_request with no delay, but the CSV/object import behind
+# the template takes a few seconds to actually finish on Crystal's
+# backend - calling /start that fast returns 200 but silently doesn't
+# launch anything (confirmed live: same call worked once retried a
+# few minutes later). Poll status and retry /start until it's
+# actually running, rather than trusting the first 200.
+for i in 1 2 3 4 5 6; do
+  status="$(curl -s -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID" | python3 -c "import json,sys; print(json.load(sys.stdin).get('status'))")"
+  if [ "$status" = "running" ]; then
+    echo "Crystal deployment is running (attempt $i)"
+    break
+  fi
+  echo "Crystal deployment status is '$status' (attempt $i) - retrying /start"
+  curl -s -o /dev/null -X POST -H "X-API-Key: $CRYSTAL_API_KEY" -H "Content-Type: application/json" \
+    -d '{"interval":"5m","auto_attacks":false}' \
+    "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID/start"
+  sleep 10
+done
+
+echo "--- Crystal block end ---"
+set -x
+
+# ---------------------------------------
+# EXAM START STATE - runs once Crystal's own object import has finished
+# ---------------------------------------
+# Crystal imports labels/rulesets/user groups asynchronously after /start
+# (a few minutes, and the ruleset import can briefly 406 before
+# self-recovering), so this waits until the org looks fully built -
+# >=100 labels and >=16 rulesets - checking every 20s for up to 30 min,
+# then:
+#   1. Task 9: plants the rogue Role label. Must come after Crystal's
+#      label import, which would otherwise not include it.
+#   2. Disables every default (non-Task) ruleset in draft so the demo
+#      policy library can't interfere with the policies learners build.
+#      Rulesets whose name starts with "Task" are left alone.
+# Backgrounded so setup (and the learner's first challenge) isn't held
+# up; log at /var/log/exam-start-state.log.
+cat > /root/exam-start-state.py <<'PYEOF'
+import json, os, subprocess, time
+fqdn_port = os.environ['AUTOACCOUNT_PCE_FQDN']
+org_id = os.environ['AUTOACCOUNT_ORG_ID']
+auth = 'api_' + os.environ['AUTOACCOUNT_APIKEY_ID'] + ':' + os.environ['AUTOACCOUNT_APIKEY_SECRET']
+base = 'https://' + fqdn_port + '/api/v2'
+org = '/orgs/' + org_id
+
+def call(method, path, body=None):
+    cmd = ['curl', '-s', '-m', '60', '-u', auth, '-X', method, base + path]
+    if body is not None:
+        cmd += ['-H', 'Content-Type: application/json', '-d', json.dumps(body)]
+    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    try:
+        return json.loads(out)
+    except Exception:
+        return out
+
+def count(path):
+    r = call('GET', org + path)
+    return len(r) if isinstance(r, list) else 0
+
+for i in range(90):
+    labels, rulesets = count('/labels?max_results=1000'), count('/sec_policy/draft/rule_sets?max_results=1000')
+    print(time.strftime('%H:%M:%S'), 'labels', labels, 'rulesets', rulesets, flush=True)
+    if labels >= 100 and rulesets >= 16:
+        break
+    time.sleep(20)
+else:
+    print('WARNING: Crystal import did not look complete after 30 min - continuing anyway', flush=True)
+
+existing = call('GET', org + '/labels?key=role&max_results=1000') or []
+if not any((l.get('value') or '').lower() == 'rogue-donotuse' for l in existing if isinstance(l, dict)):
+    print('Rogue label:', call('POST', org + '/labels', {'key': 'role', 'value': 'Rogue-DoNotUse'}), flush=True)
+
+for rs in call('GET', org + '/sec_policy/draft/rule_sets?max_results=1000') or []:
+    name = rs.get('name') or ''
+    if name.lower().startswith('task') or not rs.get('href') or not rs.get('enabled'):
+        continue
+    call('PUT', rs['href'], {'enabled': False})
+    print('Disabled default policy:', name, flush=True)
+print('Exam start state done', flush=True)
+PYEOF
+nohup python3 /root/exam-start-state.py > /var/log/exam-start-state.log 2>&1 < /dev/null &
+
+echo "===== MAGIC LINK + ACCOUNT SETUP END ====="
