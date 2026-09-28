@@ -213,12 +213,10 @@ set -x
 # >=100 labels and a ruleset count that has stopped growing - checking
 # every 20s for up to 30 min,
 # then:
-#   1. Task 9: plants the rogue Role label. Must come after Crystal's
-#      label import, which would otherwise not include it.
-#   2. Disables every default (non-Task) ruleset in draft so the demo
-#      policy library can't interfere with the policies learners build.
-#      Rulesets whose name starts with "Task" are left alone. Re-checked
-#      5 and 10 min later for any late-arriving rulesets.
+#   Disables every default (non-Task) ruleset in draft so the demo
+#   policy library can't interfere with the policies learners build.
+#   Rulesets whose name starts with "Task" are left alone. Re-checked
+#   5 and 10 min later for any late-arriving rulesets.
 # Backgrounded so setup (and the learner's first challenge) isn't held
 # up; log at /var/log/exam-start-state.log.
 cat > /root/exam-start-state.py <<'PYEOF'
@@ -257,10 +255,6 @@ for i in range(90):
     time.sleep(20)
 else:
     print('WARNING: Crystal import did not look complete after 30 min - continuing anyway', flush=True)
-
-existing = call('GET', org + '/labels?key=role&max_results=1000') or []
-if not any((l.get('value') or '').lower() == 'rogue-donotuse' for l in existing if isinstance(l, dict)):
-    print('Rogue label:', call('POST', org + '/labels', {'key': 'role', 'value': 'Rogue-DoNotUse'}), flush=True)
 
 def disable_defaults():
     for rs in call('GET', org + '/sec_policy/draft/rule_sets?max_results=1000') or []:

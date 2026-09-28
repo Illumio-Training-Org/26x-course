@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+# Fixed 2026-09-08: previously only checked that the quarantine label
+# was present, so a learner could pass by adding it while also
+# changing/removing one of linux-vm's other labels (e.g. Environment)
+# - live-caught by Nathan. Now verifies the full expected label set
+# (everything from Tasks 1/2, with DFIRBubble updated) is intact.
+#
+# Changed 2026-09-10: swapped the native PCE Quarantine label
+# (quarantine.illumio.com=strict-quarantine) for changing the
+# existing DFIRBubble label from IR-CLEANBUBBLE to IR-DIRTYBUBBLE -
+# consistent with the DFIR-bubble scheme already taught in Task 2,
+# rather than a second, unrelated labeling mechanism.
+
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+ws = {w.get('hostname'): w for w in get('/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')}
+wl = ws.get('linux-vm')
+if not wl:
+    print('linux-vm not found')
+    sys.exit(1)
+
+labels = {(e.get('key') or '').lower(): (e.get('value') or '').lower() for e in wl.get('labels', [])}
+
+expected = {
+    'role': 'web',
+    'app': 'portal',
+    'env': 'production',
+    'loc': 'ca',
+    'type': 'server',
+    'dfirbubble': 'ir-dirtybubble',
+}
+
+wrong = []
+for key, want in expected.items():
+    got = labels.get(key)
+    if got != want:
+        wrong.append(key + ' should be ' + want + ', found ' + (got or 'missing'))
+
+if wrong:
+    print('linux-vm labels are not all correct: ' + '; '.join(wrong))
+    sys.exit(1)
+
+print('linux-vm is marked as breached (IR-DIRTYBUBBLE) and its other labels are intact')
+sys.exit(0)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

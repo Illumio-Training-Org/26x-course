@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Runs when the learner clicks Skip.
+#
+# NOTE: pairing a VEN can't be done from a script - it requires the
+# actual VEN agent on linux-vm/windows-vm to run its pairing command
+# and check in with the PCE. This is a stub so Skip is at least
+# available and doesn't error; it does NOT actually pair either
+# workload. First-draft task, detail to be refined.
+
+exit 0

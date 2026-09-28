@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+
+# setup-cloud-client writes cleaned AUTOACCOUNT_* values here since this
+# script's execution context doesn't source .bashrc (interactive-only).
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+def resolve_label_value(href):
+    lbl = get(href.replace('/api/v2', ''))
+    return (lbl.get('value') or '').lower()
+
+label_groups = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups')
+lg = next((g for g in label_groups if (g.get('name') or '').lower() == 'pci-staging'), None)
+if not lg:
+    print('Label Group \"pci-staging\" not found')
+    sys.exit(1)
+
+values = set()
+for l in lg.get('labels', []):
+    href = l.get('href')
+    if href:
+        values.add(resolve_label_value(href))
+
+if not {'pci', 'staging'}.issubset(values):
+    print('Label Group \"pci-staging\" should contain the Environment labels PCI and Staging, found ' + str(sorted(values)))
+    sys.exit(1)
+
+print('Label Group pci-staging found with PCI and Staging labels')
+sys.exit(0)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

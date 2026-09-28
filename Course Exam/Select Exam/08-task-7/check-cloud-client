@@ -1,0 +1,102 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+# Scopes aren't taught in this course, so Task 6's ruleset is always
+# scopeless - this checks that Task6-RingfenceOrdering's rule now uses
+# the dev-prod Label Group in place of the plain Development label on
+# both source and destination, with Application=ordering and
+# Location=ca still present.
+#
+# Fixed 2026-09-08: previously gave one generic "should have X, Y, Z"
+# message per side with no indication of which specific piece was
+# actually wrong - same feedback gap Nathan reported on Task 6. Now
+# reports each missing/wrong piece individually.
+
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+label_groups = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups')
+lg = next((g for g in label_groups if (g.get('name') or '').lower() == 'dev-prod'), None)
+if not lg:
+    print('Label Group \"dev-prod\" not found')
+    sys.exit(1)
+
+values = set()
+for l in lg.get('labels', []):
+    href = l.get('href')
+    if href:
+        lbl = get(href.replace('/api/v2', ''))
+        values.add((lbl.get('value') or '').lower())
+if not {'development', 'production'}.issubset(values):
+    print('Label Group \"dev-prod\" should contain Development and Production, found ' + str(sorted(values)))
+    sys.exit(1)
+
+rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-ringfenceordering'), None)
+if not rs:
+    print('Policy \"Task6-RingfenceOrdering\" not found - do Task 6 first')
+    sys.exit(1)
+
+for scope in rs.get('scopes', []):
+    if scope:
+        print('Task6-RingfenceOrdering should not use a Scope - update the rule\'s labels directly instead')
+        sys.exit(1)
+
+def entry_kv(entry):
+    href = (entry.get('label') or {}).get('href')
+    if not href:
+        return None
+    lbl = get(href.replace('/api/v2', ''))
+    return (lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()
+
+def entry_group_href(entry):
+    return (entry.get('label_group') or {}).get('href')
+
+enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
+if len(enabled_rules) != 1:
+    print('Task6-RingfenceOrdering should have exactly one enabled rule, found ' + str(len(enabled_rules)))
+    sys.exit(1)
+rule = enabled_rules[0]
+
+def side_problems(side_name, entries):
+    kvs = {kv for kv in (entry_kv(e) for e in entries) if kv}
+    kv_dict = dict(kvs)
+    group_hrefs = {entry_group_href(e) for e in entries if entry_group_href(e)}
+    problems = []
+    if ('app', 'ordering') not in kvs:
+        problems.append(side_name + ' app should be ordering, found ' + (kv_dict.get('app') or 'missing'))
+    if ('loc', 'ca') not in kvs:
+        problems.append(side_name + ' loc should be ca, found ' + (kv_dict.get('loc') or 'missing'))
+    if lg.get('href') not in group_hrefs:
+        problems.append(side_name + ' is missing the dev-prod Label Group')
+    if 'env' in kv_dict:
+        problems.append(side_name + ' still has a plain env=' + kv_dict['env'] + ' label - remove it, the dev-prod Label Group replaces it')
+    return problems
+
+problems = side_problems('source', rule.get('consumers', [])) + side_problems('destination', rule.get('providers', []))
+if not problems:
+    print('dev-prod Label Group exists and Task6-RingfenceOrdering\'s rule now uses it instead of Development')
+    sys.exit(0)
+print('; '.join(problems))
+sys.exit(1)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

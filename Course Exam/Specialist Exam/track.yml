@@ -1,0 +1,33 @@
+slug: 26x-current-specialist-exam
+id: mtqbwvjzm9bq
+title: '! 26.x Current: Specialist Exam'
+description: |-
+  Lab Name: 26.x SPECIALIST EXAM
+
+  Outcome:
+  In this exam you will complete 5 hands-on tasks against the shared
+  26.x base lab environment (Illumio Console access, AWS Terraform build,
+  RockyLinux/Windows VMs, k3s/CVEN node), each graded automatically by
+  a check script. The first task (pairing the workloads) must be
+  completed to continue and cannot be skipped. Any other task can be
+  skipped, but skipping counts against your score. In order to pass
+  the exam you need a score of at least 80% or 4 out of 5 correct
+  answers.
+icon: ./assets/logo.png
+tags:
+- ilt
+owner: illumio-training
+developers:
+- nathan.mitchell@illumio.com
+show_timer: true
+idle_timeout: 3600
+timelimit: 7200
+lab_config:
+  sidebar_enabled: true
+  feedback_recap_enabled: true
+  feedback_tab_enabled: false
+  loadingMessages: true
+  override_challenge_layout: false
+  hideStopButton: false
+checksum: "10132259396443269598"
+enhanced_loading: false

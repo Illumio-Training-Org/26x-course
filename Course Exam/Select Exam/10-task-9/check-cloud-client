@@ -1,0 +1,122 @@
+#!/bin/sh
+#
+# This script runs when the platform checks the challenge.
+# Exit 0 = pass, non-zero = fail.
+#
+# Scopes aren't taught in this course, so this task does NOT accept a
+# Scope-based ruleset - it requires two plain rules: the intra-Payment
+# ringfence (Application=Payment, Location=LDN repeated on both source
+# and destination) and the inbound Ordering->Payment/LDN rule on
+# TCP/443 (HTTPS).
+#
+# Fixed 2026-09-11: the inbound rule's source only checked that
+# Application=Ordering was present (extras allowed) and its
+# destination used a subset check (extras allowed there too) -
+# live-caught by Nathan, who wants no other labels on either side.
+# Both now require an exact label match, same as the ringfence rule
+# already did. Confirmed the service check already accepts either a
+# named HTTPS service or a raw TCP/443 entry - either is correct.
+
+. /root/.autoaccount_env
+
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+result=$(python3 -c "
+import json, subprocess, sys
+
+def get(path):
+    url = 'https://$FQDN/api/v2' + path
+    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
+    return json.loads(out)
+
+rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task9-ringfencepayment'), None)
+if not rs:
+    print('Policy \"Task9-RingfencePayment\" not found')
+    sys.exit(1)
+
+for scope in rs.get('scopes', []):
+    if scope:
+        print('Task9-RingfencePayment should not use a Scope - build the ringfence rule with Application=Payment, Location=LDN on both source and destination instead')
+        sys.exit(1)
+
+def resolve_labels(entries):
+    out = set()
+    for e in entries:
+        href = (e.get('label') or {}).get('href')
+        if href:
+            lbl = get(href.replace('/api/v2', ''))
+            out.add(((lbl.get('key') or '').lower(), (lbl.get('value') or '').lower()))
+    return out
+
+expected = {('app', 'payment'), ('loc', 'ldn')}
+
+def is_all_services(ingress_services):
+    if not ingress_services:
+        return True
+    for entry in ingress_services:
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            if (svc.get('name') or '').lower() == 'all services':
+                return True
+    return False
+
+def has_tcp_443(ingress_services):
+    for entry in ingress_services or []:
+        if entry.get('port') == 443 and entry.get('proto') == 6:
+            return True
+        href = entry.get('href')
+        if href:
+            svc = get(href.replace('/api/v2', ''))
+            for sp in svc.get('service_ports', []):
+                if sp.get('port') == 443 and sp.get('proto') == 6:
+                    return True
+    return False
+
+enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
+if len(enabled_rules) != 2:
+    print('Task9-RingfencePayment should have exactly two enabled rules (the ringfence allow rule, and the inbound Ordering->Payment rule), found ' + str(len(enabled_rules)))
+    sys.exit(1)
+
+ringfence_rule = next((r for r in enabled_rules if is_all_services(r.get('ingress_services'))), None)
+inbound_rule = next((r for r in enabled_rules if has_tcp_443(r.get('ingress_services'))), None)
+
+reasons = []
+
+if not ringfence_rule:
+    reasons.append('missing the intra-Payment ringfence rule for All Services')
+else:
+    src_ok = resolve_labels(ringfence_rule.get('consumers', [])) == expected
+    dst_ok = resolve_labels(ringfence_rule.get('providers', [])) == expected
+    if not src_ok:
+        reasons.append('ringfence rule source is wrong - should be Application=Payment, Location=LDN')
+    if not dst_ok:
+        reasons.append('ringfence rule destination is wrong - should be Application=Payment, Location=LDN')
+
+if not inbound_rule:
+    reasons.append('missing the inbound allow rule for Ordering -> Payment on TCP/443 (HTTPS)')
+else:
+    consumer_labels = resolve_labels(inbound_rule.get('consumers', []))
+    if consumer_labels != {('app', 'ordering')}:
+        reasons.append('inbound rule source is wrong - should be exactly Application=Ordering, no other labels, found ' + str(sorted(consumer_labels)))
+    provider_labels = resolve_labels(inbound_rule.get('providers', []))
+    if provider_labels != expected:
+        reasons.append('inbound rule destination is wrong - should be exactly Application=Payment, Location=LDN, no other labels, found ' + str(sorted(provider_labels)))
+
+if reasons:
+    print('; '.join(reasons))
+    sys.exit(1)
+
+print('Task9-RingfencePayment ringfences Payment/LDN and allows inbound HTTPS from Ordering')
+sys.exit(0)
+")
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

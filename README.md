@@ -23,7 +23,13 @@ Restructured 2026-09-28.
   the lab ends (Close Lab NEXT or stop/expiry). Known issues in its own
   `ISSUES.md`.
 - `Course Exam/` — the **Current** exams (`! 26.x Current: Foundation /
-  Associate / Select / Specialist Exam`), Crystal-based. Being built.
+  Associate / Select / Specialist Exam`, slugs `26x-current-<x>-exam`).
+  Same tasks as Legacy, Crystal-based; deployments named
+  `Exam_<DDMM>_<PCE org ID>` (no attack fired). A background
+  `/root/exam-start-state.py` waits for Crystal's import, then disables the
+  demo (non-"Task") rulesets and, for Foundation, plants the Task 9 rogue
+  label; log at `/var/log/exam-start-state.log`. Foundation/Associate Task 4
+  requires a scopeless policy.
 - `Legacy/` — the previous vensim-based tracks, unchanged apart from
   names/slugs:
   - `Legacy/Course Lab/` — `! 26.x Legacy: Lab` (`26x-legacy-lab`)
