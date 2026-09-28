@@ -1,6 +1,6 @@
-slug: 26x-current-associate-exam
-id: 3yvij5a4sxkc
-title: '! 26.x Current: Associate Exam'
+slug: 26x-associate-exam
+id: yhfrpr27mexi
+title: '! 26.x Associate Exam'
 description: |-
   Lab Name: 26.x ASSOCIATE EXAM
 
@@ -30,5 +30,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "7826394567787893121"
+checksum: "4301487009786471765"
 enhanced_loading: false
