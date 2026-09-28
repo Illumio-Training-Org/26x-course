@@ -65,7 +65,12 @@ if not labels_ok:
     print('Both workloads are paired, but the labeling is not correct')
     sys.exit(1)
 
-print('Both workloads paired and labeled correctly into the portal application')
+not_idle = [host for host in expected_role if ws[host].get('enforcement_mode') != 'idle']
+if not_idle:
+    print('Both workloads are paired and labeled correctly, but not in Idle mode: ' + ', '.join(not_idle) + ' - pair using a Pairing Profile with Enforcement Mode set to Idle')
+    sys.exit(1)
+
+print('Both workloads paired in Idle mode and labeled correctly into the portal application')
 sys.exit(0)
 ")
 status=$?

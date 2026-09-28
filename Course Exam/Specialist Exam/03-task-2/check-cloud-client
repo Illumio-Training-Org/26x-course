@@ -5,8 +5,14 @@
 #
 # Scopes aren't taught in this course, so this task does NOT accept a
 # Scope-based ruleset - it requires a plain rule with all 5 labels
-# repeated on both source and destination. Mirrors Select Exam's
-# Task 2 (Specialist = Select's first 5 tasks).
+# repeated on both source and destination. NOT YET LIVE-VERIFIED
+# against a real sandbox - refine once tested.
+#
+# Fixed 2026-09-08: the per-workload label check previously only
+# looked for the 2 new labels (Type/IR) added this task, so a learner
+# could pass while having changed/removed one of the labels from Task
+# 1 (e.g. Role, Environment) - same bug class Nathan caught live in
+# Task 4. Now verifies each workload's full expected label set.
 
 . /root/.autoaccount_env
 

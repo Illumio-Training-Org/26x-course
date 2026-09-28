@@ -10,8 +10,8 @@
 # left untouched. Also creates Task2-Ringfence as a scopeless ruleset
 # with an allow rule that has all 5 labels on both source and
 # destination - Scopes aren't taught in this course and
-# check-cloud-client does not accept a Scope-based equivalent. Mirrors
-# Select Exam's Task 2 (Specialist = Select's first 5 tasks).
+# check-cloud-client does not accept a Scope-based equivalent.
+# NOT YET LIVE-VERIFIED against a real sandbox.
 
 . /root/.autoaccount_env
 

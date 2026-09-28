@@ -9,8 +9,8 @@ enhanced_loading: null
 ---
 Assume that the Web workload has been compromised.
 
-Isolate `linux-vm` by applying the Quarantine label:
+Mark `linux-vm` as breached by changing its DFIR label:
 
-`strict-quarantine`
+`IR-CLEANBUBBLE` → `IR-DIRTYBUBBLE`
 
-Ensure the workload is properly quarantined before continuing.
+Ensure the workload no longer retains the `IR-CLEANBUBBLE` label.

@@ -4,6 +4,14 @@
 # Exit 0 = pass, non-zero = fail.
 #
 # FIRST DRAFT - rule shape not yet live-verified. Detail to refine.
+#
+# Changed 2026-09-11: source side previously only required Role=nagios,
+# letting the rule apply to any nagios-labeled workload anywhere - but
+# the seeded inventory has multiple "monitoring"-type workloads across
+# different locations, and the task specifically wants the California
+# one. Now requires the full label set on the source (Location=ca,
+# Environment=Production, Application=monitoring, Role=nagios), not
+# just Role.
 
 . /root/.autoaccount_env
 
@@ -48,18 +56,20 @@ def has_tcp_5666(ingress_services):
     return False
 
 expected_providers = {'app': 'portal', 'env': 'production', 'loc': 'ca'}
+expected_consumers = {'app': 'monitoring', 'env': 'production', 'loc': 'ca', 'role': 'nagios'}
 best_reasons = None
 for rule in rs.get('rules', []):
     providers = resolve(rule.get('providers', []))
     consumers = resolve(rule.get('consumers', []))
-    labels_ok = all(providers.get(k) == v for k, v in expected_providers.items()) and consumers.get('role') == 'nagios'
+    labels_ok = all(providers.get(k) == v for k, v in expected_providers.items()) and all(consumers.get(k) == v for k, v in expected_consumers.items())
     service_ok = has_tcp_5666(rule.get('ingress_services'))
     if labels_ok and service_ok:
         print('Found the nagios -> portal allow rule for tcp/5666 in Task3-CoreServices')
         sys.exit(0)
     reasons = []
-    if consumers.get('role') != 'nagios':
-        reasons.append('source should be Role=nagios, found ' + str(consumers.get('role')))
+    for k, v in expected_consumers.items():
+        if consumers.get(k) != v:
+            reasons.append('source ' + k + ' should be ' + v + ', found ' + (consumers.get(k) or 'missing'))
     for k, v in expected_providers.items():
         if providers.get(k) != v:
             reasons.append('destination missing ' + k + '=' + v)
@@ -71,7 +81,7 @@ for rule in rs.get('rules', []):
 if best_reasons:
     print('Task3-CoreServices rule is close but: ' + '; '.join(best_reasons))
 else:
-    print('Task3-CoreServices exists but has no rule allowing Role=nagios to the portal application')
+    print('Task3-CoreServices exists but has no rule allowing the California Nagios instance to reach the portal application')
 sys.exit(1)
 ")
 status=$?
