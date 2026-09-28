@@ -4,12 +4,12 @@ The four current certification exams, all Crystal-based. Each subfolder is
 its own Instruqt track. The previous vensim-based versions are in
 `../Legacy/Course Exam/` (`! 26.x Superseded: ...`).
 
-| Folder | Title / slug | Tasks | Time limit |
-|---|---|---|---|
-| `Foundation Exam/` | `! 26.x Foundation Exam` / `26x-foundation-exam` | 10 | 75 min |
-| `Associate Exam/` | `! 26.x Associate Exam` / `26x-associate-exam` | 5 (= Foundation 1-5) | 45 min |
-| `Select Exam/` | `! 26.x Select Exam` / `26x-select-exam` | 10 | 150 min |
-| `Specialist Exam/` | `! 26.x Specialist Exam` / `26x-specialist-exam` | 5 (= Select 1-5) | 120 min |
+| Audience | Folder | Title / slug | Tasks | Time limit |
+|---|---|---|---|---|
+| Partner | `Foundation Exam/` | `! 26.x Foundation Exam` / `26x-foundation-exam` | 10 | 75 min |
+| Customer | `Associate Exam/` | `! 26.x Associate Exam` / `26x-associate-exam` | 5 (= Foundation 1-5) | 45 min |
+| Partner | `Select Exam/` | `! 26.x Select Exam` / `26x-select-exam` | 10 | 150 min |
+| Customer | `Specialist Exam/` | `! 26.x Specialist Exam` / `26x-specialist-exam` | 5 (= Select 1-5) | 120 min |
 
 **Which exams each audience takes:** Customers take the Associate Exam
 (5 questions) then the Specialist Exam (5 questions). Partners take the
