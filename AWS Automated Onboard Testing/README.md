@@ -194,7 +194,7 @@ don't pass the new CloudSecure variables).
 
 ## Where this came from
 
-Not something researched cold. Nathan recalled a colleague's lab that
+Not something researched cold. I recalled a colleague's lab that
 auto-onboards cloud accounts and had it pulled (`instruqt track pull
 grsxrhaf37xt`, saved to `CX-NEW/Illumivers lab example aug 2026/` —
 **not** committed to this repo, see security note below). Its

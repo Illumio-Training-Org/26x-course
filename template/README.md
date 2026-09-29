@@ -74,4 +74,4 @@ See [`track.yml`](track.yml) for the full track definition.
   `track.yml`, but double-check them in the Instruqt UI after first push).
 - Internal guide: `Documents\Training\Trainng Class Tools\Using Instruqt for ILT.doc` (OneDrive)
 - Markdown syntax reference: https://daringfireball.net/projects/markdown/syntax
-- Questions — ask Nathan.
+- Questions — ask me.
