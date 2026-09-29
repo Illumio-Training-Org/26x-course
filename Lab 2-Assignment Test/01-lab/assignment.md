@@ -89,10 +89,6 @@ enhanced_loading: null
 
 Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]])
 
-**2 )** Verify the Illumio Console dashboard is visible
-
-Keep the console open in its own browser tab. If it logs you out, scroll back up here and use the link again.
-
 ---
 
 
