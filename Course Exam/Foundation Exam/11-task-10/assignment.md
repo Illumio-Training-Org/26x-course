@@ -21,3 +21,8 @@ Onboard the provided AWS account to Illumio.
 
 Complete the onboarding process and use the Map to confirm that the
 new AWS resource appears successfully.
+
+
+> [!NOTE]
+> Traffic flows may still be loading at this point. If they are,
+> please proceed without using the Map.

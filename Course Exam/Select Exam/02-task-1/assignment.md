@@ -39,3 +39,8 @@ following labels:
 
 Verify that both workloads have successfully paired and use the Map
 to confirm that they appear within the `portal` application.
+
+
+> [!NOTE]
+> Traffic flows may still be loading at this point. If they are,
+> please proceed without using the Map.

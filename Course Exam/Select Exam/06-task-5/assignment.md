@@ -11,6 +11,10 @@ Use the Map to inspect communications between the Development and
 Production environments for the `ordering` application in the `ca`
 location.
 
+> [!NOTE]
+> Traffic flows may still be loading at this point. If they are,
+> please proceed without using the Map.
+
 Create a Policy named `Task5-DenyDevProd`.
 
 Configure a deny rule for **All Services** with:
@@ -28,3 +32,8 @@ Destination:
 - Location: `ca`
 
 Use the Map to verify the effect of the policy.
+
+
+> [!NOTE]
+> Traffic flows may still be loading at this point. If they are,
+> please proceed without using the Map.

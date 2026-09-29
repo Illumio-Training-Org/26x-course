@@ -10,6 +10,10 @@ enhanced_loading: null
 Use the Map to inspect communications within the `ordering`
 application.
 
+> [!NOTE]
+> Traffic flows may still be loading at this point. If they are,
+> please proceed without using the Map.
+
 Ringfence the Development instance of the application by creating a
 Policy named `Task6-RingfenceOrdering`.
 

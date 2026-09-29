@@ -16,3 +16,8 @@ Assign the following labels to the `linux-vm` workload:
 
 Use the Map to confirm that `linux-vm` appears grouped under the
 `ordering` application.
+
+
+> [!NOTE]
+> Traffic flows may still be loading at this point. If they are,
+> please proceed without using the Map.

@@ -17,6 +17,10 @@ application is ringfenced.
 Use the Map to identify the Nagios instance in California and confirm
 its labels before creating the rule.
 
+> [!NOTE]
+> Traffic flows may still be loading at this point. If they are,
+> please proceed without using the Map.
+
 The source must be defined using its Location, Environment,
 Application, and Role labels, including:
 
