@@ -12,7 +12,7 @@ disable, auto-delete on close - is identical to `Course Lab`; see
 
 | Folder | Title | What happens |
 |---|---|---|
-| `01-lab` | Illumio Lab Environment | Starts straight at **🔑 Illumio Console** (magic link), then Workloads, Cloud, Containers, Incident Response, and **🛠️ Advanced** (instructor-only troubleshooting commands) at the bottom. One tab set: Illumio Platform Link, Linux, Windows, CloudCLI, AWS, k3s console. |
+| `01-lab` | Illumio Lab Environment | Starts straight at **🔑 Illumio Console** (magic link), then Workloads, Cloud, Containers, Incident Response, and **🛠️ Advanced** (instructor-only troubleshooting commands) at the bottom. Tabs: Illumio & AWS (one page with the magic link and the AWS credentials), Linux, Windows, CloudCLI, k3s console. |
 | `02-close-lab` | Close Lab | Warning page; NEXT ends the session and deletes the Crystal deployment. |
 
 ## Differences from `Course Lab`

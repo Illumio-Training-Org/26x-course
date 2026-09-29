@@ -43,7 +43,7 @@ notes:
   url: https://www.youtube.com/embed/_QALLe3DJpk
 tabs:
 - id: til3uwppflnv
-  title: Illumio Platform Link
+  title: Illumio & AWS
   type: service
   hostname: cloud-client
   path: /
@@ -62,11 +62,6 @@ tabs:
   type: terminal
   hostname: cloud-client
   cmd: bash
-- id: 9se1ihulb7ze
-  title: AWS
-  type: service
-  hostname: cloud-client
-  port: 80
 - id: 8jnp3ys4xr9k
   title: k3s console
   type: terminal
@@ -167,7 +162,7 @@ Onboard the AWS account to Illumio and map cloud tags to labels.
 
 **1) Login to AWS**
 
-Login using the credentials in the **AWS** tab.
+Login using the AWS credentials in the **Illumio & AWS** tab.
 
 > [!IMPORTANT]
 > You **must** switch the region to **N. Virginia (us-east-1)** before continuing — you will not see the right resources in any other region.
