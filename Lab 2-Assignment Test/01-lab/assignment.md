@@ -76,7 +76,8 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# Illumio Lab Environment
+Illumio Lab Environment
+===
 
 🔑 Illumio Console
 ==========
