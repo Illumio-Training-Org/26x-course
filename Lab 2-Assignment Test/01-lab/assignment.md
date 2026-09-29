@@ -61,7 +61,6 @@ tabs:
   title: CloudCLI
   type: terminal
   hostname: cloud-client
-  cmd: bash
 - id: 8jnp3ys4xr9k
   title: k3s console
   type: terminal
