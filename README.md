@@ -125,8 +125,10 @@ What `setup-cloud-client` does, in order:
    `lateralMovement_firstTimeConnection`, 3h) so the Incident Response
    Investigation exercise has attack traffic without an instructor pressing
    Fire Attack in Crystal.
-4. **Lab:** disables every ruleset once Crystal has created them (learners
-   enable what they need). **Exams:** a background job
+4. **Lab:** starts a background job that waits for Crystal's import, then
+   disables every ruleset in draft (no provision) - learners enable what
+   they need; re-checks at +5/+10 min; log
+   `/var/log/disable-all-rulesets.log`. **Exams:** a background job
    (`/root/exam-start-state.py`, log `/var/log/exam-start-state.log`) waits
    for the import to finish, then disables the demo (non-"Task") rulesets,
    re-checking at +5 and +10 min; Foundation also plants the Task 9
