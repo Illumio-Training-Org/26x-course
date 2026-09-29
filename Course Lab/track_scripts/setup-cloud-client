@@ -118,9 +118,11 @@ for host in ('linux-vm', 'windows-vm'):
     if not w:
         fails.append(host + ' not paired')
         continue
-    labels = {l['key']: l['value'] for l in w.get('labels', [])}
+    # Case-insensitive: Crystal's dataset uses e.g. 'Web' where the lab
+    # says 'web', and learners may type either.
+    labels = {l['key']: (l.get('value') or '').lower() for l in w.get('labels', [])}
     for k, v in base.items():
-        if labels.get(k) != v:
+        if labels.get(k) != v.lower():
             fails.append(host + ' label ' + k + ' should be ' + v + ', found ' + str(labels.get(k)))
     if host == 'linux-vm':
         if labels.get('role') != 'web':
@@ -169,7 +171,7 @@ if not ws:
     print('FAIL - host workload not found')
 else:
     labels = {l['key']: l['value'] for l in ws[0].get('labels', [])}
-    print('PASS - role=controller label found' if labels.get('role') == 'controller' else 'FAIL - role=controller label not found (step 7)')
+    print('PASS - role=controller label found' if (labels.get('role') or '').lower() == 'controller' else 'FAIL - role=controller label not found (step 7)')
 "
 CHECKEOF
 chmod +x /usr/local/bin/check-containers
