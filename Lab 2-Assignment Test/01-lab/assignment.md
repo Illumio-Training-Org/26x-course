@@ -522,7 +522,7 @@ The jump host itself is the clearest containment target — it's the actual pivo
 
 ---
 
-Advanced
+🔧 Advanced
 ===
 
 > [!WARNING]
