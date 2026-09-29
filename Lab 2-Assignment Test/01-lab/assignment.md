@@ -74,13 +74,13 @@ enhanced_loading: null
 🔑 Illumio Console
 ==========
 
-**1 )** Open the following link in a new browser tab
+**[Click here to open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]])**
+
+If the link doesn't open, copy this into a new browser tab:
 
 ```
 [[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]]
 ```
-
-Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]])
 
 ---
 
