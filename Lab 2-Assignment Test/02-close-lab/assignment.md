@@ -18,6 +18,7 @@ tabs:
   title: CloudCLI
   type: terminal
   hostname: cloud-client
+  cmd: bash
 - id: zxoi84znlzxl
   title: AWS
   type: service
