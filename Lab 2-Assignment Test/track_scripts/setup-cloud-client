@@ -1,0 +1,386 @@
+#!/bin/bash
+set -exo
+
+echo "===== MAGIC LINK + ACCOUNT SETUP START ====="
+date
+
+# ---------------------------------------
+# Ensure required tools are present and updated
+# ---------------------------------------
+
+# update package index only
+apt-get update -y
+
+# upgrade only existing core tools (no installs)
+apt-get install --only-upgrade -y curl git
+
+
+# ---------------------------------------
+# Sanitize AUTOACCOUNT_* values
+# ---------------------------------------
+# Instruqt's autoaccount custom resource emits these as JSON-array-literal
+# strings (e.g. '["value"]') even with account_count: 1, not bare scalars.
+# AUTOACCOUNT_MAGICLINK already got this same tr -d treatment further
+# below; extend it to every other AUTOACCOUNT_* value up front so nothing
+# downstream (the PCE FQDN split, the agent variables, or the vensim
+# block) parses a value with stray brackets/quotes still in it.
+for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+           AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+           AUTOACCOUNT_SAAPIKEY_SECRET; do
+  cleaned="$(echo "${!var}" | tr -d '{}[]"')"
+  export "$var=$cleaned"
+done
+
+# Also make the cleaned values visible to any new terminal tab the
+# learner opens (e.g. the Advanced "echo $AUTOACCOUNT_APIKEY_ID" step) —
+# the container's own injected env vars are still the raw/dirty ones, so
+# override them for every future interactive shell via .bashrc.
+{
+  for var in AUTOACCOUNT_TENANT_ID AUTOACCOUNT_APIKEY_ID AUTOACCOUNT_APIKEY_SECRET \
+             AUTOACCOUNT_ORG_ID AUTOACCOUNT_PCE_FQDN AUTOACCOUNT_SAAPIKEY_KEYID \
+             AUTOACCOUNT_SAAPIKEY_SECRET; do
+    printf 'export %s=%q\n' "$var" "${!var}"
+  done
+} >> /root/.bashrc
+
+# Deliberately NOT exporting CRYSTAL_API_KEY into .bashrc the way the
+# AUTOACCOUNT_* values above are. Unlike those (each scoped to one
+# learner's own single-use, ephemeral PCE org), CRYSTAL_API_KEY is a
+# single team-level secret shared across every learner session - if
+# it were exposed to an interactive shell, any learner could extract
+# it and get full account-wide Crystal access (list/create/stop/
+# delete any deployment for the whole team) from outside the sandbox
+# entirely. It stays available only within this script's own process,
+# which is all it's actually needed for.
+
+# ---------------------------------------
+# Parse PCE FQDN
+# ---------------------------------------
+if [[ "$AUTOACCOUNT_PCE_FQDN" == *:* ]]; then
+  pceFqdn=${AUTOACCOUNT_PCE_FQDN%%:*}
+  pcePort=${AUTOACCOUNT_PCE_FQDN##*:}
+else
+  echo "ERROR: AUTOACCOUNT_PCE_FQDN does not contain a port."
+  exit 1
+fi
+
+# ---------------------------------------
+# Save variables for later use (Instruqt state)
+# ---------------------------------------
+agent variable set ACCOUNTID "$AUTOACCOUNT_TENANT_ID"
+agent variable set APINAME "api_${AUTOACCOUNT_APIKEY_ID}"
+agent variable set APISECRET "$AUTOACCOUNT_APIKEY_SECRET"
+agent variable set ORGID "$AUTOACCOUNT_ORG_ID"
+agent variable set PCEFQDN "$pceFqdn"
+agent variable set PCEPort "$pcePort"
+agent variable set SACLIENT "$AUTOACCOUNT_SAAPIKEY_KEYID"
+agent variable set SASECRET "$AUTOACCOUNT_SAAPIKEY_SECRET"
+
+# ---------------------------------------
+# MAGIC LINK SETUP
+# ---------------------------------------
+MAGIC_LINK=$(echo "${AUTOACCOUNT_MAGICLINK}" | tr -d '{}[]"')
+
+echo "Generated MAGIC LINK:"
+echo "$MAGIC_LINK"
+
+# ---------------------------------------
+# Save MAGIC LINK (Instruqt state)
+# ---------------------------------------
+agent variable set MAGICURL "$MAGIC_LINK"
+
+# ---------------------------------------
+# Render tile (gomplate) - unchanged source repo, per Nathan's instruction
+# ---------------------------------------
+git clone https://github.com/jdschmitz15/illumio-instruqt-terraform-template.git
+AUTOACCOUNT_MAGICLINK="$MAGIC_LINK"
+gomplate -f ~/illumio-instruqt-terraform-template/index.html.tmpl -o /var/www/html/index.html
+date
+
+# ---------------------------------------
+# SELF-CHECK SCRIPTS
+# ---------------------------------------
+# Pre-staged so the assignment's "Check your work" steps are a single
+# clean command instead of a big inline curl/python block.
+
+cat > /usr/local/bin/check-workloads << 'CHECKEOF'
+#!/bin/bash
+clear
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
+import json, sys
+workloads = {w.get('hostname'): w for w in json.load(sys.stdin)}
+base = {'app': 'pos', 'env': 'Production', 'loc': 'lax'}
+fails = []
+for host in ('linux-vm', 'windows-vm'):
+    w = workloads.get(host)
+    if not w:
+        fails.append(host + ' not paired')
+        continue
+    # Case-insensitive: Crystal's dataset uses e.g. 'Web' where the lab
+    # says 'web', and learners may type either.
+    labels = {l['key']: (l.get('value') or '').lower() for l in w.get('labels', [])}
+    for k, v in base.items():
+        if labels.get(k) != v.lower():
+            fails.append(host + ' label ' + k + ' should be ' + v + ', found ' + str(labels.get(k)))
+    if host == 'linux-vm':
+        if labels.get('role') != 'web':
+            fails.append('linux-vm role label should be web, found ' + str(labels.get('role')))
+        if w.get('enforcement_mode') != 'selective':
+            fails.append('linux-vm enforcement_mode should be selective, found ' + str(w.get('enforcement_mode')))
+if fails:
+    print('FAIL')
+    for f in fails:
+        print(' - ' + f)
+else:
+    print('PASS - both VMs paired, labels correct, linux-vm role=web in Selective mode')
+"
+CHECKEOF
+chmod +x /usr/local/bin/check-workloads
+
+cat > /usr/local/bin/check-containers << 'CHECKEOF'
+#!/bin/bash
+clear
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+
+echo "--- pairing profile ---"
+curl -s -u "$AUTH" "$BASE/pairing_profiles" | python3 -c "
+import json, sys
+p = [x for x in json.load(sys.stdin) if x.get('name') == 'kubernetes']
+print('PASS - kubernetes pairing profile found' if p else 'FAIL - kubernetes pairing profile not found (step 4)')
+"
+
+echo "--- container cluster ---"
+curl -s -u "$AUTH" "$BASE/container_clusters" | python3 -c "
+import json, sys
+clusters = json.load(sys.stdin)
+if not clusters:
+    print('FAIL - no container cluster found (step 3)')
+else:
+    c = clusters[0]
+    print('PASS - cluster ' + str(c.get('name')) + ' is online and in sync' if c.get('online') else 'FAIL - cluster ' + str(c.get('name')) + ' is not yet online (step 6)')
+"
+
+echo "--- host workload label ---"
+curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
+import json, sys
+ws = [w for w in json.load(sys.stdin) if w.get('hostname') == 'host']
+if not ws:
+    print('FAIL - host workload not found')
+else:
+    labels = {l['key']: l['value'] for l in ws[0].get('labels', [])}
+    print('PASS - role=controller label found' if (labels.get('role') or '').lower() == 'controller' else 'FAIL - role=controller label not found (step 7)')
+"
+CHECKEOF
+chmod +x /usr/local/bin/check-containers
+
+cat > /usr/local/bin/check-pce-api << 'CHECKEOF'
+#!/bin/bash
+clear
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+code=$(curl -s -o /dev/null -w "%{http_code}" -u "$AUTH" "$BASE/workloads?max_results=1")
+if [ "$code" = "200" ]; then
+  echo "PASS - PCE API is responding normally"
+else
+  echo "FAIL - PCE API returned HTTP $code (expected 200). Retry in a minute, or restart the sandbox if it persists."
+fi
+CHECKEOF
+chmod +x /usr/local/bin/check-pce-api
+
+cat > /usr/local/bin/check-cloud << 'CHECKEOF'
+#!/bin/bash
+clear
+AUTH2="${AUTOACCOUNT_SAAPIKEY_KEYID}:${AUTOACCOUNT_SAAPIKEY_SECRET}"
+curl -s -u "$AUTH2" -H "X-Tenant-Id: $AUTOACCOUNT_TENANT_ID" "https://cloud.illum.io/api/v1/integrations" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+aws = d.get('aws', [])
+if not aws:
+    print('FAIL - no AWS account onboarded yet')
+else:
+    a = aws[0]
+    print('PASS - AWS account onboarded: ' + str(a.get('name')) + ' (status: ' + str(a.get('status')) + ', security review: ' + str(a.get('srStatus')) + ')')
+"
+CHECKEOF
+chmod +x /usr/local/bin/check-cloud
+
+# ---------------------------------------
+# DISABLE ALL RULESETS (lab start state)
+# ---------------------------------------
+# Learners must start with every ruleset disabled - they manually enable
+# "15. IR" and build the PPTP block themselves during the IR exercise.
+# Crystal's "default" template creates every ruleset enabled by default
+# except "15. IR", so explicitly disable all of them rather than relying
+# on the template's own state. Called below once the Crystal deployment
+# reports "running"; retries a few times defensively in case ruleset
+# population is still settling at that point (the template import is
+# itself asynchronous - see the comment on the /start retry loop below).
+cat > /usr/local/bin/disable-all-rulesets << 'DISABLEEOF'
+#!/bin/bash
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+
+RS_JSON=""
+for attempt in 1 2 3 4 5 6; do
+  RS_JSON="$(curl -s -u "$AUTH" "$BASE/sec_policy/draft/rule_sets")"
+  COUNT="$(echo "$RS_JSON" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))" 2>/dev/null || echo 0)"
+  if [ "$COUNT" -gt 0 ]; then
+    echo "Found $COUNT ruleset(s) on attempt $attempt"
+    break
+  fi
+  echo "No rulesets found yet (attempt $attempt) - retrying"
+  sleep 10
+done
+
+RS_HREFS="$(echo "$RS_JSON" | python3 -c "
+import json, sys
+for rs in json.load(sys.stdin):
+    if rs.get('enabled'):
+        print(rs['href'])
+" 2>/dev/null)"
+
+if [ -z "$RS_HREFS" ]; then
+  echo "No enabled rulesets to disable"
+  exit 0
+fi
+
+echo "$RS_HREFS" | while IFS= read -r href; do
+  [ -z "$href" ] && continue
+  code=$(curl -s -o /dev/null -w "%{http_code}" -u "$AUTH" -X PUT \
+    -H "Content-Type: application/json" -d '{"enabled": false}' \
+    "https://$AUTOACCOUNT_PCE_FQDN$href")
+  echo "disabled $href -> HTTP $code"
+done
+
+curl -s -o /dev/null -w "provision -> HTTP %{http_code}\n" -u "$AUTH" -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"update_description": "Disable all rulesets for lab start"}' \
+  "$BASE/sec_policy"
+DISABLEEOF
+chmod +x /usr/local/bin/disable-all-rulesets
+
+# ---------------------------------------
+# PROJECT CRYSTAL TRAFFIC GENERATION
+# ---------------------------------------
+# Replaces vensim for this lab variant. Project Crystal creates a new
+# deployment via its own REST API (using CRYSTAL_API_KEY, a team-level
+# Instruqt secret - not tenant-specific), binds it live to THIS
+# sandbox's own freshly-provisioned PCE org (the AUTOACCOUNT_* values
+# below), applies the built-in "default" vensim-style template, and
+# starts it. See github.com/justinvid/pc-connector for the module
+# source - main.tf does 4 API calls: POST /api/deployments, PUT
+# .../config, POST .../vensim-template, POST .../start.
+
+# Install Terraform
+# apt-key is removed on this image's Debian version (trixie) - use the
+# modern keyring-file method instead of the colleague's original
+# apt-key add call.
+curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/hashicorp.list
+apt-get update -y
+apt-get -y install terraform
+
+# Command echoing (set -x) is switched off for the whole Crystal block
+# below, because every curl here carries CRYSTAL_API_KEY - a shared,
+# team-level secret - and xtrace would print it into the Instruqt
+# track logs. Progress is still logged via the echo lines. Switched
+# back on after the attack is fired.
+set +x
+echo "--- Crystal block start (command echo off to keep the API key out of logs) ---"
+
+CRYSTAL_BASE_URL="https://crystal.illumio.com"
+TEMPLATE_NAME="default"
+
+# Diagnostics: confirm this sandbox container can actually reach
+# Crystal before handing off to terraform, since terraform's own
+# error on a network-level failure is an opaque "context deadline
+# exceeded" with no detail on which stage (DNS/TCP/TLS) failed.
+echo "--- Crystal reachability diagnostics ---"
+getent hosts crystal.illumio.com || echo "DNS resolution FAILED for crystal.illumio.com"
+# -w timings instead of -v: -v prints request headers, including the
+# API key. Zero connect/tls time shows which stage failed.
+curl -sS --connect-timeout 5 -m 8 -o /dev/null \
+  -w "HTTP %{http_code} dns=%{time_namelookup}s connect=%{time_connect}s tls=%{time_appconnect}s\n" \
+  -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" || echo "curl exit code: $?"
+echo "--- end diagnostics ---"
+
+# Deployment naming: Lab_<DDMM>_<PCE org ID>, e.g. Lab_2809_4140290.
+# The org ID is unique per session and is the same number the learner
+# sees in their Console and the Advanced section, so an instructor can
+# match a learner's lab to its Crystal deployment directly. No counter
+# or collision check needed.
+DEPLOYMENT_NAME="Lab_$(date -u +%d%m)_${AUTOACCOUNT_ORG_ID}"
+echo "Crystal deployment name: $DEPLOYMENT_NAME"
+
+cd ~
+git clone https://github.com/justinvid/pc-connector.git
+cd ~/pc-connector/
+terraform init
+terraform apply -auto-approve -input=false \
+  -var "crystal_api_key=$CRYSTAL_API_KEY" \
+  -var "crystal_base_url=$CRYSTAL_BASE_URL" \
+  -var "pce_api_user=api_${AUTOACCOUNT_APIKEY_ID}" \
+  -var "pce_api_secret=$AUTOACCOUNT_APIKEY_SECRET" \
+  -var "org_id=$AUTOACCOUNT_ORG_ID" \
+  -var "name=$DEPLOYMENT_NAME" \
+  -var "template_name=$TEMPLATE_NAME" \
+  -var "pce_fqdn=$pceFqdn"
+
+CRYSTAL_DEPLOYMENT_ID="$(terraform output -raw deployment_id)"
+agent variable set CRYSTALDEPLOYMENT "$CRYSTAL_DEPLOYMENT_ID"
+agent variable set CRYSTALBASEURL "$CRYSTAL_BASE_URL"
+
+# The module's own start_request fires immediately after
+# template_request with no delay, but the CSV/object import behind
+# the template takes a few seconds to actually finish on Crystal's
+# backend - calling /start that fast returns 200 but silently doesn't
+# launch anything (confirmed live: same call worked once retried a
+# few minutes later). Poll status and retry /start until it's
+# actually running, rather than trusting the first 200.
+for i in 1 2 3 4 5 6; do
+  status="$(curl -s -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID" | python3 -c "import json,sys; print(json.load(sys.stdin).get('status'))")"
+  if [ "$status" = "running" ]; then
+    echo "Crystal deployment is running (attempt $i)"
+    break
+  fi
+  echo "Crystal deployment status is '$status' (attempt $i) - retrying /start"
+  curl -s -o /dev/null -X POST -H "X-API-Key: $CRYSTAL_API_KEY" -H "Content-Type: application/json" \
+    -d '{"interval":"5m","auto_attacks":false}' \
+    "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID/start"
+  sleep 10
+done
+
+# Fire the Lateral Movement attack at boot so its traffic is already
+# in the PCE by the time learners reach the Incident Response
+# Investigation exercise, rather than relying on an instructor to hit
+# Fire Attack in Crystal. Same call as the UI button. 3h is Crystal's
+# default duration - the attack traffic stays in PCE traffic history
+# after it ends. auto_attacks stays false on /start above so only this
+# one scenario runs. The engine applies it on its next tick (up to
+# ~5m), so only the HTTP response is checked here; non-2xx is retried
+# and a final failure is logged, not fatal, so the rest of the lab
+# still builds.
+ATTACK_SCENARIO="lateralMovement_firstTimeConnection"
+for i in 1 2 3 4 5 6; do
+  attack_code="$(curl -s -o /tmp/crystal-attack.json -w "%{http_code}" -X POST \
+    -H "X-API-Key: $CRYSTAL_API_KEY" -H "Content-Type: application/json" \
+    -d "{\"scenario\":\"$ATTACK_SCENARIO\",\"duration\":\"3h\"}" \
+    "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID/attack" || echo "000")"
+  if [ "${attack_code:0:1}" = "2" ]; then
+    echo "Crystal attack '$ATTACK_SCENARIO' fired for 3h (attempt $i)"
+    break
+  fi
+  echo "Crystal attack fire returned HTTP $attack_code (attempt $i): $(cat /tmp/crystal-attack.json 2>/dev/null)"
+  [ "$i" = "6" ] && echo "WARNING: Lateral Movement attack NOT fired - fire it manually from Crystal"
+  sleep 10
+done
+
+echo "--- Crystal block end ---"
+set -x
+
+bash /usr/local/bin/disable-all-rulesets
+
+echo "===== MAGIC LINK + ACCOUNT SETUP END ====="
