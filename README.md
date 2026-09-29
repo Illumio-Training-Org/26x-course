@@ -46,6 +46,9 @@ last. Any new current track must start with a word that sorts before
 - `Language Versions/` — `! 26.x Test: Select Exam (ES)` / `(JA)`
   (`26x-test-select-exam-es` / `-ja`), translated test copies of the
   legacy Select Exam.
+- `Lab 2-Assignment Test/` — `! 26.x Test: Lab (2 Assignments)`
+  (`26x-test-lab-2-assignments`), trial copy of the lab with the magic-link
+  challenge merged into the main lab page (2 challenges instead of 3).
 - `AWS Automated Onboard Testing/` — `! 26.x Test: AWS Automated Onboard
   Testing` (`26x-test-aws-automated-onboard-testing`), dev track.
 - `template/` — the org's reusable `! 000-Template for CX` scaffold
