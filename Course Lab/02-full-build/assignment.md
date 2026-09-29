@@ -35,6 +35,8 @@ enhanced_loading: null
 ---
 # Onboarding Workloads-Cloud-Containers
 
+Logged out of the Illumio Console? [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]])
+
 🧩 Workloads
 ==========
 
