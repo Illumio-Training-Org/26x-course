@@ -210,55 +210,58 @@ chmod +x /usr/local/bin/check-cloud
 # ---------------------------------------
 # DISABLE ALL RULESETS (lab start state)
 # ---------------------------------------
-# Learners must start with every ruleset disabled - they manually enable
-# "15. IR" and build the PPTP block themselves during the IR exercise.
-# Crystal's "default" template creates every ruleset enabled by default
-# except "15. IR", so explicitly disable all of them rather than relying
-# on the template's own state. Called below once the Crystal deployment
-# reports "running"; retries a few times defensively in case ruleset
-# population is still settling at that point (the template import is
-# itself asynchronous - see the comment on the /start retry loop below).
+# Learners must start with every ruleset disabled - they enable "15. IR"
+# themselves during the IR exercise. Crystal's "default" template creates
+# its rulesets enabled, but imports them asynchronously a few minutes
+# AFTER this setup script finishes, so this runs as a background job:
+# waits until the import looks done (>=100 labels and a ruleset count
+# that hasn't changed for 3 checks, every 20s, up to 30 min), then
+# disables every enabled ruleset in DRAFT only (no provision - Nathan's
+# call), re-checking at +5 and +10 min for any late-arriving rulesets.
+# Log: /var/log/disable-all-rulesets.log
 cat > /usr/local/bin/disable-all-rulesets << 'DISABLEEOF'
-#!/bin/bash
-BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
-AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+#!/usr/bin/env python3
+import json, os, subprocess, time
+base = "https://" + os.environ["AUTOACCOUNT_PCE_FQDN"] + "/api/v2"
+org = "/orgs/" + os.environ["AUTOACCOUNT_ORG_ID"]
+auth = "api_" + os.environ["AUTOACCOUNT_APIKEY_ID"] + ":" + os.environ["AUTOACCOUNT_APIKEY_SECRET"]
 
-RS_JSON=""
-for attempt in 1 2 3 4 5 6; do
-  RS_JSON="$(curl -s -u "$AUTH" "$BASE/sec_policy/draft/rule_sets")"
-  COUNT="$(echo "$RS_JSON" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))" 2>/dev/null || echo 0)"
-  if [ "$COUNT" -gt 0 ]; then
-    echo "Found $COUNT ruleset(s) on attempt $attempt"
-    break
-  fi
-  echo "No rulesets found yet (attempt $attempt) - retrying"
-  sleep 10
-done
+def call(method, path, body=None):
+    cmd = ["curl", "-s", "-m", "60", "-u", auth, "-X", method, base + path]
+    if body is not None:
+        cmd += ["-H", "Content-Type: application/json", "-d", json.dumps(body)]
+    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    try:
+        return json.loads(out)
+    except Exception:
+        return out
 
-RS_HREFS="$(echo "$RS_JSON" | python3 -c "
-import json, sys
-for rs in json.load(sys.stdin):
-    if rs.get('enabled'):
-        print(rs['href'])
-" 2>/dev/null)"
+def count(path):
+    r = call("GET", org + path)
+    return len(r) if isinstance(r, list) else 0
 
-if [ -z "$RS_HREFS" ]; then
-  echo "No enabled rulesets to disable"
-  exit 0
-fi
+history = []
+for i in range(90):
+    labels, rulesets = count("/labels?max_results=1000"), count("/sec_policy/draft/rule_sets?max_results=1000")
+    print(time.strftime("%H:%M:%S"), "labels", labels, "rulesets", rulesets, flush=True)
+    history.append(rulesets)
+    if labels >= 100 and rulesets >= 10 and len(history) >= 3 and len(set(history[-3:])) == 1:
+        break
+    time.sleep(20)
+else:
+    print("WARNING: Crystal import did not look complete after 30 min - continuing anyway", flush=True)
 
-echo "$RS_HREFS" | while IFS= read -r href; do
-  [ -z "$href" ] && continue
-  code=$(curl -s -o /dev/null -w "%{http_code}" -u "$AUTH" -X PUT \
-    -H "Content-Type: application/json" -d '{"enabled": false}' \
-    "https://$AUTOACCOUNT_PCE_FQDN$href")
-  echo "disabled $href -> HTTP $code"
-done
+def disable_all():
+    for rs in call("GET", org + "/sec_policy/draft/rule_sets?max_results=1000") or []:
+        if isinstance(rs, dict) and rs.get("enabled") and rs.get("href"):
+            call("PUT", rs["href"], {"enabled": False})
+            print(time.strftime("%H:%M:%S"), "Disabled:", rs.get("name"), flush=True)
 
-curl -s -o /dev/null -w "provision -> HTTP %{http_code}\n" -u "$AUTH" -X POST \
-  -H "Content-Type: application/json" \
-  -d '{"update_description": "Disable all rulesets for lab start"}' \
-  "$BASE/sec_policy"
+disable_all()
+for wait in (300, 300):
+    time.sleep(wait)
+    disable_all()
+print("Disable all rulesets done", flush=True)
 DISABLEEOF
 chmod +x /usr/local/bin/disable-all-rulesets
 
@@ -381,6 +384,6 @@ done
 echo "--- Crystal block end ---"
 set -x
 
-bash /usr/local/bin/disable-all-rulesets
+nohup python3 /usr/local/bin/disable-all-rulesets > /var/log/disable-all-rulesets.log 2>&1 < /dev/null &
 
 echo "===== MAGIC LINK + ACCOUNT SETUP END ====="
