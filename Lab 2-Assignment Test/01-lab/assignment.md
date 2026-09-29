@@ -2,7 +2,7 @@
 slug: lab
 id: 1vrxr5i0n4kh
 type: challenge
-title: Onboarding Workloads-Cloud-Containers
+title: Illumio Lab Environment
 teaser: Access the Illumio Console, then pair workloads, onboard AWS, and connect
   a container cluster
 notes:
@@ -76,7 +76,7 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-# Onboarding Workloads-Cloud-Containers
+# Illumio Lab Environment
 
 🔑 Illumio Console
 ==========
