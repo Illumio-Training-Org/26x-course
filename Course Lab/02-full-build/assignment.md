@@ -414,13 +414,13 @@ There are 4 domain controllers (`acd-dc01-prd` through `acd-dc04-prd`) and 2 jum
 
 **2) RDP — find the credential harvesting landing on the jump hosts**
 
-**Explore → Traffic**. Set Destination to Role `jumpbox`, Service `3389` (type the port number - the Service filter expects a port by default; to pick the named `rdp` service instead, click **Policy Services** in the filter's list first). Note the sources — you should see a wide spread of `win-endpoint-*` and `mac-endpoint-*` workloads all RDPing into `inf-jh01-prd`/`inf-jh02-prd` that don't normally do so. This is the harvested-credential access landing on shared infrastructure.
+**Explore → Traffic**. Set Destination to Role `jumpbox`, Service `rdp` (in the Service filter, click **Policy Services** at the bottom of the list first, then choose `rdp`). Note the sources — you should see a wide spread of `win-endpoint-*` and `mac-endpoint-*` workloads all RDPing into `inf-jh01-prd`/`inf-jh02-prd` that don't normally do so. This is the harvested-credential access landing on shared infrastructure.
 
 ---
 
 **3) SSH — find the pivot**
 
-Clear Destination, set **Source** to Role `jumpbox`, Service `22` (the SSH port). This shows the jump hosts reaching *out* into the application tier — the pivot point, not just an entry point. You should find outbound SSH from a jump host to at least one process-tier workload (e.g. an `*-proc*-prd`) it doesn't normally reach.
+Clear Destination, set **Source** to Role `jumpbox`, Service `ssh` (**Policy Services** → `ssh`). This shows the jump hosts reaching *out* into the application tier — the pivot point, not just an entry point. You should find outbound SSH from a jump host to at least one process-tier workload (e.g. an `*-proc*-prd`) it doesn't normally reach.
 
 > [!NOTE]
 > Check the **First Detected** timestamp on an inbound RDP session vs. the jump host's outbound SSH connections. An outbound SSH connection first detected only shortly after — minutes, not hours — an inbound RDP session the jump host doesn't normally receive is the pivot in action, not routine admin activity.
