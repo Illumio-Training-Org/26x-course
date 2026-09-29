@@ -408,7 +408,7 @@ There are 4 domain controllers (`acd-dc01-prd` through `acd-dc04-prd`) and 2 jum
 
 **1) Enable the containment policy**
 
-**Policies → All Policies**, select the checkbox for **15. IR** → **Enable**.
+**Policies → All Policies**, select the checkbox for **15. IR** → **Enable**. Please ensure all other Policies are disabled for this exercise.
 
 ---
 
