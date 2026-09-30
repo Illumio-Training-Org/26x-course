@@ -1,6 +1,11 @@
-# Course Lab — `! 26.x Lab`
+# Course Lab 30-09 — `! 26.x Superseded: Lab 30/09`
 
-The current 26.x course lab (slug `26x-lab`), used for the instructor-led
+**Superseded on 2026-09-30** by the 2-challenge `! 26.x Lab` in
+`../../Course Lab/`. Slug `26x-superseded-lab-3009`. Kept as a "this is
+what it was like before" reference - the 3-challenge layout (magic-link
+page, lab page, Close Lab). Everything below describes it as it was.
+
+The 26.x course lab, used for the instructor-led
 course. Each learner gets their own sandbox: a fresh Illumio PCE org (magic
 link), an AWS account, two VMs, a k3s node, and their own **Project Crystal**
 deployment that fills the org with demo workloads, labels, policies and
@@ -76,9 +81,5 @@ to run twice.
 - `02-full-build/setup-cloud-client` - AWS Terraform build.
 - `03-close-lab/cleanup-cloud-client` - deletes the Crystal deployment on
   Close Lab NEXT.
-- `ISSUES.md` - known issues specific to this track.
 - `assets/` - logo and splash images.
 
-A trial version with the console link and the lab merged into one page (2
-challenges instead of 3) is in `../Lab 2-Assignment Test/`
-(`! 26.x Test: Lab (2 Assignments)`).
