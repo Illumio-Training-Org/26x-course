@@ -30,7 +30,8 @@ goes into the other.
 - `NN-close-lab` — pressing NEXT ends the session and deletes the Crystal
   deployment.
 - `track_scripts/setup-cloud-client` — Crystal deployment
-  (`Exam_<DDMM>_<org ID>`, no attack), `/root/.autoaccount_env` for the check
+  (`<Exam>Exam_<DDMM>_<org ID>_<learner>`, e.g.
+  `SelectExam_3009_4140391_james-eifler`, no attack), `/root/.autoaccount_env` for the check
   scripts, and a background `/root/exam-start-state.py` that waits for
   Crystal's import, then disables the demo (non-"Task") rulesets
   (Foundation also plants the Task 9 rogue label). Log:

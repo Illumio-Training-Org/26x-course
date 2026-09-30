@@ -351,12 +351,18 @@ echo "--- end diagnostics ---"
 reach_code="$(curl -s -o /dev/null -m 8 -w "%{http_code}" -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" || echo 000)"
 [ "$reach_code" = "200" ] && echo "CHECK-OK: crystal-reachable" || echo "CHECK-FAIL: crystal-reachable (HTTP $reach_code)"
 
-# Deployment naming: Lab_<DDMM>_<PCE org ID>, e.g. Lab_2809_4140290.
-# The org ID is unique per session and is the same number the learner
-# sees in their Console and the Advanced section, so an instructor can
-# match a learner's lab to its Crystal deployment directly. No counter
-# or collision check needed.
-DEPLOYMENT_NAME="Lab_$(date -u +%d%m)_${AUTOACCOUNT_ORG_ID}"
+# Deployment naming: Lab_<DDMM>_<PCE org ID>_<learner>, e.g.
+# Lab_3009_4140393_keith-buckley. The org ID is unique per session and
+# is the same number the learner sees in their Console and the Advanced
+# section, so an instructor can match a learner's lab to its Crystal
+# deployment directly. <learner> is the part of the learner's email
+# before the @ (Instruqt only passes it with the learner's consent),
+# else the name they signed up with, else left off. Letters, digits and
+# dashes only (dots/spaces become dashes), max 30 characters.
+LEARNER="${INSTRUQT_USER_EMAIL%%@*}"
+[ -z "$LEARNER" ] && LEARNER="$INSTRUQT_USER_NAME"
+LEARNER="$(printf '%s' "$LEARNER" | tr '. _' '---' | tr -cd 'A-Za-z0-9-' | cut -c1-30)"
+DEPLOYMENT_NAME="Lab_$(date -u +%d%m)_${AUTOACCOUNT_ORG_ID}${LEARNER:+_$LEARNER}"
 echo "Crystal deployment name: $DEPLOYMENT_NAME"
 
 cd ~

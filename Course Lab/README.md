@@ -31,9 +31,11 @@ Measured on 2026-09-29: page ready **~2 min 50 s** after the sandbox starts.
 1. **Sandbox build** (Instruqt, ~1-1.5 min): VMs, k3s node, AWS account.
 2. **Track setup** (`track_scripts/setup-cloud-client`, ~20 s):
    - creates the magic link and the learner `check-*` commands;
-   - creates a Crystal deployment named **`Lab_<DDMM>_<PCE org ID>`**
-     (e.g. `Lab_2909_4140378`) - the org ID is what the learner sees in their
-     Console, so you can match a learner to their deployment in Crystal;
+   - creates a Crystal deployment named **`Lab_<DDMM>_<PCE org ID>_<learner>`**
+     (e.g. `Lab_3009_4140393_keith-buckley`) - the org ID is what the learner
+     sees in their Console, and `<learner>` is their email before the @ (or
+     their Instruqt name, or left off if Instruqt passes neither), so you can
+     match a learner to their deployment in Crystal;
    - **fires Crystal's Lateral Movement attack automatically** (3 hours) for
      the Incident Response Investigation - no need to press Fire Attack;
    - starts a **background job that disables every policy (ruleset)** once

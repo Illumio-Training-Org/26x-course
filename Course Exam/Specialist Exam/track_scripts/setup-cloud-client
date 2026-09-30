@@ -161,12 +161,18 @@ curl -sS --connect-timeout 5 -m 8 -o /dev/null \
   -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" || echo "curl exit code: $?"
 echo "--- end diagnostics ---"
 
-# Deployment naming: Exam_<DDMM>_<PCE org ID>, e.g. Exam_2809_4140290.
-# The org ID is unique per session and is the same number the learner
-# sees in their Console and the Advanced section, so an instructor can
-# match a learner's lab to its Crystal deployment directly. No counter
-# or collision check needed.
-DEPLOYMENT_NAME="Exam_$(date -u +%d%m)_${AUTOACCOUNT_ORG_ID}"
+# Deployment naming: SpecialistExam_<DDMM>_<PCE org ID>_<learner>, e.g.
+# SpecialistExam_3009_4140393_keith-buckley. The org ID is unique per session and
+# is the same number the learner sees in their Console and the Advanced
+# section, so an instructor can match a learner's lab to its Crystal
+# deployment directly. <learner> is the part of the learner's email
+# before the @ (Instruqt only passes it with the learner's consent),
+# else the name they signed up with, else left off. Letters, digits and
+# dashes only (dots/spaces become dashes), max 30 characters.
+LEARNER="${INSTRUQT_USER_EMAIL%%@*}"
+[ -z "$LEARNER" ] && LEARNER="$INSTRUQT_USER_NAME"
+LEARNER="$(printf '%s' "$LEARNER" | tr '. _' '---' | tr -cd 'A-Za-z0-9-' | cut -c1-30)"
+DEPLOYMENT_NAME="SpecialistExam_$(date -u +%d%m)_${AUTOACCOUNT_ORG_ID}${LEARNER:+_$LEARNER}"
 echo "Crystal deployment name: $DEPLOYMENT_NAME"
 
 cd ~

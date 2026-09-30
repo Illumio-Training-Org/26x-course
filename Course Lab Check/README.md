@@ -35,7 +35,7 @@ already deleted).
 |---|---|
 | `magic-link` | the learner's magic link / PCE org was created |
 | `crystal-reachable` | Crystal answered with HTTP 200 (API key valid) |
-| `crystal-deployed` | the `Lab_<DDMM>_<org>` Crystal deployment was created |
+| `crystal-deployed` | the `Lab_<DDMM>_<org>_<learner>` Crystal deployment was created |
 | `crystal-running` | the deployment reached `running` |
 | `attack-fired` | the Lateral Movement attack was accepted |
 | `ruleset-job-started` | the background policy-disable job started |
