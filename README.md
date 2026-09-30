@@ -26,6 +26,10 @@ last. Any new current track must start with a word that sorts before
   the Lateral Movement attack at boot, and are deleted automatically when
   the lab ends (Close Lab NEXT or stop/expiry). Known issues in its own
   `ISSUES.md`.
+- `Course Lab Check/` — the pre-class quick check for `! 26.x Lab`
+  (`quick-check.sh`): runs `instruqt track test`, then checks the lab's
+  `CHECK-OK` markers and the log for errors; PASS/FAIL in ~3 min. See its
+  README for Mac and Windows (WSL) setup.
 - `Course Exam/` — the current exams (`! 26.x Foundation / Associate /
   Select / Specialist Exam`, slugs `26x-<x>-exam`).
   Same tasks as Legacy, Crystal-based; deployments named

@@ -1,0 +1,5 @@
+# Tracks the quick check can test, one per line:
+#   <slug>  <required CHECK-OK markers...>
+# Every listed marker must appear as "CHECK-OK: <marker>" in the test log,
+# and no "CHECK-FAIL:" may appear. Lines starting with # are ignored.
+26x-lab  magic-link crystal-reachable crystal-deployed crystal-running attack-fired ruleset-job-started track-setup-complete aws-build crystal-deleted
