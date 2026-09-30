@@ -1,6 +1,6 @@
-slug: 26x-superseded-lab
-id: vzyybjwcpnxm
-title: '! 26.x Superseded: Lab'
+slug: 26x-superseded-lab-2809
+id: xkxaf5stjnok
+title: '! 26.x Superseded: Lab 28/09'
 description: |-
   This lab provides access to:
 
@@ -25,5 +25,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "2962385767614770145"
+checksum: "13583293437383414547"
 enhanced_loading: false
