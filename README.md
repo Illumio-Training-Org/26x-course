@@ -57,6 +57,10 @@ last. Any new current track must start with a word that sorts before
   legacy Select Exam.
 - `AWS Automated Onboard Testing/` — `! 26.x Test: AWS Automated Onboard
   Testing` (`26x-test-aws-automated-onboard-testing`), dev track.
+- `terraform-exam/` — Terraform that automatically onboards the sandbox's
+  AWS account to Illumio Cloud (CloudSecure). Used only by the Select Exam
+  tracks (and the AWS Automated Onboard Testing prototype) so Task 10 has an
+  onboarded account. Renamed from `terraform-cloudsecure-aws` 2026-09-30.
 - `template/` — the org's reusable `! 000-Template for CX` scaffold
   (see its own `README.md`/`CLAUDE.md`) — the starting point for any
   new CX lab, not specific to the 26.x course itself.

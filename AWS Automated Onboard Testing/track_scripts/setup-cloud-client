@@ -189,7 +189,7 @@ nohup bash -c "
 
   # Resolve the flows S3 bucket name created by the apply above - it
   # has a random suffix and lives in a separate Terraform state
-  # (terraform/, not terraform-cloudsecure-aws/), so it's looked up
+  # (terraform/, not terraform-exam/), so it's looked up
   # directly via the AWS API rather than a cross-state reference.
   # Only one bucket in the account matches this prefix.
   S3_BUCKET_NAME=\$(aws s3api list-buckets --query \"Buckets[?starts_with(Name, 'illumios3bucket')].Name | [0]\" --output text)
@@ -207,7 +207,7 @@ nohup bash -c "
   # -----------------------------------------------------------------
   echo '### STARTING AUTOMATED CLOUDSECURE ONBOARDING ###'
   date
-  cd /root/26x-course/terraform-cloudsecure-aws
+  cd /root/26x-course/terraform-exam
 
   # The SAAPIKEY credentials are minted by Instruqt's magic-link custom
   # resource at sandbox boot - live-observed 2026-09-03 that Illumio's

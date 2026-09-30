@@ -1,4 +1,4 @@
-# terraform-cloudsecure-aws — automated AWS → Illumio Cloud onboarding
+# terraform-exam — automated AWS → Illumio Cloud onboarding (Select Exam)
 
 Terraform that onboards a sandbox's AWS account to Illumio CloudSecure
 without the browser wizard. It runs **after** the shared `../terraform/`

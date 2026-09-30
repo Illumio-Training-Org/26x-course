@@ -231,7 +231,7 @@ nohup bash -c "
 
   # Resolve the flows S3 bucket name created by the apply above - it
   # has a random suffix and lives in a separate Terraform state
-  # (terraform/, not terraform-cloudsecure-aws/). Read it straight out
+  # (terraform/, not terraform-exam/). Read it straight out
   # of this state (we're still in /root/26x-course/terraform here)
   # rather than asking AWS to list buckets - live-caught 2026-09-10:
   # aws s3api list-buckets (s3:ListAllMyBuckets) is explicitly denied
@@ -245,7 +245,7 @@ nohup bash -c "
 
   echo '### STARTING AUTOMATED CLOUDSECURE ONBOARDING ###'
   date
-  cd /root/26x-course/terraform-cloudsecure-aws
+  cd /root/26x-course/terraform-exam
 
   # Wait for the freshly-minted SAAPIKEY to actually be accepted by
   # Illumio's OAuth token endpoint before handing it to terraform -

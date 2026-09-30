@@ -127,7 +127,7 @@ showing the automation's own service-account identity, not a human.
 ## How it works, step by step
 
 Two files matter here: `track_scripts/setup-cloud-client` (this
-track) and `../terraform-cloudsecure-aws/*.tf` (a separate Terraform
+track) and `../terraform-exam/*.tf` (a separate Terraform
 config, deliberately not part of the shared `terraform/` folder used
 by Course Lab and all 5 exam tracks — adding a new required provider
 there would break every other track's `terraform apply`, since they
@@ -163,7 +163,7 @@ don't pass the new CloudSecure variables).
    (see bug #4 below).
 
 6. **The isolated onboarding config runs** —
-   `cd /root/26x-course/terraform-cloudsecure-aws` (own state, own
+   `cd /root/26x-course/terraform-exam` (own state, own
    lock file, entirely separate from step 3):
    ```
    terraform init -input=false
@@ -263,7 +263,7 @@ collecting — a completely separate step from the Terraform provider's
 own `illumio-cloudsecure_aws_account` resource, which apparently
 creates the account record but doesn't perform this activation itself.
 
-`terraform-cloudsecure-aws/main.tf` now creates the IAM role directly
+`terraform-exam/main.tf` now creates the IAM role directly
 (rather than letting the module generate an internal role with a
 random external ID we could never retrieve), exposes `role_arn` /
 `role_external_id` / `aws_account_id` as outputs, and
@@ -443,7 +443,7 @@ connections and 903 prod connections confirmed in the real flow log
 contents over a 3-hour monitored window, zero cross-environment
 leakage, no anomalies.
 
-**What's automated in `terraform-cloudsecure-aws/`, confirmed reliable:**
+**What's automated in `terraform-exam/`, confirmed reliable:**
 - Security group rules: inbound HTTPS (443) on `web_sg` from the
   internet, inbound MySQL (3306) on `db_sg` scoped to `web_sg` only.
 - A VPC Flow Log delivering to the S3 bucket
@@ -492,7 +492,7 @@ actual track record across every attempt:
 single time it's been tried (4 hours, then 3+ hours - zero both). The
 manual Console wizard is 1 for 2. That's not consistent with "both
 methods behave identically" - it's re-reverted back to manual
-(`terraform-cloudsecure-aws/main.tf` no longer creates the grant; do
+(`terraform-exam/main.tf` no longer creates the grant; do
 it by hand via Cloud → Onboarding → Flow Log Access). Best working
 theory, not confirmed: the wizard's CloudFormation stack includes a
 Lambda "eventual consistency check" that may actively notify
@@ -503,7 +503,7 @@ Budget the lab's 4-hour timelimit as before — even via the manual
 wizard, ingestion can take anywhere from under an hour to several
 hours, or may not succeed at all on a given attempt.
 
-**Decision**: leave the lab as-is. `terraform-cloudsecure-aws/main.tf`
+**Decision**: leave the lab as-is. `terraform-exam/main.tf`
 keeps the SG rules and VPC Flow Log automated (both proven reliable)
 but deliberately does **not** attempt to grant Flow Log Access — that
 step is left out entirely rather than re-attempted, since both
