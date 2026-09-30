@@ -15,6 +15,12 @@ apt-get update -y
 apt-get install --only-upgrade -y curl git
 
 
+# Command echoing (set -x) is off from here until the tile is rendered:
+# this section handles the learner's API secrets and magic link (a
+# login URL for their PCE org), and xtrace would print them all into
+# the Instruqt track logs. Values stay available via agent variables.
+set +x
+
 # ---------------------------------------
 # Sanitize AUTOACCOUNT_* values
 # ---------------------------------------
@@ -81,8 +87,7 @@ agent variable set SASECRET "$AUTOACCOUNT_SAAPIKEY_SECRET"
 # ---------------------------------------
 MAGIC_LINK=$(echo "${AUTOACCOUNT_MAGICLINK}" | tr -d '{}[]"')
 
-echo "Generated MAGIC LINK:"
-echo "$MAGIC_LINK"
+echo "Magic link generated (not printed, to keep it out of the logs)"
 
 # ---------------------------------------
 # Save MAGIC LINK (Instruqt state)
@@ -98,6 +103,7 @@ agent variable set MAGICURL "$MAGIC_LINK"
 git clone https://github.com/jdschmitz15/illumio-instruqt-terraform-template.git
 AUTOACCOUNT_MAGICLINK="$MAGIC_LINK"
 gomplate -f ~/illumio-instruqt-terraform-template/index.html.tmpl -o /var/www/html/index.html
+set -x
 date
 
 # ---------------------------------------
@@ -268,6 +274,36 @@ print("Disable all rulesets done", flush=True)
 DISABLEEOF
 chmod +x /usr/local/bin/disable-all-rulesets
 
+# close-lab: the deliberate "I'm finished" step for the Close Lab
+# challenge. Its check-cloud-client only passes once this has been run
+# and confirmed, so an accidental click on Check/Next there can't end
+# the session. Writes /root/.close-lab-confirmed.
+cat > /usr/local/bin/close-lab << 'CLOSEEOF'
+#!/bin/bash
+clear
+echo "=================================================================="
+echo " CLOSE LAB"
+echo "=================================================================="
+echo "This permanently ends your lab session. The PCE org, AWS account,"
+echo "VMs and k3s cluster will all be destroyed, and cannot be resumed."
+echo
+echo "Only continue if you have finished all three sections (Workloads,"
+echo "Cloud, Containers) and have told your instructor you're done."
+echo
+read -r -p "Type YES to confirm, or anything else to cancel: " answer
+if [ "$(echo "$answer" | tr '[:lower:]' '[:upper:]')" = "YES" ]; then
+  touch /root/.close-lab-confirmed
+  echo
+  echo "Confirmed. Now click Check at the bottom of the Close Lab page to end the lab."
+else
+  rm -f /root/.close-lab-confirmed
+  echo
+  echo "Cancelled - your lab is still running. Click Overview at the top of the"
+  echo "screen to go back to Illumio Lab Environment."
+fi
+CLOSEEOF
+chmod +x /usr/local/bin/close-lab
+
 # ---------------------------------------
 # PROJECT CRYSTAL TRAFFIC GENERATION
 # ---------------------------------------
@@ -326,7 +362,15 @@ echo "Crystal deployment name: $DEPLOYMENT_NAME"
 cd ~
 git clone https://github.com/justinvid/pc-connector.git
 cd ~/pc-connector/
-terraform init
+# terraform init downloads the terracurl provider from github.com, which
+# has returned one-off HTTP 500s here (twice on 2026-09-30, each failing
+# the whole lab setup) - retry a few times before giving up.
+for i in 1 2 3; do
+  terraform init && break
+  if [ "$i" = "3" ]; then echo "terraform init failed 3 times - giving up"; exit 1; fi
+  echo "terraform init failed (attempt $i) - retrying in 15s"
+  sleep 15
+done
 terraform apply -auto-approve -input=false \
   -var "crystal_api_key=$CRYSTAL_API_KEY" \
   -var "crystal_base_url=$CRYSTAL_BASE_URL" \

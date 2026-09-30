@@ -16,7 +16,7 @@ Became the main lab on 2026-09-30, replacing the earlier 3-challenge layout
 | Folder | Title | What happens |
 |---|---|---|
 | `01-lab` | Illumio Lab Environment | One page for the whole lab. Starts at **🔑 Illumio Console** - a "Click here to open the Illumio Console" link, with a copy box underneath in case the link doesn't open. Then **Workloads** (pairing profile, pair linux-vm/windows-vm, VEN CLI, enforcement), **Cloud** (AWS onboarding), **Containers** (k3s / C-VEN), **Incident Response** (Part 1 Ransomware Protection, Part 2 Investigation of a live lateral-movement attack), and **🛠️ Advanced** at the bottom - troubleshooting commands *only for use if the instructor asks* (full reference: root README, *Troubleshooting reference*). Some sections end with a `check-*` command learners run in the CloudCLI tab. |
-| `02-close-lab` | Close Lab | Warning page. Pressing **NEXT** ends the session and deletes the learner's Crystal deployment. |
+| `02-close-lab` | Close Lab | Warning page. The learner must run `close-lab` in the CloudCLI tab and type **YES**, then click **Check**, to end the session (an accidental click just shows a reminder). Ending deletes the learner's Crystal deployment. |
 
 Tabs: **Illumio & AWS** (one page with the console link and the AWS login
 details), **Linux**, **Windows**, **CloudCLI**, **k3s console**.
@@ -76,13 +76,14 @@ last prompt, or press Ctrl+L.
 ## How the lab ends
 
 The Crystal deployment is **deleted automatically** however the lab ends:
-NEXT on Close Lab (`02-close-lab/cleanup-cloud-client`), or the lab being
+passing the Close Lab check (`02-close-lab/cleanup-cloud-client`), or the lab being
 stopped or expiring (`track_scripts/cleanup-cloud-client`). Both are safe
 to run twice.
 
 ## Files
 
-- `track.yml` - title, slug, 6h `timelimit` / `idle_timeout`.
+- `track.yml` - title, slug, 6h `timelimit` / `idle_timeout`, and
+  `skipping_enabled: false` so Skip can't bypass the Close Lab check.
 - `config.yml` - sandbox machines, AWS account, secrets (incl. the
   team-level `CRYSTAL_API_KEY`, which is kept out of learner terminals and
   out of the Instruqt logs).
@@ -91,8 +92,12 @@ to run twice.
 - `track_scripts/cleanup-cloud-client` - deletes the Crystal deployment on
   stop/expiry.
 - `01-lab/setup-cloud-client` - AWS Terraform build.
-- `02-close-lab/cleanup-cloud-client` - deletes the Crystal deployment on
-  Close Lab NEXT.
+- `02-close-lab/check-cloud-client` - passes only after `close-lab` (installed
+  by track setup) was run and confirmed with YES; otherwise shows a reminder.
+- `02-close-lab/solve-cloud-client` - creates the same confirmation (used by
+  `instruqt track test`; Skip is switched off).
+- `02-close-lab/cleanup-cloud-client` - deletes the Crystal deployment when
+  Close Lab is passed.
 - `ISSUES.md` - known issues specific to this lab.
 
 **Keep `../Course Lab Check/` in sync.** The setup and cleanup scripts print

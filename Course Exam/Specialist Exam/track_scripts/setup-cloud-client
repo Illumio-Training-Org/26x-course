@@ -15,6 +15,12 @@ apt-get update -y
 apt-get install --only-upgrade -y curl git
 
 
+# Command echoing (set -x) is off from here until the tile is rendered:
+# this section handles the learner's API secrets and magic link (a
+# login URL for their PCE org), and xtrace would print them all into
+# the Instruqt track logs. Values stay available via agent variables.
+set +x
+
 # ---------------------------------------
 # Sanitize AUTOACCOUNT_* values
 # ---------------------------------------
@@ -94,8 +100,7 @@ agent variable set SASECRET "$AUTOACCOUNT_SAAPIKEY_SECRET"
 # ---------------------------------------
 MAGIC_LINK=$(echo "${AUTOACCOUNT_MAGICLINK}" | tr -d '{}[]"')
 
-echo "Generated MAGIC LINK:"
-echo "$MAGIC_LINK"
+echo "Magic link generated (not printed, to keep it out of the logs)"
 
 # ---------------------------------------
 # Save MAGIC LINK (Instruqt state)
@@ -108,6 +113,7 @@ agent variable set MAGICURL "$MAGIC_LINK"
 git clone https://github.com/jdschmitz15/illumio-instruqt-terraform-template.git
 AUTOACCOUNT_MAGICLINK="$MAGIC_LINK"
 gomplate -f ~/illumio-instruqt-terraform-template/index.html.tmpl -o /var/www/html/index.html
+set -x
 date
 
 # ---------------------------------------
@@ -166,7 +172,15 @@ echo "Crystal deployment name: $DEPLOYMENT_NAME"
 cd ~
 git clone https://github.com/justinvid/pc-connector.git
 cd ~/pc-connector/
-terraform init
+# terraform init downloads the terracurl provider from github.com, which
+# has returned one-off HTTP 500s here (twice on 2026-09-30, each failing
+# the whole lab setup) - retry a few times before giving up.
+for i in 1 2 3; do
+  terraform init && break
+  if [ "$i" = "3" ]; then echo "terraform init failed 3 times - giving up"; exit 1; fi
+  echo "terraform init failed (attempt $i) - retrying in 15s"
+  sleep 15
+done
 terraform apply -auto-approve -input=false \
   -var "crystal_api_key=$CRYSTAL_API_KEY" \
   -var "crystal_base_url=$CRYSTAL_BASE_URL" \

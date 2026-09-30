@@ -62,6 +62,7 @@ patterns = [r"script was aborted", r"Error making request", r"\[ERROR\]", r"^.*\
 ignore = [r"debconf: unable to initialize frontend", r"Deployment not found", r"CHECK-FAIL:"]
 bad = [l for l in lines if any(re.search(p, l) for p in patterns) and not any(re.search(i, l) for i in ignore)]
 leak = [l for l in lines if "crst_" in l]
+linkleak = [l for l in lines if "accesslink/login?token=" in l]
 def ts(pat):
     for l in lines:
         if re.search(pat, l):
@@ -74,6 +75,7 @@ problems += [f"missing marker: CHECK-OK: {m}" for m in missing]
 problems += ["marker: " + l.split("CHECK-FAIL:",1)[1].strip() for l in fails]
 problems += ["log: " + l[:200] for l in bad[:15]]
 if leak: problems.append(f"SECURITY: Crystal API key (crst_) appears in the log on {len(leak)} line(s)")
+if linkleak: problems.append(f"SECURITY: learner magic link (accesslink token) appears in the log on {len(linkleak)} line(s)")
 result = "PASS" if not problems else "FAIL"
 out = [f"26.x quick check - {slug} - {result}",
        f"run length: {secs//60}m{secs%60:02d}s (instruqt track test exit code {rc})",

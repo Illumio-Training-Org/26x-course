@@ -9,8 +9,8 @@ echo "===== PROJECT CRYSTAL TEARDOWN START ====="
 #
 # The same script runs from two places, so it must be safe to run
 # twice:
-#   - 03-close-lab/cleanup-cloud-client: when the learner clicks NEXT
-#     on Close Lab (the normal finish)
+#   - 02-close-lab/cleanup-cloud-client: when the learner passes the
+#     Close Lab check (the normal finish)
 #   - track_scripts/cleanup-cloud-client: when the sandbox is stopped
 #     or expires without the learner reaching Close Lab
 # A deployment that's already gone (404) counts as done.

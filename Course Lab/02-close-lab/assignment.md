@@ -34,14 +34,23 @@ timelimit: 0
 enhanced_loading: null
 ---
 > [!WARNING]
-> **DO NOT CLICK NEXT UNLESS YOU WANT TO CLOSE THE LAB**
+> **ONLY CONTINUE IF YOU WANT TO CLOSE THE LAB**
 
 If you got here by mistake, go back — click **Overview** at the top of the screen, then re-open **Illumio Lab Environment** and make sure you've completed all three sections (Workloads, Cloud, Containers).
 
-Clicking **NEXT** below will permanently end this session — the PCE org, AWS account, VMs, and k3s cluster will all be destroyed. There is no way to resume once this happens.
-
-Only click **NEXT** if you are completely finished with the lab.
+Closing the lab will permanently end this session — the PCE org, AWS account, VMs, and k3s cluster will all be destroyed. There is no way to resume once this happens.
 
 ---
 
-**Lab Complete – This is the end of the lab and pressing NEXT will end the session**
+**To close the lab** (only when you are completely finished, and have told your instructor):
+
+1. In the **CloudCLI** tab, run:
+
+```run
+close-lab
+```
+
+2. Type **YES** to confirm.
+3. Click **Check** at the bottom of this page.
+
+If you click **Check** without doing steps 1 and 2, you will just see a reminder message and your lab keeps running.

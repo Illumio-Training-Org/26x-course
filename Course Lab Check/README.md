@@ -23,7 +23,9 @@ lab's scripts print their own markers, `CHECK-OK: <step>` or
 - none of the known failure messages appear (`script was aborted`,
   `Error making request`, `[ERROR]`, `Error:`, `timed out`, `exit code`,
   `Lateral Movement attack NOT fired`, `Crystal delete returned HTTP 5xx`);
-- the Crystal API key (`crst_`) doesn't appear anywhere in the log.
+- the Crystal API key (`crst_`) doesn't appear anywhere in the log;
+- the learner's magic link (`accesslink/login?token=`) doesn't appear
+  anywhere in the log (setup keeps command echo off while it handles it).
 
 Known harmless noise is ignored: `debconf: unable to initialize frontend`,
 and `Deployment not found` (the second cleanup finding the deployment
@@ -40,6 +42,12 @@ already deleted).
 | `track-setup-complete` | the whole track setup finished |
 | `aws-build` | the AWS Terraform build finished |
 | `crystal-deleted` | the Crystal deployment was deleted at the end |
+
+The test also passes the Close Lab challenge: its check only passes after
+the learner runs `close-lab` and types YES, and `instruqt track test` runs
+that challenge's solve script to create the same confirmation. So if the
+Close Lab check or solve script breaks, `crystal-deleted` goes missing and
+the run fails. (Typing YES by hand is not tested.)
 
 **Not checked:** things that happen after the test has already torn the
 sandbox down - Crystal's object import (~5-10 min), the policies actually
