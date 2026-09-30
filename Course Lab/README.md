@@ -94,4 +94,10 @@ to run twice.
 - `02-close-lab/cleanup-cloud-client` - deletes the Crystal deployment on
   Close Lab NEXT.
 - `ISSUES.md` - known issues specific to this lab.
+
+**Keep `../Course Lab Check/` in sync.** The setup and cleanup scripts print
+`CHECK-OK:` / `CHECK-FAIL:` markers that the pre-class quick check relies on.
+If you add, remove or rename a step here, update its marker and the
+marker list in `../Course Lab Check/tracks.txt` (and that folder's README),
+then re-run the check.
 - `assets/` - logo and splash images.
