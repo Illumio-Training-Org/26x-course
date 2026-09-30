@@ -88,6 +88,9 @@ echo "$MAGIC_LINK"
 # Save MAGIC LINK (Instruqt state)
 # ---------------------------------------
 agent variable set MAGICURL "$MAGIC_LINK"
+# Markers ("CHECK-OK: <step>" / "CHECK-FAIL: <step>") are read by the
+# pre-class quick check in CX-NEW/Verify Labs - keep the wording stable.
+[ -n "$MAGIC_LINK" ] && echo "CHECK-OK: magic-link" || echo "CHECK-FAIL: magic-link"
 
 # ---------------------------------------
 # Render tile (gomplate) - unchanged source repo, per Nathan's instruction
@@ -309,6 +312,8 @@ curl -sS --connect-timeout 5 -m 8 -o /dev/null \
   -w "HTTP %{http_code} dns=%{time_namelookup}s connect=%{time_connect}s tls=%{time_appconnect}s\n" \
   -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" || echo "curl exit code: $?"
 echo "--- end diagnostics ---"
+reach_code="$(curl -s -o /dev/null -m 8 -w "%{http_code}" -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" || echo 000)"
+[ "$reach_code" = "200" ] && echo "CHECK-OK: crystal-reachable" || echo "CHECK-FAIL: crystal-reachable (HTTP $reach_code)"
 
 # Deployment naming: Lab_<DDMM>_<PCE org ID>, e.g. Lab_2809_4140290.
 # The org ID is unique per session and is the same number the learner
@@ -335,6 +340,7 @@ terraform apply -auto-approve -input=false \
 CRYSTAL_DEPLOYMENT_ID="$(terraform output -raw deployment_id)"
 agent variable set CRYSTALDEPLOYMENT "$CRYSTAL_DEPLOYMENT_ID"
 agent variable set CRYSTALBASEURL "$CRYSTAL_BASE_URL"
+[ -n "$CRYSTAL_DEPLOYMENT_ID" ] && echo "CHECK-OK: crystal-deployed ($DEPLOYMENT_NAME)" || echo "CHECK-FAIL: crystal-deployed"
 
 # The module's own start_request fires immediately after
 # template_request with no delay, but the CSV/object import behind
@@ -355,6 +361,7 @@ for i in 1 2 3 4 5 6; do
     "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID/start"
   sleep 10
 done
+[ "$status" = "running" ] && echo "CHECK-OK: crystal-running" || echo "CHECK-FAIL: crystal-running (status $status)"
 
 # Fire the Lateral Movement attack at boot so its traffic is already
 # in the PCE by the time learners reach the Incident Response
@@ -380,10 +387,14 @@ for i in 1 2 3 4 5 6; do
   [ "$i" = "6" ] && echo "WARNING: Lateral Movement attack NOT fired - fire it manually from Crystal"
   sleep 10
 done
+[ "${attack_code:0:1}" = "2" ] && echo "CHECK-OK: attack-fired" || echo "CHECK-FAIL: attack-fired (HTTP $attack_code)"
 
 echo "--- Crystal block end ---"
 set -x
 
 nohup python3 /usr/local/bin/disable-all-rulesets > /var/log/disable-all-rulesets.log 2>&1 < /dev/null &
+sleep 1
+pgrep -f /usr/local/bin/disable-all-rulesets >/dev/null && echo "CHECK-OK: ruleset-job-started" || echo "CHECK-FAIL: ruleset-job-started"
 
+echo "CHECK-OK: track-setup-complete"
 echo "===== MAGIC LINK + ACCOUNT SETUP END ====="

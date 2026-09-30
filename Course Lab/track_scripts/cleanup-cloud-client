@@ -38,17 +38,21 @@ curl -s -m 30 -w "\nstop: HTTP %{http_code}\n" -X POST \
   -H "X-API-Key: $CRYSTAL_API_KEY" -H "Content-Type: application/json" -d '{}' \
   "$CRYSTALBASEURL/api/deployments/$CRYSTALDEPLOYMENT/stop"
 
+deleted=0
 for i in 1 2 3; do
   code="$(curl -s -m 30 -o /tmp/crystal-delete.json -w "%{http_code}" -X DELETE \
     -H "X-API-Key: $CRYSTAL_API_KEY" \
     "$CRYSTALBASEURL/api/deployments/$CRYSTALDEPLOYMENT")"
   if [ "${code:0:1}" = "2" ] || [ "$code" = "404" ]; then
     echo "Crystal deployment $CRYSTALDEPLOYMENT deleted (HTTP $code, attempt $i)"
+    deleted=1
     break
   fi
   echo "Crystal delete returned HTTP $code (attempt $i): $(cat /tmp/crystal-delete.json 2>/dev/null)"
   sleep 5
 done
 
+# Marker for the pre-class quick check (CX-NEW/Verify Labs).
+[ "$deleted" = "1" ] && echo "CHECK-OK: crystal-deleted" || echo "CHECK-FAIL: crystal-deleted (HTTP $code)"
 echo "===== PROJECT CRYSTAL TEARDOWN END ====="
 exit 0

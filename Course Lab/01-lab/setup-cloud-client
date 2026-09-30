@@ -44,3 +44,7 @@ terraform apply -input=false -auto-approve tfplan
 
 # Configure SSH
 cp my-keypair.pem /root/.ssh/
+
+# Marker for the pre-class quick check (CX-NEW/Verify Labs). set -e means
+# we only get here if the AWS build succeeded.
+echo "CHECK-OK: aws-build"
