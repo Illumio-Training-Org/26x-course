@@ -1,30 +1,30 @@
 ---
 slug: close-lab
-id: nz7gc7ljzxu5
+id: yvb15dkb3ncw
 type: challenge
 title: Close Lab
 teaser: Read this before ending your session
 tabs:
-- id: kkpbnggpzrd9
+- id: vhn6ehtikomm
   title: Linux
   type: terminal
   hostname: linux-vm
   cmd: bash
-- id: mo9x5eonstwo
+- id: hcx5lv3hkhuq
   title: Windows
   type: terminal
   hostname: windows-vm
-- id: mdymq4y2r6zg
+- id: ls4eghumcb6b
   title: CloudCLI
   type: terminal
   hostname: cloud-client
   cmd: bash
-- id: zxoi84znlzxl
+- id: am6yyb9ymxcr
   title: AWS
   type: service
   hostname: cloud-client
   port: 80
-- id: cbkqieypdo22
+- id: tvig8s3gnwzn
   title: k3s
   type: terminal
   hostname: host
