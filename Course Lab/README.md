@@ -15,7 +15,7 @@ Became the main lab on 2026-09-30, replacing the earlier 3-challenge layout
 
 | Folder | Title | What happens |
 |---|---|---|
-| `01-lab` | Illumio Lab Environment | One page for the whole lab. Starts at **🔑 Illumio Console** - a "Click here to open the Illumio Console" link, with a copy box underneath in case the link doesn't open. Then **Workloads** (pairing profile, pair linux-vm/windows-vm, VEN CLI, enforcement), **Cloud** (AWS onboarding), **Containers** (k3s / C-VEN), **Incident Response** (Part 1 Ransomware Protection, Part 2 Investigation of a live lateral-movement attack), and **🛠️ Advanced** at the bottom - troubleshooting commands *only for use if the instructor asks* (full reference: root README, *Troubleshooting reference*). Some sections end with a `check-*` command learners run in the CloudCLI tab. |
+| `01-lab` | Illumio Lab Environment | One page for the whole lab. Starts at **🔑 Console** - the Illumio logo, then a "Click here to open the Illumio Console" link, with a copy box underneath in case the link doesn't open. Then **Workloads** (pairing profile, pair linux-vm/windows-vm, VEN CLI, enforcement), **Cloud** (AWS onboarding), **Containers** (k3s / C-VEN), **Incident Response** (Part 1 Ransomware Protection, Part 2 Investigation of a live lateral-movement attack), and **🛠️ Advanced** at the bottom - troubleshooting commands *only for use if the instructor asks* (full reference: root README, *Troubleshooting reference*). Some sections end with a `check-*` command learners run in the CloudCLI tab. |
 | `02-close-lab` | Close Lab | Warning page. The learner must run `close-lab` in the CloudCLI tab and type **YES**, then click **Check**, to end the session (an accidental click just shows a reminder). Ending deletes the learner's Crystal deployment. |
 
 Tabs: **Illumio & AWS** (one page with the console link and the AWS login
@@ -109,4 +109,4 @@ marker list in `../Course Lab Check/tracks.txt` (and that folder's README),
 then re-run the check.
 - `assets/` - logo and splash images, plus `illumio-logo-banner.png` (the
   white Illumio logo on the instructions panel colour `#202636`, shown at
-  the top of the Illumio Console section of the lab instructions).
+  the top of the 🔑 Console section of the lab instructions).

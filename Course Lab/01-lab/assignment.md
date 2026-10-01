@@ -71,7 +71,7 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-🔑 Illumio Console
+🔑 Console
 ==========
 
 ![Illumio](../assets/illumio-logo-banner.png)
