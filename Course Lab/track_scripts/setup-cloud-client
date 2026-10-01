@@ -127,8 +127,8 @@ for host in ('linux-vm', 'windows-vm'):
     if not w:
         fails.append(host + ' not paired')
         continue
-    # Case-insensitive: Crystal's dataset uses e.g. 'Web' where the lab
-    # says 'web', and learners may type either.
+    # Case-insensitive: the lab now says 'Web' (the PCE default label),
+    # but learners may still create or pick 'web'.
     labels = {l['key']: (l.get('value') or '').lower() for l in w.get('labels', [])}
     for k, v in base.items():
         if labels.get(k) != v.lower():
@@ -143,7 +143,7 @@ if fails:
     for f in fails:
         print(' - ' + f)
 else:
-    print('PASS - both VMs paired, labels correct, linux-vm role=web in Selective mode')
+    print('PASS - both VMs paired, labels correct, linux-vm role=Web in Selective mode')
 "
 CHECKEOF
 chmod +x /usr/local/bin/check-workloads

@@ -97,7 +97,7 @@ Onboard the Linux and Windows VM.
 - Enforcement: Idle
 - Node Type: Server VEN
 - Initial VEN Version: Current Default
-- Labels: `web`, `pos`, `Production`, `lax`
+- Labels: `Web`, `pos`, `Production`, `lax`
 - Uses Per Key: Unlimited Uses
 - Key Lifespan: 6 Hours
 
