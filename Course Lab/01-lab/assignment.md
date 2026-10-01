@@ -10,7 +10,7 @@ notes:
   contents: |-
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-      .splash-wrap { font-family: 'Montserrat', sans-serif; color: #fff; background: #141720; padding: 3% 4% 4% 4%; }
+      .splash-wrap { font-family: 'Montserrat', sans-serif; color: #d4d4d4; background: #141720; padding: 3% 4% 4% 4%; }
       .splash-logo { width: 444px; max-width: 70%; height: auto; display: block; margin: 0 0 2.2em; }
       .splash-wrap h1 { font-size: 1.6em; font-weight: 700; line-height: 1.25; margin: 0 0 0.8em; }
       .splash-wrap p { margin: 0 0 0.4em; font-size: 1em; }
