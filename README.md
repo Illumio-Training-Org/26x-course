@@ -155,7 +155,11 @@ every 5 minutes for the rest of the session.
 instructor can see whose lab it is and match the learner's org ID (shown in
 the Console) to its Crystal deployment. `<learner>` is the learner's email
 before the @ (only when Instruqt passes it, which needs their consent), else
-their Instruqt name, else it's left off; dots and spaces become dashes.
+their Instruqt name. Team members starting a track from the Instruqt UI get
+neither, so their Instruqt user ID is looked up in a team list in each
+`setup-cloud-client` (`team_member_name`) - add new team members there. An
+unlisted ID is used as-is, and with no details at all it's `team`. Dots and
+spaces become dashes; the setup log says which source was used.
 
 **Cleanup:** the deployment is stopped and deleted automatically when the
 lab ends - when the learner passes the Close Lab check (challenge cleanup script) and

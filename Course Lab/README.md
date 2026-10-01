@@ -34,7 +34,8 @@ Measured on 2026-09-29: page ready **~2 min 50 s** after the sandbox starts.
    - creates a Crystal deployment named **`Lab_<DDMM>_<PCE org ID>_<learner>`**
      (e.g. `Lab_3009_4140393_keith-buckley`) - the org ID is what the learner
      sees in their Console, and `<learner>` is their email before the @ (or
-     their Instruqt name, or left off if Instruqt passes neither), so you can
+     their Instruqt name; for team members starting it from the Instruqt UI,
+     their name from the team list in `setup-cloud-client`), so you can
      match a learner to their deployment in Crystal;
    - **fires Crystal's Lateral Movement attack automatically** (3 hours) for
      the Incident Response Investigation - no need to press Fire Attack;

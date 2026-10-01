@@ -167,10 +167,39 @@ echo "--- end diagnostics ---"
 # section, so an instructor can match a learner's lab to its Crystal
 # deployment directly. <learner> is the part of the learner's email
 # before the @ (Instruqt only passes it with the learner's consent),
-# else the name they signed up with, else left off. Letters, digits and
-# dashes only (dots/spaces become dashes), max 30 characters.
-LEARNER="${INSTRUQT_USER_EMAIL%%@*}"
-[ -z "$LEARNER" ] && LEARNER="$INSTRUQT_USER_NAME"
+# else the name they signed up with. Team members starting the track
+# directly from the Instruqt UI get neither (seen 2026-10-01), so their
+# INSTRUQT_USER_ID is looked up in the team list below; an ID not in the
+# list is used as-is, and with no ID at all it's "team". Letters, digits
+# and dashes only (dots/spaces become dashes), max 30 characters.
+# Team list from Instruqt (illumio-training team members, 2026-10-01) -
+# add new team members here (name = their email before the @).
+team_member_name() {
+  case "$1" in
+    6cj4yyx4rpcs) echo nathan-mitchell ;;
+    hzr0el9p4xq1) echo pritesh-chauhan ;;
+    36UKnCyZVsgasTEsujZw0yVvHr13) echo james-eifler ;;
+    ltp9hziadn3q) echo keith-buckley ;;
+    elqoiercnof4) echo steve-elliott ;;
+    0ve5nbttzjpe) echo adrianna-white ;;
+    1y8ce1p7yzw6) echo luca-turbesi ;;
+    yi944naccdvp) echo michael-cutler ;;
+    I91sO8Qu7NShpx19Q0docpUbWcr1) echo harpreet ;;
+    rqjmagbplzhh) echo resourcetraining ;;
+  esac
+}
+if [ -n "${INSTRUQT_USER_EMAIL%%@*}" ]; then
+  LEARNER="${INSTRUQT_USER_EMAIL%%@*}"; LEARNER_SOURCE="email"
+elif [ -n "$INSTRUQT_USER_NAME" ]; then
+  LEARNER="$INSTRUQT_USER_NAME"; LEARNER_SOURCE="name"
+elif [ -n "$(team_member_name "$INSTRUQT_USER_ID")" ]; then
+  LEARNER="$(team_member_name "$INSTRUQT_USER_ID")"; LEARNER_SOURCE="team list"
+elif [ -n "$INSTRUQT_USER_ID" ]; then
+  LEARNER="$INSTRUQT_USER_ID"; LEARNER_SOURCE="user ID (not in team list)"
+else
+  LEARNER="team"; LEARNER_SOURCE="none (no user details from Instruqt)"
+fi
+echo "Deployment name learner part from: $LEARNER_SOURCE"
 LEARNER="$(printf '%s' "$LEARNER" | tr '. _' '---' | tr -cd 'A-Za-z0-9-' | cut -c1-30)"
 DEPLOYMENT_NAME="AssociateExam_$(date -u +%d%m)_${AUTOACCOUNT_ORG_ID}${LEARNER:+_$LEARNER}"
 echo "Crystal deployment name: $DEPLOYMENT_NAME"
