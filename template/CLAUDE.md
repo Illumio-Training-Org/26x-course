@@ -79,8 +79,8 @@ background picture. The note sits on the notes area's own colour
 recoloured to `#141720` so it has no visible box, shown at `width: 444px`
 (`max-width: 70%`) - followed by normal-flow HTML text: heading "Welcome
 to your Illumio Training Lab", the four bullets, Illumio Training /
-training@illumio.com, and the CTA "Click the &rsaquo; on the right hand
-side of the screen for an intro video on how to use Instruqt". The old
+training@illumio.com, and the CTA "Click &rsaquo; for a short video on using
+Instruqt". The old
 overlay-on-`splashscreenblank.png` design (text absolutely positioned on a
 branded background image) is kept in `assets/` only for a quick revert.
 

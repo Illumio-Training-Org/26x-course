@@ -32,7 +32,7 @@ notes:
         Illumio Training<br>
         training@illumio.com
       </div>
-      <div class="splash-cta">Click the &rsaquo; on the right hand side of the screen for an intro video on how to use Instruqt</div>
+      <div class="splash-cta">Click &rsaquo; for a short video on using Instruqt</div>
     </div>
 - type: video
   url: https://www.youtube.com/embed/_QALLe3DJpk
