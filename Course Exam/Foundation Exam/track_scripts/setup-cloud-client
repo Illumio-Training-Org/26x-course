@@ -162,7 +162,7 @@ curl -sS --connect-timeout 5 -m 8 -o /dev/null \
 echo "--- end diagnostics ---"
 
 # Deployment naming: FoundationExam_<DDMM>_<PCE org ID>_<learner>, e.g.
-# FoundationExam_3009_4140393_keith-buckley. The org ID is unique per session and
+# FoundationExam_3009_4140393_keith. The org ID is unique per session and
 # is the same number the learner sees in their Console and the Advanced
 # section, so an instructor can match a learner's lab to its Crystal
 # deployment directly. <learner> is the part of the learner's email
@@ -170,20 +170,20 @@ echo "--- end diagnostics ---"
 # else the name they signed up with. Team members starting the track
 # directly from the Instruqt UI get neither (seen 2026-10-01), so their
 # INSTRUQT_USER_ID is looked up in the team list below; an ID not in the
-# list is used as-is, and with no ID at all it's "team". Letters, digits
-# and dashes only (dots/spaces become dashes), max 30 characters.
+# list is used as-is, and with no ID at all it's "team". Forename only
+# (see below), lower-case letters and digits, max 30 characters.
 # Team list from Instruqt (illumio-training team members, 2026-10-01) -
-# add new team members here (name = their email before the @).
+# add new team members here (name = their forename, lower case).
 team_member_name() {
   case "$1" in
-    6cj4yyx4rpcs) echo nathan-mitchell ;;
-    hzr0el9p4xq1) echo pritesh-chauhan ;;
-    36UKnCyZVsgasTEsujZw0yVvHr13) echo james-eifler ;;
-    ltp9hziadn3q) echo keith-buckley ;;
-    elqoiercnof4) echo steve-elliott ;;
-    0ve5nbttzjpe) echo adrianna-white ;;
-    1y8ce1p7yzw6) echo luca-turbesi ;;
-    yi944naccdvp) echo michael-cutler ;;
+    6cj4yyx4rpcs) echo nathan ;;
+    hzr0el9p4xq1) echo pritesh ;;
+    36UKnCyZVsgasTEsujZw0yVvHr13) echo james ;;
+    ltp9hziadn3q) echo keith ;;
+    elqoiercnof4) echo steve ;;
+    0ve5nbttzjpe) echo adrianna ;;
+    1y8ce1p7yzw6) echo luca ;;
+    yi944naccdvp) echo michael ;;
     I91sO8Qu7NShpx19Q0docpUbWcr1) echo harpreet ;;
     rqjmagbplzhh) echo resourcetraining ;;
   esac
@@ -200,7 +200,10 @@ else
   LEARNER="team"; LEARNER_SOURCE="none (no user details from Instruqt)"
 fi
 echo "Deployment name learner part from: $LEARNER_SOURCE"
-LEARNER="$(printf '%s' "$LEARNER" | tr '. _' '---' | tr -cd 'A-Za-z0-9-' | cut -c1-30)"
+# Forename only: everything before the first dot, space, underscore,
+# dash or plus (jane.smith@... -> jane, "Jane Smith" -> jane), lower case.
+LEARNER="${LEARNER%%[. _+-]*}"
+LEARNER="$(printf '%s' "$LEARNER" | tr -cd 'A-Za-z0-9' | tr 'A-Z' 'a-z' | cut -c1-30)"
 DEPLOYMENT_NAME="FoundationExam_$(date -u +%d%m)_${AUTOACCOUNT_ORG_ID}${LEARNER:+_$LEARNER}"
 echo "Crystal deployment name: $DEPLOYMENT_NAME"
 

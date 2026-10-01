@@ -32,8 +32,8 @@ Measured on 2026-09-29: page ready **~2 min 50 s** after the sandbox starts.
 2. **Track setup** (`track_scripts/setup-cloud-client`, ~20 s):
    - creates the magic link and the learner `check-*` commands;
    - creates a Crystal deployment named **`Lab_<DDMM>_<PCE org ID>_<learner>`**
-     (e.g. `Lab_3009_4140393_keith-buckley`) - the org ID is what the learner
-     sees in their Console, and `<learner>` is their email before the @ (or
+     (e.g. `Lab_3009_4140393_keith`) - the org ID is what the learner
+     sees in their Console, and `<learner>` is their forename, from their email before the @ (or
      their Instruqt name; for team members starting it from the Instruqt UI,
      their name from the team list in `setup-cloud-client`), so you can
      match a learner to their deployment in Crystal;
