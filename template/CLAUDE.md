@@ -84,6 +84,13 @@ Instruqt". The old
 overlay-on-`splashscreenblank.png` design (text absolutely positioned on a
 branded background image) is kept in `assets/` only for a quick revert.
 
+**Layout gotcha (2026-10-01):** Instruqt renders notes in a narrow centred
+column (~570px), which wrapped the heading and bullets. `.splash-wrap` therefore
+breaks out of it with `width: min(90vw, 1300px); position: relative; left: 50%;
+transform: translateX(-50%)`, the heading and `<li>` use `white-space: nowrap`,
+and the `h1` sets `font-family: 'Montserrat'` itself (Instruqt's h1 style
+overrides the inherited font). Text colour `#d4d4d4`; bullets `0.8em`.
+
 **Images in notes:** use an `<img src="../assets/...">` tag, NOT a CSS
 `background-image: url(...)` - a relative `../assets/...` path resolves as
 an `<img src>` but did NOT resolve inside CSS `url()` in a live test
