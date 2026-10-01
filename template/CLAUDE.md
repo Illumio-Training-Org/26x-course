@@ -42,8 +42,10 @@ copying it for a new lab:
   Linux VM, `rockyvm` - a placeholder, not real infra for any product)
   plus the matching `hostname:` in every challenge's `tabs[]`, `timelimit`,
   `idle_timeout`.
-- `assets/illumio-logo-splash.png` (splash logo) and `assets/logo.png` (track
-  icon) — keep as-is (shared Illumio branding) unless the lab needs its own (the logo is the standard Illumio icon used
+- `assets/illumio-logo-splash.png` (splash logo), `assets/illumio-logo-banner.png`
+  (logo at the top of challenge 01's first section, on the sectioned-page colour
+  `#202636`; a page with no `#` sections needs a `#000F17` version instead) and
+  `assets/logo.png` (track icon) — keep as-is (shared Illumio branding) unless the lab needs its own (the logo is the standard Illumio icon used
   across all tracks, e.g. 331-Containers).
 - Challenge titles/slugs/bodies — replace every `[bracketed placeholder]`.
 

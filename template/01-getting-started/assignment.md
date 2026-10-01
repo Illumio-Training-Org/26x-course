@@ -48,6 +48,8 @@ enhanced_loading: null
 ---
 # 01-Getting Started
 
+![Illumio](../assets/illumio-logo-banner.png)
+
 **[LAB TOPIC]**
 
 [1 paragraph context]
