@@ -10,12 +10,12 @@ notes:
   contents: |-
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-      .splash-wrap { font-family: 'Montserrat', sans-serif; color: #d4d4d4; background: #141720; padding: 3% 4% 4% 4%; }
+      .splash-wrap { font-family: 'Montserrat', sans-serif; color: #d4d4d4; background: #141720; padding: 3% 4% 4% 4%; box-sizing: border-box; width: min(90vw, 1300px); position: relative; left: 50%; transform: translateX(-50%); }
       .splash-logo { width: 444px; max-width: 70%; height: auto; display: block; margin: 0 0 2.2em; }
-      .splash-wrap h1 { font-size: 1.6em; font-weight: 700; line-height: 1.25; margin: 0 0 0.8em; }
+      .splash-wrap h1 { font-family: 'Montserrat', sans-serif; font-size: 1.6em; font-weight: 700; line-height: 1.25; margin: 0 0 0.8em; white-space: nowrap; }
       .splash-wrap p { margin: 0 0 0.4em; font-size: 1em; }
       .splash-wrap ul { margin: 0 0 1.2em; padding: 0; list-style: none; }
-      .splash-wrap li { margin: 0 0 0.35em; font-size: 0.8em; }
+      .splash-wrap li { margin: 0 0 0.35em; font-size: 0.8em; white-space: nowrap; }
       .splash-wrap li::before { content: "- "; }
       .splash-contact { margin: 0 0 1.4em; font-size: 1em; line-height: 1.5; }
       .splash-cta { font-size: 1em; font-weight: 700; }
