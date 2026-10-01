@@ -44,7 +44,7 @@ See [`track.yml`](track.yml) for the full track definition.
 .
 ├── track.yml                       # Track metadata and config
 ├── config.yml                      # Instruqt config version
-├── assets/                         # logo.png + shared splash screen
+├── assets/                         # logo.png (track icon) + illumio-logo-splash.png (splash logo)
 └── 01-.../02-.../03-...            # One directory per challenge, each with an assignment.md
 ```
 

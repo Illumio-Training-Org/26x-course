@@ -42,9 +42,8 @@ copying it for a new lab:
   Linux VM, `rockyvm` - a placeholder, not real infra for any product)
   plus the matching `hostname:` in every challenge's `tabs[]`, `timelimit`,
   `idle_timeout`.
-- `assets/splash%20...%20jan.png` and `assets/logo.png` — replace with the
-  new lab's own splash image if desired, or keep the shared Illumio
-  training splash/logo as-is (the logo is the standard Illumio icon used
+- `assets/illumio-logo-splash.png` (splash logo) and `assets/logo.png` (track
+  icon) — keep as-is (shared Illumio branding) unless the lab needs its own (the logo is the standard Illumio icon used
   across all tracks, e.g. 331-Containers).
 - Challenge titles/slugs/bodies — replace every `[bracketed placeholder]`.
 
@@ -68,49 +67,32 @@ view. No content changes needed because of this.
 
 ## Splash + video intro (challenge 01 only)
 `01-getting-started` carries two `notes:` entries: a `type: text` note with
-the splash background image (`assets/splashscreenblank.png` — logo +
-branded graphic only, no baked-in text) plus ALL the welcome copy
-(heading, bullets, contact info) and a video call-to-action line, all laid
-out via absolutely-positioned HTML/CSS on top of the `<img>`; then a
-`type: video` entry pointing at Instruqt's own official "Instruqt 101"
-interface walkthrough (`https://www.youtube.com/embed/_QALLe3DJpk`, from
-https://instruqt.com/videos/instruqt-101 / their YouTube channel). Instruqt
-renders the video to the right of the text/splash note on the pre-challenge
-slide. `type: video` accepts a YouTube embed URL directly
-(`youtube.com/embed/<id>`), per Instruqt's own `assignment.md` reference
-docs — no need to self-host an mp4.
+the splash, then a `type: video` entry pointing at Instruqt's own official
+"Instruqt 101" interface walkthrough
+(`https://www.youtube.com/embed/_QALLe3DJpk`). Instruqt renders the video
+to the right of the splash on the pre-challenge slide; `type: video`
+accepts a YouTube embed URL directly.
 
-**Text-over-image technique (learned the hard way):** put the picture in
-an actual `<img src="../assets/...">` tag, NOT a CSS `background-image:
-url(...)`. A relative `../assets/...` path resolves fine as an `<img src>`
-(same as plain Markdown `![]()`) but did NOT resolve inside a CSS
-`background-image: url()` in a live test (2026-08-19) — the image just
-didn't render. Overlay text with a `position: absolute` div inside a
-`position: relative` wrapper around the `<img>` instead.
+**Splash design (since 2026-10-01, copied from `! 26.x Lab`):** no
+background picture. The note sits on the notes area's own colour
+(`#141720`) with `assets/illumio-logo-splash.png` - the white Illumio logo
+recoloured to `#141720` so it has no visible box, shown at `width: 444px`
+(`max-width: 70%`) - followed by normal-flow HTML text: heading "Welcome
+to your Illumio Training Lab", the four bullets, Illumio Training /
+training@illumio.com, and the CTA "Click the &rsaquo; on the right hand
+side of the screen for an intro video on how to use Instruqt". The old
+overlay-on-`splashscreenblank.png` design (text absolutely positioned on a
+branded background image) is kept in `assets/` only for a quick revert.
 
-**Font**: the overlay text uses Montserrat (400/700) pulled via a Google
-Fonts `<link>` tag inside the note's `contents:` — confirmed working live.
-Illumio's actual website brand font is the licensed "FK Grotesk"
-(`Fkgrotesk` in illumio.com's CSS), which we don't have files for and
-can't legally embed; Montserrat was chosen by the user as a close, freely
-licensed match. Swap the Google Fonts `<link>`/`font-family` if a different
-font is ever needed.
+**Images in notes:** use an `<img src="../assets/...">` tag, NOT a CSS
+`background-image: url(...)` - a relative `../assets/...` path resolves as
+an `<img src>` but did NOT resolve inside CSS `url()` in a live test
+(2026-08-19).
 
-Swap the background image, welcome copy, and video per lab as needed; keep
-the overlay-on-blank-background approach and the splash-then-video
-ordering.
-
-**Overlay layout (tuned live, 2026-08-19):** `.splash-overlay` is
-absolutely positioned at `width: 66%`, `padding: 18% 4% 4% 7.2%` (the
-7.2% left padding lines the text up with the Illumio logo's left edge in
-`splashscreenblank.png`) with `justify-content: flex-start` so content
-starts near the top instead of vertical-centering. Heading is `1.25em`;
-body/bullets/contact/CTA are all `0.78em`; heading and each `<li>` use
-`white-space: nowrap` so every line fits on one row instead of wrapping —
-this is why the overlay column is 66% wide rather than narrower. CTA
-copy: "Click the &rsaquo; on the right hand side of the screen for an
-intro video on how to use Instruqt" (grammar-checked and revised from an
-earlier "Use the &rsaquo; icon..." draft).
+**Font**: Montserrat (400/700) via a Google Fonts `<link>` inside the
+note's `contents:` - confirmed working live. Illumio's brand font ("FK
+Grotesk") is licensed and can't be embedded; Montserrat was chosen as a
+close, freely licensed match.
 
 ## Verification challenges (03 and 04) — two different purposes
 
