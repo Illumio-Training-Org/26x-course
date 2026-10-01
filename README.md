@@ -334,3 +334,11 @@ curl -s -u "api_a1b2c3d4e5f6g7h8i:9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b
 - `1234567` -> `$AUTOACCOUNT_ORG_ID`
 - `api_a1b2c3d4e5f6g7h8i` -> `api_$AUTOACCOUNT_APIKEY_ID`
 - `9f8e7d6c...` -> `$AUTOACCOUNT_APIKEY_SECRET`
+
+## Backup-Dependencies
+
+`Backup-Dependencies/` holds fallback copies of the third-party code the lab and
+exams download during setup (`justinvid/pc-connector`,
+`jdschmitz15/illumio-instruqt-terraform-template`, and the `devops-rob/terracurl`
+Terraform provider), with step-by-step instructions for switching the setup
+scripts over to them if an original disappears or breaks. See its README.
