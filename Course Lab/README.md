@@ -111,3 +111,6 @@ then re-run the check.
 - `assets/` - logo and splash images, plus `illumio-logo-banner.png` (the
   white Illumio logo on the instructions panel colour `#202636`, shown at
   the top of the 🔑 Console section of the lab instructions).
+  `illumio-logo-splash.png` is the same logo on the notes background
+  (`#141720`), used by the splash screen (since 2026-10-01, in place of
+  `splashscreenblank.png`, which is kept for a quick revert).
