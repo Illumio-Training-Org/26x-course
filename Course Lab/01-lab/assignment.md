@@ -22,7 +22,7 @@ notes:
     </style>
     <div class="splash-wrap">
       <img class="splash-logo" src="../assets/illumio-logo-splash.png" alt="Illumio" />
-      <h1>Welcome to your Instructor Led Training from Illumio</h1>
+      <h1>Welcome to your Illumio Training Lab</h1>
       <p>This is your opportunity to:</p>
       <ul>
         <li>Learn how Zero Trust Segmentation protects against breaches</li>
