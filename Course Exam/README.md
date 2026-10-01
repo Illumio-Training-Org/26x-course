@@ -22,6 +22,11 @@ goes into the other.
 ## How each exam is built
 
 - `01-magic-link` — access to the learner's PCE org.
+- Every task challenge is split into two sections: **📝 Task** (the question,
+  open by default) and **🔑 Logged out of the Console?** (collapsed) with the
+  learner's magic link (`MAGICURL`). The Console logs out after ~10-15 min idle
+  while the Instruqt exam keeps running; the magic link can be reused, so the
+  learner can log back in from whichever task they're on.
 - `NN-task-N` — one challenge per task, each with a `check-cloud-client`
   (runs on **Check**; failures shown via `fail-message`) and a
   `solve-cloud-client`. Tasks 1 (pairing), 8 (scoped user) and 10 (cloud
