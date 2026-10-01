@@ -23,7 +23,7 @@ notes:
     <div class="splash-wrap">
       <img class="splash-logo" src="../assets/illumio-logo-splash.png" alt="Illumio" />
       <h1>Welcome to your Select Exam</h1>
-      <div class="splash-time">Time allowed: 150 minutes (2 hours 30)</div>
+      <div class="splash-time">Time allowed: 2 hours 30 minutes</div>
       <p>This is your opportunity to:</p>
       <ul>
         <li>Demonstrate your Zero Trust Segmentation skills</li>

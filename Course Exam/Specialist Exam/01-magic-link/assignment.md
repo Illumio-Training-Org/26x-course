@@ -23,7 +23,7 @@ notes:
     <div class="splash-wrap">
       <img class="splash-logo" src="../assets/illumio-logo-splash.png" alt="Illumio" />
       <h1>Welcome to your Specialist Exam</h1>
-      <div class="splash-time">Time allowed: 120 minutes (2 hours)</div>
+      <div class="splash-time">Time allowed: 2 hours</div>
       <p>This is your opportunity to:</p>
       <ul>
         <li>Demonstrate your Zero Trust Segmentation skills</li>
