@@ -18,10 +18,12 @@ notes:
       .splash-wrap li::before { content: "- "; }
       .splash-contact { margin: 0 0 1.4em; font-size: 1em; line-height: 1.5; }
       .splash-cta { font-size: 1em; font-weight: 700; }
+      .splash-time { font-size: 1.1em; font-weight: 700; margin: -0.4em 0 1.2em; }
     </style>
     <div class="splash-wrap">
       <img class="splash-logo" src="../assets/illumio-logo-splash.png" alt="Illumio" />
       <h1>Welcome to your Select Exam</h1>
+      <div class="splash-time">Time allowed: 150 minutes (2 hours 30)</div>
       <p>This is your opportunity to:</p>
       <ul>
         <li>Demonstrate your Zero Trust Segmentation skills</li>
