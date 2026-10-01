@@ -21,7 +21,11 @@ goes into the other.
 
 ## How each exam is built
 
-- `01-magic-link` — access to the learner's PCE org.
+- `01-magic-link` — access to the learner's PCE org. Its splash (since
+  2026-10-01) matches the Course Lab: white Illumio logo
+  (`assets/illumio-logo-splash.png`, on the notes colour `#141720`) above the
+  exam's own welcome text - no background picture (`splashscreenblank.png` is
+  kept for a quick revert).
 - Every task challenge is split into two sections: **📝 Task** (the question,
   open by default) and **🔑 Logged out of the Console?** (collapsed) with the
   learner's magic link (`MAGICURL`). The Console logs out after ~10-15 min idle
