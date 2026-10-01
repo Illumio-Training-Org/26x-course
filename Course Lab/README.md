@@ -107,4 +107,6 @@ to run twice.
 If you add, remove or rename a step here, update its marker and the
 marker list in `../Course Lab Check/tracks.txt` (and that folder's README),
 then re-run the check.
-- `assets/` - logo and splash images.
+- `assets/` - logo and splash images, plus `illumio-logo-banner.png` (the
+  white Illumio logo on the instructions panel colour `#202636`, shown at
+  the top of the lab instructions).
