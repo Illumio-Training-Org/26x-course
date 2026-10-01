@@ -56,7 +56,7 @@ enhanced_loading: null
 ![Illumio](../assets/illumio-logo-banner.png)
 
 > [!IMPORTANT]
-> This exam is **150 minutes (2 hours 30)**.
+> You have a maximum of **2 hours 30 minutes** to complete the exam.
 
 **Please note:**
 - **The first task (pairing the workloads) must be completed and cannot be skipped.**
