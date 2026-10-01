@@ -17,7 +17,7 @@ else
   git clone https://github.com/Illumio-Training-Org/26x-course.git
   cd 26x-course
 fi
-cd /root/26x-course/terraform
+cd /root/26x-course/terraform-lab
 
 # Install Terraform only if it isn't already present (idempotent re-run)
 if ! command -v terraform >/dev/null 2>&1; then

@@ -6,7 +6,7 @@
 # CloudSecure's Map/Traffic explorer has actual web->db application
 # traffic to show per environment, not just internet scan noise on
 # the opened SG ports. Run via ssh from setup-cloud-client, not part
-# of the shared terraform/ build's user_data (that build is also used
+# of the shared terraform-lab/ build's user_data (that build is also used
 # by Course Lab and Select Exam).
 #
 # Usage: web-heartbeat.sh <db-private-ip>

@@ -3,7 +3,7 @@
 # Installs and starts a real MariaDB server on a crm-*-db instance
 # (Amazon Linux 2023), listening on 0.0.0.0:3306, with a lab
 # database/user for the matching web instance to connect to. Run via
-# ssh from setup-cloud-client, not part of the shared terraform/
+# ssh from setup-cloud-client, not part of the shared terraform-lab/
 # build's user_data (that build is also used by Course Lab and Select
 # Exam, so this stays isolated to this track's own provisioning step).
 #

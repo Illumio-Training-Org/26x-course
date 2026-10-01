@@ -6,7 +6,7 @@ fresh and torn down after use — no state carries across sessions.
 
 ## Structure
 
-- `terraform/` — the shared AWS Terraform build (magic-link-driven PCE org +
+- `terraform-lab/` — the shared AWS Terraform build (magic-link-driven PCE org +
   4 EC2 instances: 2 applications, each a Web/DB pair, 1 VPC, per-role
   security groups). Deliberately kept out of the track folders so it
   doesn't interfere with their own Instruqt track sync.
@@ -90,7 +90,7 @@ repo.
 
 ### 2. AWS build (Terraform)
 
-The second challenge triggers this repo's own `terraform/` build applying
+The second challenge triggers this repo's own `terraform-lab/` build applying
 against AWS: one VPC, two subnets, two role-based security groups, and 4
 EC2 instances forming a single application (`crm`) with a Web/DB pair in
 both a `dev` and a `prod` environment. This is what the learner logs into

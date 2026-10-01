@@ -81,7 +81,7 @@ pipeline now:
 
 1. Builds the shared AWS infrastructure (the tagged `crm` app — 4 EC2
    instances, `crm-dev-web/db` and `crm-prod-web/db`) via the existing
-   shared `terraform/` folder.
+   shared `terraform-lab/` folder.
 2. Creates a dedicated IAM role in AWS for CloudSecure, matching the
    real Console wizard's own CloudFormation template's policy content.
 3. Registers the AWS account with CloudSecure via Terraform
@@ -128,7 +128,7 @@ showing the automation's own service-account identity, not a human.
 
 Two files matter here: `track_scripts/setup-cloud-client` (this
 track) and `../terraform-exam/*.tf` (a separate Terraform
-config, deliberately not part of the shared `terraform/` folder used
+config, deliberately not part of the shared `terraform-lab/` folder used
 by Course Lab and all 5 exam tracks — adding a new required provider
 there would break every other track's `terraform apply`, since they
 don't pass the new CloudSecure variables).
@@ -148,7 +148,7 @@ don't pass the new CloudSecure variables).
    immediately and the learner isn't blocked waiting on it.
 
 3. **The shared AWS build runs first** — clones the whole `26x-course`
-   repo, `cd`s into the shared `terraform/` folder, and does a normal
+   repo, `cd`s into the shared `terraform-lab/` folder, and does a normal
    `terraform init/plan/apply`. Builds the actual AWS infrastructure
    (the tagged `crm` app, VPC, EC2, S3).
 
@@ -431,12 +431,12 @@ hitting the newly-opened public port, plus pre-existing SSH exposure
 from the base build). **Added 2026-09-09**: a real per-environment
 web→db heartbeat (`helper_scripts/db-setup.sh` +
 `helper_scripts/web-heartbeat.sh`, run over SSH from
-`setup-cloud-client` after the shared `terraform/` apply completes) -
+`setup-cloud-client` after the shared `terraform-lab/` apply completes) -
 `crm-dev-web` queries `crm-dev-db` and `crm-prod-web` queries
 `crm-prod-db` over real MySQL protocol (a MariaDB server + `SELECT
 NOW()` every 30s) on port 3306, entirely within each environment. This
 is deliberately done via SSH provisioning rather than `user_data` on
-the shared `terraform/main.tf` - that build is also the base for
+the shared `terraform-lab/main.tf` - that build is also the base for
 Course Lab and Select Exam, so this stays isolated to this track only.
 **Live-tested successfully 2026-09-09** (org 4138968): 903 dev
 connections and 903 prod connections confirmed in the real flow log
@@ -447,7 +447,7 @@ leakage, no anomalies.
 - Security group rules: inbound HTTPS (443) on `web_sg` from the
   internet, inbound MySQL (3306) on `db_sg` scoped to `web_sg` only.
 - A VPC Flow Log delivering to the S3 bucket
-  (`aws_s3_bucket.illumio_flows` in the shared `terraform/` build —
+  (`aws_s3_bucket.illumio_flows` in the shared `terraform-lab/` build —
   originally named "...forflows" before trimming, so this was always
   its intended purpose) in the exact V2+V3+V4+V5 custom format
   Illumio's docs require. Live-verified repeatedly: real traffic sent,

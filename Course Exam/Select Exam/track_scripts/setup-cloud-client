@@ -281,7 +281,7 @@ nohup bash -c "
 
   cd /root
   git clone https://github.com/Illumio-Training-Org/26x-course.git
-  cd /root/26x-course/terraform
+  cd /root/26x-course/terraform-lab
 
   # Install Terraform
   curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
@@ -298,8 +298,8 @@ nohup bash -c "
 
   # Resolve the flows S3 bucket name created by the apply above - it
   # has a random suffix and lives in a separate Terraform state
-  # (terraform/, not terraform-exam/). Read it straight out
-  # of this state (we're still in /root/26x-course/terraform here)
+  # (terraform-lab/, not terraform-exam/). Read it straight out
+  # of this state (we're still in /root/26x-course/terraform-lab here)
   # rather than asking AWS to list buckets - live-caught 2026-09-10:
   # aws s3api list-buckets (s3:ListAllMyBuckets) is explicitly denied
   # by an AWS Organizations SCP on this exam's sandbox account type,
