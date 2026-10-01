@@ -53,7 +53,7 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Welcome to your **26.x Specialist Exam**.
+![Illumio](../assets/illumio-logo-banner.png)
 
 > [!IMPORTANT]
 > This exam is **120 minutes (2 hours)**.

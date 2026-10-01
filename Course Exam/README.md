@@ -26,6 +26,11 @@ goes into the other.
   (`assets/illumio-logo-splash.png`, on the notes colour `#141720`) above the
   exam's own welcome text - no background picture (`splashscreenblank.png` is
   kept for a quick revert).
+  The first page's instructions start with the Illumio logo banner
+  (`assets/illumio-logo-banner.png`) instead of a "Welcome to your 26.x ... Exam"
+  line. Its background matches the instructions panel: `#000F17` for
+  Foundation/Associate/Specialist (plain page), `#202636` for Select (its
+  page has an "Advanced" section, and sections use the lighter colour).
 - Every task challenge is split into two sections: **📝 Task** (the question,
   open by default) and **🔑 Logged out of the Console?** (collapsed) with the
   learner's magic link (`MAGICURL`). The Console logs out after ~10-15 min idle

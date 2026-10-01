@@ -53,7 +53,7 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Welcome to your **26.x Foundation Exam**.
+![Illumio](../assets/illumio-logo-banner.png)
 
 > [!IMPORTANT]
 > This exam is **75 minutes (1 hour 15)**.

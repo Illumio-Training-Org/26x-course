@@ -53,7 +53,7 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-Welcome to your **26.x Select Exam**.
+![Illumio](../assets/illumio-logo-banner.png)
 
 > [!IMPORTANT]
 > This exam is **150 minutes (2 hours 30)**.
