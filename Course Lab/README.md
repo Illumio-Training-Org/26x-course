@@ -109,4 +109,4 @@ marker list in `../Course Lab Check/tracks.txt` (and that folder's README),
 then re-run the check.
 - `assets/` - logo and splash images, plus `illumio-logo-banner.png` (the
   white Illumio logo on the instructions panel colour `#202636`, shown at
-  the top of the lab instructions).
+  the top of the Illumio Console section of the lab instructions).

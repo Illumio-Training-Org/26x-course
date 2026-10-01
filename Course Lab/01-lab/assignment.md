@@ -71,10 +71,10 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-![Illumio](../assets/illumio-logo-banner.png)
-
 🔑 Illumio Console
 ==========
+
+![Illumio](../assets/illumio-logo-banner.png)
 
 **[Click here to open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]])**
 
