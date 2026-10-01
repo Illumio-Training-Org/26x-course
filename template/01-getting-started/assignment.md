@@ -13,7 +13,7 @@ notes:
       .splash-wrap h1 { font-size: 1.6em; font-weight: 700; line-height: 1.25; margin: 0 0 0.8em; }
       .splash-wrap p { margin: 0 0 0.4em; font-size: 1em; }
       .splash-wrap ul { margin: 0 0 1.2em; padding: 0; list-style: none; }
-      .splash-wrap li { margin: 0 0 0.35em; font-size: 1em; }
+      .splash-wrap li { margin: 0 0 0.35em; font-size: 0.9em; }
       .splash-wrap li::before { content: "- "; }
       .splash-contact { margin: 0 0 1.4em; font-size: 1em; line-height: 1.5; }
       .splash-cta { font-size: 1em; font-weight: 700; }
