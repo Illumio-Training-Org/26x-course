@@ -101,9 +101,6 @@ Pair workloads with the PCE using a pairing profile and a pairing key.
    /opt/illumio_ven/illumio-ven-ctl status
    ```
    Then open **aix-ven-01** in Workloads.
-   - **AIX** tab: use the **AIX OS Pairing Script**, check the status with
-     `/opt/illumio_ven/illumio-ven-ctl status`, and open **aix-ven-01**
-     in Workloads.
 
 > [!NOTE]
 > To pair a workload again, open it in **Workloads** and select **Unpair**.
