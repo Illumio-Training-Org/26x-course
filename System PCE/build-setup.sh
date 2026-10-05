@@ -20,7 +20,9 @@ HEAD
   base64 < "$SRC" | fold -w 76
   cat <<'TAIL'
 PCE_HTML_B64
-echo "System PCE page installed: $(wc -c < /var/www/html/index.html) bytes"
+# Same page for every tab; it picks Console or terminal mode from its file name
+for n in linux windows aix; do cp /var/www/html/index.html /var/www/html/$n.html; done
+echo "System PCE pages installed: $(wc -c < /var/www/html/index.html) bytes each"
 TAIL
 } > "$OUT"
 chmod +x "$OUT"

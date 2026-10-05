@@ -3,8 +3,8 @@ slug: pairing
 id: r6axx9o88hto
 type: challenge
 title: Pair a Workload
-teaser: Generate a pairing key from a Pairing Profile and pair a workload in an offline
-  simulation of the Illumio Console
+teaser: Generate a pairing key and pair Linux, Windows and AIX workloads with the
+  PCE
 notes:
 - type: text
   contents: |-
@@ -40,10 +40,28 @@ notes:
   url: https://www.youtube.com/embed/_QALLe3DJpk
 tabs:
 - id: u0xwe0pmmfs6
-  title: Illumio Console (simulated)
+  title: Illumio Console
   type: service
   hostname: cloud-client
   path: /
+  port: 80
+- id: xlyvoosoqjwb
+  title: Linux
+  type: service
+  hostname: cloud-client
+  path: /linux.html
+  port: 80
+- id: jftsomjp77y5
+  title: Windows
+  type: service
+  hostname: cloud-client
+  path: /windows.html
+  port: 80
+- id: ytgylazeryck
+  title: AIX
+  type: service
+  hostname: cloud-client
+  path: /aix.html
   port: 80
 difficulty: ""
 timelimit: 0
@@ -52,31 +70,37 @@ enhanced_loading: null
 📝 Task
 ==========
 
-The tab on the left is an **offline simulation** of the Illumio Console with
-a simulated Linux workload. Keys are fake, nothing is installed, and the page
-never connects to a real PCE.
+Pair workloads with the PCE using a pairing profile and a pairing key.
 
-1. Go to **Servers & Endpoints → Pairing Profiles**.
+1. In the **Illumio Console** tab, go to **Servers & Endpoints → Pairing Profiles**.
 2. Open **Default (Servers)**, or select **Add** to create your own profile.
 3. Select **Generate Key**.
-4. Under **Linux OS Pairing Script**, select the **Copy** icon. The
-   simulated Linux terminal opens at the bottom of the page.
+4. Under **Linux OS Pairing Script**, select the **Copy** icon.
    If copying is blocked, the script is selected for you: press
-   **Ctrl+C** (Windows) or **⌘C** (Mac), then select **Linux terminal**
-   (top right).
-5. Make sure the **linux-ven-01** tab is selected in the terminal.
-6. Click in the terminal, paste the script (**Ctrl+V** or **⌘V**) and press
-   **Enter**. Watch the VEN install and pair. Installing the packages takes
-   a little while, just as it does on a real workload.
-7. When you see `VEN has been SUCCESSFULLY paired with Illumio`, run:
+   **Ctrl+C** (Windows) or **⌘C** (Mac).
+5. Open the **Linux** tab, click in the terminal, paste the script
+   (**Ctrl+V** or **⌘V**) and press **Enter**. Installing the packages
+   takes a little while.
+6. When you see `VEN has been SUCCESSFULLY paired with Illumio`, check the
+   VEN status:
    ```
    /opt/illumio_ven/illumio-ven-ctl status
    ```
-8. Go to **Servers & Endpoints → Workloads** and open **linux-ven-01**.
-   Check that it has the settings from the pairing profile you used.
+7. In the **Illumio Console** tab, go to **Servers & Endpoints → Workloads**
+   and open **linux-ven-01**. Check that it has the settings from the
+   pairing profile you used.
+8. Repeat steps 3–7 for the other two workloads:
+   - **Windows** tab: use the **Windows OS Pairing Script**, then check
+     the status with:
+     ```
+     & 'C:\Program Files\Illumio\illumio-ven-ctl.ps1' status
+     ```
+     and open **windows-ven-01** in Workloads.
+   - **AIX** tab: use the **AIX OS Pairing Script**, check the status with
+     `/opt/illumio_ven/illumio-ven-ctl status`, and open **aix-ven-01**
+     in Workloads.
 
 > [!NOTE]
-> **Reset lab** (bottom strip) restores the sample profiles, removes the
-> simulated workloads and clears the terminal. Reloading the tab also resets it.
+> To pair a workload again, open it in **Workloads** and select **Unpair**.
 
 When you have finished, click **Check** to complete the lab.

@@ -5,9 +5,8 @@ description: |-
   Lab Name: 26.x System PCE - Pairing
 
   Outcome:
-  In this lab you will successfully generate a pairing key from a Pairing
-  Profile and pair a workload, using an offline simulation of the Illumio
-  Console. No real PCE, VEN or magic link is used.
+  In this lab you will successfully pair Linux, Windows and AIX workloads
+  with the PCE using a pairing profile and a pairing key.
 icon: ./assets/logo.png
 tags:
 - ilt
@@ -25,5 +24,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "6185144437644415643"
+checksum: "15109387371738679734"
 enhanced_loading: false

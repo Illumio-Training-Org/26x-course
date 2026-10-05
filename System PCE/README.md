@@ -1,13 +1,15 @@
 # ! 26.x System PCE
 
-A single-challenge Instruqt track (`26x-system-pce`) that shows an offline,
-self-contained simulation of the Illumio Console's Pairing Profiles
-workflow, with the instructions in the right-hand panel. Learners copy the
-Linux pairing script from the simulated Console and paste it into a simulated
-workload terminal (bottom strip). The terminal plays back the real VEN 24.2.20
-pairing output captured from a live Rocky 9.4 workload on 2026-10-05, including
-the pause at "Installing Illumio Packages" (`INSTALL_PAUSE_MS`, 15s; real is
-about 30s). Windows/AIX output and the error messages are approximations.
+A single-challenge Instruqt track (`26x-system-pce`) with four tabs:
+**Illumio Console | Linux | Windows | AIX**. The Console is an offline
+recreation of the Pairing Profiles workflow; each OS tab is a terminal where
+the learner pastes the pairing script copied from the Console. All four tabs
+are the same page (`index.html`, `linux.html`, `windows.html`, `aix.html`),
+which picks Console or terminal mode from its file name, and they share state
+in the browser (localStorage + BroadcastChannel), so a paired workload shows
+up in the Console's Workloads list. Learner-facing text never mentions a
+simulation. Reset lab is on the Console's Settings page; Unpair works on a
+workload's page.
 
 - No magic link, Terraform, secrets or real PCE. One small `cloud-client`
   container serves the page on port 80 through a website (service) tab.
