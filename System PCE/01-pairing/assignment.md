@@ -59,11 +59,12 @@ never connects to a real PCE.
 1. Go to **Servers & Endpoints → Pairing Profiles**.
 2. Open **Default (Servers)**, or select **Add** to create your own profile.
 3. Select **Generate Key**.
-4. Under **Linux OS Pairing Script**, select the **Copy** icon.
+4. Under **Linux OS Pairing Script**, select the **Copy** icon. The
+   simulated Linux terminal opens at the bottom of the page.
    If copying is blocked, the script is selected for you: press
-   **Ctrl+C** (Windows) or **⌘C** (Mac).
-5. Select **Workload terminal** in the strip at the bottom of the page and
-   make sure **linux-ven-01** is selected.
+   **Ctrl+C** (Windows) or **⌘C** (Mac), then select **Linux terminal**
+   (top right).
+5. Make sure **linux-ven-01** is selected in the terminal's drop-down.
 6. Click in the terminal, paste the script (**Ctrl+V** or **⌘V**) and press
    **Enter**. Watch the VEN install and pair. Installing the packages takes
    a little while, just as it does on a real workload.
