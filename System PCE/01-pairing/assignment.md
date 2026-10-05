@@ -64,7 +64,7 @@ never connects to a real PCE.
    If copying is blocked, the script is selected for you: press
    **Ctrl+C** (Windows) or **⌘C** (Mac), then select **Linux terminal**
    (top right).
-5. Make sure **linux-ven-01** is selected in the terminal's drop-down.
+5. Make sure the **linux-ven-01** tab is selected in the terminal.
 6. Click in the terminal, paste the script (**Ctrl+V** or **⌘V**) and press
    **Enter**. Watch the VEN install and pair. Installing the packages takes
    a little while, just as it does on a real workload.
