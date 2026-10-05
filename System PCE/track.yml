@@ -1,0 +1,29 @@
+slug: 26x-system-pce
+id: 0h4trcynkust
+title: '! 26.x System PCE'
+description: |-
+  Lab Name: 26.x System PCE - Pairing
+
+  Outcome:
+  In this lab you will successfully generate a pairing key from a Pairing
+  Profile and pair a workload, using an offline simulation of the Illumio
+  Console. No real PCE, VEN or magic link is used.
+icon: ./assets/logo.png
+tags:
+- ilt
+owner: illumio-training
+developers:
+- nathan.mitchell@illumio.com
+show_timer: true
+idle_timeout: 1800
+timelimit: 3600
+lab_config:
+  extend_ttl: 600
+  sidebar_enabled: true
+  feedback_recap_enabled: true
+  feedback_tab_enabled: false
+  loadingMessages: true
+  override_challenge_layout: false
+  hideStopButton: false
+checksum: "15623887526369319382"
+enhanced_loading: false
