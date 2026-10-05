@@ -12,7 +12,6 @@ enhanced_loading: null
 
 Assign the following labels to the `linux-vm` workload:
 
-- Role: any appropriate Role label
 - Application: `ordering`
 - Environment: `Production`
 - Location: `ca`

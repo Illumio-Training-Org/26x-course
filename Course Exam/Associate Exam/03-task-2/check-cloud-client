@@ -20,8 +20,6 @@ if not wl:
     sys.exit(1)
 labels = {l.get('key'): (l.get('value') or '') for l in (wl.get('labels') or [])}
 fails = []
-if not labels.get('role'):
-    fails.append('Role label is missing')
 expected = {'app': 'ordering', 'env': 'Production', 'loc': 'ca'}
 for k, v in expected.items():
     if labels.get(k, '').lower() != v.lower():
@@ -29,7 +27,7 @@ for k, v in expected.items():
 if fails:
     print('; '.join(fails))
     sys.exit(1)
-print('linux-vm labeled correctly: Role set, Application=ordering, Environment=Production, Location=ca')
+print('linux-vm labeled correctly: Application=ordering, Environment=Production, Location=ca')
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

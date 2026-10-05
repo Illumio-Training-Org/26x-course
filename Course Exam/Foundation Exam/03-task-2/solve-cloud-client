@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Runs when the learner clicks Skip. Best-effort: sets linux-vm's
-# labels to match Task 2 (Role: any, Application: ordering,
+# labels to match Task 2 (Application: ordering,
 # Environment: Production, Location: ca). No-ops if linux-vm hasn't
 # been paired yet (Task 1 skipped/not done) - there's no workload
 # object to label in that case.
@@ -38,14 +38,12 @@ def find_or_create_label(key, value):
     created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
     return created['href'] if created else None
 
-role_href = find_or_create_label('role', 'skip-solved')
 app_href = find_or_create_label('app', 'ordering')
 env_href = find_or_create_label('env', 'Production')
 loc_href = find_or_create_label('loc', 'ca')
 
 call('PUT', wl['href'], {
     'labels': [
-        {'href': role_href},
         {'href': app_href},
         {'href': env_href},
         {'href': loc_href},
