@@ -75,7 +75,7 @@ Pair workloads with the PCE using a pairing profile and a pairing key.
 1. In the **Illumio Console** tab, go to **Servers & Endpoints → Pairing Profiles**.
 2. Open **Default (Servers)**, or select **Add** to create your own profile.
 3. Select **Generate Key**.
-4. Under **Linux OS Pairing Script**, select the **Copy** icon.
+4. Click the **Linux OS Pairing Script** to copy it (**Copy to clipboard**).
    If copying is blocked, the script is selected for you: press
    **Ctrl+C** (Windows) or **⌘C** (Mac).
 5. Open the **Linux** tab, click in the terminal, paste the script
