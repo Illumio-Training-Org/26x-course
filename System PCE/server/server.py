@@ -2,8 +2,8 @@
 """Web server for ! 26.x System PCE (runs on cloud-client).
 
 Serves the four tab pages (index/linux/windows/aix.html) from ROOT and
-accepts POST /api/state from the page with the list of paired workloads,
-saved to STATE so the challenge check script can read it.
+accepts POST /api/state from the page with the list of paired workloads
+and a summary of the policies, saved to STATE for the check scripts.
 """
 import http.server
 import json
@@ -28,18 +28,21 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_error(404)
             return
         length = int(self.headers.get('Content-Length') or 0)
-        if length > 10000:
+        if length > 200000:
             self.send_error(413)
             return
         try:
             data = json.loads(self.rfile.read(length) or b'{}')
             paired = sorted({w for w in data.get('workloads', []) if w in VALID})
+            policies = data.get('policies', [])
+            if not isinstance(policies, list):
+                policies = []
         except (ValueError, AttributeError, TypeError):
             self.send_error(400)
             return
         tmp = STATE + '.tmp'
         with open(tmp, 'w') as f:
-            json.dump({'workloads': paired}, f)
+            json.dump({'workloads': paired, 'policies': policies[:100]}, f)
         os.replace(tmp, STATE)
         self.send_response(204)
         self.end_headers()

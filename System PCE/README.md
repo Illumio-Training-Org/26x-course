@@ -29,6 +29,8 @@ The pages report the paired workloads to the lab web server
 (`server/server.py`, embedded in the setup script and run on
 `cloud-client:8080`), which writes `/root/pce-lab-state.json`.
 `01-pairing/check-cloud-client` passes only when Linux, Windows and AIX are
-all paired, and otherwise says which are still to pair. `02-lab-complete` is
+all paired, and otherwise says which are still to pair. `02-writing-policy` checks that the policy "Block Development to Production"
+has a saved rule from Development to Production on All Services (rule type set
+by `RULE_TYPE` in its check script). `03-lab-complete` is
 an empty end page telling learners who arrive there by mistake to go back via
 Overview.

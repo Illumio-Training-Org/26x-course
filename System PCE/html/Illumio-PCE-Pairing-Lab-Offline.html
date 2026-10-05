@@ -157,6 +157,114 @@ body.term-page .term-body{padding:12px 16px 24px}
 .running-banner strong{font-weight:700;margin-inline-end:10px}
 .script-meta .icon{inline-size:14px;block-size:14px}
 @media(max-width:760px){.tls-row{grid-template-columns:1fr}}
+
+.pol-intro{min-block-size:auto}
+.ptabs{display:flex;gap:4px;border-block-end:1px solid var(--line);margin-block:4px 14px}
+.ptab{border:0;border-radius:0;background:none;color:var(--muted);font-weight:600;padding:8px 10px;border-block-end:3px solid transparent}
+.ptab:disabled{color:var(--muted)}
+.ptab.active{color:var(--blue);border-block-end-color:var(--blue)}
+.add-wrap{position:relative;display:inline-flex}
+.caret{font-size:11px;margin-inline-start:2px}
+.menu{position:absolute;inset-block-start:calc(100% + 6px);inset-inline-start:0;z-index:40;background:var(--white);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 20px #0003;padding:6px;display:flex;flex-direction:column;gap:2px;min-inline-size:210px}
+.menu button{border:0;justify-content:flex-start;background:none;color:var(--ink);padding:8px 10px;border-radius:7px;white-space:nowrap}
+.menu button:hover{background:var(--blue-pale)}
+.pol-meta{display:flex;justify-content:flex-end;gap:26px;padding:8px 14px;font:600 12px/1.4 GeistMono,Consolas,monospace;color:var(--ink);border-block-end:1px solid var(--line)}
+.pol-table td{vertical-align:middle}
+.pbadge{display:inline-flex;align-items:center;gap:5px;background:#d1f0d6;color:#126b29;font-weight:600;border-radius:4px;padding:2px 8px;font-size:12px}
+.pbadge .icon{inline-size:13px;block-size:13px}
+.pstatus{display:inline-flex;align-items:center;gap:5px;font-weight:600}
+.pstatus.enabled{color:#126b29}
+.pstatus .icon{inline-size:14px;block-size:14px}
+.scope-chip{display:inline-flex;align-items:center;gap:4px;background:var(--disabled-bg);border-radius:12px;padding:2px 9px;font-size:12px}
+.scope-chip .icon{inline-size:12px;block-size:12px;color:var(--muted)}
+.empty-row td{text-align:center;color:var(--muted);padding:28px}
+.pol-dialog{border:0;border-radius:18px;padding:0;inline-size:min(600px,92vw);box-shadow:0 10px 40px #0005;background:var(--white);color:var(--ink)}
+.pol-dialog::backdrop{background:#1f272f80}
+.pd-head{display:flex;align-items:center;justify-content:space-between;padding:22px 30px;border-block-end:1px solid var(--line)}
+.pd-head h2{margin:0;font-size:22px}
+.pd-x{border:0;background:none;font-size:20px;color:var(--ink)}
+.pd-body{padding:20px 30px 22px;display:flex;flex-direction:column}
+.pd-label{font-weight:500;font-size:14px;margin-block:12px 6px}
+.pd-label .star{color:#d92d20}
+.pd-label.invalid{color:#b42318}
+.pd-input{border:1px solid var(--line-strong);border-radius:8px;padding:10px 12px;font-size:14px;background:var(--white);color:var(--ink)}
+.pd-input.invalid{border-color:#e5484d}
+.pd-ta{min-block-size:80px;resize:vertical}
+.pd-select{display:flex;justify-content:space-between;border:1px solid var(--line-strong);border-radius:8px;padding:10px 14px;color:var(--disabled);font-size:14px}
+.pd-error{color:#b42318;font-size:12px;margin-block-start:6px}
+.pd-foot{display:flex;justify-content:flex-end;gap:10px;padding:18px 30px;border-block-start:1px solid var(--line)}
+.pd-foot button{min-block-size:34px;padding:6px 16px;font-size:14px}
+.rule-toolbar{align-items:center}
+.warn-ico{color:#d1600a;display:inline-flex}
+.show-impact{display:inline-flex;align-items:center;gap:5px}
+.rule-menu{position:absolute;inset-block-start:calc(100% + 2px);inset-inline-start:0;z-index:40;background:var(--white);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 28px #0003;inline-size:min(760px,calc(100vw - 260px));overflow:hidden}
+.rm-main{display:grid;grid-template-columns:1fr 1.5fr;min-block-size:280px}
+.rm-preview{padding:18px 20px;border-inline-end:1px solid var(--line)}
+.rm-preview h3{margin:0 0 10px;font-size:16px}
+.rm-preview svg{inline-size:220px;max-inline-size:100%;display:block;margin:10px auto 0}
+.rm-head{background:var(--blue-pale);font-size:11px;font-weight:700;letter-spacing:.3px;padding:9px 12px;color:var(--ink)}
+.rm-types{display:flex;flex-direction:column;gap:2px}
+.rm-type{border:0;border-radius:6px;background:none;justify-content:flex-start;padding:12px 14px;margin-inline:8px;color:var(--ink);font-size:13px}
+.rm-type:first-of-type{margin-block-start:8px}
+.rm-type:hover,.rm-type.sel{background:var(--blue-pale);color:var(--blue)}
+.rm-type:disabled{color:var(--disabled);background:none}
+.rm-foot{display:flex;justify-content:flex-end;gap:14px;align-items:center;padding:10px 14px;border-block-start:1px solid var(--line)}
+.rm-foot .link{font-size:13px}
+.sec{margin-block:10px}
+.sec-head{border:0;background:none;padding:6px 0;font-weight:700;font-size:13px;color:var(--ink);gap:8px}
+.sec-head .chev{display:inline-block;font-size:10px;color:var(--muted);transition:transform .15s}
+.sec.collapsed .chev{transform:rotate(180deg)}
+.sec.collapsed .sec-body{display:none}
+.rscroll{overflow-x:auto}
+.rtable{min-inline-size:1180px}
+.rrow{display:grid;grid-template-columns:22px 92px 34px 76px minmax(170px,1.3fr) minmax(130px,1fr) 22px minmax(170px,1.3fr) minmax(170px,1.3fr) minmax(120px,.9fr) 118px;align-items:center;column-gap:10px;padding:8px 10px;border-block-end:1px solid var(--line)}
+.rhead{background:var(--table-head);font-weight:600;font-size:12px;color:var(--ink);padding-block:9px;border-block:1px solid var(--line)}
+.rhead .dst{background:#dfe1f5;margin-block:-9px;padding-block:9px}
+.rrow.draft{background:#effaf1}
+.rrow.saved{background:var(--white)}
+.handle{color:var(--subtle);cursor:grab}
+.rempty{border:1px solid var(--line);border-radius:8px;margin:12px 0 4px auto;inline-size:min(520px,60%);padding:22px 26px;color:var(--disabled);font-size:20px;font-weight:600;background:var(--pale)}
+.ract{display:flex;align-items:center;gap:8px;justify-content:flex-end;white-space:nowrap;position:sticky;inset-inline-end:0;z-index:2;align-self:stretch;padding-inline-start:8px;background:inherit}
+.rrow.draft .ract{background:#effaf1}.rrow.saved .ract{background:var(--white)}.rhead>div:last-child{position:sticky;inset-inline-end:0;background:var(--table-head);align-self:stretch}
+.ract .kind{display:inline-flex;align-items:center;gap:4px;font-weight:600}
+.ract .kind.allow{color:#126b29}.ract .kind.deny,.ract .kind.override{color:#b42318}
+.ract button{border:0;background:none;padding:2px;min-block-size:22px;color:var(--ink)}
+.ract .icon{inline-size:17px;block-size:17px}
+.picker{position:relative}
+.picker-box{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-block-size:34px;border:1px solid var(--line-strong);border-radius:6px;padding:3px 22px 3px 6px;background:var(--white);cursor:text;position:relative}
+.picker.open .picker-box{border-color:#e5484d #e5484d var(--line) #e5484d;border-radius:6px 6px 0 0}
+.picker.invalid .picker-box{border-color:#e5484d}
+.picker-chips{display:contents}
+.picker-input{flex:1 1 8px;inline-size:8px;min-inline-size:8px;border:0;outline:none!important;background:none;color:var(--ink);font-size:12.5px;padding:3px 0}
+.picker-caret{position:absolute;inset-inline-end:9px;inset-block-start:50%;transform:translateY(-50%);color:var(--muted);font-size:11px}
+.picker-dd{position:fixed;z-index:60;display:flex;flex-direction:column;overflow:hidden;background:var(--white);border:1px solid var(--line);border-block-start:0;border-radius:0 0 8px 8px;box-shadow:0 8px 22px #0003;min-inline-size:340px}
+.picker.svc .picker-dd{min-inline-size:520px}
+.dd-row{display:grid;grid-template-columns:1.5fr 1fr}
+.dd-main{display:flex;flex-direction:column;max-block-size:330px;min-block-size:0;flex:1 1 auto}
+.dd-row{min-block-size:0;flex:1 1 auto;overflow:hidden}
+.picker-dd[hidden]{display:none}
+.dd-list{overflow:auto;padding:8px;display:flex;flex-direction:column;gap:4px;min-block-size:120px}
+.dd-pinned{border-block-start:1px solid var(--line);padding:8px;display:flex;flex-direction:column;gap:4px}
+.dd-opt{border:0;background:none;justify-content:space-between;padding:5px 8px;border-radius:6px;inline-size:100%;color:var(--ink)}
+.dd-opt.hi,.dd-opt:hover{background:#8fbffa}
+.dd-type{color:var(--muted);font-size:12px}
+.dd-empty{color:var(--muted);font-size:12px;padding:8px}
+.dd-side{background:var(--pale);padding:12px 10px;display:flex;flex-direction:column;gap:6px;border-inline-start:1px solid var(--line)}
+.dd-side-item{padding:8px 10px;font-size:13px;color:var(--ink);border-radius:6px;display:flex;gap:6px;align-items:center}
+.dd-side-item.active{background:var(--white);color:var(--blue);font-weight:700;border-inline-start:3px solid var(--blue)}
+.dd-side-item.add{color:var(--blue)}
+.dd-foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-block-start:1px solid var(--line);padding:7px 10px;font-size:12px;color:var(--ink)}
+.dd-adv{display:inline-flex;align-items:center;gap:4px;margin-inline-end:auto}
+.dd-tip{color:var(--blue);font-weight:700}
+.dd-key{background:var(--disabled-bg);border-radius:4px;padding:1px 6px;font-weight:700}
+.pchip{display:inline-flex;align-items:center;gap:5px;background:var(--disabled-bg);border-radius:14px;padding:2px 9px;font-size:12px;color:var(--ink);max-inline-size:100%}
+.pchip .icon{inline-size:13px;block-size:13px}
+.pchip.lbl-env .icon{color:#13867a}.pchip.lbl-app .icon{color:var(--app)}.pchip.lbl-role .icon{color:var(--role)}.pchip.lbl-loc .icon{color:var(--loc)}
+.pchip-x{border:0;background:none;padding:0 0 0 2px;min-block-size:14px;font-size:12px;color:var(--muted)}
+.svc-chip{border-radius:10px;padding:5px 10px}
+.svc-chip .icon{inline-size:18px;block-size:18px}
+.svc-text{display:flex;flex-direction:column;align-items:flex-start;line-height:1.25}
+.fake-select{display:flex;justify-content:space-between;align-items:center;min-block-size:34px;border:1px solid var(--line-strong);border-radius:6px;padding:3px 10px;color:var(--disabled);font-size:12.5px;background:var(--white)}
 </style>
 
 <!--[if gte mso 9]><xml>
@@ -183,7 +291,8 @@ body.term-page .term-body{padding:12px 16px 24px}
   <button data-area="Insights"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 1c.8 0 1.5.7 1.5 1.5V4c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5V2.5c0-.8.7-1.5 1.5-1.5M5.4 5.4c.6-.6 1.5-.6 2.1 0l1.1 1.1c.6.5.6 1.5 0 2.1s-1.6.6-2.1 0L5.4 7.5c-.6-.6-.6-1.5 0-2.1m21.2 0c.6.6.6 1.5 0 2.1l-1.1 1.1c-.6.6-1.5.6-2.1 0s-.6-1.5 0-2.1l1.1-1.1c.6-.6 1.5-.6 2.1 0M16 10c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6m-9 6c0-5 4-9 9-9s9 4 9 9c0 3.3-1.8 6.2-4.5 7.8v2.7c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5v-2.7C8.8 22.2 7 19.3 7 16m7.5 8.9v1.6c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5v-1.6c-.5.1-1 .1-1.5.1s-1 0-1.5-.1M1 16c0-.8.7-1.5 1.5-1.5H4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5H2.5c-.8 0-1.5-.7-1.5-1.5m25.5 0c0-.8.7-1.5 1.5-1.5h1.5c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5H28c-.8 0-1.5-.7-1.5-1.5"></path></svg>Insights<span class="chevron">›</span></button>
   <button data-area="Quarantine"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M1.667 23.8v-1.3a1.333 1.333 0 1 1 2.666 0v1.3c0 .931.002 1.55.04 2.026.038.458.103.665.169.794.183.36.477.655.838.838.128.066.335.13.794.168.475.04 1.095.04 2.026.04h1.3a1.333 1.333 0 1 1 0 2.667H8.2c-.888 0-1.634.002-2.243-.048-.625-.05-1.221-.163-1.788-.452a4.6 4.6 0 0 1-2.002-2.002c-.29-.567-.401-1.164-.452-1.788-.05-.609-.048-1.356-.048-2.244m15.958 3.867a1.333 1.333 0 1 1 0 2.666h-3.25a1.333 1.333 0 0 1 0-2.666zm10.042-3.868V22.5a1.333 1.333 0 0 1 2.666 0v1.3c0 .887.002 1.634-.048 2.243-.051.624-.163 1.22-.452 1.788a4.6 4.6 0 0 1-2.002 2.002c-.567.29-1.164.401-1.788.452-.609.05-1.356.048-2.244.048h-1.3a1.333 1.333 0 0 1 0-2.666h1.3c.932 0 1.551-.002 2.026-.04.46-.038.666-.103.795-.169a1.92 1.92 0 0 0 .838-.838c.066-.129.13-.336.168-.794.039-.476.04-1.095.04-2.027m-7.292-4.94c0-.463-.002-.743-.016-.953-.013-.197-.033-.234-.027-.22a.57.57 0 0 0-.31-.31c.014.006-.022-.014-.22-.027-.21-.014-.49-.016-.952-.016h-5.716c-.462 0-.742.002-.952.016-.197.014-.234.033-.22.027a.57.57 0 0 0-.31.31c.006-.014-.014.023-.027.22-.014.21-.016.49-.016.952s.002.742.016.952c.013.198.033.234.027.22.058.14.17.252.31.31-.014-.006.023.014.22.027.21.014.49.016.952.016h5.716c.462 0 .742-.002.952-.016.198-.013.234-.033.22-.027a.57.57 0 0 0 .31-.31c-.006.014.014-.023.027-.22.014-.21.016-.49.016-.952M1.667 17.624v-3.25a1.333 1.333 0 1 1 2.666 0v3.25a1.333 1.333 0 1 1-2.666 0m26 0v-3.25a1.333 1.333 0 0 1 2.666 0v3.25a1.333 1.333 0 0 1-2.666 0m-26-8.125V8.2c0-.887-.002-1.634.048-2.243.05-.624.163-1.22.452-1.788a4.6 4.6 0 0 1 2.002-2.002c.567-.29 1.163-.401 1.788-.452.609-.05 1.355-.048 2.243-.048h1.3a1.333 1.333 0 0 1 0 2.666H8.2c-.931 0-1.55.002-2.026.04-.459.038-.666.103-.794.169a1.92 1.92 0 0 0-.838.838c-.066.129-.131.336-.168.794-.04.475-.04 1.095-.04 2.027V9.5a1.333 1.333 0 1 1-2.667 0m26 0V8.2c0-.931-.002-1.55-.04-2.026-.038-.458-.104-.665-.169-.794a1.92 1.92 0 0 0-.838-.838c-.129-.066-.336-.13-.795-.168-.475-.04-1.094-.04-2.026-.04h-1.3a1.333 1.333 0 0 1 0-2.667h1.3c.888 0 1.635-.002 2.244.048.624.05 1.22.163 1.788.452a4.6 4.6 0 0 1 2.002 2.002c.289.567.401 1.164.452 1.788.05.609.048 1.356.048 2.244V9.5a1.333 1.333 0 0 1-2.666 0M17.624 1.667a1.333 1.333 0 1 1 0 2.666h-3.25a1.333 1.333 0 0 1 0-2.666zm.845 12.428a2.478 2.478 0 0 0-4.956 0v.572h4.956zm2.667.862a3.24 3.24 0 0 1 1.658 1.708c.151.365.203.727.226 1.06.022.322.02.708.02 1.133s.002.811-.02 1.133a3.3 3.3 0 0 1-.226 1.06 3.24 3.24 0 0 1-1.752 1.752 3.3 3.3 0 0 1-1.06.226c-.322.022-.707.02-1.133.02h-5.716c-.425 0-.811.002-1.133-.02a3.3 3.3 0 0 1-1.06-.226 3.24 3.24 0 0 1-1.752-1.752 3.3 3.3 0 0 1-.226-1.06c-.022-.322-.02-.707-.02-1.133 0-.425-.002-.811.02-1.133.023-.333.075-.695.226-1.06.315-.76.91-1.37 1.659-1.708v-.862a5.145 5.145 0 0 1 10.289 0z"></path></svg>Quarantine</button>
   <button data-area="Explore"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16 19H4c-1.65 0-3-1.35-3-3V6.47c0-.23.03-.45.08-.67 0-.03.01-.05.02-.08.05-.21.13-.41.22-.59l1.37-2.75C3.12 1.53 3.97 1 4.93 1h10.15c.95 0 1.81.53 2.24 1.38l1.38 2.75c.09.19.17.39.22.59 0 .03.01.05.02.08.05.22.08.45.08.67V16c0 1.65-1.35 3-3 3ZM3 7v9c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V7zm.62-2h12.76l-.86-1.72a.5.5 0 0 0-.45-.28H4.93c-.19 0-.36.11-.45.28zm8.88 4.75h-5c-.55 0-1-.45-1-1s.45-1 1-1h5c.55 0 1 .45 1 1s-.45 1-1 1"></path></svg>Explore<span class="chevron">›</span></button>
-  <button data-area="Segmentation"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 19c-.19 0-.37-.05-.53-.15-.54-.34-1.04-.65-1.51-.94-2.98-1.82-4.95-3.02-4.95-6.22V4c0-.55.45-1 1-1 2.21 0 3.37-.07 5.35-1.76a1 1 0 0 1 1.3 0C12.64 2.93 13.8 3 16.01 3c.55 0 1 .45 1 1v7.69c0 3.2-1.97 4.4-4.95 6.22-.47.29-.98.59-1.51.94-.16.1-.35.15-.53.15ZM5 4.99v6.7c0 1.98.96 2.66 3.99 4.51.32.2.65.4 1.01.62.35-.22.69-.42 1.01-.62 3.03-1.85 3.99-2.53 3.99-4.51v-6.7c-1.77-.05-3.17-.33-5-1.71-1.83 1.38-3.23 1.65-5 1.71"></path></svg>Segmentation<span class="chevron">›</span></button>
+  <button id="segMenu" aria-expanded="false" aria-controls="segChildren"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 19c-.19 0-.37-.05-.53-.15-.54-.34-1.04-.65-1.51-.94-2.98-1.82-4.95-3.02-4.95-6.22V4c0-.55.45-1 1-1 2.21 0 3.37-.07 5.35-1.76a1 1 0 0 1 1.3 0C12.64 2.93 13.8 3 16.01 3c.55 0 1 .45 1 1v7.69c0 3.2-1.97 4.4-4.95 6.22-.47.29-.98.59-1.51.94-.16.1-.35.15-.53.15ZM5 4.99v6.7c0 1.98.96 2.66 3.99 4.51.32.2.65.4 1.01.62.35-.22.69-.42 1.01-.62 3.03-1.85 3.99-2.53 3.99-4.51v-6.7c-1.77-.05-3.17-.33-5-1.71-1.83 1.38-3.23 1.65-5 1.71"></path></svg>Segmentation<span id="segChevron" class="chevron">›</span></button>
+  <div id="segChildren" class="nav-children" hidden><button id="navAllPolicies"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M4 2.5h5.5L12 5v8.5H4zM6 8h4M6 10.5h4"/></svg>All Policies</button><button data-area="Deny Rules"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2 13 4v4c0 3-2.2 5.2-5 6-2.8-.8-5-3-5-6V4z"/></svg>Deny Rules</button><button data-area="Drafts &amp; Versions"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M4 2.5h5.5L12 5v8.5H4zM6 8h4M6 10.5h4"/></svg>Drafts &amp; Versions</button></div>
   <button data-area="Label Management"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M16.966 5.407c-.271-.065-.575-.074-1.617-.074h-4.016a1.333 1.333 0 0 1 0-2.666h4.152c.846 0 1.486-.001 2.103.147.544.13 1.065.346 1.542.639.54.331.993.784 1.591 1.383l.096.096 7.46 7.458a1.333 1.333 0 1 1-1.887 1.886l-7.458-7.459c-.737-.736-.958-.945-1.195-1.09a2.7 2.7 0 0 0-.771-.32m-2.667 4c-.271-.065-.575-.074-1.617-.074h-1.615c-1.142 0-1.919.001-2.519.05-.585.048-.883.135-1.092.241-.502.256-.91.664-1.165 1.165-.107.209-.193.508-.24 1.092C6 12.481 6 13.258 6 14.4v1.616c0 1.042.009 1.345.074 1.616s.173.532.319.771c.146.238.354.459 1.091 1.195l4.267 4.267c.807.808 1.357 1.356 1.816 1.745.447.38.72.53.942.603a2.67 2.67 0 0 0 1.648 0c.223-.073.496-.223.943-.603.459-.39 1.008-.937 1.816-1.745l1.616-1.616c.807-.807 1.356-1.357 1.745-1.816.38-.447.53-.72.602-.942a2.67 2.67 0 0 0 0-1.648c-.072-.223-.222-.496-.602-.943-.39-.459-.938-1.008-1.745-1.816l-4.267-4.267c-.737-.736-.957-.945-1.195-1.09a2.7 2.7 0 0 0-.771-.32m-1.48-2.74c.846 0 1.486-.001 2.102.147.545.13 1.065.346 1.542.639.541.331.993.784 1.592 1.383l.096.096 4.305 4.305c.76.76 1.386 1.386 1.854 1.938.487.573.881 1.153 1.106 1.844a5.33 5.33 0 0 1 0 3.296c-.225.69-.62 1.27-1.106 1.844-.468.552-1.095 1.178-1.854 1.937l-1.693 1.694c-.76.759-1.386 1.385-1.937 1.854-.574.486-1.154.88-1.845 1.105a5.33 5.33 0 0 1-3.296 0c-.69-.225-1.27-.619-1.844-1.105-.552-.47-1.178-1.095-1.937-1.854l-4.306-4.306-.096-.096c-.599-.598-1.051-1.05-1.383-1.591a5.3 5.3 0 0 1-.638-1.542c-.148-.617-.148-1.257-.148-2.104v-1.806c0-1.073 0-1.96.06-2.68.06-.75.192-1.44.522-2.086a5.33 5.33 0 0 1 2.33-2.331c.648-.33 1.336-.461 2.086-.522.722-.06 1.607-.06 2.68-.06h1.807M8.065 13.4a2 2 0 1 1 4 0 2 2 0 0 1-4 0" clip-rule="evenodd"></path></svg>Label Management<span class="chevron">›</span></button>
   <button id="serversMenu" aria-expanded="true" aria-controls="serversChildren"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 19c-.19 0-.36-.05-.51-.14l-6.91-3.99c-.31-.18-.5-.51-.5-.87V6c0-.36.19-.69.5-.87l6.92-4c.31-.18.69-.18 1 0l6.93 4c.31.18.5.51.5.87v8c0 .36-.19.69-.5.87l-6.91 3.99c-.15.09-.32.14-.51.14Zm-5.93-5.58L9 16.26v-5.21L4.07 8.02zM11 11.06v5.21l4.93-2.84v-5.4zM4.83 6.14 10 9.32l5.17-3.18L10 3.15z"></path></svg>Servers &amp; Endpoints<span id="serversChevron" class="chevron">⌄</span></button>
   <div id="serversChildren" class="nav-children">
@@ -204,7 +313,7 @@ body.term-page .term-body{padding:12px 16px 24px}
  <button id="mobileMenu" class="mobile-menu" aria-label="Open console navigation" aria-expanded="false" aria-controls="sidebar">☰</button>
  <nav class="breadcrumbs" aria-label="Breadcrumb">
   <svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.22 9.5h-2.67c-1.53 0-2.78-1.24-2.78-2.75V3.76c0-1.52 1.25-2.75 2.78-2.75h2.67c1.53 0 2.78 1.24 2.78 2.75v2.99c0 1.52-1.25 2.75-2.78 2.75M13.55 3c-.43 0-.78.34-.78.75v2.99c0 .42.35.75.78.75h2.67c.43 0 .78-.34.78-.75V3.75c0-.42-.35-.75-.78-.75z"></path><path d="M6.44 9.5H3.77C2.24 9.5.99 8.26.99 6.75V3.76c0-1.52 1.25-2.75 2.78-2.75h2.67c1.53 0 2.78 1.24 2.78 2.75v2.99c0 1.52-1.25 2.75-2.78 2.75M3.78 3c-.43 0-.78.34-.78.75v2.99c0 .42.35.75.78.75h2.67c.43 0 .78-.34.78-.75V3.75c0-.42-.35-.75-.78-.75zM16.22 19h-2.67c-1.53 0-2.78-1.24-2.78-2.75v-2.99c0-1.52 1.25-2.75 2.78-2.75h2.67c1.53 0 2.78 1.24 2.78 2.75v2.99c0 1.52-1.25 2.75-2.78 2.75m-2.67-6.5c-.43 0-.78.34-.78.75v2.99c0 .42.35.75.78.75h2.67c.43 0 .78-.34.78-.75v-2.99c0-.42-.35-.75-.78-.75zM6.44 19H3.77C2.24 19 .99 17.76.99 16.25v-2.99c0-1.52 1.25-2.75 2.78-2.75h2.67c1.53 0 2.78 1.24 2.78 2.75v2.99c0 1.52-1.25 2.75-2.78 2.75m-2.67-6.5c-.43 0-.78.34-.78.75v2.99c0 .42.35.75.78.75h2.67c.43 0 .78-.34.78-.75v-2.99c0-.42-.35-.75-.78-.75z"></path></svg><span>Home</span><span class="separator">/</span>
-  <span id="crumbServers" style="display:contents"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 19c-.19 0-.36-.05-.51-.14l-6.91-3.99c-.31-.18-.5-.51-.5-.87V6c0-.36.19-.69.5-.87l6.92-4c.31-.18.69-.18 1 0l6.93 4c.31.18.5.51.5.87v8c0 .36-.19.69-.5.87l-6.91 3.99c-.15.09-.32.14-.51.14Zm-5.93-5.58L9 16.26v-5.21L4.07 8.02zM11 11.06v5.21l4.93-2.84v-5.4zM4.83 6.14 10 9.32l5.17-3.18L10 3.15z"></path></svg><span>Servers and Endpoints</span><span class="separator">/</span></span>
+  <span id="crumbServers" style="display:contents"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 19c-.19 0-.36-.05-.51-.14l-6.91-3.99c-.31-.18-.5-.51-.5-.87V6c0-.36.19-.69.5-.87l6.92-4c.31-.18.69-.18 1 0l6.93 4c.31.18.5.51.5.87v8c0 .36-.19.69-.5.87l-6.91 3.99c-.15.09-.32.14-.51.14Zm-5.93-5.58L9 16.26v-5.21L4.07 8.02zM11 11.06v5.21l4.93-2.84v-5.4zM4.83 6.14 10 9.32l5.17-3.18L10 3.15z"></path></svg><span id="crumbSection">Servers and Endpoints</span><span class="separator">/</span></span>
   <button id="breadcrumbProfiles" class="link">Pairing Profiles</button><span id="breadcrumbSuffix" class="current" hidden></span>
  </nav>
  <h1 id="pageTitle" tabindex="-1">Pairing Profiles</h1>
@@ -275,7 +384,9 @@ body.term-page .term-body{padding:12px 16px 24px}
   <section class="section key-settings"><h2>Pairing Key Settings</h2><div class="attributes"><div class="row"><span class="label">Generated On</span><div id="keyGenerated" class="value timestamp"></div></div><div class="row"><span class="label">Lifespan</span><div id="keyLifespan" class="value"></div></div><div class="row"><span class="label">Remaining Uses</span><div id="keyRemaining" class="value"></div></div></div></section>
   <div hidden><details id="trainingPanel"></details><select id="trainingHost"></select><textarea id="executionInput"></textarea><button id="runExecution"></button><button id="viewWorkloads"></button><p id="executionError"></p><pre id="executionOutput"></pre></div>
  </section>
- <section id="placeholderScreen" aria-label="Console area" hidden><div class="ph-card"><h2 id="phHeading"></h2><p id="phText"></p><button id="phBack" class="primary">Go to Pairing Profiles</button> <button id="phReset" hidden>Reset lab</button></div></section>
+ <section id="policiesScreen" aria-label="Policies" hidden><div class="intro pol-intro"><div><h2>Overview of Policies</h2><p>Illumio security policies are declarative, intent-based allow and deny rules, built using labels. This means that you can describe the end state of your security posture and let Illumio determine the network details of that.</p><button class="learn-more" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M2.5 3.5h4a1.5 1.5 0 0 1 1.5 1.5v8.5a1.5 1.5 0 0 0-1.5-1.5h-4zM13.5 3.5h-4A1.5 1.5 0 0 0 8 5v8.5A1.5 1.5 0 0 1 9.5 12h4z"/></svg>Learn more</button></div></div><div class="ptabs"><button class="ptab active">All Policies</button><button class="ptab" disabled>Organization Policies</button><button class="ptab" disabled>Application Policies</button><button class="ptab" disabled>Rule Search</button></div><div class="toolbar"><div class="add-wrap"><button id="addPolicyBtn" class="primary" aria-haspopup="true"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add<span class="caret">⌄</span></button><div id="addPolicyMenu" class="menu" hidden><button id="addFromScratch"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add from Scratch</button><button id="addFromTemplate"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add from Template</button></div></div><button class="primary" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 10.5V3m0 0L5 6m3-3 3 3M2.5 10.5v1.75c0 .69.56 1.25 1.25 1.25h8.5c.69 0 1.25-.56 1.25-1.25V10.5"/></svg>Provision</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 3.5 3 6l2.5 2.5M3 6h7a3 3 0 0 1 0 6H6"/></svg>Revert</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 8h5"/></svg>Remove</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><rect fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="1.5" y="4.5" width="13" height="7" rx="3.5"/><circle cx="5" cy="8" r="2" fill="currentColor"/></svg>Disable</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M3 8.5 6.5 12 13 4.5"/></svg>Enable</button><span class="spacer"></span><button disabled>Provisioning Errors</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M13 4v3h-3M3 12V9h3M12.6 7A5 5 0 0 0 3.8 5.5M3.4 9a5 5 0 0 0 8.8 1.5"/></svg>Refresh</button><button disabled aria-label="Export"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M9.5 2.5H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h5.5M7 8h7m0 0-2.5-2.5M14 8l-2.5 2.5"/></svg></button></div><div class="filter-bar"><input disabled placeholder="Select properties to filter view" aria-label="Filter policies (not available)"></div><div class="table-frame"><div class="pol-meta"><span>Customize columns ⌄</span><span>50 per page ⌄</span><span id="policiesCount"></span></div><div class="table-scroll"><table class="pol-table"><thead><tr><th><input type="checkbox" disabled aria-label="Select all policies (not available)"></th><th>Provision Status</th><th>Status</th><th>Name</th><th>Scopes</th><th>Last Modified On</th><th>Last Modified By</th></tr></thead><tbody id="policiesBody"></tbody></table></div></div></section>
+<section id="policyScreen" aria-label="Policy" hidden><div class="toolbar rule-toolbar"><div class="add-wrap"><button id="addRuleBtn" class="primary" aria-haspopup="true"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add Rule<span class="caret">⌄</span></button><div id="addRuleMenu" class="rule-menu" hidden><div class="rm-main"><div class="rm-preview"><h3 id="rmTitle"></h3><div id="rmArt"></div></div><div class="rm-types"><div class="rm-head">RULE TYPE</div><button class="rm-type" data-type="override">Override Deny Rule</button><button class="rm-type" data-type="allow">Allow Rule</button><button class="rm-type" data-type="deny">Deny Rule</button><button class="rm-type" data-type="iptables">Custom IP Table Rule</button></div></div><div class="rm-foot"><button id="rmCancel" class="link">Cancel</button><button id="rmAdd" class="primary" disabled>Add Rule</button></div></div></div><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 8h5"/></svg>Remove</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><rect fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="1.5" y="4.5" width="13" height="7" rx="3.5"/><circle cx="5" cy="8" r="2" fill="currentColor"/></svg>Disable</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M3 8.5 6.5 12 13 4.5"/></svg>Enable</button><span class="warn-ico" title="Policy changes are not provisioned"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2.5 14 13H2zM8 6.5v3M8 11.25v.25"/></svg></span><span class="spacer"></span><button class="link show-impact" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="3"/><circle cx="8" cy="8" r="1" fill="currentColor"/></svg>Show Impact</button></div><div class="filter-bar"><input disabled placeholder="Select properties to filter view" aria-label="Filter rules (not available)"></div><div id="sec-override" class="sec"><button class="sec-head" data-sec="override"><span class="chev">⌃</span>Override Deny Rules</button><div class="sec-body"></div></div><div id="sec-allow" class="sec"><button class="sec-head" data-sec="allow"><span class="chev">⌃</span>Allow Rules</button><div class="sec-body"></div></div><div id="sec-deny" class="sec"><button class="sec-head" data-sec="deny"><span class="chev">⌃</span>Deny Rules</button><div class="sec-body"></div></div></section>
+<section id="placeholderScreen" aria-label="Console area" hidden><div class="ph-card"><h2 id="phHeading"></h2><p id="phText"></p><button id="phBack" class="primary">Go to Pairing Profiles</button> <button id="phReset" hidden>Reset lab</button></div></section>
 <section id="workloadsScreen" aria-label="Workloads" hidden><div class="toolbar"><button disabled>Add</button><button disabled>Remove</button><span class="spacer"></span><button disabled><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M15.9 29c-5.4 0-10.1-3.2-12.1-8.1-.4-.9.1-1.9 1-2.3s1.9.1 2.3 1c1.5 3.6 5 6 8.9 6 2.9 0 5.7-1.3 7.5-3.6h-1.1c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8H28c1 0 1.8.8 1.8 1.8v5.6c0 1-.8 1.8-1.8 1.8s-1.8-.8-1.8-1.8V24c-2.4 3.2-6.2 5-10.3 5m10.7-15.5c-.7 0-1.3-.4-1.6-1.1-1.5-3.6-5-6-8.9-6-2.9 0-5.7 1.3-7.5 3.6h1.1c1 0 1.8.8 1.8 1.8s-.8 1.8-1.8 1.8H4c-1 0-1.8-.8-1.8-1.8V6.1c0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8V8C8.2 4.8 12 3 16.1 3c5.4 0 10.1 3.2 12.1 8.1.4.9-.1 1.9-1 2.3-.2.1-.4.1-.6.1"></path></svg>Refresh</button><button disabled><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26.2 26.78v-4H15.62v-5.63H26.2v-4L32 20Z"></path><path d="M20.58 25.56v4.07H2.38V2.37H14.4v6.15h6.18v5.85h2.38V8.61l-.1-.09h.1L14.4 0v.1l-.09-.1H0v32h22.96v-6.44z"></path></svg>Export</button></div><div class="filter-bar"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M6.09 2.667H25.91c.337 0 .664 0 .942.022.305.025.664.084 1.026.268.502.256.91.664 1.166 1.166.184.362.243.721.268 1.026.022.278.022.605.022.942v2.427c.001.253.002.572-.073.886a2.7 2.7 0 0 1-.32.77c-.168.276-.394.5-.574.679l-.048.048-8.084 8.084a8 8 0 0 0-.227.232l-.004.003v.005c-.003.063-.003.15-.003.325v3.117c0 .353-.14.692-.39.942l-5.334 5.334A1.333 1.333 0 0 1 12 28v-8.45c0-.174 0-.262-.003-.325v-.005l-.004-.003a8 8 0 0 0-.227-.232L3.682 10.9l-.048-.048c-.18-.179-.406-.403-.574-.679a2.7 2.7 0 0 1-.32-.77c-.075-.314-.074-.633-.073-.886V6.09c0-.337 0-.664.022-.942.025-.305.084-.664.268-1.026.256-.502.664-.91 1.166-1.166a2.7 2.7 0 0 1 1.026-.268c.278-.022.605-.022.942-.022M5.35 5.349l-.002.017c-.013.156-.014.372-.014.767V8.45c0 .174 0 .262.004.325v.005l.003.003c.043.047.104.109.228.232L13.65 17.1l.049.048c.179.179.405.404.574.679.146.238.254.498.319.77.075.314.074.633.074.886v5.299l2.666-2.667v-2.632c0-.253-.001-.572.074-.886.065-.272.173-.532.32-.77.168-.276.394-.5.573-.679l.049-.048 8.083-8.084c.124-.123.185-.185.228-.232l.003-.003v-.005a8 8 0 0 0 .004-.325V6.133a11 11 0 0 0-.016-.784l-.017-.002a11 11 0 0 0-.767-.014H6.133a11 11 0 0 0-.784.016" clip-rule="evenodd"></path></svg><input disabled placeholder="Select properties to filter view" aria-label="Filter workloads (not available)"></div><div class="table-frame"><div class="table-scroll"><table style="min-inline-size:950px"><thead><tr><th><input type="checkbox" disabled aria-label="Select all workloads (not available)"></th><th>Hostname</th><th>VEN Status</th><th>Enforcement</th><th>Labels</th><th>Operating System</th></tr></thead><tbody id="workloadsBody"></tbody></table></div><div class="pagination"><span id="workloadCount">0 workloads</span><span class="spacer"></span></div></div><p id="verifiedMessage" class="verified" hidden></p></section>
  <section id="workloadDetailScreen" aria-label="Workload details" hidden><div class="running-banner"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.333 8.222 6.974 10l3.693-4M14 8A6 6 0 1 1 2 8a6 6 0 0 1 12 0"></path></svg><span>Online</span></div><div class="toolbar"><button id="backWorkloads">Back to Workloads</button><button disabled>Edit</button><button id="unpairWorkload">Unpair</button></div><section class="section"><h2>General</h2><div class="attributes"><div class="row"><span class="label">Hostname</span><div id="workloadHost" class="value"></div></div><div class="row"><span class="label">Operating System</span><div id="workloadOS" class="value"></div></div><div class="row"><span class="label">Enforcement</span><div id="workloadEnforcement" class="value"></div></div><div class="row"><span class="label">Visibility</span><div id="workloadVisibility" class="value"></div></div><div class="row"><span class="label">VEN Version</span><div id="workloadVersion" class="value"></div></div><div class="row"><span class="label">Enforcement Node Type</span><div id="workloadNodeType" class="value"></div></div><div class="row"><span class="label">Pairing Profile</span><div id="workloadProfile" class="value"></div></div><div class="row"><span class="label">Paired</span><div id="workloadPaired" class="value timestamp"></div></div></div></section><section class="section"><h2>Label Assignment</h2><div class="row"><span class="label">Labels</span><div id="workloadLabels" class="label-chips"></div></div></section></section>
 </main>
@@ -283,13 +394,14 @@ body.term-page .term-body{padding:12px 16px 24px}
 <section id="termDrawer" class="term-drawer" aria-label="Terminal" hidden><div class="term-head"><strong>Workload terminal</strong><select id="termHost" aria-label="Workload" hidden><option value="linux">linux-ven-01 · Rocky Linux 9</option><option value="windows">windows-ven-01 · Windows Server 2022</option><option value="aix">aix-ven-01 · AIX 7.3</option></select><div class="term-tabs" role="tablist" aria-label="Workload"><button class="term-tab active" role="tab" aria-selected="true" data-os="linux">linux-ven-01 · Rocky Linux 9</button><button class="term-tab" role="tab" aria-selected="false" data-os="windows">windows-ven-01 · Windows Server 2022</button><button class="term-tab" role="tab" aria-selected="false" data-os="aix">aix-ven-01 · AIX 7.3</button></div><span class="spacer"></span><button id="termClear">Clear</button><button id="termClose" aria-label="Close terminal">Close</button></div><div id="termBody" class="term-body"><pre id="termOut" class="term-out"></pre><div id="termRow" class="term-row"><span id="termPrompt" class="term-prompt"></span><input id="termInput" class="term-input" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Terminal input"></div></div></section>
 <aside hidden class="training-strip no-print" aria-label="Lab controls"><span class="strip-text"></span><button id="openTraining">Workload terminal</button><button id="labGuide">Lab guide</button><button id="resetLab">Reset lab</button></aside>
 <dialog id="guideDialog" aria-labelledby="guideTitle"><div class="dialog-head"><h2 id="guideTitle">Lab guide</h2><button id="closeGuide" aria-label="Close lab guide"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.67" d="m11.333 4.667-6.666 6.666m6.666 0L4.667 4.667"></path></svg></button></div><div class="dialog-body"><ol><li>Go to Servers &amp; Endpoints → Pairing Profiles. Open Default (Servers), or select Add to create your own profile.</li><li>Select Generate Key. The Pairing Key page shows the profile's initial workload settings, a key and the pairing scripts.</li><li>Copy the Linux OS Pairing Script. If copying is blocked, the script is selected for you: press Ctrl+C or ⌘C.</li><li>Select Workload terminal in the bottom strip, choose linux-ven-01, paste the script at the prompt and press Enter.</li><li>Watch the VEN install and pair, then run <code>illumio-ven-ctl status</code>.</li><li>Open Servers &amp; Endpoints → Workloads and inspect the new workload.</li></ol><p>Reset lab restores the four sample profiles, removes all paired workloads and clears the terminals. Reloading the page also resets it.</p><p>All names, keys, dates and addresses are fictional. Nothing on this page connects to a network or runs on a real machine.</p></div><div class="dialog-footer"><button id="guideDone" class="primary">Close</button></div></dialog>
+<dialog id="addPolicyDialog" class="pol-dialog" aria-labelledby="apTitle"><div class="pd-head"><h2 id="apTitle">Add Policy</h2><button id="apClose" class="pd-x" aria-label="Close">✕</button></div><div class="pd-body"><label for="apName" id="apNameLabel" class="pd-label invalid"><span class="star">*</span> Name</label><input id="apName" class="pd-input invalid" placeholder="Type a name for the new Policy" maxlength="200" autocomplete="off"><div id="apError" class="pd-error" hidden></div><label for="apDesc" class="pd-label">Description</label><textarea id="apDesc" class="pd-input pd-ta" placeholder="Type a description for the new Policy"></textarea><span class="pd-label">Scope</span><div class="pd-select" aria-label="Scope (no scopes in this lab)"><span>Select Scope</span><span>⌄</span></div></div><div class="pd-foot"><button id="apCancel">Cancel</button><button id="apSave" class="primary" disabled>Save</button></div></dialog>
 <dialog id="removeDialog" class="reset-dialog" aria-labelledby="removeTitle"><div class="dialog-head"><h2 id="removeTitle">Remove Pairing Profile</h2></div><div class="dialog-body"><p id="removeText"></p></div><div class="dialog-footer"><button id="cancelRemove" autofocus>Cancel</button><button id="confirmRemove" class="primary">Remove</button></div></dialog>
 <dialog id="resetDialog" class="reset-dialog" aria-labelledby="resetTitle"><div class="dialog-head"><h2 id="resetTitle">Reset lab?</h2></div><div class="dialog-body"><p>This restores the default pairing profiles and removes all pairing keys, added profiles and paired workloads.</p></div><div class="dialog-footer"><button id="cancelReset" autofocus>Cancel</button><button id="confirmReset" class="primary">Reset lab</button></div></dialog>
 <script>
 'use strict';
 (() => {
  const $=id=>document.getElementById(id);
- const screens=['placeholderScreen','profilesScreen','detailScreen','formScreen','keyScreen','workloadsScreen','workloadDetailScreen'];
+ const screens=['policiesScreen','policyScreen','placeholderScreen','profilesScreen','detailScreen','formScreen','keyScreen','workloadsScreen','workloadDetailScreen'];
  const labelIds=['roleLabel','appLabel','envLabel','locLabel'];
  const overrideIds=['overrideRole','overrideApp','overrideEnv','overrideLoc'];
  const labelNames=['Role','Application','Environment','Location'];
@@ -317,9 +429,9 @@ body.term-page .term-body{padding:12px 16px 24px}
   screens.forEach(screen=>$(screen).hidden=screen!==id);$('pageTitle').textContent=title;
   const workloads=id==='workloadsScreen'||id==='workloadDetailScreen';
   const area=id==='placeholderScreen'?currentArea:'';document.querySelectorAll('.side-nav button').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current');});
-  const navBtn=area?document.querySelector('.side-nav button[data-area="'+area+'"]'):$(workloads?'navWorkloads':'navProfiles');navBtn.classList.add('active');navBtn.setAttribute('aria-current','page');$('crumbServers').hidden=!!area&&!serverAreas.includes(area);
-  $('breadcrumbProfiles').textContent=area||(workloads?'Workloads':'Pairing Profiles');
-  const suffix=id==='detailScreen'?' / '+selected().name:id==='keyScreen'?' / Pairing Key':id==='formScreen'?' / '+(editing?'Edit':'Add'):id==='workloadDetailScreen'?' / '+title:'';
+  const pol=id==='policiesScreen'||id==='policyScreen';const navBtn=pol?$('navAllPolicies'):area?document.querySelector('.side-nav button[data-area="'+area+'"]'):$(workloads?'navWorkloads':'navProfiles');navBtn.classList.add('active');navBtn.setAttribute('aria-current','page');$('crumbServers').hidden=!pol&&!!area&&!serverAreas.includes(area);$('crumbSection').textContent=pol?'Segmentation':'Servers and Endpoints';
+  $('breadcrumbProfiles').textContent=pol?'Policies':area||(workloads?'Workloads':'Pairing Profiles');
+  const suffix=id==='policyScreen'?' / '+title:id==='detailScreen'?' / '+selected().name:id==='keyScreen'?' / Pairing Key':id==='formScreen'?' / '+(editing?'Edit':'Add'):id==='workloadDetailScreen'?' / '+title:'';
   $('breadcrumbSuffix').textContent=suffix;$('breadcrumbSuffix').hidden=!suffix;
   closeSidebar();$('pageTitle').focus();window.scrollTo({top:0});if(id==='keyScreen')fitScripts();
  }
@@ -403,7 +515,7 @@ save();
  function openWorkload(w){curWorkload=w;message();$('workloadHost').textContent=w.hostname;$('workloadOS').textContent=osNames[w.os];$('workloadEnforcement').textContent=w.enforcement;$('workloadVisibility').textContent=w.visibility;$('workloadVersion').textContent=w.version;$('workloadNodeType').textContent=w.nodeType;$('workloadProfile').textContent=w.profile;$('workloadPaired').textContent=w.paired;chips('workloadLabels',w.labels);show('workloadDetailScreen',w.hostname);}
  $('serversMenu').addEventListener('click',()=>{const open=$('serversChildren').hidden;$('serversChildren').hidden=!open;$('serversMenu').setAttribute('aria-expanded',String(open));$('serversChevron').textContent=open?'⌄':'›';});
  $('navProfiles').addEventListener('click',()=>{message();renderProfiles();show('profilesScreen','Pairing Profiles');});$('navWorkloads').addEventListener('click',openWorkloads);
- $('breadcrumbProfiles').addEventListener('click',()=>{if($('navWorkloads').classList.contains('active'))openWorkloads();else{message();renderProfiles();show('profilesScreen','Pairing Profiles');}});
+ $('breadcrumbProfiles').addEventListener('click',()=>{if($('navAllPolicies').classList.contains('active')){openPolicies();return;}if($('navWorkloads').classList.contains('active'))openWorkloads();else{message();renderProfiles();show('profilesScreen','Pairing Profiles');}});
  $('mobileMenu').addEventListener('click',()=>{const open=!$('sidebar').classList.contains('open');$('sidebar').classList.toggle('open',open);$('mobileMenu').setAttribute('aria-expanded',String(open));if(open)$('serversMenu').focus();});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('sidebar').classList.contains('open')){closeSidebar(true);e.preventDefault();}});
  document.addEventListener('click',e=>{if($('sidebar').classList.contains('open')&&!$('sidebar').contains(e.target)&&!$('mobileMenu').contains(e.target))closeSidebar();});
@@ -442,7 +554,7 @@ save();
   'Cloud':'Cloud accounts and the cloud resources discovered in them.',
   'Usage':'Licence and workload usage for the organization.',
   'Access':'Users, roles and API keys.',
-  'Settings':'Organization-wide settings, such as VEN and event settings.',
+  'Settings':'Organization-wide settings, such as VEN and event settings.','Deny Rules':'All Deny Rules across your policies.','Drafts & Versions':'Draft policy changes and provisioned policy versions.',
   'Support':'Support reports and product documentation.'
  };
  function openArea(area){currentArea=area;message();$('phHeading').textContent=area;$('phText').textContent=(areaText[area]||'')+' This area is not available in this lab.';$('phReset').hidden=area!=='Settings';show('placeholderScreen',area);}
@@ -596,7 +708,7 @@ save();
  $('termHost').addEventListener('change',()=>{termSave();termLoad($('termHost').value);$('termInput').focus();});
  $('termClear').addEventListener('click',()=>{$('termOut').replaceChildren();termSave();$('termInput').focus();});
  $('termClose').addEventListener('click',closeTerm);
- $('confirmReset').addEventListener('click',()=>{state.resets=(state.resets||0)+1;save();});
+ $('confirmReset').addEventListener('click',()=>{state.resets=(state.resets||0)+1;state.policies=[];save();});
 
 
  // ---- real-PCE look: dates, email links, profile IDs, copy-on-click, download, stop/remove ----
@@ -633,19 +745,194 @@ save();
  $('removeProfile').addEventListener('click',()=>{$('removeText').textContent='Are you sure you want to remove the Pairing Profile "'+selected().name+'"?';$('removeDialog').showModal();});
  $('cancelRemove').addEventListener('click',()=>$('removeDialog').close());
  $('confirmRemove').addEventListener('click',()=>{const p=selected();$('removeDialog').close();state.profiles=state.profiles.filter(x=>x.id!==p.id);if(state.key&&state.key.profileId===p.id)state.key=null;state.selectedId=(state.profiles[0]||{}).id;renderProfiles();show('profilesScreen','Pairing Profiles');save();message('Pairing Profile "'+p.name+'" has been removed.');});
+
+ // ---- Segmentation: All Policies, policy page and rules ----
+ const I={"plus": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" cx=\"8\" cy=\"8\" r=\"6\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8 5.5v5M5.5 8h5\"/></svg>", "minus": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" cx=\"8\" cy=\"8\" r=\"6\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M5.5 8h5\"/></svg>", "upload": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8 10.5V3m0 0L5 6m3-3 3 3M2.5 10.5v1.75c0 .69.56 1.25 1.25 1.25h8.5c.69 0 1.25-.56 1.25-1.25V10.5\"/></svg>", "revert": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M5.5 3.5 3 6l2.5 2.5M3 6h7a3 3 0 0 1 0 6H6\"/></svg>", "toggle": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" x=\"1.5\" y=\"4.5\" width=\"13\" height=\"7\" rx=\"3.5\"/><circle cx=\"5\" cy=\"8\" r=\"2\" fill=\"currentColor\"/></svg>", "check": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M3 8.5 6.5 12 13 4.5\"/></svg>", "checkc": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" cx=\"8\" cy=\"8\" r=\"6\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M5.5 8.2 7.2 10l3.3-3.7\"/></svg>", "refresh": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M13 4v3h-3M3 12V9h3M12.6 7A5 5 0 0 0 3.8 5.5M3.4 9a5 5 0 0 0 8.8 1.5\"/></svg>", "export": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M9.5 2.5H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h5.5M7 8h7m0 0-2.5-2.5M14 8l-2.5 2.5\"/></svg>", "book": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M2.5 3.5h4a1.5 1.5 0 0 1 1.5 1.5v8.5a1.5 1.5 0 0 0-1.5-1.5h-4zM13.5 3.5h-4A1.5 1.5 0 0 0 8 5v8.5A1.5 1.5 0 0 1 9.5 12h4z\"/></svg>", "warn": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8 2.5 14 13H2zM8 6.5v3M8 11.25v.25\"/></svg>", "target": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" cx=\"8\" cy=\"8\" r=\"6\"/><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" cx=\"8\" cy=\"8\" r=\"3\"/><circle cx=\"8\" cy=\"8\" r=\"1\" fill=\"currentColor\"/></svg>", "save": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M2 2h9.5L14 4.5V14H2z\" fill=\"currentColor\"/><rect x=\"4.5\" y=\"2\" width=\"6\" height=\"3.5\" fill=\"#fff\"/><rect x=\"4\" y=\"9\" width=\"8\" height=\"5\" rx=\".5\" fill=\"#fff\"/></svg>", "ban": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1.8\" cx=\"8\" cy=\"8\" r=\"6\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1.8\" d=\"M3.8 12.2 12.2 3.8\"/></svg>", "label": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"6.5\" fill=\"currentColor\"/><path d=\"M8 1.5v13M1.5 8h13M3.2 3.8c2.6 1.4 7 1.4 9.6 0M3.2 12.2c2.6-1.4 7-1.4 9.6 0\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1\"/></svg>", "gear": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle cx=\"6\" cy=\"8\" r=\"4.5\" fill=\"#9aa9b8\"/><circle cx=\"6\" cy=\"8\" r=\"1.6\" fill=\"#fff\"/><circle cx=\"11.5\" cy=\"11\" r=\"3\" fill=\"#b6c3cf\"/><circle cx=\"11.5\" cy=\"11\" r=\"1\" fill=\"#fff\"/></svg>", "globe": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" cx=\"8\" cy=\"8\" r=\"6\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M3 5.5h10M3 10.5h10M8 2a9 9 0 0 1 0 12M8 2a9 9 0 0 0 0 12\"/></svg>", "doc": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M4 2.5h5.5L12 5v8.5H4zM6 8h4M6 10.5h4\"/></svg>", "shield": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8 2 13 4v4c0 3-2.2 5.2-5 6-2.8-.8-5-3-5-6V4z\"/></svg>"};
+ const ART={allow:"<svg viewBox=\"0 0 220 180\" aria-hidden=\"true\"><path d=\"M48 58C70 0 150 0 172 58\" fill=\"none\" stroke=\"#3ccf6b\" stroke-width=\"9\" stroke-linecap=\"round\"/><path d=\"M36 46l14 20 10-22z\" fill=\"#3ccf6b\"/><path d=\"M184 46l-14 20-10-22z\" fill=\"#3ccf6b\"/><g transform=\"translate(18 0)\"><path d=\"M0 72l32-16 32 16v58l-32 16-32-16z\" fill=\"#d3dbe6\" stroke=\"#5c6f84\" stroke-width=\"3\"/><path d=\"M0 72l32 16 32-16M32 88v58M0 101l32 16 32-16\" fill=\"none\" stroke=\"#5c6f84\" stroke-width=\"3\"/><circle cx=\"10\" cy=\"92\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"96\" r=\"3\" fill=\"#fff\"/><circle cx=\"10\" cy=\"121\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"125\" r=\"3\" fill=\"#fff\"/></g><g transform=\"translate(138 0)\"><path d=\"M0 72l32-16 32 16v58l-32 16-32-16z\" fill=\"#9fc4ff\" stroke=\"#2366ed\" stroke-width=\"3\"/><path d=\"M0 72l32 16 32-16M32 88v58M0 101l32 16 32-16\" fill=\"none\" stroke=\"#2366ed\" stroke-width=\"3\"/><circle cx=\"10\" cy=\"92\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"96\" r=\"3\" fill=\"#fff\"/><circle cx=\"10\" cy=\"121\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"125\" r=\"3\" fill=\"#fff\"/></g><rect x=\"22\" y=\"152\" width=\"56\" height=\"16\" rx=\"3\" fill=\"#3b4757\"/><text x=\"50\" y=\"163\" font-size=\"8\" fill=\"#fff\" text-anchor=\"middle\" font-family=\"Arial\">SOURCE</text><rect x=\"132\" y=\"152\" width=\"76\" height=\"16\" rx=\"3\" fill=\"#3b4757\"/><text x=\"170\" y=\"163\" font-size=\"8\" fill=\"#fff\" text-anchor=\"middle\" font-family=\"Arial\">DESTINATION</text></svg>",deny:"<svg viewBox=\"0 0 220 180\" aria-hidden=\"true\"><path d=\"M48 58C70 0 150 0 172 58\" fill=\"none\" stroke=\"#e5484d\" stroke-width=\"9\" stroke-linecap=\"round\"/><path d=\"M36 46l14 20 10-22z\" fill=\"#e5484d\"/><path d=\"M184 46l-14 20-10-22z\" fill=\"#e5484d\"/><path d=\"M100 18l20 20M120 18l-20 20\" stroke=\"#e5484d\" stroke-width=\"7\" stroke-linecap=\"round\"/><g transform=\"translate(18 0)\"><path d=\"M0 72l32-16 32 16v58l-32 16-32-16z\" fill=\"#d3dbe6\" stroke=\"#5c6f84\" stroke-width=\"3\"/><path d=\"M0 72l32 16 32-16M32 88v58M0 101l32 16 32-16\" fill=\"none\" stroke=\"#5c6f84\" stroke-width=\"3\"/><circle cx=\"10\" cy=\"92\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"96\" r=\"3\" fill=\"#fff\"/><circle cx=\"10\" cy=\"121\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"125\" r=\"3\" fill=\"#fff\"/></g><g transform=\"translate(138 0)\"><path d=\"M0 72l32-16 32 16v58l-32 16-32-16z\" fill=\"#9fc4ff\" stroke=\"#2366ed\" stroke-width=\"3\"/><path d=\"M0 72l32 16 32-16M32 88v58M0 101l32 16 32-16\" fill=\"none\" stroke=\"#2366ed\" stroke-width=\"3\"/><circle cx=\"10\" cy=\"92\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"96\" r=\"3\" fill=\"#fff\"/><circle cx=\"10\" cy=\"121\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"125\" r=\"3\" fill=\"#fff\"/></g><rect x=\"22\" y=\"152\" width=\"56\" height=\"16\" rx=\"3\" fill=\"#3b4757\"/><text x=\"50\" y=\"163\" font-size=\"8\" fill=\"#fff\" text-anchor=\"middle\" font-family=\"Arial\">SOURCE</text><rect x=\"132\" y=\"152\" width=\"76\" height=\"16\" rx=\"3\" fill=\"#3b4757\"/><text x=\"170\" y=\"163\" font-size=\"8\" fill=\"#fff\" text-anchor=\"middle\" font-family=\"Arial\">DESTINATION</text></svg>",override:"<svg viewBox=\"0 0 220 180\" aria-hidden=\"true\"><path d=\"M48 58C70 0 150 0 172 58\" fill=\"none\" stroke=\"#3ccf6b\" stroke-width=\"9\" stroke-linecap=\"round\"/><path d=\"M36 46l14 20 10-22z\" fill=\"#3ccf6b\"/><path d=\"M184 46l-14 20-10-22z\" fill=\"#3ccf6b\"/><g transform=\"translate(18 0)\"><path d=\"M0 72l32-16 32 16v58l-32 16-32-16z\" fill=\"#d3dbe6\" stroke=\"#5c6f84\" stroke-width=\"3\"/><path d=\"M0 72l32 16 32-16M32 88v58M0 101l32 16 32-16\" fill=\"none\" stroke=\"#5c6f84\" stroke-width=\"3\"/><circle cx=\"10\" cy=\"92\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"96\" r=\"3\" fill=\"#fff\"/><circle cx=\"10\" cy=\"121\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"125\" r=\"3\" fill=\"#fff\"/></g><g transform=\"translate(138 0)\"><path d=\"M0 72l32-16 32 16v58l-32 16-32-16z\" fill=\"#9fc4ff\" stroke=\"#2366ed\" stroke-width=\"3\"/><path d=\"M0 72l32 16 32-16M32 88v58M0 101l32 16 32-16\" fill=\"none\" stroke=\"#2366ed\" stroke-width=\"3\"/><circle cx=\"10\" cy=\"92\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"96\" r=\"3\" fill=\"#fff\"/><circle cx=\"10\" cy=\"121\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"125\" r=\"3\" fill=\"#fff\"/></g><rect x=\"22\" y=\"152\" width=\"56\" height=\"16\" rx=\"3\" fill=\"#3b4757\"/><text x=\"50\" y=\"163\" font-size=\"8\" fill=\"#fff\" text-anchor=\"middle\" font-family=\"Arial\">SOURCE</text><rect x=\"132\" y=\"152\" width=\"76\" height=\"16\" rx=\"3\" fill=\"#3b4757\"/><text x=\"170\" y=\"163\" font-size=\"8\" fill=\"#fff\" text-anchor=\"middle\" font-family=\"Arial\">DESTINATION</text></svg>"};
+ const LABELS=[['env','Development'],['env','Production'],['env','Staging'],['app','ordering'],['app','payment'],['app','crm'],['role','web'],['role','app'],['role','db'],['loc','ca'],['loc','us'],['loc','uk']];
+ const LABEL_TYPE={role:'Role',app:'Application',env:'Environment',loc:'Location'};
+ const SERVICES=[['S-HTTP','80 TCP'],['S-HTTPS','443 TCP'],['S-SSH','22 TCP'],['S-RDP','3389 TCP'],['S-SMB','445 TCP'],['S-8443','8443 TCP'],['S-BGP','179 TCP'],['S-DHCP-CLIENT','68 UDP, 68 TCP'],['S-DHCP-SERVER','67 UDP, 67 TCP'],['S-BIND-RNDC','953 TCP'],['S-DNS','53 TCP, 53 UDP']];
+ const RULE_NAME={override:'Override Deny Rule',allow:'Allow Rule',deny:'Deny Rule',iptables:'Custom IP Table Rule'};
+ const SECTION_NAME={override:'Override Deny Rules',allow:'Allow Rules',deny:'Deny Rules'};
+ let curPolicyId=null,draft=null,rmSel=null;
+ const pols=()=>state.policies||(state.policies=[]);
+ const curPolicy=()=>pols().find(p=>p.id===curPolicyId);
+ function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+ function ico(name){const s=document.createElement('span');s.style.display='inline-flex';s.innerHTML=I[name];return s.firstChild;}
+ function itemStr(i){return i.kind==='label'?i.key+':'+i.value:i.kind==='all'?'All Workloads':i.kind==='any'?'Any':i.name;}
+ function polSummary(){return pols().map(p=>({name:p.name,rules:['override','allow','deny'].flatMap(t=>(p.rules[t]||[]).map(r=>({type:t,enabled:r.enabled!==false,sources:r.sources.map(itemStr),destinations:r.destinations.map(itemStr),services:r.services.map(itemStr)})))}));}
+ function pchip(item,onRemove){
+  const c=el('span','pchip'+(item.kind==='label'?' lbl-'+item.key:''));
+  if(item.kind==='label')c.append(ico('label'));
+  c.append(el('span','',item.kind==='label'?item.value:item.name));
+  if(onRemove){const x=el('button','pchip-x','×');x.type='button';x.setAttribute('aria-label','Remove');x.addEventListener('mousedown',e=>{e.preventDefault();e.stopPropagation();onRemove();});c.append(x);}
+  return c;
+ }
+ function sameItem(a,b){return a.kind===b.kind&&a.key===b.key&&a.value===b.value&&a.name===b.name;}
+ function picker(kind,list,placeholder){
+  const wrap=el('div','picker'+(kind==='svc'?' svc':''));const box=el('div','picker-box');const chips=el('span','picker-chips');
+  const input=el('input','picker-input');input.placeholder=placeholder;input.setAttribute('aria-label',placeholder);
+  box.append(chips,input,el('span','picker-caret','⌄'));const dd=el('div','picker-dd');dd.hidden=true;wrap.append(box,dd);
+  let hi=0,opts=[];
+  function draw(){chips.replaceChildren(...list.map((it,i)=>pchip(it,()=>{list.splice(i,1);draw();if(!dd.hidden)render();})));input.placeholder=list.length?'':placeholder;}
+  function options(){
+   const q=input.value.trim().toLowerCase();let o;
+   if(kind==='svc'){o=SERVICES.filter(s=>!q||s[0].toLowerCase().includes(q)||s[1].toLowerCase().includes(q)).map(s=>({kind:'service',name:s[0],ports:s[1]}));if(!q||'all services'.includes(q))o.push({kind:'service',name:'All Services',pin:true});}
+   else{o=LABELS.filter(l=>!q||l[1].toLowerCase().includes(q)).map(l=>({kind:'label',key:l[0],value:l[1]}));o.push({kind:'all',name:'All Workloads',pin:true},{kind:'any',name:'Any (0.0.0.0/0 and ::/0)',pin:true});}
+   return o.filter(a=>!list.some(b=>sameItem(a,b)));
+  }
+  function render(){
+   opts=options();hi=Math.max(0,Math.min(hi,opts.length-1));dd.replaceChildren();
+   const main=el('div','dd-main'),lst=el('div','dd-list'),pin=el('div','dd-pinned');
+   opts.forEach((o,i)=>{
+    const b=el('button','dd-opt'+(i===hi?' hi':''));b.type='button';b.tabIndex=-1;
+    if(o.kind==='label'){b.append(pchip(o),el('span','dd-type',LABEL_TYPE[o.key]));}
+    else if(o.kind==='service'&&!o.pin){const c=el('span','pchip svc-chip');c.append(ico('gear'));const t=el('span','svc-text');t.append(el('b','',o.name),el('span','',o.ports));c.append(t);b.append(c);b.style.justifyContent='flex-start';}
+    else{b.append(pchip(o));b.style.justifyContent='flex-start';}
+    b.addEventListener('mousedown',e=>{e.preventDefault();pick(o);});
+    (o.pin?pin:lst).append(b);
+   });
+   if(!lst.childNodes.length)lst.append(el('div','dd-empty',kind==='svc'?'No matching services':'No matching labels'));
+   main.append(lst);if(pin.childNodes.length)main.append(pin);
+   const foot=el('div','dd-foot');
+   if(kind==='svc'){
+    const side=el('div','dd-side');side.append(el('div','dd-side-item active','Policy Services'),el('div','dd-side-item','Port/Port Range'));
+    const add=el('div','dd-side-item add');add.append(ico('plus'),el('span','','Add a new Service'));side.append(add);
+    const row=el('div','dd-row');row.append(main,side);dd.append(row);
+    foot.append(el('span','dd-tip','? Filtering Tips(cmd+i)'),el('span','dd-key','↓↑'),el('span','','to navigate'),el('span','dd-key','↵'),el('span','','to select'),el('span','dd-key','esc'),el('span','','to close'));
+   }else{
+    dd.append(main);const adv=el('label','dd-adv');const cb=el('input');cb.type='checkbox';cb.disabled=true;adv.append(cb,document.createTextNode('Advanced Options(cmd+a)'));
+    foot.append(adv,el('span','dd-tip','? Filtering Tips(cmd+i)'));
+   }
+   dd.append(foot);
+   const h=dd.querySelector('.dd-opt.hi');if(h)h.scrollIntoView({block:'nearest'});
+  }
+  function pick(o){const v={kind:o.kind};if(o.key)v.key=o.key;if(o.value)v.value=o.value;if(o.name)v.name=o.name;list.push(v);input.value='';draw();hi=0;render();place();wrap.classList.remove('invalid');}
+  function place(){const b=box.getBoundingClientRect();const below=window.innerHeight-b.bottom-8,above=b.top-8;if(below<300&&above>below){dd.style.insetBlockStart='auto';dd.style.insetBlockEnd=(window.innerHeight-b.top)+'px';dd.style.maxBlockSize=above+'px';}else{dd.style.insetBlockEnd='auto';dd.style.insetBlockStart=b.bottom+'px';dd.style.maxBlockSize=below+'px';}const w=Math.max(b.width,kind==='svc'?520:340);dd.style.inlineSize=w+'px';dd.style.insetInlineStart=Math.max(8,Math.min(b.left,window.innerWidth-w-8))+'px';}
+  function open(){document.querySelectorAll('.picker.open').forEach(p=>{if(p!==wrap)p._close();});wrap.classList.add('open');opts=options();hi=kind==='svc'?opts.length-1:0;render();place();dd.hidden=false;}
+  function close(){wrap.classList.remove('open');dd.hidden=true;input.value='';}
+  wrap._close=close;wrap._place=place;
+  box.addEventListener('mousedown',e=>{if(e.target!==input){e.preventDefault();input.focus();}});
+  input.addEventListener('focus',open);
+  input.addEventListener('input',()=>{hi=0;render();place();dd.hidden=false;wrap.classList.add('open');});
+  input.addEventListener('keydown',e=>{
+   if(e.key==='ArrowDown'){hi=Math.min(opts.length-1,hi+1);render();e.preventDefault();}
+   else if(e.key==='ArrowUp'){hi=Math.max(0,hi-1);render();e.preventDefault();}
+   else if(e.key==='Enter'){if(opts[hi])pick(opts[hi]);e.preventDefault();}
+   else if(e.key==='Escape'){close();input.blur();}
+   else if(e.key==='Backspace'&&!input.value&&list.length){list.pop();draw();render();}
+  });
+  input.addEventListener('blur',()=>setTimeout(()=>{if(!wrap.contains(document.activeElement))close();},150));
+  draw();return wrap;
+ }
+ function renderPolicies(){
+  const body=$('policiesBody');body.replaceChildren();const ps=pols();
+  $('policiesCount').textContent=ps.length?'1 – '+ps.length+' of '+ps.length+' Total':'0 Total';
+  if(!ps.length){const r=body.insertRow();r.className='empty-row';const c=r.insertCell();c.colSpan=7;c.textContent='No Policies';return;}
+  ps.forEach(p=>{
+   const r=body.insertRow();const cb=el('input');cb.type='checkbox';cb.disabled=true;cb.setAttribute('aria-label','Select policy');r.insertCell().append(cb);
+   const b=el('span','pbadge');b.append(ico('plus'),el('span','','Pending'));r.insertCell().append(b);
+   const st=el('span','pstatus enabled');st.append(ico('checkc'),el('span','','Enabled'));r.insertCell().append(st);
+   const a=el('button','link',p.name);a.addEventListener('click',()=>openPolicy(p.id));r.insertCell().append(a);
+   const sc=el('span','scope-chip');sc.append(ico('globe'),el('span','','All'));r.insertCell().append(sc);
+   r.insertCell().textContent=p.modified;r.insertCell().append(emailLink(p.by));
+  });
+ }
+ function closeMenus(){$('addPolicyMenu').hidden=true;$('addRuleMenu').hidden=true;}
+ function expandSeg(){$('segChildren').hidden=false;$('segMenu').setAttribute('aria-expanded','true');$('segChevron').textContent='⌄';}
+ function openPolicies(){curPolicyId=null;draft=null;message();closeMenus();expandSeg();renderPolicies();show('policiesScreen','Policies');}
+ function openPolicy(id){curPolicyId=id;draft=null;message();closeMenus();renderPolicy();show('policyScreen',curPolicy().name);}
+ function ruleHeader(){
+  const h=el('div','rrow rhead');
+  ['','Provision Status','No.','Status','Sources','Source Process / Service','→','Destinations','Destination Services','Rule Options',''].forEach((t,i)=>{const c=el('div','',t);if(i===7||i===8)c.className='dst';h.append(c);});
+  return h;
+ }
+ function chipsCell(list){const d=el('div');list.forEach(it=>d.append(pchip(it)));d.style.display='flex';d.style.flexWrap='wrap';d.style.gap='4px';return d;}
+ function kindLabel(t){const k=el('span','kind '+t);k.append(ico(t==='allow'?'check':'ban'),el('span','',t==='allow'?'Allow':t==='deny'?'Deny':'Override Deny'));return k;}
+ function savedRow(t,r,i){
+  const row=el('div','rrow saved');row.append(el('span','handle','⠿'));
+  const b=el('span','pbadge');b.append(ico('plus'),el('span','','Pending'));const bc=el('div');bc.append(b);row.append(bc);
+  row.append(el('div','',String(i+1)));const st=el('span','pstatus enabled');st.append(ico('checkc'),el('span','','Enabled'));const sc=el('div');sc.append(st);row.append(sc);
+  row.append(chipsCell(r.sources),chipsCell(r.srcServices||[]),el('div','','→'),chipsCell(r.destinations),chipsCell(r.services),el('div'));
+  const act=el('div','ract');act.append(kindLabel(t));row.append(act);return row;
+ }
+ function draftRow(t){
+  const r=draft.rule;const row=el('div','rrow draft');row.append(el('span','handle','⠿'),el('div'),el('div'),el('div'));
+  const src=picker('ws',r.sources,'Select Sources'),ssvc=picker('svc',r.srcServices,'Select Services'),dst=picker('ws',r.destinations,'Select Destinations'),svc=picker('svc',r.services,'Select Services');
+  const opt=el('div','fake-select');opt.append(el('span','','Select Rule Options'),el('span','','⌄'));
+  row.append(src,ssvc,el('div','','→'),dst,svc,opt);
+  const act=el('div','ract');act.append(kindLabel(t));
+  const sv=el('button');sv.type='button';sv.title='Save';sv.setAttribute('aria-label','Save rule');sv.append(ico('save'));
+  const cn=el('button');cn.type='button';cn.title='Cancel';cn.setAttribute('aria-label','Cancel rule');cn.append(ico('ban'));
+  sv.addEventListener('click',()=>{
+   const miss=[[src,r.sources],[dst,r.destinations],[svc,r.services]].filter(([w,l])=>!l.length);
+   miss.forEach(([w])=>w.classList.add('invalid'));if(miss.length)return;
+   const p=curPolicy();(p.rules[t]=p.rules[t]||[]).push({sources:r.sources,srcServices:r.srcServices,destinations:r.destinations,services:r.services,enabled:true});
+   p.modified=timestamp();p.provision='Pending';draft=null;save();renderPolicy();
+  });
+  cn.addEventListener('click',()=>{draft=null;renderPolicy();});
+  act.append(sv,cn);row.append(act);row._first=src;return row;
+ }
+ function renderPolicy(){
+  const p=curPolicy();if(!p)return;let first=null;
+  ['override','allow','deny'].forEach(t=>{
+   const body=document.querySelector('#sec-'+t+' .sec-body');body.replaceChildren();
+   const rules=p.rules[t]||[];const wrap=el('div','rscroll');const tbl=el('div','rtable');tbl.append(ruleHeader());
+   rules.forEach((r,i)=>tbl.append(savedRow(t,r,i)));
+   if(draft&&draft.type===t){const d=draftRow(t);tbl.append(d);first=d._first;}
+   wrap.append(tbl);body.append(wrap);
+   if(!rules.length&&!(draft&&draft.type===t))body.append(el('div','rempty','There are no '+SECTION_NAME[t]+' defined'));
+  });
+  if(first)setTimeout(()=>first.querySelector('input').focus(),0);
+ }
+ function rmPreview(t){const k=t==='iptables'?'allow':t;$('rmTitle').textContent=(RULE_NAME[t]||'Allow Rule')+' No Scope';$('rmArt').innerHTML=ART[k];}
+ $('segMenu').addEventListener('click',()=>{const open=$('segChildren').hidden;$('segChildren').hidden=!open;$('segMenu').setAttribute('aria-expanded',String(open));$('segChevron').textContent=open?'⌄':'›';});
+ $('navAllPolicies').addEventListener('click',openPolicies);
+ $('addPolicyBtn').addEventListener('click',e=>{e.stopPropagation();$('addPolicyMenu').hidden=!$('addPolicyMenu').hidden;});
+ $('addFromTemplate').addEventListener('click',()=>{closeMenus();message('Policy templates are not available in this lab. Select Add from Scratch.');});
+ function apValidate(){const v=$('apName').value.trim();$('apNameLabel').classList.toggle('invalid',!v);$('apName').classList.toggle('invalid',!v);$('apSave').disabled=!v;$('apError').hidden=true;}
+ $('addFromScratch').addEventListener('click',()=>{closeMenus();$('apName').value='';$('apDesc').value='';apValidate();$('addPolicyDialog').showModal();$('apName').focus();});
+ $('apName').addEventListener('input',apValidate);
+ ['apClose','apCancel'].forEach(id=>$(id).addEventListener('click',()=>$('addPolicyDialog').close()));
+ $('apSave').addEventListener('click',()=>{
+  const name=$('apName').value.trim();if(!name)return;
+  if(pols().some(p=>p.name.toLowerCase()===name.toLowerCase())){$('apError').textContent='A Policy with this name already exists.';$('apError').hidden=false;return;}
+  const now=timestamp();const p={id:'pol-'+Date.now(),name,description:$('apDesc').value.trim(),scope:'All',created:now,modified:now,by:'admin@illumio-lab.invalid',provision:'Pending',rules:{override:[],allow:[],deny:[]}};
+  pols().push(p);save();$('addPolicyDialog').close();openPolicy(p.id);
+ });
+ $('apName').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('apSave').disabled){e.preventDefault();$('apSave').click();}});
+ $('addRuleBtn').addEventListener('click',e=>{e.stopPropagation();const m=$('addRuleMenu');m.hidden=!m.hidden;if(!m.hidden){rmSel=null;document.querySelectorAll('.rm-type').forEach(b=>b.classList.remove('sel'));$('rmAdd').disabled=true;rmPreview('allow');}});
+ $('addRuleMenu').addEventListener('click',e=>e.stopPropagation());
+ document.querySelectorAll('.rm-type').forEach(b=>{
+  b.addEventListener('mouseenter',()=>rmPreview(b.dataset.type));
+  b.addEventListener('mouseleave',()=>rmPreview(rmSel||'allow'));
+  b.addEventListener('click',()=>{rmSel=b.dataset.type;document.querySelectorAll('.rm-type').forEach(x=>x.classList.toggle('sel',x===b));$('rmAdd').disabled=false;rmPreview(rmSel);});
+  b.addEventListener('dblclick',()=>{rmSel=b.dataset.type;$('rmAdd').click();});
+ });
+ $('rmCancel').addEventListener('click',closeMenus);
+ $('rmAdd').addEventListener('click',()=>{
+  if(!rmSel)return;closeMenus();
+  if(rmSel==='iptables'){message('Custom IP Table Rules are not available in this lab.');return;}
+  draft={type:rmSel,rule:{sources:[],srcServices:[],destinations:[],services:[]}};
+  document.querySelector('#sec-'+rmSel).classList.remove('collapsed');renderPolicy();
+ });
+ document.querySelectorAll('.sec-head').forEach(h=>h.addEventListener('click',()=>h.parentElement.classList.toggle('collapsed')));
+ document.addEventListener('click',e=>{if(!e.target.closest('.add-wrap'))closeMenus();});
+ document.addEventListener('scroll',e=>{if(e.target.closest&&e.target.closest('.picker-dd'))return;document.querySelectorAll('.picker.open').forEach(p=>p._place());},true);
+ window.addEventListener('resize',()=>document.querySelectorAll('.picker.open').forEach(p=>p._place()));
  // ---- Instruqt tabs: index.html = Console; linux.html / windows.html / aix.html = one terminal each.
  // All four are served from the same host, so they share state via localStorage + BroadcastChannel.
  const STORE='illumio-pce-lab-v1';
  const MODE=(location.pathname.match(/(linux|windows|aix)\.html/)||[])[1]||'console';
  let bc=null;try{bc=new BroadcastChannel(STORE);}catch(_){}
  let curWorkload=null;
- function snapshot(){return JSON.stringify({profiles:state.profiles,keys:state.keys,workloads:state.workloads,serial:state.serial,nextProfile:state.nextProfile,resets:state.resets||0,curKey:state.key?state.key.value:null});}
- function report(){try{fetch('api/state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({workloads:state.workloads.map(w=>w.os)}),keepalive:true}).catch(()=>{});}catch(_){}}
+ function snapshot(){return JSON.stringify({policies:state.policies||[],profiles:state.profiles,keys:state.keys,workloads:state.workloads,serial:state.serial,nextProfile:state.nextProfile,resets:state.resets||0,curKey:state.key?state.key.value:null});}
+ function report(){try{fetch('api/state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({workloads:state.workloads.map(w=>w.os),policies:polSummary()}),keepalive:true}).catch(()=>{});}catch(_){}}
  function save(post=true){const s=snapshot();try{localStorage.setItem(STORE,s);}catch(_){}if(post)report();if(bc)try{bc.postMessage(s);}catch(_){}}
  function applySnapshot(s){
   let d;try{d=JSON.parse(s);}catch(_){return false;}if(!d||!d.profiles)return false;
   const prevResets=state.resets||0;
-  state.profiles=d.profiles;state.keys=d.keys||[];state.workloads=d.workloads||[];state.serial=d.serial||0;state.nextProfile=d.nextProfile||5;state.resets=d.resets||0;
+  state.profiles=d.profiles;state.policies=d.policies||[];state.keys=d.keys||[];state.workloads=d.workloads||[];state.serial=d.serial||0;state.nextProfile=d.nextProfile||5;state.resets=d.resets||0;
   const cur=MODE==='console'&&state.key?state.key.value:d.curKey;state.key=state.keys.find(k=>k.value===cur)||null;
   if(!state.profiles.some(p=>p.id===state.selectedId))state.selectedId=state.profiles[0].id;
   if(MODE!=='console'&&state.resets!==prevResets){term.buf[term.os]=null;try{localStorage.removeItem(STORE+'-term-'+term.os);}catch(_){}termLoad(term.os);}
