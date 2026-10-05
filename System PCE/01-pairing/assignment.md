@@ -44,25 +44,25 @@ tabs:
   type: service
   hostname: cloud-client
   path: /
-  port: 80
+  port: 8080
 - id: xlyvoosoqjwb
   title: Linux
   type: service
   hostname: cloud-client
   path: /linux.html
-  port: 80
+  port: 8080
 - id: jftsomjp77y5
   title: Windows
   type: service
   hostname: cloud-client
   path: /windows.html
-  port: 80
+  port: 8080
 - id: ytgylazeryck
   title: AIX
   type: service
   hostname: cloud-client
   path: /aix.html
-  port: 80
+  port: 8080
 difficulty: ""
 timelimit: 0
 enhanced_loading: null

@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# Used by `instruqt track test`: records all three workloads as paired
+# so the check passes. (Skip is disabled for learners.)
+echo '{"workloads": ["aix", "linux", "windows"]}' > /root/pce-lab-state.json

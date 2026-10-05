@@ -22,3 +22,13 @@ workload's page.
 1. Replace `html/Illumio-PCE-Pairing-Lab-Offline.html`.
 2. Run `./build-setup.sh` to regenerate the setup script.
 3. Run `instruqt track push`, then commit and push to GitHub.
+
+## Check
+
+The pages report the paired workloads to the lab web server
+(`server/server.py`, embedded in the setup script and run on
+`cloud-client:8080`), which writes `/root/pce-lab-state.json`.
+`01-pairing/check-cloud-client` passes only when Linux, Windows and AIX are
+all paired, and otherwise says which are still to pair. `02-lab-complete` is
+an empty end page telling learners who arrive there by mistake to go back via
+Overview.
