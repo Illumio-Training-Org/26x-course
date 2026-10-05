@@ -38,12 +38,12 @@ def score(r):
 
 best = max(typed, key=score)
 if 'env:Development' not in best.get('sources', []):
-    fail('The rule\'s Sources must include the Development (Environment) label.')
+    fail('The Sources of the rule must include the Development (Environment) label.')
 if 'env:Production' not in best.get('destinations', []):
-    fail('The rule\'s Destinations must include the Production (Environment) label.')
+    fail('The Destinations of the rule must include the Production (Environment) label.')
 if 'All Services' not in best.get('services', []):
-    fail('The rule\'s Destination Services must be All Services.')
-print('Policy "%s" has a %s from Development to Production on All Services.' % (name, type_name))
+    fail('The Destination Services of the rule must be All Services.')
+print('Policy "%s" has %s %s from Development to Production on All Services.' % (name, 'an' if type_name[0] in 'AO' else 'a', type_name))
 PY
 )
 status=$?
