@@ -67,7 +67,7 @@ difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
-📝 Task
+📝 Workload Pairing
 ==========
 
 Pair workloads with the PCE using a pairing profile and a pairing key.
