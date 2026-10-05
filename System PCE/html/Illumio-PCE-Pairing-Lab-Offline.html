@@ -265,6 +265,30 @@ body.term-page .term-body{padding:12px 16px 24px}
 .svc-chip .icon{inline-size:18px;block-size:18px}
 .svc-text{display:flex;flex-direction:column;align-items:flex-start;line-height:1.25}
 .fake-select{display:flex;justify-content:space-between;align-items:center;min-block-size:34px;border:1px solid var(--line-strong);border-radius:6px;padding:3px 10px;color:var(--disabled);font-size:12.5px;background:var(--white)}
+
+.rrow{column-gap:0}
+.rrow>*{padding-inline:6px}
+.rrow{grid-template-columns:22px 116px 34px 72px minmax(170px,1.3fr) minmax(130px,1fr) 24px minmax(170px,1.3fr) minmax(170px,1.3fr) minmax(140px,.9fr) 118px}
+.rrow.short{grid-template-columns:22px 116px 34px 72px minmax(170px,2.3fr) 24px minmax(170px,1.3fr) minmax(170px,1.3fr) minmax(140px,.9fr) 118px}
+.rtable{min-inline-size:1220px}.rtable.short{min-inline-size:1000px}
+.rhead>div{white-space:nowrap}
+.fake-select span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rhead{background:#eef2f6;border:1px solid var(--line);border-radius:6px;padding-block:0;min-block-size:30px}
+.rhead>div{padding-block:7px}
+.rhead .dst{background:#dcdcf3;margin-block:0;padding-block:7px}
+.rrow.saved{cursor:pointer}
+.rrow.saved:hover{background:var(--pale)}
+.rrow.editing{background:#dbe8fb;border-radius:6px;border-block-end:0;margin-block-start:4px}
+.rrow.editing .ract{background:#dbe8fb}
+.rrow.draft{border-radius:6px;border-block-end:0;margin-block-start:4px}
+.rempty{margin:22px auto 10px;inline-size:min(392px,80%);padding:14px 26px;font-size:21px;line-height:1.2;color:#a8b8c8;background:#f6f9fc;border:1px solid #d5dee7;border-radius:8px}
+.save-btn{border:1px solid var(--line-strong)!important;border-radius:5px!important;background:var(--white)!important;padding:4px!important;min-block-size:26px!important}
+.save-btn:disabled{opacity:.45;cursor:default}
+.picker-box{border-color:#c9d4df;border-radius:6px;min-block-size:34px}
+.pchip{font-size:11.5px}
+.sec-count{display:inline-flex;align-items:center;justify-content:center;min-inline-size:14px;block-size:14px;border-radius:7px;background:#f97316;color:#fff;font-size:9px;font-weight:700;padding-inline:3px;margin-inline-start:-4px;transform:translateY(-6px)}
+.sec-count[hidden]{display:none}
+.arrow{text-align:center}
 </style>
 
 <!--[if gte mso 9]><xml>
@@ -385,7 +409,7 @@ body.term-page .term-body{padding:12px 16px 24px}
   <div hidden><details id="trainingPanel"></details><select id="trainingHost"></select><textarea id="executionInput"></textarea><button id="runExecution"></button><button id="viewWorkloads"></button><p id="executionError"></p><pre id="executionOutput"></pre></div>
  </section>
  <section id="policiesScreen" aria-label="Policies" hidden><div class="intro pol-intro"><div><h2>Overview of Policies</h2><p>Illumio security policies are declarative, intent-based allow and deny rules, built using labels. This means that you can describe the end state of your security posture and let Illumio determine the network details of that.</p><button class="learn-more" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M2.5 3.5h4a1.5 1.5 0 0 1 1.5 1.5v8.5a1.5 1.5 0 0 0-1.5-1.5h-4zM13.5 3.5h-4A1.5 1.5 0 0 0 8 5v8.5A1.5 1.5 0 0 1 9.5 12h4z"/></svg>Learn more</button></div></div><div class="ptabs"><button class="ptab active">All Policies</button><button class="ptab" disabled>Organization Policies</button><button class="ptab" disabled>Application Policies</button><button class="ptab" disabled>Rule Search</button></div><div class="toolbar"><div class="add-wrap"><button id="addPolicyBtn" class="primary" aria-haspopup="true"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add<span class="caret">⌄</span></button><div id="addPolicyMenu" class="menu" hidden><button id="addFromScratch"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add from Scratch</button><button id="addFromTemplate"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add from Template</button></div></div><button class="primary" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 10.5V3m0 0L5 6m3-3 3 3M2.5 10.5v1.75c0 .69.56 1.25 1.25 1.25h8.5c.69 0 1.25-.56 1.25-1.25V10.5"/></svg>Provision</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 3.5 3 6l2.5 2.5M3 6h7a3 3 0 0 1 0 6H6"/></svg>Revert</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 8h5"/></svg>Remove</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><rect fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="1.5" y="4.5" width="13" height="7" rx="3.5"/><circle cx="5" cy="8" r="2" fill="currentColor"/></svg>Disable</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M3 8.5 6.5 12 13 4.5"/></svg>Enable</button><span class="spacer"></span><button disabled>Provisioning Errors</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M13 4v3h-3M3 12V9h3M12.6 7A5 5 0 0 0 3.8 5.5M3.4 9a5 5 0 0 0 8.8 1.5"/></svg>Refresh</button><button disabled aria-label="Export"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M9.5 2.5H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h5.5M7 8h7m0 0-2.5-2.5M14 8l-2.5 2.5"/></svg></button></div><div class="filter-bar"><input disabled placeholder="Select properties to filter view" aria-label="Filter policies (not available)"></div><div class="table-frame"><div class="pol-meta"><span>Customize columns ⌄</span><span>50 per page ⌄</span><span id="policiesCount"></span></div><div class="table-scroll"><table class="pol-table"><thead><tr><th><input type="checkbox" disabled aria-label="Select all policies (not available)"></th><th>Provision Status</th><th>Status</th><th>Name</th><th>Scopes</th><th>Last Modified On</th><th>Last Modified By</th></tr></thead><tbody id="policiesBody"></tbody></table></div></div></section>
-<section id="policyScreen" aria-label="Policy" hidden><div class="toolbar rule-toolbar"><div class="add-wrap"><button id="addRuleBtn" class="primary" aria-haspopup="true"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add Rule<span class="caret">⌄</span></button><div id="addRuleMenu" class="rule-menu" hidden><div class="rm-main"><div class="rm-preview"><h3 id="rmTitle"></h3><div id="rmArt"></div></div><div class="rm-types"><div class="rm-head">RULE TYPE</div><button class="rm-type" data-type="override">Override Deny Rule</button><button class="rm-type" data-type="allow">Allow Rule</button><button class="rm-type" data-type="deny">Deny Rule</button><button class="rm-type" data-type="iptables">Custom IP Table Rule</button></div></div><div class="rm-foot"><button id="rmCancel" class="link">Cancel</button><button id="rmAdd" class="primary" disabled>Add Rule</button></div></div></div><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 8h5"/></svg>Remove</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><rect fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="1.5" y="4.5" width="13" height="7" rx="3.5"/><circle cx="5" cy="8" r="2" fill="currentColor"/></svg>Disable</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M3 8.5 6.5 12 13 4.5"/></svg>Enable</button><span class="warn-ico" title="Policy changes are not provisioned"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2.5 14 13H2zM8 6.5v3M8 11.25v.25"/></svg></span><span class="spacer"></span><button class="link show-impact" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="3"/><circle cx="8" cy="8" r="1" fill="currentColor"/></svg>Show Impact</button></div><div class="filter-bar"><input disabled placeholder="Select properties to filter view" aria-label="Filter rules (not available)"></div><div id="sec-override" class="sec"><button class="sec-head" data-sec="override"><span class="chev">⌃</span>Override Deny Rules</button><div class="sec-body"></div></div><div id="sec-allow" class="sec"><button class="sec-head" data-sec="allow"><span class="chev">⌃</span>Allow Rules</button><div class="sec-body"></div></div><div id="sec-deny" class="sec"><button class="sec-head" data-sec="deny"><span class="chev">⌃</span>Deny Rules</button><div class="sec-body"></div></div></section>
+<section id="policyScreen" aria-label="Policy" hidden><div class="toolbar rule-toolbar"><div class="add-wrap"><button id="addRuleBtn" class="primary" aria-haspopup="true"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add Rule<span class="caret">⌄</span></button><div id="addRuleMenu" class="rule-menu" hidden><div class="rm-main"><div class="rm-preview"><h3 id="rmTitle"></h3><div id="rmArt"></div></div><div class="rm-types"><div class="rm-head">RULE TYPE</div><button class="rm-type" data-type="override">Override Deny Rule</button><button class="rm-type" data-type="allow">Allow Rule</button><button class="rm-type" data-type="deny">Deny Rule</button><button class="rm-type" data-type="iptables">Custom IP Table Rule</button></div></div><div class="rm-foot"><button id="rmCancel" class="link">Cancel</button><button id="rmAdd" class="primary" disabled>Add Rule</button></div></div></div><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 8h5"/></svg>Remove</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><rect fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="1.5" y="4.5" width="13" height="7" rx="3.5"/><circle cx="5" cy="8" r="2" fill="currentColor"/></svg>Disable</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M3 8.5 6.5 12 13 4.5"/></svg>Enable</button><span class="warn-ico" title="Policy changes are not provisioned"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2.5 14 13H2zM8 6.5v3M8 11.25v.25"/></svg></span><span class="spacer"></span><button class="link show-impact" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="3"/><circle cx="8" cy="8" r="1" fill="currentColor"/></svg>Show Impact</button></div><div class="filter-bar"><input disabled placeholder="Select properties to filter view" aria-label="Filter rules (not available)"></div><div id="sec-override" class="sec"><button class="sec-head" data-sec="override"><span class="chev">⌃</span>Override Deny Rules<span class="sec-count" hidden></span></button><div class="sec-body"></div></div><div id="sec-allow" class="sec"><button class="sec-head" data-sec="allow"><span class="chev">⌃</span>Allow Rules<span class="sec-count" hidden></span></button><div class="sec-body"></div></div><div id="sec-deny" class="sec"><button class="sec-head" data-sec="deny"><span class="chev">⌃</span>Deny Rules<span class="sec-count" hidden></span></button><div class="sec-body"></div></div></section>
 <section id="placeholderScreen" aria-label="Console area" hidden><div class="ph-card"><h2 id="phHeading"></h2><p id="phText"></p><button id="phBack" class="primary">Go to Pairing Profiles</button> <button id="phReset" hidden>Reset lab</button></div></section>
 <section id="workloadsScreen" aria-label="Workloads" hidden><div class="toolbar"><button disabled>Add</button><button disabled>Remove</button><span class="spacer"></span><button disabled><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M15.9 29c-5.4 0-10.1-3.2-12.1-8.1-.4-.9.1-1.9 1-2.3s1.9.1 2.3 1c1.5 3.6 5 6 8.9 6 2.9 0 5.7-1.3 7.5-3.6h-1.1c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8H28c1 0 1.8.8 1.8 1.8v5.6c0 1-.8 1.8-1.8 1.8s-1.8-.8-1.8-1.8V24c-2.4 3.2-6.2 5-10.3 5m10.7-15.5c-.7 0-1.3-.4-1.6-1.1-1.5-3.6-5-6-8.9-6-2.9 0-5.7 1.3-7.5 3.6h1.1c1 0 1.8.8 1.8 1.8s-.8 1.8-1.8 1.8H4c-1 0-1.8-.8-1.8-1.8V6.1c0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8V8C8.2 4.8 12 3 16.1 3c5.4 0 10.1 3.2 12.1 8.1.4.9-.1 1.9-1 2.3-.2.1-.4.1-.6.1"></path></svg>Refresh</button><button disabled><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26.2 26.78v-4H15.62v-5.63H26.2v-4L32 20Z"></path><path d="M20.58 25.56v4.07H2.38V2.37H14.4v6.15h6.18v5.85h2.38V8.61l-.1-.09h.1L14.4 0v.1l-.09-.1H0v32h22.96v-6.44z"></path></svg>Export</button></div><div class="filter-bar"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M6.09 2.667H25.91c.337 0 .664 0 .942.022.305.025.664.084 1.026.268.502.256.91.664 1.166 1.166.184.362.243.721.268 1.026.022.278.022.605.022.942v2.427c.001.253.002.572-.073.886a2.7 2.7 0 0 1-.32.77c-.168.276-.394.5-.574.679l-.048.048-8.084 8.084a8 8 0 0 0-.227.232l-.004.003v.005c-.003.063-.003.15-.003.325v3.117c0 .353-.14.692-.39.942l-5.334 5.334A1.333 1.333 0 0 1 12 28v-8.45c0-.174 0-.262-.003-.325v-.005l-.004-.003a8 8 0 0 0-.227-.232L3.682 10.9l-.048-.048c-.18-.179-.406-.403-.574-.679a2.7 2.7 0 0 1-.32-.77c-.075-.314-.074-.633-.073-.886V6.09c0-.337 0-.664.022-.942.025-.305.084-.664.268-1.026.256-.502.664-.91 1.166-1.166a2.7 2.7 0 0 1 1.026-.268c.278-.022.605-.022.942-.022M5.35 5.349l-.002.017c-.013.156-.014.372-.014.767V8.45c0 .174 0 .262.004.325v.005l.003.003c.043.047.104.109.228.232L13.65 17.1l.049.048c.179.179.405.404.574.679.146.238.254.498.319.77.075.314.074.633.074.886v5.299l2.666-2.667v-2.632c0-.253-.001-.572.074-.886.065-.272.173-.532.32-.77.168-.276.394-.5.573-.679l.049-.048 8.083-8.084c.124-.123.185-.185.228-.232l.003-.003v-.005a8 8 0 0 0 .004-.325V6.133a11 11 0 0 0-.016-.784l-.017-.002a11 11 0 0 0-.767-.014H6.133a11 11 0 0 0-.784.016" clip-rule="evenodd"></path></svg><input disabled placeholder="Select properties to filter view" aria-label="Filter workloads (not available)"></div><div class="table-frame"><div class="table-scroll"><table style="min-inline-size:950px"><thead><tr><th><input type="checkbox" disabled aria-label="Select all workloads (not available)"></th><th>Hostname</th><th>VEN Status</th><th>Enforcement</th><th>Labels</th><th>Operating System</th></tr></thead><tbody id="workloadsBody"></tbody></table></div><div class="pagination"><span id="workloadCount">0 workloads</span><span class="spacer"></span></div></div><p id="verifiedMessage" class="verified" hidden></p></section>
  <section id="workloadDetailScreen" aria-label="Workload details" hidden><div class="running-banner"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.333 8.222 6.974 10l3.693-4M14 8A6 6 0 1 1 2 8a6 6 0 0 1 12 0"></path></svg><span>Online</span></div><div class="toolbar"><button id="backWorkloads">Back to Workloads</button><button disabled>Edit</button><button id="unpairWorkload">Unpair</button></div><section class="section"><h2>General</h2><div class="attributes"><div class="row"><span class="label">Hostname</span><div id="workloadHost" class="value"></div></div><div class="row"><span class="label">Operating System</span><div id="workloadOS" class="value"></div></div><div class="row"><span class="label">Enforcement</span><div id="workloadEnforcement" class="value"></div></div><div class="row"><span class="label">Visibility</span><div id="workloadVisibility" class="value"></div></div><div class="row"><span class="label">VEN Version</span><div id="workloadVersion" class="value"></div></div><div class="row"><span class="label">Enforcement Node Type</span><div id="workloadNodeType" class="value"></div></div><div class="row"><span class="label">Pairing Profile</span><div id="workloadProfile" class="value"></div></div><div class="row"><span class="label">Paired</span><div id="workloadPaired" class="value timestamp"></div></div></div></section><section class="section"><h2>Label Assignment</h2><div class="row"><span class="label">Labels</span><div id="workloadLabels" class="label-chips"></div></div></section></section>
@@ -754,7 +778,7 @@ save();
  const SERVICES=[['S-HTTP','80 TCP'],['S-HTTPS','443 TCP'],['S-SSH','22 TCP'],['S-RDP','3389 TCP'],['S-SMB','445 TCP'],['S-8443','8443 TCP'],['S-BGP','179 TCP'],['S-DHCP-CLIENT','68 UDP, 68 TCP'],['S-DHCP-SERVER','67 UDP, 67 TCP'],['S-BIND-RNDC','953 TCP'],['S-DNS','53 TCP, 53 UDP']];
  const RULE_NAME={override:'Override Deny Rule',allow:'Allow Rule',deny:'Deny Rule',iptables:'Custom IP Table Rule'};
  const SECTION_NAME={override:'Override Deny Rules',allow:'Allow Rules',deny:'Deny Rules'};
- let curPolicyId=null,draft=null,rmSel=null;
+ let curPolicyId=null,draft=null,rmSel=null,edit=null;
  const pols=()=>state.policies||(state.policies=[]);
  const curPolicy=()=>pols().find(p=>p.id===curPolicyId);
  function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
@@ -769,12 +793,12 @@ save();
   return c;
  }
  function sameItem(a,b){return a.kind===b.kind&&a.key===b.key&&a.value===b.value&&a.name===b.name;}
- function picker(kind,list,placeholder){
+ function picker(kind,list,placeholder,onChange){
   const wrap=el('div','picker'+(kind==='svc'?' svc':''));const box=el('div','picker-box');const chips=el('span','picker-chips');
   const input=el('input','picker-input');input.placeholder=placeholder;input.setAttribute('aria-label',placeholder);
   box.append(chips,input,el('span','picker-caret','⌄'));const dd=el('div','picker-dd');dd.hidden=true;wrap.append(box,dd);
   let hi=0,opts=[];
-  function draw(){chips.replaceChildren(...list.map((it,i)=>pchip(it,()=>{list.splice(i,1);draw();if(!dd.hidden)render();})));input.placeholder=list.length?'':placeholder;}
+  function draw(){chips.replaceChildren(...list.map((it,i)=>pchip(it,()=>{list.splice(i,1);draw();if(!dd.hidden)render();})));input.placeholder=list.length?'':placeholder;if(onChange)onChange();}
   function options(){
    const q=input.value.trim().toLowerCase();let o;
    if(kind==='svc'){o=SERVICES.filter(s=>!q||s[0].toLowerCase().includes(q)||s[1].toLowerCase().includes(q)).map(s=>({kind:'service',name:s[0],ports:s[1]}));if(!q||'all services'.includes(q))o.push({kind:'service',name:'All Services',pin:true});}
@@ -840,48 +864,59 @@ save();
  }
  function closeMenus(){$('addPolicyMenu').hidden=true;$('addRuleMenu').hidden=true;}
  function expandSeg(){$('segChildren').hidden=false;$('segMenu').setAttribute('aria-expanded','true');$('segChevron').textContent='⌄';}
- function openPolicies(){curPolicyId=null;draft=null;message();closeMenus();expandSeg();renderPolicies();show('policiesScreen','Policies');}
- function openPolicy(id){curPolicyId=id;draft=null;message();closeMenus();renderPolicy();show('policyScreen',curPolicy().name);}
- function ruleHeader(){
-  const h=el('div','rrow rhead');
-  ['','Provision Status','No.','Status','Sources','Source Process / Service','→','Destinations','Destination Services','Rule Options',''].forEach((t,i)=>{const c=el('div','',t);if(i===7||i===8)c.className='dst';h.append(c);});
+ function openPolicies(){curPolicyId=null;draft=null;edit=null;message();closeMenus();expandSeg();renderPolicies();show('policiesScreen','Policies');}
+ function openPolicy(id){curPolicyId=id;draft=null;edit=null;message();closeMenus();renderPolicy();show('policyScreen',curPolicy().name);}
+ function ruleHeader(full){
+  const h=el('div','rrow rhead'+(full?'':' short'));
+  (full?['','Provision Status','No.','Status','Sources','Source Process / Service','→','Destinations','Destination Services','Rule Options','']
+       :['','Provision Status','No.','Status','Sources','→','Destinations','Destination Services','Rule Options','']).forEach(t=>{
+   const c=el('div',t==='Destinations'||t==='Destination Services'?'dst':t==='→'?'arrow':'',t);h.append(c);});
   return h;
  }
  function chipsCell(list){const d=el('div');list.forEach(it=>d.append(pchip(it)));d.style.display='flex';d.style.flexWrap='wrap';d.style.gap='4px';return d;}
  function kindLabel(t){const k=el('span','kind '+t);k.append(ico(t==='allow'?'check':'ban'),el('span','',t==='allow'?'Allow':t==='deny'?'Deny':'Override Deny'));return k;}
+ function pendingCell(){const b=el('span','pbadge');b.append(ico('plus'),el('span','','Pending'));const d=el('div');d.append(b);return d;}
+ function stripRule(r){return {sources:r.sources,srcServices:r.srcServices||[],destinations:r.destinations,services:r.services,enabled:true};}
+ const copyRule=r=>JSON.parse(JSON.stringify(stripRule(r)));
  function savedRow(t,r,i){
-  const row=el('div','rrow saved');row.append(el('span','handle','⠿'));
-  const b=el('span','pbadge');b.append(ico('plus'),el('span','','Pending'));const bc=el('div');bc.append(b);row.append(bc);
-  row.append(el('div','',String(i+1)));const st=el('span','pstatus enabled');st.append(ico('checkc'),el('span','','Enabled'));const sc=el('div');sc.append(st);row.append(sc);
-  row.append(chipsCell(r.sources),chipsCell(r.srcServices||[]),el('div','','→'),chipsCell(r.destinations),chipsCell(r.services),el('div'));
-  const act=el('div','ract');act.append(kindLabel(t));row.append(act);return row;
+  const row=el('div','rrow saved');row.title='Select to edit this rule';
+  row.append(el('span','handle','⠿'),pendingCell(),el('div'),el('div'),chipsCell(r.sources),chipsCell(r.srcServices||[]),el('div','arrow','→'),chipsCell(r.destinations),chipsCell(r.services),el('div'));
+  const act=el('div','ract');act.append(kindLabel(t));row.append(act);
+  row.addEventListener('click',()=>{if(draft)return;edit={type:t,i,rule:copyRule(r),orig:JSON.stringify(stripRule(r))};renderPolicy();});
+  return row;
  }
- function draftRow(t){
-  const r=draft.rule;const row=el('div','rrow draft');row.append(el('span','handle','⠿'),el('div'),el('div'),el('div'));
-  const src=picker('ws',r.sources,'Select Sources'),ssvc=picker('svc',r.srcServices,'Select Services'),dst=picker('ws',r.destinations,'Select Destinations'),svc=picker('svc',r.services,'Select Services');
+ function editableRow(t,r,mode){
+  const row=el('div','rrow '+(mode==='new'?'draft':'editing'));
+  row.append(el('span','handle','⠿'),mode==='new'?el('div'):pendingCell(),el('div'),el('div'));
+  let sv=null;const changed=()=>{if(mode==='edit'&&sv)sv.disabled=JSON.stringify(stripRule(r))===edit.orig;};
+  const src=picker('ws',r.sources,'Select Sources',changed),ssvc=picker('svc',r.srcServices,'Select Services',changed),dst=picker('ws',r.destinations,'Select Destinations',changed),svc=picker('svc',r.services,'Select Services',changed);
   const opt=el('div','fake-select');opt.append(el('span','','Select Rule Options'),el('span','','⌄'));
-  row.append(src,ssvc,el('div','','→'),dst,svc,opt);
+  row.append(src,ssvc,el('div','arrow','→'),dst,svc,opt);
   const act=el('div','ract');act.append(kindLabel(t));
-  const sv=el('button');sv.type='button';sv.title='Save';sv.setAttribute('aria-label','Save rule');sv.append(ico('save'));
-  const cn=el('button');cn.type='button';cn.title='Cancel';cn.setAttribute('aria-label','Cancel rule');cn.append(ico('ban'));
+  sv=el('button','save-btn');sv.type='button';sv.title='Save';sv.setAttribute('aria-label','Save rule');sv.append(ico('save'));
+  const cn=el('button');cn.type='button';cn.title='Cancel';cn.setAttribute('aria-label','Cancel');cn.append(ico('ban'));
   sv.addEventListener('click',()=>{
    const miss=[[src,r.sources],[dst,r.destinations],[svc,r.services]].filter(([w,l])=>!l.length);
    miss.forEach(([w])=>w.classList.add('invalid'));if(miss.length)return;
-   const p=curPolicy();(p.rules[t]=p.rules[t]||[]).push({sources:r.sources,srcServices:r.srcServices,destinations:r.destinations,services:r.services,enabled:true});
-   p.modified=timestamp();p.provision='Pending';draft=null;save();renderPolicy();
+   const p=curPolicy();const rule=stripRule(r);p.rules[t]=p.rules[t]||[];
+   if(mode==='new'){p.rules[t].push(rule);draft=null;edit={type:t,i:p.rules[t].length-1,rule:copyRule(rule),orig:JSON.stringify(rule)};}
+   else{p.rules[t][edit.i]=rule;edit.rule=copyRule(rule);edit.orig=JSON.stringify(rule);}
+   p.modified=timestamp();p.provision='Pending';save();renderPolicy();
   });
-  cn.addEventListener('click',()=>{draft=null;renderPolicy();});
-  act.append(sv,cn);row.append(act);row._first=src;return row;
+  cn.addEventListener('click',()=>{if(mode==='new')draft=null;else edit=null;renderPolicy();});
+  act.append(sv,cn);row.append(act);changed();row._first=src;return row;
  }
  function renderPolicy(){
   const p=curPolicy();if(!p)return;let first=null;
   ['override','allow','deny'].forEach(t=>{
-   const body=document.querySelector('#sec-'+t+' .sec-body');body.replaceChildren();
-   const rules=p.rules[t]||[];const wrap=el('div','rscroll');const tbl=el('div','rtable');tbl.append(ruleHeader());
-   rules.forEach((r,i)=>tbl.append(savedRow(t,r,i)));
-   if(draft&&draft.type===t){const d=draftRow(t);tbl.append(d);first=d._first;}
+   const sec=$('sec-'+t),body=sec.querySelector('.sec-body');body.replaceChildren();
+   const rules=p.rules[t]||[],hasDraft=!!(draft&&draft.type===t),full=rules.length>0||hasDraft;
+   const cnt=sec.querySelector('.sec-count');cnt.textContent=String(rules.length);cnt.hidden=!rules.length;
+   const wrap=el('div','rscroll'),tbl=el('div','rtable'+(full?'':' short'));tbl.append(ruleHeader(full));
+   rules.forEach((r,i)=>{if(edit&&edit.type===t&&edit.i===i){edit.rule.srcServices=edit.rule.srcServices||[];tbl.append(editableRow(t,edit.rule,'edit'));}else tbl.append(savedRow(t,r,i));});
+   if(hasDraft){const d=editableRow(t,draft.rule,'new');tbl.append(d);first=d._first;}
    wrap.append(tbl);body.append(wrap);
-   if(!rules.length&&!(draft&&draft.type===t))body.append(el('div','rempty','There are no '+SECTION_NAME[t]+' defined'));
+   if(!full)body.append(el('div','rempty','There are no '+SECTION_NAME[t]+' defined'));
   });
   if(first)setTimeout(()=>first.querySelector('input').focus(),0);
  }
@@ -913,7 +948,7 @@ save();
  $('rmAdd').addEventListener('click',()=>{
   if(!rmSel)return;closeMenus();
   if(rmSel==='iptables'){message('Custom IP Table Rules are not available in this lab.');return;}
-  draft={type:rmSel,rule:{sources:[],srcServices:[],destinations:[],services:[]}};
+  edit=null;draft={type:rmSel,rule:{sources:[],srcServices:[],destinations:[],services:[]}};
   document.querySelector('#sec-'+rmSel).classList.remove('collapsed');renderPolicy();
  });
  document.querySelectorAll('.sec-head').forEach(h=>h.addEventListener('click',()=>h.parentElement.classList.toggle('collapsed')));
