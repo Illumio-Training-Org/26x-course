@@ -89,13 +89,18 @@ Pair workloads with the PCE using a pairing profile and a pairing key.
 7. In the **Illumio Console** tab, go to **Servers & Endpoints → Workloads**
    and open **linux-ven-01**. Check that it has the settings from the
    pairing profile you used.
-8. Repeat steps 3–7 for the other two workloads:
-   - **Windows** tab: use the **Windows OS Pairing Script**, then check
-     the status with:
-     ```
-     & 'C:\Program Files\Illumio\illumio-ven-ctl.ps1' status
-     ```
-     and open **windows-ven-01** in Workloads.
+8. Repeat steps 3–7 in the **Windows** tab, using the
+   **Windows OS Pairing Script**. Check the VEN status with:
+   ```
+   & 'C:\Program Files\Illumio\illumio-ven-ctl.ps1' status
+   ```
+   Then open **windows-ven-01** in Workloads.
+9. Repeat steps 3–7 in the **AIX** tab, using the
+   **AIX OS Pairing Script**. Check the VEN status with:
+   ```
+   /opt/illumio_ven/illumio-ven-ctl status
+   ```
+   Then open **aix-ven-01** in Workloads.
    - **AIX** tab: use the **AIX OS Pairing Script**, check the status with
      `/opt/illumio_ven/illumio-ven-ctl status`, and open **aix-ven-01**
      in Workloads.
