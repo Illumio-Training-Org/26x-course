@@ -28,7 +28,10 @@ The lab is built in three stages:
 ## Build order and progress
 1. ✅ Scaffold the new track (2026-10-06, commit 03f90e1).
 2. ✅ Split into `src/` (`page.html`, `styles.css`, `js/NN-*.js` concatenated in name order into one shared scope, `assets/`) with `build.mjs` producing `html/index.html`. Build output was byte-identical to the original page (2026-10-06). **Edit `src/`, never `html/index.html`.**
-3. ⬜ Write `capture/capture-pce.mjs`. Nathan runs it once, then we review the manifest together.
+3. ✅ Capture done 2026-10-06 → `capture/pce-manifest.json`: the real menu (97 entries) plus 66 in-scope pages, with emails anonymised. It was done through the browser extension on Nathan's read-only org; the repeatable tool is `capture/capture-pce.mjs` (see `capture/README.md`).
+   - 47 pages are tables, either the classic `comp-grid` or AG Grid (Labels, Label Types, Users and others), with real columns, sample rows and pagination.
+   - About 15 settings/form pages (Policy Settings, Offline Timers, Security, Trusted Proxy, Quarantine, …) captured no fields yet. Improve `capture-page.js` for their layout during step 4.
+   - Redirects on this org: AI Labeling goes to Tag to Label Mapping, and Essential Service Rules goes to the Insights Hub; treat both as placeholders.
 4. ⬜ Generic templates and the manifest-driven sidebar, so every menu item is clickable.
 5. ⬜ Labels, Label Groups, Services and IP Lists fully working and wired into the policy pickers.
 6. ⬜ Static views (Dashboard, Cloud) and the blank Map.

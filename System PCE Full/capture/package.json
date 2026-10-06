@@ -1,0 +1,8 @@
+{
+  "name": "pce-capture",
+  "private": true,
+  "type": "module",
+  "description": "Read-only capture of the real PCE Console structure for ! 26.x System PCE Full",
+  "scripts": { "capture": "node capture-pce.mjs" },
+  "dependencies": { "playwright": "^1.63.0" }
+}

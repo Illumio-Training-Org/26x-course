@@ -1,0 +1,5358 @@
+{
+ "source": "console.illum.io",
+ "capturedAt": "2026-10-06",
+ "note": "First capture via the Claude in Chrome extension on a read-only (expired trial) org. Re-capture with capture-pce.mjs.",
+ "menu": [
+  {
+   "l": "Dashboard",
+   "i": "dashboard",
+   "c": [
+    {
+     "l": "Servers & Endpoints",
+     "r": "serversAndEndpointsDashboard",
+     "i": "servers"
+    },
+    {
+     "l": "Cloud",
+     "r": "clouddashboard",
+     "i": "cloud"
+    },
+    {
+     "l": "Ransomware Protection",
+     "r": "ransomwareDashboard",
+     "i": "shield-bolt"
+    }
+   ]
+  },
+  {
+   "l": "Insights",
+   "i": "lightbulb-outline",
+   "c": [
+    {
+     "l": "Insights Hub",
+     "r": "insights/insights-hub",
+     "i": "insights-hub"
+    },
+    {
+     "l": "External Data Transfer",
+     "r": "insights/external-data-transfer",
+     "i": "insights-item"
+    },
+    {
+     "l": "Known Public LLMs",
+     "r": "insights/shadow-llms",
+     "i": "insights-item"
+    },
+    {
+     "l": "Label Insights",
+     "r": "insights/label-insights",
+     "i": "insights-item"
+    },
+    {
+     "l": "Country Insights",
+     "r": "insights/country-insights",
+     "i": "insights-item"
+    },
+    {
+     "l": "Firewall Insights",
+     "r": "insights/firewall-insights",
+     "i": "insights-item"
+    },
+    {
+     "l": "Risky Services Traffic",
+     "r": "insights/risky-traffic",
+     "i": "insights-item"
+    },
+    {
+     "l": "Malicious IP Traffic",
+     "r": "insights/malicious-ip-threats",
+     "i": "insights-item"
+    },
+    {
+     "l": "Resource Traffic",
+     "r": "insights/resource-insights",
+     "i": "insights-item"
+    },
+    {
+     "l": "Traffic Ingestion Rules",
+     "r": "traffic-rules",
+     "i": "square-sliders"
+    }
+   ]
+  },
+  {
+   "l": "Quarantine",
+   "r": "quarantine",
+   "i": "quarantine"
+  },
+  {
+   "l": "Explore",
+   "i": "explore",
+   "c": [
+    {
+     "l": "Map",
+     "r": "illuminationplus",
+     "i": "chart-network"
+    },
+    {
+     "l": "Traffic",
+     "r": "illuminationplus",
+     "i": "table-list"
+    },
+    {
+     "l": "Mesh",
+     "r": "illuminationplus",
+     "i": "chart-gantt"
+    }
+   ]
+  },
+  {
+   "l": "Segmentation",
+   "i": "policy",
+   "c": [
+    {
+     "l": "All Policies",
+     "r": "rulesets",
+     "i": "file-shield-alt"
+    },
+    {
+     "l": "Deny Rules",
+     "r": "boundaries",
+     "i": "deny-rules"
+    },
+    {
+     "l": "Drafts & Versions",
+     "r": "pending",
+     "i": "diagram-project"
+    },
+    {
+     "l": "Policy Objects",
+     "i": "cube-alt",
+     "c": [
+      {
+       "l": "Services",
+       "r": "services",
+       "i": "file-shield-alt"
+      },
+      {
+       "l": "IP Lists",
+       "r": "iplists",
+       "i": "file-shield-alt"
+      },
+      {
+       "l": "User Groups",
+       "r": "usergroups",
+       "i": ""
+      },
+      {
+       "l": "Virtual Services",
+       "r": "virtualservices",
+       "i": ""
+      },
+      {
+       "l": "Virtual Servers",
+       "r": "virtualservers",
+       "i": ""
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "l": "Label Management",
+   "i": "tags",
+   "c": [
+    {
+     "l": "Labels",
+     "r": "labels",
+     "i": "tags"
+    },
+    {
+     "l": "Label Groups",
+     "r": "labelgroups",
+     "i": "tags"
+    },
+    {
+     "l": "Labeling Method",
+     "i": "tags",
+     "c": [
+      {
+       "l": "AI Labeling",
+       "r": "labelMapping/recommendedLabels",
+       "i": ""
+      },
+      {
+       "l": "Tag to Label Mapping",
+       "r": "labelMapping/tagsToLabelMapping",
+       "i": "tags"
+      },
+      {
+       "l": "System Generated Labels",
+       "r": "labelMapping/systemGeneratedLabels",
+       "i": ""
+      }
+     ]
+    },
+    {
+     "l": "Label Types",
+     "r": "labelsettings",
+     "i": "tags"
+    }
+   ]
+  },
+  {
+   "l": "Servers & Endpoints",
+   "i": "servers",
+   "c": [
+    {
+     "l": "Workloads",
+     "r": "workloads",
+     "i": "clone"
+    },
+    {
+     "l": "Pairing Profiles",
+     "r": "pairingprofiles",
+     "i": "link-alt"
+    },
+    {
+     "l": "Applications",
+     "r": "appgroupslist",
+     "i": "grid-plus"
+    },
+    {
+     "l": "Reports",
+     "r": "reporting",
+     "i": "reports"
+    }
+   ]
+  },
+  {
+   "l": "Cloud",
+   "i": "cloud",
+   "c": [
+    {
+     "l": "Onboarding",
+     "r": "onboarding",
+     "i": "sitemap"
+    },
+    {
+     "l": "Security Review",
+     "r": "securityreview",
+     "i": "security-review"
+    },
+    {
+     "l": "Inventory",
+     "r": "cloudinventory",
+     "i": "inventory"
+    },
+    {
+     "l": "Explore",
+     "i": "explore",
+     "c": [
+      {
+       "l": "Map",
+       "r": "cloudMap",
+       "i": ""
+      },
+      {
+       "l": "Traffic",
+       "r": "traffic",
+       "i": ""
+      },
+      {
+       "l": "Reports",
+       "r": "cloudReports/downloads",
+       "i": ""
+      }
+     ]
+    },
+    {
+     "l": "Applications",
+     "r": "applications",
+     "i": "grid-plus"
+    },
+    {
+     "l": "Application Discovery",
+     "i": "app-discovery",
+     "c": [
+      {
+       "l": "Deployments",
+       "r": "cloudlabeling/applicationDiscovery/deployments",
+       "i": ""
+      },
+      {
+       "l": "Application Definitions",
+       "r": "cloudlabeling/applicationDiscovery/applicationDefinitions",
+       "i": ""
+      },
+      {
+       "l": "Discovery Rules",
+       "r": "cloudlabeling/applicationDiscovery/discoveryRules",
+       "i": ""
+      }
+     ]
+    },
+    {
+     "l": "Events",
+     "r": "cloudEvents",
+     "i": "events"
+    }
+   ]
+  },
+  {
+   "l": "Usage",
+   "r": "usage",
+   "i": "usage"
+  },
+  {
+   "l": "Access",
+   "i": "access",
+   "c": [
+    {
+     "l": "Users",
+     "r": "rbac/users",
+     "i": "users"
+    },
+    {
+     "l": "External Groups",
+     "r": "rbac/groups",
+     "i": "building-user"
+    },
+    {
+     "l": "Roles",
+     "r": "rbac/roles",
+     "i": "poll-people"
+    },
+    {
+     "l": "Scopes",
+     "r": "rbac/roles/scope",
+     "i": "book-user"
+    },
+    {
+     "l": "Service Accounts",
+     "r": "rbac/serviceaccounts",
+     "i": "screen-users"
+    },
+    {
+     "l": "Access Restriction",
+     "r": "accessrestrictions",
+     "i": "access-restriction"
+    },
+    {
+     "l": "Trusted Proxy",
+     "r": "trustedproxy",
+     "i": "server"
+    },
+    {
+     "l": "Authentication",
+     "r": "authenticationsettings",
+     "i": "authentication"
+    }
+   ]
+  },
+  {
+   "l": "Settings",
+   "i": "settings",
+   "c": [
+    {
+     "l": "Connectors",
+     "r": "connector",
+     "i": "connector-alt"
+    },
+    {
+     "l": "Servers & Endpoints",
+     "i": "location-pin-lock",
+     "c": [
+      {
+       "l": "Corporate Public IPs",
+       "r": "corporatepublicips",
+       "i": "location-pin"
+      },
+      {
+       "l": "Flow Collection",
+       "r": "flowcollection",
+       "i": "arrow-switch-horizontal"
+      },
+      {
+       "l": "Security",
+       "r": "securitysettings",
+       "i": "file-shield"
+      },
+      {
+       "l": "Essential Service Rules",
+       "r": "essentialservicerules",
+       "i": "location-pin-lock"
+      },
+      {
+       "l": "VEN Operations",
+       "r": "venoperations",
+       "i": "clipboard-text"
+      },
+      {
+       "l": "Policy Settings",
+       "r": "policysettings",
+       "i": "shield-alt"
+      },
+      {
+       "l": "Offline Timers",
+       "r": "offlinetimers",
+       "i": "timer"
+      }
+     ]
+    },
+    {
+     "l": "Cloud",
+     "i": "cloud",
+     "c": [
+      {
+       "l": "Connector",
+       "r": "cloudappsintegrations",
+       "i": ""
+      },
+      {
+       "l": "Service Accounts",
+       "r": "serviceAccounts",
+       "i": ""
+      },
+      {
+       "l": "Policy Preferences",
+       "r": "securityControls",
+       "i": ""
+      }
+     ]
+    },
+    {
+     "l": "Infrastructure",
+     "i": "infrastructure",
+     "c": [
+      {
+       "l": "Core Services",
+       "r": "coreservices",
+       "i": "core-services-settings"
+      },
+      {
+       "l": "Container Clusters",
+       "r": "containerclusters",
+       "i": "container-cluster"
+      },
+      {
+       "l": "SecureConnect Gateways",
+       "r": "secureconnectgateways",
+       "i": "laptop-wired"
+      },
+      {
+       "l": "Networks",
+       "r": "networks",
+       "i": "networks"
+      }
+     ]
+    },
+    {
+     "l": "Troubleshoot",
+     "i": "troubleshoot",
+     "c": [
+      {
+       "l": "Events",
+       "r": "events",
+       "i": "events"
+      },
+      {
+       "l": "Exports",
+       "r": "exportreports",
+       "i": "export"
+      },
+      {
+       "l": "Resource Limits",
+       "r": "objectlimits",
+       "i": ""
+      },
+      {
+       "l": "VEN Support Bundles",
+       "r": "supportbundles/ven",
+       "i": "layer-group"
+      },
+      {
+       "l": "Policy Check",
+       "r": "connectivity",
+       "i": "shield-check"
+      },
+      {
+       "l": "Segmentation Templates",
+       "r": "segmentationtemplates",
+       "i": "file-pencil-alt"
+      },
+      {
+       "l": "About",
+       "r": "insights/insights-hub",
+       "i": "file-info"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "l": "Support",
+   "i": "info",
+   "c": [
+    {
+     "l": "VEN Library",
+     "r": "venlibrary",
+     "i": "notebook"
+    },
+    {
+     "l": "Support Portal",
+     "r": "",
+     "i": "support-portal"
+    }
+   ]
+  }
+ ],
+ "pages": {
+  "serversAndEndpointsDashboard": {
+   "route": "serversAndEndpointsDashboard",
+   "title": "Servers and Endpoints",
+   "breadcrumbs": [
+    "Home"
+   ],
+   "banner": {
+    "title": "Overview of Dashboards",
+    "text": "Use dashboards to get a quick summary of cloud dashboards, servers/endpoints dashboards, and ransomware protection dashboards."
+   },
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    }
+   ],
+   "sections": [
+    {
+     "heading": "Overview of Dashboards",
+     "labels": []
+    },
+    {
+     "heading": "000000000",
+     "labels": []
+    },
+    {
+     "heading": "000000000",
+     "labels": []
+    },
+    {
+     "heading": "000000000",
+     "labels": []
+    },
+    {
+     "heading": "000000000",
+     "labels": []
+    },
+    {
+     "heading": "000000000",
+     "labels": []
+    }
+   ]
+  },
+  "clouddashboard": {
+   "route": "clouddashboard",
+   "title": "Cloud",
+   "breadcrumbs": [
+    "Home"
+   ],
+   "tabs": [],
+   "toolbar": [],
+   "sections": []
+  },
+  "ransomwareDashboard": {
+   "route": "ransomwareDashboard",
+   "title": "Ransomware Protection for Servers",
+   "breadcrumbs": [
+    "Home"
+   ],
+   "tabs": [
+    {
+     "label": "APPLICATIONS WORKLOADS PROTECTION ordering | Development 9 46% cart | Production 5 49% ecomm | Production 9 49% infra-mgmt | Production 2 49% monitoring | Production 2 49%",
+     "active": false
+    },
+    {
+     "label": "APPLICATIONS WORKLOADS PROTECTION",
+     "active": false
+    },
+    {
+     "label": "APPLICATIONS",
+     "active": false
+    },
+    {
+     "label": "WORKLOADS",
+     "active": false
+    },
+    {
+     "label": "PROTECTION",
+     "active": false
+    },
+    {
+     "label": "ordering | Development 9 46%",
+     "active": false
+    },
+    {
+     "label": "ordering | Development",
+     "active": false
+    },
+    {
+     "label": "9",
+     "active": false
+    },
+    {
+     "label": "46%",
+     "active": false
+    },
+    {
+     "label": "cart | Production 5 49%",
+     "active": false
+    },
+    {
+     "label": "cart | Production",
+     "active": false
+    },
+    {
+     "label": "5",
+     "active": false
+    },
+    {
+     "label": "49%",
+     "active": false
+    },
+    {
+     "label": "ecomm | Production 9 49%",
+     "active": false
+    },
+    {
+     "label": "ecomm | Production",
+     "active": false
+    },
+    {
+     "label": "9",
+     "active": false
+    },
+    {
+     "label": "49%",
+     "active": false
+    },
+    {
+     "label": "infra-mgmt | Production 2 49%",
+     "active": false
+    },
+    {
+     "label": "infra-mgmt | Production",
+     "active": false
+    },
+    {
+     "label": "2",
+     "active": false
+    },
+    {
+     "label": "49%",
+     "active": false
+    },
+    {
+     "label": "monitoring | Production 2 49%",
+     "active": false
+    },
+    {
+     "label": "monitoring | Production",
+     "active": false
+    },
+    {
+     "label": "2",
+     "active": false
+    },
+    {
+     "label": "49%",
+     "active": false
+    },
+    {
+     "label": "SERVICE PROTECTION rdp 39% S-RDP 39% S-SSDP 39% S-WSD 39% wsd 39%",
+     "active": false
+    },
+    {
+     "label": "SERVICE PROTECTION",
+     "active": false
+    },
+    {
+     "label": "SERVICE",
+     "active": false
+    },
+    {
+     "label": "PROTECTION",
+     "active": false
+    },
+    {
+     "label": "rdp 39%",
+     "active": false
+    },
+    {
+     "label": "rdp",
+     "active": false
+    },
+    {
+     "label": "39%",
+     "active": false
+    },
+    {
+     "label": "S-RDP 39%",
+     "active": false
+    },
+    {
+     "label": "S-RDP",
+     "active": false
+    },
+    {
+     "label": "39%",
+     "active": false
+    },
+    {
+     "label": "S-SSDP 39%",
+     "active": false
+    },
+    {
+     "label": "S-SSDP",
+     "active": false
+    },
+    {
+     "label": "39%",
+     "active": false
+    },
+    {
+     "label": "S-WSD 39%",
+     "active": false
+    },
+    {
+     "label": "S-WSD",
+     "active": false
+    },
+    {
+     "label": "39%",
+     "active": false
+    },
+    {
+     "label": "wsd 39%",
+     "active": false
+    },
+    {
+     "label": "wsd",
+     "active": false
+    },
+    {
+     "label": "39%",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    }
+   ],
+   "sections": [
+    {
+     "heading": "000000000",
+     "labels": []
+    },
+    {
+     "heading": "000000000",
+     "labels": []
+    }
+   ]
+  },
+  "traffic-rules": {
+   "route": "traffic-rules",
+   "title": "Traffic Ingestion Rules",
+   "breadcrumbs": [
+    "Home",
+    "Insights"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    }
+   ],
+   "sections": []
+  },
+  "quarantine": {
+   "route": "quarantine",
+   "title": "Quarantine",
+   "breadcrumbs": [
+    "Home"
+   ],
+   "tabs": [
+    {
+     "label": "Quarantined Resources Administrative Tools",
+     "active": false
+    },
+    {
+     "label": "Quarantined Resources",
+     "active": false
+    },
+    {
+     "label": "Administrative Tools",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Restore",
+     "disabled": true,
+     "icons": [
+      "quarantine-restore"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    }
+   ],
+   "sections": []
+  },
+  "illuminationplus": {
+   "route": "illuminationplus",
+   "title": "Traffic",
+   "breadcrumbs": [
+    "Home",
+    "Explore"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Group by Locations Environments Applications Roles",
+     "disabled": false,
+     "icons": [
+      "loc",
+      "close",
+      "env",
+      "close",
+      "app",
+      "close",
+      "role",
+      "close",
+      "down"
+     ]
+    },
+    {
+     "label": "Filter",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    },
+    {
+     "label": "",
+     "disabled": true,
+     "icons": [
+      "left"
+     ]
+    },
+    {
+     "label": "",
+     "disabled": true,
+     "icons": [
+      "right"
+     ]
+    }
+   ],
+   "filter": "Source",
+   "sections": []
+  },
+  "rulesets": {
+   "route": "rulesets",
+   "title": "Policies",
+   "breadcrumbs": [
+    "Home",
+    "Segmentation"
+   ],
+   "tabs": [
+    {
+     "label": "All Policies Organization Policies Application Policies Rule Search",
+     "active": false
+    },
+    {
+     "label": "All Policies",
+     "active": false
+    },
+    {
+     "label": "Organization Policies",
+     "active": false
+    },
+    {
+     "label": "Application Policies",
+     "active": false
+    },
+    {
+     "label": "Rule Search",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Provision",
+     "disabled": true,
+     "icons": [
+      "provision"
+     ]
+    },
+    {
+     "label": "Revert",
+     "disabled": true,
+     "icons": [
+      "revert"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Disable",
+     "disabled": true,
+     "icons": [
+      "disabled"
+     ]
+    },
+    {
+     "label": "Enable",
+     "disabled": true,
+     "icons": [
+      "check"
+     ]
+    },
+    {
+     "label": "Provisioning Errors",
+     "disabled": false,
+     "icons": []
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "status",
+     "label": "Provision Status"
+    },
+    {
+     "key": "state",
+     "label": "Status"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "scope",
+     "label": "Scopes"
+    },
+    {
+     "key": "updatedat",
+     "label": "Last Modified On"
+    },
+    {
+     "key": "updatedby",
+     "label": "Last Modified By"
+    }
+   ],
+   "rows": [
+    {
+     "status": "Pending",
+     "state": "Disabled",
+     "name": "1. Ransomware Propogation Deny",
+     "scope": "All",
+     "updatedat": "05/10/2026, 17:56:53",
+     "updatedby": "admin@illumio-lab.invalid"
+    },
+    {
+     "status": "Pending",
+     "state": "Disabled",
+     "name": "2. OT-IT separation",
+     "scope": "All",
+     "updatedat": "05/10/2026, 17:56:54",
+     "updatedby": "admin@illumio-lab.invalid"
+    },
+    {
+     "status": "Pending",
+     "state": "Disabled",
+     "name": "3. Dev Prod Separation",
+     "scope": "All",
+     "updatedat": "05/10/2026, 17:56:54",
+     "updatedby": "admin@illumio-lab.invalid"
+    },
+    {
+     "status": "Pending",
+     "state": "Disabled",
+     "name": "4. Critical Asset Protection",
+     "scope": "SWIFT",
+     "updatedat": "05/10/2026, 17:56:55",
+     "updatedby": "admin@illumio-lab.invalid"
+    },
+    {
+     "status": "Pending",
+     "state": "Disabled",
+     "name": "5. Admin Access Policy",
+     "scope": "All",
+     "updatedat": "05/10/2026, 17:56:55",
+     "updatedby": "admin@illumio-lab.invalid"
+    }
+   ],
+   "rowCount": 17,
+   "pagination": "1 \u2013 17 of 17 Total"
+  },
+  "boundaries": {
+   "route": "boundaries",
+   "title": "Deny Rules",
+   "breadcrumbs": [
+    "Home",
+    "Segmentation"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Provision",
+     "disabled": true,
+     "icons": [
+      "provision"
+     ]
+    },
+    {
+     "label": "Revert",
+     "disabled": true,
+     "icons": [
+      "revert"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Disable",
+     "disabled": true,
+     "icons": [
+      "disabled"
+     ]
+    },
+    {
+     "label": "Enable",
+     "disabled": true,
+     "icons": [
+      "check"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "status",
+     "label": "Provision Status"
+    },
+    {
+     "key": "state",
+     "label": "Status"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "consumers",
+     "label": "Sources"
+    },
+    {
+     "key": "arrow",
+     "label": ""
+    },
+    {
+     "key": "providers",
+     "label": "Destinations"
+    },
+    {
+     "key": "providingservices",
+     "label": "Destination Services"
+    },
+    {
+     "key": "networktype",
+     "label": "Network Profile"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "pending": {
+   "route": "pending/pending",
+   "title": "Draft Changes",
+   "breadcrumbs": [
+    "Home",
+    "Segmentation"
+   ],
+   "tabs": [
+    {
+     "label": "Drafts Versions",
+     "active": false
+    },
+    {
+     "label": "Drafts",
+     "active": false
+    },
+    {
+     "label": "Versions",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Provision",
+     "disabled": true,
+     "icons": [
+      "provision"
+     ]
+    },
+    {
+     "label": "Revert",
+     "disabled": true,
+     "icons": [
+      "revert"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "status",
+     "label": "Provision Status"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "type",
+     "label": "Item"
+    },
+    {
+     "key": "updatedby",
+     "label": "Last Modified By"
+    },
+    {
+     "key": "updatedat",
+     "label": "Last Modified On"
+    }
+   ],
+   "rows": [
+    {
+     "status": "Pending",
+     "name": "1. Ransomware Propogation Deny",
+     "type": "Policy",
+     "updatedby": "admin@illumio-lab.invalid",
+     "updatedat": "05/10/2026, 17:56:53"
+    },
+    {
+     "status": "Pending",
+     "name": "2. OT-IT separation",
+     "type": "Policy",
+     "updatedby": "admin@illumio-lab.invalid",
+     "updatedat": "05/10/2026, 17:56:54"
+    },
+    {
+     "status": "Pending",
+     "name": "3. Dev Prod Separation",
+     "type": "Policy",
+     "updatedby": "admin@illumio-lab.invalid",
+     "updatedat": "05/10/2026, 17:56:54"
+    },
+    {
+     "status": "Pending",
+     "name": "4. Critical Asset Protection",
+     "type": "Policy",
+     "updatedby": "admin@illumio-lab.invalid",
+     "updatedat": "05/10/2026, 17:56:55"
+    },
+    {
+     "status": "Pending",
+     "name": "5. Admin Access Policy",
+     "type": "Policy",
+     "updatedby": "admin@illumio-lab.invalid",
+     "updatedat": "05/10/2026, 17:56:55"
+    }
+   ],
+   "rowCount": 16,
+   "pagination": "1 \u2013 16 of 16 Total"
+  },
+  "services": {
+   "route": "services",
+   "title": "Services",
+   "breadcrumbs": [
+    "Home",
+    "Segmentation",
+    "Policy Objects"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Provision",
+     "disabled": true,
+     "icons": [
+      "provision"
+     ]
+    },
+    {
+     "label": "Revert",
+     "disabled": true,
+     "icons": [
+      "revert"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "status",
+     "label": "Provision Status"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "portprotos",
+     "label": "Port/Protocol"
+    },
+    {
+     "key": "updatedat",
+     "label": "Last Modified On"
+    },
+    {
+     "key": "updatedby",
+     "label": "Last Modified By"
+    },
+    {
+     "key": "desc",
+     "label": "Description"
+    }
+   ],
+   "rows": [
+    {
+     "name": "All Services",
+     "portprotos": "ALL",
+     "updatedat": "05/10/2026, 17:49:26",
+     "updatedby": "System",
+     "desc": "Alternate HTTP"
+    },
+    {
+     "name": "alt-http",
+     "portprotos": "8080 TCP",
+     "updatedat": "05/10/2026, 17:55:33",
+     "updatedby": "admin@illumio-lab.invalid",
+     "desc": "Alternate HTTPS"
+    },
+    {
+     "name": "alt-https",
+     "portprotos": "8443 TCP",
+     "updatedat": "05/10/2026, 17:55:39",
+     "updatedby": "admin@illumio-lab.invalid",
+     "desc": "Border Gateway Protocol"
+    },
+    {
+     "name": "bgp",
+     "portprotos": "179 TCP",
+     "updatedat": "05/10/2026, 17:55:38",
+     "updatedby": "admin@illumio-lab.invalid",
+     "desc": "BIND Remote Network Domain Control"
+    },
+    {
+     "name": "bind-rndc",
+     "portprotos": "953 TCP",
+     "updatedat": "05/10/2026, 17:55:31",
+     "updatedby": "admin@illumio-lab.invalid",
+     "desc": "Dynamic Host Control Protocol/BOOTP Client"
+    }
+   ],
+   "rowCount": 50,
+   "pagination": "1 \u2013 50 of 182 Total"
+  },
+  "iplists": {
+   "route": "iplists",
+   "title": "IP Lists",
+   "breadcrumbs": [
+    "Home",
+    "Segmentation",
+    "Policy Objects"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Provision",
+     "disabled": true,
+     "icons": [
+      "provision"
+     ]
+    },
+    {
+     "label": "Revert",
+     "disabled": true,
+     "icons": [
+      "revert"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "status",
+     "label": "Provision Status"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "iprange",
+     "label": "Addresses"
+    },
+    {
+     "key": "updatedat",
+     "label": "Last Modified On"
+    },
+    {
+     "key": "updatedby",
+     "label": "Last Modified By"
+    },
+    {
+     "key": "desc",
+     "label": "Description"
+    },
+    {
+     "key": "knownnetwork",
+     "label": "Known Network (Cloud )"
+    }
+   ],
+   "rows": [
+    {
+     "name": "Any (0.0.0.0/0 and ::/0)",
+     "iprange": "0.0.0.0/0 +1 more",
+     "updatedat": "05/10/2026, 17:49:26",
+     "updatedby": "System",
+     "desc": "",
+     "knownnetwork": ""
+    },
+    {
+     "name": "hq",
+     "iprange": "45.54.45.0/24",
+     "updatedat": "05/10/2026, 17:55:46",
+     "updatedby": "admin@illumio-lab.invalid",
+     "desc": "",
+     "knownnetwork": ""
+    },
+    {
+     "name": "internet",
+     "iprange": "0.0.0.0/0 +6 more",
+     "updatedat": "05/10/2026, 17:55:46",
+     "updatedby": "admin@illumio-lab.invalid",
+     "desc": "",
+     "knownnetwork": ""
+    },
+    {
+     "name": "IPL-DFIR-ARTIFACT-STORAGE",
+     "iprange": "setiporfqdn.com",
+     "updatedat": "05/10/2026, 17:55:47",
+     "updatedby": "admin@illumio-lab.invalid",
+     "desc": "",
+     "knownnetwork": ""
+    },
+    {
+     "name": "IPL-EDR-CROWDSTRIKE-FALCON",
+     "iprange": "ts01-b.cloudsink.net +261 more",
+     "updatedat": "05/10/2026, 17:55:47",
+     "updatedby": "admin@illumio-lab.invalid",
+     "desc": "",
+     "knownnetwork": ""
+    }
+   ],
+   "rowCount": 12,
+   "pagination": "1 \u2013 12 of 12 Total"
+  },
+  "usergroups": {
+   "route": "usergroups",
+   "title": "User Groups",
+   "breadcrumbs": [
+    "Home",
+    "Segmentation",
+    "Policy Objects"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "sid",
+     "label": "SID"
+    },
+    {
+     "key": "desc",
+     "label": "Description"
+    },
+    {
+     "key": "rulesets",
+     "label": "Policies"
+    }
+   ],
+   "rows": [
+    {
+     "name": "Engineering",
+     "sid": "S-1-5-21-3967917948-4012392808-1110388204-1108",
+     "rulesets": "In use"
+    },
+    {
+     "name": "Finance",
+     "sid": "S-1-5-21-3967917948-4012392808-1110388204-1107"
+    },
+    {
+     "name": "Illumio Admins",
+     "sid": "S-1-5-21-3967917948-4012392808-1110388204-1110"
+    },
+    {
+     "name": "IT",
+     "sid": "S-1-5-21-3967917948-4012392808-1110388204-1109"
+    },
+    {
+     "name": "Sales",
+     "sid": "S-1-5-21-3967917948-4012392808-1110388204-1111"
+    }
+   ],
+   "rowCount": 5,
+   "pagination": "1 \u2013 5 of 5 Total"
+  },
+  "virtualservices": {
+   "route": "virtualservices",
+   "title": "Virtual Services",
+   "breadcrumbs": [
+    "Home",
+    "Segmentation",
+    "Policy Objects"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Provision",
+     "disabled": true,
+     "icons": [
+      "provision"
+     ]
+    },
+    {
+     "label": "Revert",
+     "disabled": true,
+     "icons": [
+      "revert"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "status",
+     "label": "Provision Status"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "service",
+     "label": "Service / Ports"
+    },
+    {
+     "key": "ip",
+     "label": "Addresses"
+    },
+    {
+     "key": "labels",
+     "label": "Labels"
+    },
+    {
+     "key": "workloads",
+     "label": "Workloads"
+    },
+    {
+     "key": "containerworkloads",
+     "label": "Container Workloads"
+    },
+    {
+     "key": "desc",
+     "label": "Description"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "virtualservers": {
+   "route": "virtualservers",
+   "title": "Virtual Servers",
+   "breadcrumbs": [
+    "Home",
+    "Segmentation",
+    "Policy Objects"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Unmanage",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Enforce",
+     "disabled": true,
+     "icons": [
+      "enforce"
+     ]
+    },
+    {
+     "label": "Stop Enforcement",
+     "disabled": true,
+     "icons": [
+      "cancel"
+     ]
+    },
+    {
+     "label": "Provision",
+     "disabled": true,
+     "icons": [
+      "provision"
+     ]
+    },
+    {
+     "label": "Revert",
+     "disabled": true,
+     "icons": [
+      "revert"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "status",
+     "label": "Provision Status"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "mode",
+     "label": "Mode"
+    },
+    {
+     "key": "vipport",
+     "label": "VIP & Port"
+    },
+    {
+     "key": "managestate",
+     "label": "Management State"
+    },
+    {
+     "key": "slb",
+     "label": "SLB"
+    },
+    {
+     "key": "labels",
+     "label": "Labels"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "labels": {
+   "route": "labels",
+   "title": "Labels",
+   "breadcrumbs": [
+    "Home",
+    "Label Management"
+   ],
+   "banner": {
+    "title": "Labels",
+    "text": "You can edit and filter labels and label groups, label workloads, and label groups in rules and scopes."
+   },
+   "tabs": [
+    {
+     "label": "Columns",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "grid": "ag-grid",
+   "columns": [
+    {
+     "key": "ag-Grid-SelectionColumn",
+     "label": ""
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "type",
+     "label": "Type"
+    },
+    {
+     "key": "policy",
+     "label": "Policy"
+    },
+    {
+     "key": "cloud",
+     "label": "Cloud"
+    },
+    {
+     "key": "servers",
+     "label": "Servers and Endpoints"
+    },
+    {
+     "key": "container",
+     "label": "Container"
+    },
+    {
+     "key": "rbac",
+     "label": "Rbac"
+    },
+    {
+     "key": "labelGroups",
+     "label": "Label Groups"
+    },
+    {
+     "key": "other",
+     "label": "Other"
+    }
+   ],
+   "columnGroups": [
+    "In Use By"
+   ],
+   "rows": [
+    {
+     "ag-Grid-SelectionColumn": "",
+     "name": "ad",
+     "type": "Application",
+     "policy": "Policies",
+     "cloud": "",
+     "servers": "Workloads",
+     "container": "",
+     "rbac": "",
+     "labelGroups": "",
+     "other": ""
+    },
+    {
+     "ag-Grid-SelectionColumn": "",
+     "name": "assetmgmt",
+     "type": "Application",
+     "policy": "",
+     "cloud": "",
+     "servers": "Workloads",
+     "container": "",
+     "rbac": "",
+     "labelGroups": "",
+     "other": ""
+    },
+    {
+     "ag-Grid-SelectionColumn": "",
+     "name": "cart",
+     "type": "Application",
+     "policy": "",
+     "cloud": "",
+     "servers": "Workloads",
+     "container": "",
+     "rbac": "",
+     "labelGroups": "",
+     "other": ""
+    },
+    {
+     "ag-Grid-SelectionColumn": "",
+     "name": "catalog",
+     "type": "Application",
+     "policy": "",
+     "cloud": "",
+     "servers": "Workloads",
+     "container": "",
+     "rbac": "",
+     "labelGroups": "",
+     "other": ""
+    },
+    {
+     "ag-Grid-SelectionColumn": "",
+     "name": "ecomm",
+     "type": "Application",
+     "policy": "",
+     "cloud": "",
+     "servers": "Workloads",
+     "container": "",
+     "rbac": "",
+     "labelGroups": "",
+     "other": ""
+    }
+   ],
+   "rowCount": 22,
+   "pagination": "Page Size: 50 1 to 50 of 111 Page of 3"
+  },
+  "labelgroups": {
+   "route": "labelgroups",
+   "title": "Label Groups",
+   "breadcrumbs": [
+    "Home",
+    "Label Management"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Provision",
+     "disabled": true,
+     "icons": [
+      "provision"
+     ]
+    },
+    {
+     "label": "Revert",
+     "disabled": true,
+     "icons": [
+      "revert"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "status",
+     "label": "Provision Status"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "type",
+     "label": "Type"
+    },
+    {
+     "key": "rulesets",
+     "label": "Policies"
+    },
+    {
+     "key": "labelgroups",
+     "label": "Label Groups"
+    },
+    {
+     "key": "enforcementboundary",
+     "label": "Deny Rules"
+    },
+    {
+     "key": "staticpolicy",
+     "label": "Static Policy"
+    },
+    {
+     "key": "rbac",
+     "label": "RBAC"
+    },
+    {
+     "key": "loopbackinterfaces",
+     "label": "Loopback Interfaces"
+    },
+    {
+     "key": "containersettings",
+     "label": "Container Settings"
+    },
+    {
+     "key": "blockaction",
+     "label": "Reject Connections"
+    },
+    {
+     "key": "updatedat",
+     "label": "Last Modified On"
+    },
+    {
+     "key": "updatedby",
+     "label": "Last Modified By"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "labelMapping/recommendedLabels": {
+   "route": "labelMapping/tagsToLabelMapping",
+   "title": "Tag to Label Mapping",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Label Management",
+    "Labeling Method"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add Mapping",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Filter Label Mappings by...",
+   "columns": [
+    {
+     "key": "tagkey",
+     "label": "Cloud Tag Key"
+    },
+    {
+     "key": "mapsto",
+     "label": "Maps to"
+    },
+    {
+     "key": "labeltype",
+     "label": "Illumio Label Type"
+    },
+    {
+     "key": "labels",
+     "label": "Labels"
+    },
+    {
+     "key": "labeledit",
+     "label": ""
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "labelMapping/tagsToLabelMapping": {
+   "route": "labelMapping/tagsToLabelMapping",
+   "title": "Tag to Label Mapping",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Label Management",
+    "Labeling Method"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add Mapping",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Filter Label Mappings by...",
+   "columns": [
+    {
+     "key": "tagkey",
+     "label": "Cloud Tag Key"
+    },
+    {
+     "key": "mapsto",
+     "label": "Maps to"
+    },
+    {
+     "key": "labeltype",
+     "label": "Illumio Label Type"
+    },
+    {
+     "key": "labels",
+     "label": "Labels"
+    },
+    {
+     "key": "labeledit",
+     "label": ""
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "labelMapping/systemGeneratedLabels": {
+   "route": "labelMapping/systemGeneratedLabels",
+   "title": "System Generated Labels",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Label Management",
+    "Labeling Method"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "categorylabel",
+     "label": "Service Category Label"
+    },
+    {
+     "key": "awsservicerolelabels",
+     "label": "Service Role Labels (AWS)"
+    },
+    {
+     "key": "azureservicerolelabels",
+     "label": "Service Role Labels (Azure)"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "labelsettings": {
+   "route": "labelsettings",
+   "title": "Label Types",
+   "breadcrumbs": [
+    "Home",
+    "Label Management"
+   ],
+   "tabs": [
+    {
+     "label": "Columns",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Edit",
+     "disabled": false,
+     "icons": [
+      "edit"
+     ]
+    },
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    }
+   ],
+   "grid": "ag-grid",
+   "columns": [
+    {
+     "key": "ag-Grid-SelectionColumn",
+     "label": ""
+    },
+    {
+     "key": "dragbar",
+     "label": ""
+    },
+    {
+     "key": "style",
+     "label": "Style"
+    },
+    {
+     "key": "type",
+     "label": "Name"
+    },
+    {
+     "key": "labelkey",
+     "label": "Key"
+    },
+    {
+     "key": "initial",
+     "label": "Label Type Initial"
+    },
+    {
+     "key": "labelInUse",
+     "label": "In Use By Labels"
+    },
+    {
+     "key": "labelGroupInUse",
+     "label": "In Use By Label Groups"
+    },
+    {
+     "key": "edit",
+     "label": "Action"
+    }
+   ],
+   "columnGroups": [],
+   "rows": [
+    {
+     "ag-Grid-SelectionColumn": "",
+     "dragbar": "",
+     "style": "Role",
+     "type": "Role",
+     "labelkey": "role",
+     "initial": "R",
+     "labelInUse": "Labels",
+     "labelGroupInUse": "",
+     "edit": ""
+    },
+    {
+     "ag-Grid-SelectionColumn": "",
+     "dragbar": "",
+     "style": "Application",
+     "type": "Application",
+     "labelkey": "app",
+     "initial": "A",
+     "labelInUse": "Labels",
+     "labelGroupInUse": "",
+     "edit": ""
+    },
+    {
+     "ag-Grid-SelectionColumn": "",
+     "dragbar": "",
+     "style": "Environment",
+     "type": "Environment",
+     "labelkey": "env",
+     "initial": "E",
+     "labelInUse": "Labels",
+     "labelGroupInUse": "",
+     "edit": ""
+    },
+    {
+     "ag-Grid-SelectionColumn": "",
+     "dragbar": "",
+     "style": "Location",
+     "type": "Location",
+     "labelkey": "loc",
+     "initial": "L",
+     "labelInUse": "Labels",
+     "labelGroupInUse": "",
+     "edit": ""
+    },
+    {
+     "ag-Grid-SelectionColumn": "",
+     "dragbar": "",
+     "style": "Service Category",
+     "type": "Service Category",
+     "labelkey": "servicecategory",
+     "initial": "",
+     "labelInUse": "",
+     "labelGroupInUse": "",
+     "edit": ""
+    }
+   ],
+   "rowCount": 12,
+   "pagination": "Page Size: 50 1 to 15 of 15 Page of 1"
+  },
+  "workloads": {
+   "route": "workloads",
+   "title": "Workloads",
+   "breadcrumbs": [
+    "Home",
+    "Servers and Endpoints"
+   ],
+   "tabs": [
+    {
+     "label": "Workloads Container Workloads VENs Devices",
+     "active": false
+    },
+    {
+     "label": "Workloads",
+     "active": false
+    },
+    {
+     "label": "Container Workloads",
+     "active": false
+    },
+    {
+     "label": "VENs",
+     "active": false
+    },
+    {
+     "label": "Devices",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Edit Labels",
+     "disabled": true,
+     "icons": [
+      "edit"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Import",
+     "disabled": false,
+     "icons": [
+      "import"
+     ]
+    },
+    {
+     "label": "Export",
+     "disabled": false,
+     "icons": [
+      "export"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "status",
+     "label": "Connectivity"
+    },
+    {
+     "key": "enforcement",
+     "label": "Enforcement"
+    },
+    {
+     "key": "visibility",
+     "label": "Visibility"
+    },
+    {
+     "key": "sync",
+     "label": "Policy Sync"
+    },
+    {
+     "key": "ransomwareexposure",
+     "label": "Ransomware Exposure"
+    },
+    {
+     "key": "protectioncoveragescore",
+     "label": "Protection Coverage Score"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "labels",
+     "label": "Labels"
+    },
+    {
+     "key": "last",
+     "label": "Last Applied Policy"
+    },
+    {
+     "key": "labels-role",
+     "label": "dc"
+    },
+    {
+     "key": "labels-app",
+     "label": "ad"
+    },
+    {
+     "key": "labels-env",
+     "label": "Production"
+    },
+    {
+     "key": "labels-loc",
+     "label": "ca"
+    },
+    {
+     "key": "labels-bu",
+     "label": "it"
+    },
+    {
+     "key": "labels-type",
+     "label": "server"
+    },
+    {
+     "key": "labels-os",
+     "label": "windows 2008"
+    },
+    {
+     "key": "labels-dfirbubble",
+     "label": "IR-CLEANBUBBLE"
+    },
+    {
+     "key": "labels-compliance",
+     "label": "HIPAA"
+    }
+   ],
+   "rows": [
+    {
+     "status": "Online",
+     "enforcement": "Selective",
+     "visibility": "Enhanced Data Collection",
+     "sync": "Active (Syncing)",
+     "ransomwareexposure": "Protected",
+     "protectioncoveragescore": "55%",
+     "name": "acd-dc01-prd",
+     "labels": "dc ad Production ca it server windows 2008 IR-CLEANBUBBLE",
+     "last": "05/10/2026, 18:36:15",
+     "labels-role": "dc",
+     "labels-app": "ad",
+     "labels-env": "Production",
+     "labels-loc": "ca",
+     "labels-bu": "it",
+     "labels-type": "server",
+     "labels-os": "windows 2008",
+     "labels-dfirbubble": "IR-CLEANBUBBLE",
+     "labels-compliance": "HIPAA"
+    },
+    {
+     "status": "Online",
+     "enforcement": "Selective",
+     "visibility": "Enhanced Data Collection",
+     "sync": "Active (Syncing)",
+     "ransomwareexposure": "Protected",
+     "protectioncoveragescore": "55%",
+     "name": "acd-dc02-prd",
+     "labels": "dc ad Production ca it server windows 2008 IR-CLEANBUBBLE",
+     "last": "05/10/2026, 18:36:14",
+     "labels-role": "dc",
+     "labels-app": "ad",
+     "labels-env": "Production",
+     "labels-loc": "ny",
+     "labels-bu": "it",
+     "labels-type": "server",
+     "labels-os": "windows 2008",
+     "labels-dfirbubble": "IR-CLEANBUBBLE",
+     "labels-compliance": "HIPAA"
+    },
+    {
+     "status": "Online",
+     "enforcement": "Selective",
+     "visibility": "Enhanced Data Collection",
+     "sync": "Active (Syncing)",
+     "ransomwareexposure": "Protected",
+     "protectioncoveragescore": "55%",
+     "name": "acd-dc03-prd",
+     "labels": "dc ad Production ny it server windows 2008 IR-CLEANBUBBLE",
+     "last": "05/10/2026, 18:36:15",
+     "labels-role": "dc",
+     "labels-app": "ad",
+     "labels-env": "Production",
+     "labels-loc": "ny",
+     "labels-bu": "it",
+     "labels-type": "server",
+     "labels-os": "windows 2008",
+     "labels-dfirbubble": "IR-CLEANBUBBLE",
+     "labels-compliance": "HIPAA"
+    },
+    {
+     "status": "Online",
+     "enforcement": "Selective",
+     "visibility": "Enhanced Data Collection",
+     "sync": "Active (Syncing)",
+     "ransomwareexposure": "Protected",
+     "protectioncoveragescore": "55%",
+     "name": "acd-dc04-prd",
+     "labels": "dc ad Production ny it server windows 2008 IR-CLEANBUBBLE",
+     "last": "05/10/2026, 18:36:15",
+     "labels-role": "ct",
+     "labels-app": "imaging",
+     "labels-env": "medical",
+     "labels-loc": "acme hospital",
+     "labels-bu": "health",
+     "labels-type": "OT",
+     "labels-os": "linux",
+     "labels-dfirbubble": "IR-CLEANBUBBLE",
+     "labels-compliance": "HIPAA"
+    },
+    {
+     "status": "Unmanaged",
+     "enforcement": "Selective",
+     "visibility": "Enhanced Data Collection",
+     "sync": "",
+     "ransomwareexposure": "Protected",
+     "protectioncoveragescore": "",
+     "name": "AqONEScannerSurg6",
+     "labels": "ct imaging medical acme hospital health OT HIPAA IR-CLEANBUBBLE",
+     "last": "05/10/2026, 18:36:15",
+     "labels-role": "ct",
+     "labels-app": "imaging",
+     "labels-env": "medical",
+     "labels-loc": "acme hospital",
+     "labels-bu": "health",
+     "labels-type": "OT",
+     "labels-os": "linux",
+     "labels-dfirbubble": "IR-CLEANBUBBLE",
+     "labels-compliance": "HIPAA"
+    }
+   ],
+   "rowCount": 50,
+   "pagination": "1 \u2013 50 of 207 Total"
+  },
+  "pairingprofiles": {
+   "route": "pairingprofiles",
+   "title": "Pairing Profiles",
+   "breadcrumbs": [
+    "Home",
+    "Servers and Endpoints"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "status",
+     "label": "Pairing Status"
+    },
+    {
+     "key": "ventype",
+     "label": "Enforcement Node Type"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "state",
+     "label": "Enforcement"
+    },
+    {
+     "key": "labels",
+     "label": "Labels"
+    },
+    {
+     "key": "updatedat",
+     "label": "Last Modified On"
+    },
+    {
+     "key": "updatedby",
+     "label": "Last Modified By"
+    },
+    {
+     "key": "lastuse",
+     "label": "Last Used On"
+    },
+    {
+     "key": "desc",
+     "label": "Description"
+    }
+   ],
+   "rows": [
+    {
+     "status": "Running",
+     "ventype": "Endpoint VEN",
+     "name": "Default (Endpoints)",
+     "state": "Visibility Only",
+     "labels": "",
+     "updatedat": "05/10/2026, 17:50:34",
+     "updatedby": "admin@illumio-lab.invalid",
+     "lastuse": "Never",
+     "desc": "Default (Endpoints)"
+    },
+    {
+     "status": "Running",
+     "ventype": "Server VEN",
+     "name": "Default (Servers)",
+     "state": "Visibility Only",
+     "labels": "",
+     "updatedat": "05/10/2026, 17:50:34",
+     "updatedby": "admin@illumio-lab.invalid",
+     "lastuse": "Never",
+     "desc": "Default (Servers)"
+    },
+    {
+     "status": "Running",
+     "ventype": "Endpoint VEN",
+     "name": "Default-Endpoints",
+     "state": "Visibility Only",
+     "labels": "",
+     "updatedat": "05/10/2026, 17:50:34",
+     "updatedby": "admin@illumio-lab.invalid",
+     "lastuse": "05/10/2026, 17:52:34",
+     "desc": ""
+    },
+    {
+     "status": "Running",
+     "ventype": "Server VEN",
+     "name": "Default-Servers",
+     "state": "Visibility Only",
+     "labels": "",
+     "updatedat": "05/10/2026, 17:50:33",
+     "updatedby": "admin@illumio-lab.invalid",
+     "lastuse": "05/10/2026, 17:52:47",
+     "desc": ""
+    },
+    {
+     "status": "Running",
+     "ventype": "Server VEN",
+     "name": "pp",
+     "state": "Visibility Only",
+     "labels": "",
+     "updatedat": "05/10/2026, 17:51:28",
+     "updatedby": "admin@illumio-lab.invalid",
+     "lastuse": "05/10/2026, 17:54:28",
+     "desc": ""
+    }
+   ],
+   "rowCount": 5,
+   "pagination": "1 \u2013 5 of 5 Total"
+  },
+  "appgroupslist": {
+   "route": "appgroupslist",
+   "title": "Applications",
+   "breadcrumbs": [
+    "Home",
+    "Servers and Endpoints"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Edit Application Definition",
+     "disabled": false,
+     "icons": []
+    },
+    {
+     "label": "Segment Multiple Applications",
+     "disabled": false,
+     "icons": []
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "entitycounts",
+     "label": "Members"
+    },
+    {
+     "key": "enforcementmode",
+     "label": "Enforcement"
+    },
+    {
+     "key": "protectioncoveragescore",
+     "label": "Protection Coverage Score"
+    },
+    {
+     "key": "coverage",
+     "label": "Rule Coverage"
+    },
+    {
+     "key": "rules",
+     "label": "Rules"
+    },
+    {
+     "key": "map",
+     "label": "Map"
+    }
+   ],
+   "rows": [
+    {
+     "name": "ad | Production",
+     "entitycounts": "4",
+     "enforcementmode": "Selective",
+     "protectioncoveragescore": "55%",
+     "coverage": "No Connections",
+     "rules": "View",
+     "map": "View"
+    },
+    {
+     "name": "assetmgmt | Production",
+     "entitycounts": "7",
+     "enforcementmode": "Selective",
+     "protectioncoveragescore": "63%",
+     "coverage": "No Connections",
+     "rules": "View",
+     "map": "View"
+    },
+    {
+     "name": "cart | Production",
+     "entitycounts": "5",
+     "enforcementmode": "Selective",
+     "protectioncoveragescore": "49%",
+     "coverage": "No Connections",
+     "rules": "View",
+     "map": "View"
+    },
+    {
+     "name": "catalog | Production",
+     "entitycounts": "7",
+     "enforcementmode": "Selective",
+     "protectioncoveragescore": "70%",
+     "coverage": "No Connections",
+     "rules": "View",
+     "map": "View"
+    },
+    {
+     "name": "ecomm | Production",
+     "entitycounts": "9",
+     "enforcementmode": "Selective",
+     "protectioncoveragescore": "49%",
+     "coverage": "No Connections",
+     "rules": "View",
+     "map": "View"
+    }
+   ],
+   "rowCount": 24,
+   "pagination": "1 \u2013 24 of 24 Total"
+  },
+  "reporting": {
+   "route": "reporting/downloads",
+   "title": "Reports",
+   "breadcrumbs": [
+    "Home",
+    "Explore"
+   ],
+   "tabs": [
+    {
+     "label": "Downloads Schedules",
+     "active": false
+    },
+    {
+     "label": "Downloads",
+     "active": false
+    },
+    {
+     "label": "Schedules",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Settings",
+     "disabled": false,
+     "icons": [
+      "settings"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    }
+   ],
+   "columns": [
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "reporttype",
+     "label": "Report Type"
+    },
+    {
+     "key": "generatedat",
+     "label": "Generated At"
+    },
+    {
+     "key": "generatedby",
+     "label": "Generated By"
+    },
+    {
+     "key": "status",
+     "label": "Status"
+    },
+    {
+     "key": "action",
+     "label": "Action"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "onboarding": {
+   "route": "onboarding/cloudAccounts",
+   "title": "Onboarding",
+   "breadcrumbs": [
+    "Home",
+    "Cloud"
+   ],
+   "tabs": [
+    {
+     "label": "Cloud Accounts Kubernetes Clusters",
+     "active": false
+    },
+    {
+     "label": "Cloud Accounts",
+     "active": false
+    },
+    {
+     "label": "Kubernetes Clusters",
+     "active": false
+    },
+    {
+     "label": "Columns",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Flow Log Access",
+     "disabled": false,
+     "icons": [
+      "monitor-heart-rate"
+     ]
+    },
+    {
+     "label": "Cloud",
+     "disabled": false,
+     "icons": [
+      "chevron-down"
+     ]
+    },
+    {
+     "label": "Account Name",
+     "disabled": false,
+     "icons": [
+      "chevron-down"
+     ]
+    },
+    {
+     "label": "Type",
+     "disabled": false,
+     "icons": [
+      "chevron-down"
+     ]
+    },
+    {
+     "label": "ID",
+     "disabled": false,
+     "icons": [
+      "chevron-down"
+     ]
+    },
+    {
+     "label": "Permissions",
+     "disabled": false,
+     "icons": [
+      "chevron-down"
+     ]
+    },
+    {
+     "label": "Add Filter",
+     "disabled": false,
+     "icons": [
+      "plus"
+     ]
+    }
+   ],
+   "grid": "ag-grid",
+   "columns": [
+    {
+     "key": "ag-Grid-SelectionColumn",
+     "label": ""
+    },
+    {
+     "key": "name",
+     "label": "Account Name"
+    },
+    {
+     "key": "accountType",
+     "label": "Type"
+    },
+    {
+     "key": "accessMode",
+     "label": "Permissions"
+    },
+    {
+     "key": "status",
+     "label": "Onboarding Status"
+    },
+    {
+     "key": "issue",
+     "label": "Issues"
+    }
+   ],
+   "columnGroups": [],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": "Page Size: 50 0 to 0 of 0 Page of 0"
+  },
+  "securityreview": {
+   "route": "securityreview",
+   "title": "Security Review",
+   "breadcrumbs": [
+    "Home",
+    "Cloud"
+   ],
+   "banner": {
+    "title": "Security Reviews",
+    "text": "Security reviews ensure that users review policy enforcement on Azure subscriptions and AWS accounts, reducing the risk of implementing ineffective rules. Conduct a security review before you write application or additional organization policies for your subscription."
+   },
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Approve Security Review",
+     "disabled": true,
+     "icons": []
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select Properties to Filter",
+   "columns": [
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "securitycontrol",
+     "label": "Security Control"
+    },
+    {
+     "key": "applications",
+     "label": "Applications"
+    },
+    {
+     "key": "resources",
+     "label": "Resources"
+    },
+    {
+     "key": "policyconflicts",
+     "label": "Policy Conflicts"
+    },
+    {
+     "key": "status",
+     "label": "Status"
+    },
+    {
+     "key": "action",
+     "label": ""
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "cloudinventory": {
+   "route": "cloudinventory/cloudResources",
+   "title": "Inventory",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Inventory"
+   ],
+   "banner": {
+    "title": "Viewing Cloud Inventory",
+    "text": "Browse your inventory of all onboarded cloud resources. Use filtering to display specific resources."
+   },
+   "tabs": [
+    {
+     "label": "Cloud Resources Kubernetes Resources",
+     "active": false
+    },
+    {
+     "label": "Cloud Resources",
+     "active": false
+    },
+    {
+     "label": "Kubernetes Resources",
+     "active": false
+    }
+   ],
+   "toolbar": [],
+   "sections": [
+    {
+     "heading": "Viewing Cloud Inventory",
+     "labels": []
+    }
+   ]
+  },
+  "cloudMap": {
+   "route": "cloudMap",
+   "title": "Map",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Explore"
+   ],
+   "banner": {
+    "title": "Maps",
+    "text": "The Cloud Map is an interactive connectivity map of cloud-native resources. It helps your organization visualize and analyze your cloud resources and their traffic flows across hybrid, multi-cloud environments."
+   },
+   "tabs": [],
+   "toolbar": [],
+   "sections": [
+    {
+     "heading": "Maps",
+     "labels": []
+    }
+   ]
+  },
+  "traffic": {
+   "route": "traffic",
+   "title": "Traffic",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Explore"
+   ],
+   "banner": {
+    "title": "Viewing Cloud Traffic Flows",
+    "text": "Browse the traffic flowing to and from your onboarded cloud resources. Filter the displayed traffic flows by resource type, flow status, time windows, and more. Use traffic flow information to help write policies."
+   },
+   "tabs": [],
+   "toolbar": [],
+   "sections": [
+    {
+     "heading": "Viewing Cloud Traffic Flows",
+     "labels": []
+    },
+    {
+     "heading": "Traffic",
+     "labels": []
+    }
+   ]
+  },
+  "cloudReports/downloads": {
+   "route": "cloudReports/downloads",
+   "title": "Reports",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Explore"
+   ],
+   "banner": {
+    "title": "Reports",
+    "text": "View all the reports generated in Cloud, including ad-hoc reports, scheduled reports, and report exports from across the product."
+   },
+   "tabs": [
+    {
+     "label": "Generated Reports Schedules",
+     "active": false
+    },
+    {
+     "label": "Generated Reports",
+     "active": false
+    },
+    {
+     "label": "Schedules",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Filter reports by",
+   "columns": [
+    {
+     "key": "name",
+     "label": "Report"
+    },
+    {
+     "key": "created_at",
+     "label": "Generated"
+    },
+    {
+     "key": "status",
+     "label": "Status"
+    },
+    {
+     "key": "expires_in",
+     "label": "Expires In"
+    },
+    {
+     "key": "file_format",
+     "label": "File Type"
+    },
+    {
+     "key": "action",
+     "label": "Actions"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "applications": {
+   "route": "applications",
+   "title": "Applications",
+   "breadcrumbs": [
+    "Home",
+    "Cloud"
+   ],
+   "banner": {
+    "title": "Managing Cloud Applications",
+    "text": "View details about your approved applications. Click the links provided for each application to explore the inventory, map, and policy views."
+   },
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Export",
+     "disabled": false,
+     "icons": [
+      "export"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Filter Applications by...",
+   "columns": [
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "deployment",
+     "label": "Deployment"
+    },
+    {
+     "key": "cspaccounts",
+     "label": "Cloud Accounts"
+    },
+    {
+     "key": "inventory",
+     "label": "Inventory"
+    },
+    {
+     "key": "labels",
+     "label": "Associated Labels"
+    },
+    {
+     "key": "map",
+     "label": ""
+    },
+    {
+     "key": "policy",
+     "label": ""
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "cloudlabeling/applicationDiscovery/deployments": {
+   "route": "cloudlabeling/applicationDiscovery/deployments",
+   "title": "Application Discovery",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Application Discovery"
+   ],
+   "banner": {
+    "title": "Managing Application Deployments",
+    "text": "Browse and manage Application Deployments of cloud resources. Define new deployments with deployment stacks that discover application topologies and apply policies."
+   },
+   "tabs": [
+    {
+     "label": "Deployments Application Definitions Discovery Rules",
+     "active": false
+    },
+    {
+     "label": "Deployments",
+     "active": false
+    },
+    {
+     "label": "Application Definitions",
+     "active": false
+    },
+    {
+     "label": "Discovery Rules",
+     "active": false
+    }
+   ],
+   "toolbar": [],
+   "sections": [
+    {
+     "heading": "Managing Application Deployments",
+     "labels": []
+    },
+    {
+     "heading": "Application Discovery",
+     "labels": []
+    }
+   ]
+  },
+  "cloudlabeling/applicationDiscovery/applicationDefinitions": {
+   "route": "cloudlabeling/applicationDiscovery/applicationDefinitions",
+   "title": "Application Discovery",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Application Discovery"
+   ],
+   "tabs": [
+    {
+     "label": "Deployments Application Definitions Discovery Rules",
+     "active": false
+    },
+    {
+     "label": "Deployments",
+     "active": false
+    },
+    {
+     "label": "Application Definitions",
+     "active": false
+    },
+    {
+     "label": "Discovery Rules",
+     "active": false
+    }
+   ],
+   "toolbar": [],
+   "sections": []
+  },
+  "cloudlabeling/applicationDiscovery/discoveryRules": {
+   "route": "cloudlabeling/applicationDiscovery/discoveryRules",
+   "title": "Application Discovery",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Application Discovery"
+   ],
+   "tabs": [
+    {
+     "label": "Deployments Application Definitions Discovery Rules",
+     "active": false
+    },
+    {
+     "label": "Deployments",
+     "active": false
+    },
+    {
+     "label": "Application Definitions",
+     "active": false
+    },
+    {
+     "label": "Discovery Rules",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Filter Application Discovery Rule",
+   "columns": [
+    {
+     "key": "name",
+     "label": "Rule Name"
+    },
+    {
+     "key": "prefix",
+     "label": "Application Prefix"
+    },
+    {
+     "key": "rule_type",
+     "label": "Rule Type"
+    },
+    {
+     "key": "details",
+     "label": ""
+    },
+    {
+     "key": "buttons",
+     "label": ""
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "cloudEvents": {
+   "route": "cloudEvents/audit",
+   "title": "Events",
+   "breadcrumbs": [
+    "Home",
+    "Cloud"
+   ],
+   "tabs": [
+    {
+     "label": "Audit Events System Events",
+     "active": false
+    },
+    {
+     "label": "Audit Events",
+     "active": false
+    },
+    {
+     "label": "System Events",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Export",
+     "disabled": false,
+     "icons": [
+      "export"
+     ]
+    }
+   ],
+   "filter": "Filter Audit Events",
+   "columns": [
+    {
+     "key": "successful",
+     "label": ""
+    },
+    {
+     "key": "occurred_at",
+     "label": "Timestamp"
+    },
+    {
+     "key": "type",
+     "label": "Event Type"
+    },
+    {
+     "key": "category",
+     "label": "Category"
+    },
+    {
+     "key": "user",
+     "label": "User"
+    },
+    {
+     "key": "details",
+     "label": "Details"
+    }
+   ],
+   "rows": [
+    {
+     "successful": "",
+     "occurred_at": "05/10/2026, 17:49:34",
+     "type": "license.create",
+     "category": "licenses",
+     "user": "admin@illumio-lab.invalid",
+     "details": "Licenses event license.create occurred at 05/10/2026, 17:49:34 by"
+    },
+    {
+     "successful": "",
+     "occurred_at": "05/10/2026, 17:49:34",
+     "type": "license.create",
+     "category": "licenses",
+     "user": "admin@illumio-lab.invalid",
+     "details": "Licenses event license.create occurred at 05/10/2026, 17:49:34 by"
+    },
+    {
+     "successful": "",
+     "occurred_at": "05/10/2026, 17:49:32",
+     "type": "tenant.create",
+     "category": "User/Access",
+     "user": "admin@illumio-lab.invalid",
+     "details": "User/access event tenant.create occurred at 05/10/2026, 17:49:32 by admin@illumio-lab.invalid"
+    }
+   ],
+   "rowCount": 3,
+   "pagination": "1 \u2013 3 of 3 Total"
+  },
+  "usage": {
+   "route": "usage",
+   "title": "Usage",
+   "breadcrumbs": [
+    "Home"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Illumio Insights",
+     "disabled": false,
+     "icons": [
+      "lightbulb-outline"
+     ]
+    },
+    {
+     "label": "Illumio Segmentation",
+     "disabled": false,
+     "icons": [
+      "shield-alt"
+     ]
+    },
+    {
+     "label": "Workload Calculator",
+     "disabled": false,
+     "icons": [
+      "calculator-outlined"
+     ]
+    }
+   ],
+   "grid": "ag-grid",
+   "columns": [
+    {
+     "key": "licenseName",
+     "label": "License"
+    },
+    {
+     "key": "status",
+     "label": "Status"
+    },
+    {
+     "key": "startDate",
+     "label": "Start Date"
+    },
+    {
+     "key": "endDate",
+     "label": "End Date"
+    },
+    {
+     "key": "workloads",
+     "label": "Billable Workloads"
+    }
+   ],
+   "columnGroups": [],
+   "rows": [
+    {
+     "licenseName": "Illumio Insights Free Trial",
+     "status": "EXPIRED",
+     "startDate": "2026-10-05",
+     "endDate": "2026-10-06",
+     "workloads": "0"
+    }
+   ],
+   "rowCount": 1,
+   "pagination": "Page Size: 100 1 to 0 of 0 Page of 1"
+  },
+  "rbac/users": {
+   "route": "rbac/users",
+   "title": "Users",
+   "breadcrumbs": [
+    "Home",
+    "Access"
+   ],
+   "tabs": [
+    {
+     "label": "Users External Groups Roles Scopes Service Accounts",
+     "active": false
+    },
+    {
+     "label": "Users",
+     "active": false
+    },
+    {
+     "label": "External Groups",
+     "active": false
+    },
+    {
+     "label": "Roles",
+     "active": false
+    },
+    {
+     "label": "Scopes",
+     "active": false
+    },
+    {
+     "label": "Service Accounts",
+     "active": false
+    },
+    {
+     "label": "Columns",
+     "active": false
+    },
+    {
+     "label": "Filters",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    }
+   ],
+   "grid": "ag-grid",
+   "columns": [
+    {
+     "key": "email",
+     "label": "Email Address"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "status",
+     "label": "Status"
+    },
+    {
+     "key": "type",
+     "label": "Type"
+    },
+    {
+     "key": "last_login_ip",
+     "label": "Last Login IP"
+    },
+    {
+     "key": "session_duration",
+     "label": "Session Duration"
+    },
+    {
+     "key": "last_login_time",
+     "label": "Last Login"
+    },
+    {
+     "key": "createdAt",
+     "label": "Created On"
+    }
+   ],
+   "columnGroups": [],
+   "rows": [
+    {
+     "email": "admin@illumio-lab.invalid",
+     "name": "",
+     "status": "Online",
+     "type": "",
+     "last_login_ip": "195.213.113.154, 172.69.194.76",
+     "session_duration": "22 mins",
+     "last_login_time": "06/10/2026, 09:17:53",
+     "createdAt": "05/10/2026, 17:49:33"
+    }
+   ],
+   "rowCount": 1,
+   "pagination": "Page Size: 100 1 to 1 of 1 Page of 1"
+  },
+  "rbac/groups": {
+   "route": "rbac/groups",
+   "title": "External Groups",
+   "breadcrumbs": [
+    "Home",
+    "Access"
+   ],
+   "tabs": [
+    {
+     "label": "Users External Groups Roles Scopes Service Accounts",
+     "active": false
+    },
+    {
+     "label": "Users",
+     "active": false
+    },
+    {
+     "label": "External Groups",
+     "active": false
+    },
+    {
+     "label": "Roles",
+     "active": false
+    },
+    {
+     "label": "Scopes",
+     "active": false
+    },
+    {
+     "label": "Service Accounts",
+     "active": false
+    },
+    {
+     "label": "Columns",
+     "active": false
+    },
+    {
+     "label": "Filters",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    }
+   ],
+   "grid": "ag-grid",
+   "columns": [
+    {
+     "key": "ag-Grid-AutoColumn",
+     "label": "Name"
+    },
+    {
+     "key": "claim",
+     "label": "Claim"
+    },
+    {
+     "key": "role",
+     "label": "Role"
+    },
+    {
+     "key": "scopes",
+     "label": "Scope"
+    }
+   ],
+   "columnGroups": [],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": "Page Size: 100 0 to 0 of 0 Page of 0"
+  },
+  "rbac/roles": {
+   "route": "rbac/roles",
+   "title": "Roles",
+   "breadcrumbs": [
+    "Home",
+    "Access"
+   ],
+   "tabs": [
+    {
+     "label": "Users External Groups Roles Scopes Service Accounts",
+     "active": false
+    },
+    {
+     "label": "Users",
+     "active": false
+    },
+    {
+     "label": "External Groups",
+     "active": false
+    },
+    {
+     "label": "Roles",
+     "active": false
+    },
+    {
+     "label": "Scopes",
+     "active": false
+    },
+    {
+     "label": "Service Accounts",
+     "active": false
+    }
+   ],
+   "toolbar": [],
+   "grid": "ag-grid",
+   "columns": [
+    {
+     "key": "id",
+     "label": "Roles"
+    }
+   ],
+   "columnGroups": [],
+   "rows": [
+    {
+     "id": "Owner"
+    },
+    {
+     "id": "Admin"
+    },
+    {
+     "id": "Viewer"
+    },
+    {
+     "id": "Provisioner"
+    },
+    {
+     "id": "Ruleset Manager"
+    }
+   ],
+   "rowCount": 14,
+   "pagination": "Page Size: 100 1 to 14 of 14 Page of 1"
+  },
+  "rbac/roles/scope": {
+   "route": "rbac/roles/scope",
+   "title": "Scopes",
+   "breadcrumbs": [
+    "Home",
+    "Access"
+   ],
+   "tabs": [
+    {
+     "label": "Users External Groups Roles Scopes Service Accounts",
+     "active": false
+    },
+    {
+     "label": "Users",
+     "active": false
+    },
+    {
+     "label": "External Groups",
+     "active": false
+    },
+    {
+     "label": "Roles",
+     "active": false
+    },
+    {
+     "label": "Scopes",
+     "active": false
+    },
+    {
+     "label": "Service Accounts",
+     "active": false
+    },
+    {
+     "label": "Columns",
+     "active": false
+    },
+    {
+     "label": "Filters",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    }
+   ],
+   "grid": "ag-grid",
+   "columns": [
+    {
+     "key": "ag-Grid-AutoColumn",
+     "label": "Scopes"
+    },
+    {
+     "key": "principalName",
+     "label": "Principals"
+    },
+    {
+     "key": "roleName",
+     "label": "Role"
+    }
+   ],
+   "columnGroups": [],
+   "rows": [
+    {
+     "ag-Grid-AutoColumn": "All",
+     "principalName": "Illumio Training",
+     "roleName": "Owner"
+    }
+   ],
+   "rowCount": 1,
+   "pagination": "Page Size: 100 1 to 1 of 1 Page of 1"
+  },
+  "rbac/serviceaccounts": {
+   "route": "rbac/serviceaccounts",
+   "title": "Service Accounts",
+   "breadcrumbs": [
+    "Home",
+    "Access"
+   ],
+   "tabs": [
+    {
+     "label": "Users External Groups Roles Scopes Service Accounts",
+     "active": false
+    },
+    {
+     "label": "Users",
+     "active": false
+    },
+    {
+     "label": "External Groups",
+     "active": false
+    },
+    {
+     "label": "Roles",
+     "active": false
+    },
+    {
+     "label": "Scopes",
+     "active": false
+    },
+    {
+     "label": "Service Accounts",
+     "active": false
+    },
+    {
+     "label": "Columns",
+     "active": false
+    },
+    {
+     "label": "Filters",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Copy to clipboard",
+     "disabled": false,
+     "icons": [
+      "copy"
+     ]
+    },
+    {
+     "label": "Copy to clipboard",
+     "disabled": false,
+     "icons": [
+      "copy"
+     ]
+    },
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    }
+   ],
+   "grid": "ag-grid",
+   "columns": [
+    {
+     "key": "ag-Grid-AutoColumn",
+     "label": "Name"
+    },
+    {
+     "key": "apiKeys",
+     "label": "Authentication Username"
+    },
+    {
+     "key": "role",
+     "label": "Role"
+    },
+    {
+     "key": "scopes",
+     "label": "Scope"
+    },
+    {
+     "key": "accessRestriction",
+     "label": "Access Restriction"
+    }
+   ],
+   "columnGroups": [],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": "Page Size: 100 0 to 0 of 0 Page of 0"
+  },
+  "accessrestrictions": {
+   "route": "accessrestrictions",
+   "title": "Access Restriction",
+   "breadcrumbs": [
+    "Home",
+    "Access"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    }
+   ],
+   "columns": [
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "description",
+     "label": "Description"
+    },
+    {
+     "key": "ipaddress",
+     "label": "Addresses"
+    },
+    {
+     "key": "restrictionappliedto",
+     "label": "Restriction Applied To"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "trustedproxy": {
+   "route": "trustedproxy",
+   "title": "Trusted Proxy IPs",
+   "breadcrumbs": [
+    "Home",
+    "Access"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Edit",
+     "disabled": false,
+     "icons": [
+      "edit"
+     ]
+    }
+   ],
+   "sections": []
+  },
+  "authenticationsettings": {
+   "route": "authenticationsettings",
+   "title": "Authentication",
+   "breadcrumbs": [
+    "Home",
+    "Access"
+   ],
+   "tabs": [],
+   "toolbar": [],
+   "sections": [
+    {
+     "heading": "Local Authentication",
+     "labels": []
+    },
+    {
+     "heading": "Single Sign-On (SSO)",
+     "labels": []
+    },
+    {
+     "heading": "API Key Settings",
+     "labels": []
+    }
+   ]
+  },
+  "connector": {
+   "route": "connector",
+   "title": "Connectors",
+   "breadcrumbs": [
+    "Home",
+    "Settings"
+   ],
+   "tabs": [],
+   "toolbar": [],
+   "sections": []
+  },
+  "corporatepublicips": {
+   "route": "corporatepublicips/default",
+   "title": "default",
+   "breadcrumbs": [
+    "Home",
+    "Settings"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Edit",
+     "disabled": false,
+     "icons": [
+      "edit"
+     ]
+    }
+   ],
+   "sections": []
+  },
+  "flowcollection": {
+   "route": "flowcollection",
+   "title": "Flow Collection",
+   "breadcrumbs": [
+    "Home",
+    "Settings"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    }
+   ],
+   "columns": [
+    {
+     "key": "action",
+     "label": "Action"
+    },
+    {
+     "key": "source",
+     "label": "Enforcement Node Type"
+    },
+    {
+     "key": "network",
+     "label": "Network"
+    },
+    {
+     "key": "transmission",
+     "label": "Transmission"
+    },
+    {
+     "key": "protocol",
+     "label": "Protocol"
+    },
+    {
+     "key": "sourceip",
+     "label": "Source IP"
+    },
+    {
+     "key": "sourceport",
+     "label": "Source Port"
+    },
+    {
+     "key": "destinationip",
+     "label": "Destination IP"
+    },
+    {
+     "key": "destinationport",
+     "label": "Destination Port"
+    }
+   ],
+   "rows": [
+    {
+     "action": "Drop",
+     "source": "ANY",
+     "network": "ANY",
+     "transmission": "Unicast",
+     "protocol": "TCP",
+     "sourceip": "Any",
+     "sourceport": "Any",
+     "destinationip": "Any",
+     "destinationport": "137"
+    },
+    {
+     "action": "Drop",
+     "source": "ANY",
+     "network": "ANY",
+     "transmission": "Broadcast",
+     "protocol": "UDP",
+     "sourceip": "Any",
+     "sourceport": "Any",
+     "destinationip": "Any",
+     "destinationport": "137"
+    },
+    {
+     "action": "Drop",
+     "source": "ANY",
+     "network": "ANY",
+     "transmission": "Unicast",
+     "protocol": "UDP",
+     "sourceip": "Any",
+     "sourceport": "Any",
+     "destinationip": "Any",
+     "destinationport": "137"
+    },
+    {
+     "action": "Drop",
+     "source": "ANY",
+     "network": "ANY",
+     "transmission": "Broadcast",
+     "protocol": "UDP",
+     "sourceip": "Any",
+     "sourceport": "Any",
+     "destinationip": "Any",
+     "destinationport": "138"
+    },
+    {
+     "action": "Drop",
+     "source": "ANY",
+     "network": "ANY",
+     "transmission": "Unicast",
+     "protocol": "UDP",
+     "sourceip": "Any",
+     "sourceport": "Any",
+     "destinationip": "Any",
+     "destinationport": "138"
+    }
+   ],
+   "rowCount": 12,
+   "pagination": "1 \u2013 12 of 12 Total"
+  },
+  "securitysettings": {
+   "route": "securitysettings/general",
+   "title": "General",
+   "breadcrumbs": [
+    "Home",
+    "Settings"
+   ],
+   "tabs": [
+    {
+     "label": "General Static Policy Firewall Coexistence Reject Connections Loopback Interfaces Containers Policy SecureConnect",
+     "active": false
+    },
+    {
+     "label": "General",
+     "active": false
+    },
+    {
+     "label": "Static Policy",
+     "active": false
+    },
+    {
+     "label": "Firewall Coexistence",
+     "active": false
+    },
+    {
+     "label": "Reject Connections",
+     "active": false
+    },
+    {
+     "label": "Loopback Interfaces",
+     "active": false
+    },
+    {
+     "label": "Containers Policy",
+     "active": false
+    },
+    {
+     "label": "SecureConnect",
+     "active": false
+    }
+   ],
+   "toolbar": [],
+   "sections": []
+  },
+  "essentialservicerules": {
+   "route": "insights/insights-hub",
+   "title": "Insights Hub",
+   "breadcrumbs": [
+    "Home",
+    "Insights"
+   ],
+   "tabs": [],
+   "toolbar": [],
+   "grid": "ag-grid",
+   "columns": [
+    {
+     "key": "ag-Grid-AutoColumn",
+     "label": "Service"
+    },
+    {
+     "key": "protocol",
+     "label": "Protocol"
+    },
+    {
+     "key": "port",
+     "label": "Port"
+    },
+    {
+     "key": "flows",
+     "label": "Flows Now"
+    },
+    {
+     "key": "bytes",
+     "label": "Bytes Now"
+    },
+    {
+     "key": "raw_flows_comp",
+     "label": "Flows Prev"
+    },
+    {
+     "key": "raw_bytes_comp",
+     "label": "Bytes Prev"
+    },
+    {
+     "key": "flows_diff",
+     "label": "\u2206 Flows"
+    },
+    {
+     "key": "bytes_diff",
+     "label": "\u2206 Bytes"
+    }
+   ],
+   "columnGroups": [],
+   "rows": [
+    {
+     "ag-Grid-AutoColumn": "2 SSH",
+     "protocol": "",
+     "port": "",
+     "flows": "22.3k",
+     "bytes": "44.6MB",
+     "raw_flows_comp": "0",
+     "raw_bytes_comp": "0",
+     "flows_diff": "0",
+     "bytes_diff": "0"
+    },
+    {
+     "ag-Grid-AutoColumn": "2 KERBEROS",
+     "protocol": "",
+     "port": "",
+     "flows": "23.7k",
+     "bytes": "46.6MB",
+     "raw_flows_comp": "0",
+     "raw_bytes_comp": "0",
+     "flows_diff": "",
+     "bytes_diff": ""
+    },
+    {
+     "ag-Grid-AutoColumn": "2 RDP",
+     "protocol": "",
+     "port": "",
+     "flows": "13.1k",
+     "bytes": "23.9MB",
+     "raw_flows_comp": "0",
+     "raw_bytes_comp": "0",
+     "flows_diff": "",
+     "bytes_diff": ""
+    },
+    {
+     "ag-Grid-AutoColumn": "SMTP",
+     "protocol": "TCP",
+     "port": "25",
+     "flows": "7.5k",
+     "bytes": "14.4MB",
+     "raw_flows_comp": "-",
+     "raw_bytes_comp": "-",
+     "flows_diff": "-",
+     "bytes_diff": "-"
+    },
+    {
+     "ag-Grid-AutoColumn": "HTTP",
+     "protocol": "TCP",
+     "port": "80",
+     "flows": "6.9k",
+     "bytes": "13.2MB",
+     "raw_flows_comp": "-",
+     "raw_bytes_comp": "-",
+     "flows_diff": "-",
+     "bytes_diff": "-"
+    }
+   ],
+   "rowCount": 18,
+   "pagination": "1 to 0 of 0 Page of 1"
+  },
+  "venoperations": {
+   "route": "venoperations",
+   "title": "VEN Operations",
+   "breadcrumbs": [
+    "Home",
+    "Settings"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Edit",
+     "disabled": false,
+     "icons": [
+      "edit"
+     ]
+    },
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    }
+   ],
+   "columns": [
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "labels",
+     "label": "Labels"
+    },
+    {
+     "key": "inactivitythreshold",
+     "label": "Inactivity Threshold"
+    },
+    {
+     "key": "enabled",
+     "label": "Schedule"
+    },
+    {
+     "key": "updatedat",
+     "label": "Last Modified At"
+    },
+    {
+     "key": "updatedby",
+     "label": "Last Modified By"
+    },
+    {
+     "key": "edit",
+     "label": ""
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "policysettings": {
+   "route": "policysettings",
+   "title": "Policy Settings",
+   "breadcrumbs": [
+    "Home",
+    "Settings"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Edit",
+     "disabled": false,
+     "icons": [
+      "edit"
+     ]
+    }
+   ],
+   "sections": []
+  },
+  "offlinetimers": {
+   "route": "offlinetimers/server",
+   "title": "Offline Timers",
+   "breadcrumbs": [
+    "Home",
+    "Settings"
+   ],
+   "tabs": [
+    {
+     "label": "Server Endpoint VEN Uninstall Timers",
+     "active": false
+    },
+    {
+     "label": "Server",
+     "active": false
+    },
+    {
+     "label": "Endpoint",
+     "active": false
+    },
+    {
+     "label": "VEN Uninstall Timers",
+     "active": false
+    }
+   ],
+   "toolbar": [
+    {
+     "label": "Edit",
+     "disabled": false,
+     "icons": [
+      "edit"
+     ]
+    }
+   ],
+   "sections": []
+  },
+  "cloudappsintegrations": {
+   "route": "cloudappsintegrations/apps",
+   "title": "Connector",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Settings"
+   ],
+   "tabs": [
+    {
+     "label": "Apps Automation",
+     "active": false
+    },
+    {
+     "label": "Apps",
+     "active": false
+    },
+    {
+     "label": "Automation",
+     "active": false
+    }
+   ],
+   "toolbar": [],
+   "sections": []
+  },
+  "serviceAccounts": {
+   "route": "serviceAccounts",
+   "title": "Service Accounts",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Settings"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    }
+   ],
+   "columns": [
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "clientid",
+     "label": "Client ID"
+    }
+   ],
+   "rows": [
+    {
+     "name": "service-account-8851911-76cdf1c9-5cb9-4acb-9db3-c65770ee9579",
+     "clientid": "cloud_79cdb62f-1fc1791218977750841108"
+    }
+   ],
+   "rowCount": 1,
+   "pagination": "1 \u2013 1 of 1 Total"
+  },
+  "securityControls": {
+   "route": "securityControls",
+   "title": "Policy Preferences",
+   "breadcrumbs": [
+    "Home",
+    "Cloud",
+    "Settings"
+   ],
+   "tabs": [
+    {
+     "label": "Enforcement Points",
+     "active": false
+    },
+    {
+     "label": "Enforcement Points",
+     "active": false
+    }
+   ],
+   "toolbar": [],
+   "sections": []
+  },
+  "coreservices": {
+   "route": "coreservices",
+   "title": "Core Services",
+   "breadcrumbs": [
+    "Home",
+    "Infrastructure"
+   ],
+   "tabs": [],
+   "toolbar": [],
+   "columns": [
+    {
+     "key": "coreservice",
+     "label": "Core Service"
+    },
+    {
+     "key": "recommended",
+     "label": "Recommended"
+    },
+    {
+     "key": "accepted",
+     "label": "Accepted"
+    },
+    {
+     "key": "rejected",
+     "label": "Rejected"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "containerclusters": {
+   "route": "containerclusters",
+   "title": "Container Clusters",
+   "breadcrumbs": [
+    "Home",
+    "Infrastructure"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "state",
+     "label": "Status"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "manager",
+     "label": "Platform Version"
+    },
+    {
+     "key": "version",
+     "label": "Kubelink Version"
+    },
+    {
+     "key": "desc",
+     "label": "Description"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "secureconnectgateways": {
+   "route": "secureconnectgateways",
+   "title": "SecureConnect Gateways",
+   "breadcrumbs": [
+    "Home",
+    "Infrastructure"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Add",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Provision",
+     "disabled": true,
+     "icons": [
+      "provision"
+     ]
+    },
+    {
+     "label": "Revert",
+     "disabled": true,
+     "icons": [
+      "revert"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    }
+   ],
+   "columns": [
+    {
+     "key": "status",
+     "label": "Provision Status"
+    },
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "ipaddress",
+     "label": "Gateway IP Address"
+    },
+    {
+     "key": "desc",
+     "label": "Description"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "networks": {
+   "route": "networks",
+   "title": "Networks",
+   "breadcrumbs": [
+    "Home",
+    "Infrastructure"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "name",
+     "label": "Name"
+    },
+    {
+     "key": "type",
+     "label": "Type"
+    },
+    {
+     "key": "datacenter",
+     "label": "IP Type"
+    },
+    {
+     "key": "ipversion",
+     "label": "IP Version"
+    },
+    {
+     "key": "updatedat",
+     "label": "Last Modified On"
+    },
+    {
+     "key": "updatedby",
+     "label": "Last Modified By"
+    },
+    {
+     "key": "description",
+     "label": "Description"
+    }
+   ],
+   "rows": [
+    {
+     "name": "Corporate",
+     "type": "System",
+     "datacenter": "Link Local",
+     "ipversion": "IPv4",
+     "updatedat": "05/10/2026, 17:49:28",
+     "updatedby": "System"
+    },
+    {
+     "name": "Corporate",
+     "type": "System",
+     "datacenter": "Corporate",
+     "ipversion": "IPv4",
+     "updatedat": "05/10/2026, 17:49:28",
+     "updatedby": "System"
+    },
+    {
+     "name": "Corporate",
+     "type": "System",
+     "datacenter": "Link Local",
+     "ipversion": "IPv6",
+     "updatedat": "05/10/2026, 17:49:28",
+     "updatedby": "System"
+    },
+    {
+     "name": "Corporate",
+     "type": "System",
+     "datacenter": "Corporate",
+     "ipversion": "IPv6",
+     "updatedat": "05/10/2026, 17:49:28",
+     "updatedby": "System"
+    },
+    {
+     "name": "External (Non-Corporate)",
+     "type": "System",
+     "ipversion": "IPv4",
+     "updatedat": "05/10/2026, 17:49:28",
+     "updatedby": "System"
+    }
+   ],
+   "rowCount": 6,
+   "pagination": "1 \u2013 6 of 6 Total"
+  },
+  "events": {
+   "route": "events/landing",
+   "title": "Events",
+   "breadcrumbs": [
+    "Home",
+    "Troubleshoot"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Refresh",
+     "disabled": true,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    },
+    {
+     "label": "Run",
+     "disabled": false,
+     "icons": []
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "event",
+     "label": "Event"
+    },
+    {
+     "key": "description",
+     "label": "Description"
+    },
+    {
+     "key": "severity",
+     "label": "Severity"
+    },
+    {
+     "key": "state",
+     "label": "Status"
+    },
+    {
+     "key": "timestamp",
+     "label": "Timestamp"
+    },
+    {
+     "key": "generatedby",
+     "label": "Generated By"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "exportreports": {
+   "route": "exportreports",
+   "title": "Exports",
+   "breadcrumbs": [
+    "Home",
+    "Troubleshoot"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "New Export",
+     "disabled": false,
+     "icons": [
+      "add"
+     ]
+    },
+    {
+     "label": "Remove",
+     "disabled": true,
+     "icons": [
+      "remove"
+     ]
+    },
+    {
+     "label": "Download",
+     "disabled": true,
+     "icons": [
+      "download"
+     ]
+    },
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    }
+   ],
+   "columns": [
+    {
+     "key": "description",
+     "label": "File name"
+    },
+    {
+     "key": "jobtype",
+     "label": "Containing All"
+    },
+    {
+     "key": "requestedby",
+     "label": "Generated By"
+    },
+    {
+     "key": "requestedat",
+     "label": "Generated At"
+    },
+    {
+     "key": "status",
+     "label": "Status"
+    },
+    {
+     "key": "regenerate",
+     "label": "Retry"
+    },
+    {
+     "key": "download",
+     "label": "Download"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "objectlimits": {
+   "route": "objectlimits",
+   "title": "Resource Limits",
+   "breadcrumbs": [
+    "Home",
+    "Troubleshoot"
+   ],
+   "banner": {
+    "title": "Monitor usage against PCE limits",
+    "text": "Track usage against limits based on the performance and capacity of the PCE. Soft limits warn of potential issues; contact Illumio Support if alerted. Hard limits prevent overloads; exceeding them will fail object creation."
+   },
+   "tabs": [],
+   "toolbar": [],
+   "grid": "ag-grid",
+   "columns": [
+    {
+     "key": "object",
+     "label": "Resource"
+    },
+    {
+     "key": "key",
+     "label": "Key"
+    },
+    {
+     "key": "usagePercent",
+     "label": "Usage (% of hard limit)"
+    },
+    {
+     "key": "usage",
+     "label": "Usage"
+    },
+    {
+     "key": "softLimit",
+     "label": "Soft Limit"
+    },
+    {
+     "key": "hardLimit",
+     "label": "Hard Limit"
+    }
+   ],
+   "columnGroups": [],
+   "rows": [
+    {
+     "object": "Active agents per PCE",
+     "key": "active_agents_per_pce",
+     "usagePercent": "73%",
+     "usage": "183",
+     "softLimit": "200",
+     "hardLimit": "250"
+    },
+    {
+     "object": "Active pairing keys",
+     "key": "total_active_pairing_keys",
+     "usagePercent": "0%",
+     "usage": "5",
+     "softLimit": "1,200",
+     "hardLimit": "5,000"
+    },
+    {
+     "object": "Actors per rule",
+     "key": "total_actors_per_rule",
+     "usagePercent": "3%",
+     "usage": "6",
+     "softLimit": "50",
+     "hardLimit": "200"
+    },
+    {
+     "object": "Adaptive user segmentation users",
+     "key": "total_security_principals",
+     "usagePercent": "0%",
+     "usage": "5",
+     "softLimit": "45,000",
+     "hardLimit": "50,000"
+    },
+    {
+     "object": "CIDRs per network",
+     "key": "cidrs_per_network",
+     "usagePercent": "0%",
+     "usage": "0",
+     "softLimit": "-",
+     "hardLimit": "20"
+    }
+   ],
+   "rowCount": 18,
+   "pagination": "Page Size: 100 1 to 45 of 45 Page of 1"
+  },
+  "supportbundles/ven": {
+   "route": "supportbundles/ven",
+   "title": "VEN",
+   "breadcrumbs": [
+    "Home",
+    "Troubleshoot"
+   ],
+   "tabs": [
+    {
+     "label": "VEN",
+     "active": false
+    },
+    {
+     "label": "VEN",
+     "active": false
+    }
+   ],
+   "toolbar": [],
+   "columns": [
+    {
+     "key": "venname",
+     "label": "VEN"
+    },
+    {
+     "key": "createdon",
+     "label": "Generated At"
+    },
+    {
+     "key": "generatedby",
+     "label": "Generated By"
+    },
+    {
+     "key": "downloadurl",
+     "label": "Download"
+    }
+   ],
+   "rows": [],
+   "rowCount": 0,
+   "pagination": ""
+  },
+  "connectivity": {
+   "route": "connectivity",
+   "title": "Policy Check",
+   "breadcrumbs": [
+    "Home",
+    "Troubleshoot"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    },
+    {
+     "label": "Check",
+     "disabled": true,
+     "icons": []
+    }
+   ],
+   "filter": "Source",
+   "sections": []
+  },
+  "segmentationtemplates": {
+   "route": "segmentationtemplates",
+   "title": "Segmentation Templates",
+   "breadcrumbs": [
+    "Home",
+    "Troubleshoot"
+   ],
+   "tabs": [],
+   "toolbar": [],
+   "sections": []
+  },
+  "venlibrary": {
+   "route": "venlibrary",
+   "title": "VEN Library",
+   "breadcrumbs": [
+    "Home",
+    "Support"
+   ],
+   "tabs": [],
+   "toolbar": [
+    {
+     "label": "Refresh",
+     "disabled": false,
+     "icons": [
+      "refresh"
+     ]
+    },
+    {
+     "label": "Dependencies",
+     "disabled": false,
+     "icons": [
+      "external-link"
+     ]
+    },
+    {
+     "label": "Supported OS Versions",
+     "disabled": false,
+     "icons": [
+      "external-link"
+     ]
+    },
+    {
+     "label": "Open",
+     "disabled": false,
+     "icons": [
+      "down"
+     ]
+    }
+   ],
+   "filter": "Select properties to filter view",
+   "columns": [
+    {
+     "key": "default",
+     "label": "Default"
+    },
+    {
+     "key": "release",
+     "label": "Release"
+    },
+    {
+     "key": "ven_type",
+     "label": "Enforcement Node Type"
+    },
+    {
+     "key": "filename",
+     "label": "VEN Filename"
+    },
+    {
+     "key": "distribution",
+     "label": "Distribution"
+    },
+    {
+     "key": "architecture",
+     "label": "Architecture"
+    },
+    {
+     "key": "osversion",
+     "label": "OS Version"
+    },
+    {
+     "key": "download",
+     "label": "Download"
+    }
+   ],
+   "rows": [
+    {
+     "default": "",
+     "release": "24.2.20-2091",
+     "ven_type": "Endpoint VEN only",
+     "filename": "illumio-ven-24.2.20-2091.mac.universal.pkg",
+     "distribution": "macOS",
+     "architecture": "universal",
+     "osversion": "10",
+     "download": ""
+    },
+    {
+     "default": "",
+     "release": "24.2.20-2091",
+     "ven_type": "Endpoint VEN only",
+     "filename": "illumio-ven-24.2.20-2091.mac.universal.pkg",
+     "distribution": "macOS",
+     "architecture": "universal",
+     "osversion": "11",
+     "download": ""
+    },
+    {
+     "default": "",
+     "release": "24.2.20-2091",
+     "ven_type": "Endpoint VEN only",
+     "filename": "illumio-ven-24.2.20-2091.mac.universal.pkg",
+     "distribution": "macOS",
+     "architecture": "universal",
+     "osversion": "12",
+     "download": ""
+    },
+    {
+     "default": "",
+     "release": "24.2.20-2091",
+     "ven_type": "Endpoint VEN only",
+     "filename": "illumio-ven-24.2.20-2091.mac.universal.pkg",
+     "distribution": "macOS",
+     "architecture": "universal",
+     "osversion": "13",
+     "download": ""
+    },
+    {
+     "default": "",
+     "release": "24.2.20-2091",
+     "ven_type": "Endpoint VEN only",
+     "filename": "illumio-ven-24.2.20-2091.mac.universal.pkg",
+     "distribution": "macOS",
+     "architecture": "universal",
+     "osversion": "14",
+     "download": ""
+    }
+   ],
+   "rowCount": 50,
+   "pagination": "1 \u2013 50 of 62 Total"
+  }
+ }
+}
