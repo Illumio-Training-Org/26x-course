@@ -30,8 +30,8 @@
   function draw(){chips.replaceChildren(...list.map((it,i)=>pchip(it,()=>{list.splice(i,1);draw();if(!dd.hidden)render();})));input.placeholder=list.length?'':placeholder;if(onChange)onChange();}
   function options(){
    const q=input.value.trim().toLowerCase();let o;
-   if(kind==='svc'){o=SERVICES.filter(s=>!q||s[0].toLowerCase().includes(q)||s[1].toLowerCase().includes(q)).map(s=>({kind:'service',name:s[0],ports:s[1]}));if(!q||'all services'.includes(q))o.push({kind:'service',name:'All Services',pin:true});}
-   else{o=LABELS.filter(l=>!q||l[1].toLowerCase().includes(q)).map(l=>({kind:'label',key:l[0],value:l[1]}));o.push({kind:'all',name:'All Workloads',pin:true},{kind:'any',name:'Any (0.0.0.0/0 and ::/0)',pin:true});}
+   if(kind==='svc'){o=storeServices().filter(s=>!q||s[0].toLowerCase().includes(q)||s[1].toLowerCase().includes(q)).map(s=>({kind:'service',name:s[0],ports:s[1]}));if(!q||'all services'.includes(q))o.push({kind:'service',name:'All Services',pin:true});}
+   else{o=storeLabels().filter(l=>!q||l[1].toLowerCase().includes(q)).map(l=>({kind:'label',key:l[0],value:l[1]})).concat(storeExtras(q));o.push({kind:'all',name:'All Workloads',pin:true},{kind:'any',name:'Any (0.0.0.0/0 and ::/0)',pin:true});}
    return o.filter(a=>!list.some(b=>sameItem(a,b)));
   }
   function render(){
@@ -40,6 +40,7 @@
    opts.forEach((o,i)=>{
     const b=el('button','dd-opt'+(i===hi?' hi':''));b.type='button';b.tabIndex=-1;
     if(o.kind==='label'){b.append(pchip(o),el('span','dd-type',LABEL_TYPE[o.key]));}
+    else if(o.kind==='labelgroup'||o.kind==='iplist'){b.append(pchip(o),el('span','dd-type',o.kind==='iplist'?'IP List':'Label Group'));}
     else if(o.kind==='service'&&!o.pin){const c=el('span','pchip svc-chip');c.append(ico('gear'));const t=el('span','svc-text');t.append(el('b','',o.name),el('span','',o.ports));c.append(t);b.append(c);b.style.justifyContent='flex-start';}
     else{b.append(pchip(o));b.style.justifyContent='flex-start';}
     b.addEventListener('mousedown',e=>{e.preventDefault();pick(o);});

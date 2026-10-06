@@ -87,6 +87,7 @@
    (s.labels||[]).forEach(l=>{const r=el('div','row');r.append(el('span','label',l),el('div','value','—'));at.append(r);});sec.append(at);box.append(sec);});
  }
  function openRoute(btn){
+  if(OBJ_TYPES[btn.dataset.route]){openObjects(btn);return;}
   const r=btn.dataset.route,label=btn.dataset.label,kind=mfKind(btn);
   if(kind==='placeholder'){openArea(label);markNav(btn);return;}
   const p=PCE_MANIFEST.pages[r]||{};const box=$('manifestScreen');box.replaceChildren();message();

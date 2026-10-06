@@ -46,7 +46,13 @@ The lab is built in three stages:
      - The sidebar is 297px wide (Nathan: 50% wider).
      - Placeholder pages have no "Go to Pairing Profiles" button.
      - The setup script is now about 1.7 MB, and Instruqt accepted it.
-5. ⬜ (next) Labels, Label Groups, Services and IP Lists fully working and wired into the policy pickers.
+5. ✅ (2026-10-06) Labels, Label Groups, Services and IP Lists are fully working (`src/js/60-objects.js`).
+   - Add/edit dialog with validation and duplicate checks; Remove with confirmation; a working name filter.
+   - System objects (All Services, Any IP list) are locked.
+   - Objects in use by a rule can't be removed, and renaming a label updates the rules that use it.
+   - The data is stored in state (`labels`, `labelGroups`, `services`, `ipLists`), synced across tabs and re-seeded on Reset.
+   - The policy rule pickers read the store (`storeLabels`, `storeServices`, `storeExtras`), with IP Lists and Label Groups added.
+   - Seeds come from the policy defaults plus the captured rows. Tested end-to-end.
 6. ⬜ Static views (Dashboard, Cloud) and the blank Map.
 7. ⬜ **Stop: working console complete.**
 
