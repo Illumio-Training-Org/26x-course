@@ -293,3 +293,15 @@ body.term-page .term-body{padding:12px 16px 24px}
 .first-cell input{margin:0}
 .row-btn{border:1px solid var(--line-strong)!important;border-radius:5px!important;background:var(--white)!important;padding:4px!important;min-block-size:26px!important;min-inline-size:26px}
 .row-btn .icon{inline-size:14px!important;block-size:14px!important}
+.side-nav .nav-children .nav-children{margin-inline-start:14px}
+.side-nav .nav-group .chevron{margin-inline-start:auto}
+.mf-table .link-text{color:var(--blue)}
+.mf-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-block-start:8px}
+.mf-tile{border:1px solid var(--line);border-radius:10px;background:var(--white);padding:14px 16px;box-shadow:var(--shadow);min-block-size:150px;pointer-events:none}
+.mf-tile h3{margin:0 0 10px;font-size:14px}
+.mf-tile-line{font-size:12px;color:var(--muted);padding-block:3px;border-block-end:1px dashed var(--line)}
+.mf-chart{block-size:90px;border-radius:6px;background:linear-gradient(180deg,transparent 60%,var(--pale) 60%),repeating-linear-gradient(90deg,var(--pale) 0 1px,transparent 1px 40px)}
+.mf-map-bar{align-items:center}
+.mf-map-filter{flex:1;margin:0}
+.mf-map-canvas{block-size:calc(100dvh - 220px);min-block-size:360px;border:1px solid var(--line);border-radius:8px;margin-block-start:10px;background:var(--pale) radial-gradient(circle,var(--line) 1px,transparent 1px) 0 0/22px 22px}
+.mf-empty{color:var(--muted)}

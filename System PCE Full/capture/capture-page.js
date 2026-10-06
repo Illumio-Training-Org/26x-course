@@ -35,7 +35,7 @@
   // tabs
   out.tabs = all('[role=tab],[data-tid*="comp-tab"]').filter(e => inMain(e) && visible(e)).map(e => ({
     label: T(e), active: e.getAttribute('aria-selected') === 'true' || /active|selected/i.test(e.className),
-  })).filter(t => t.label);
+  })).filter(t => t.label && !['Columns', 'Filters'].includes(t.label));   // skip AG Grid side-bar panels
 
   // toolbar buttons (main area only)
   out.toolbar = all('[data-tid~="comp-toolbar"] [data-tid~="comp-button"], [data-tid~="comp-toolbar"] button').filter(inMain)
@@ -52,22 +52,16 @@
     out.filter = (inp && inp.getAttribute('placeholder')) || T(sel.querySelector('[data-tid~="comp-selector-legend"]')) || T(sel);
   }
 
-  // grid: columns in header order, plus a few sample rows
+  // grid: header row gives the columns; each body row is read on its own so
+  // empty cells can't shift values into the wrong row
   const grid = document.querySelector('[data-tid~="comp-grid"]');
   if (grid) {
-    const cells = [...grid.querySelectorAll('[data-tid^="comp-grid-column-"]')];
-    const keys = [];
-    cells.forEach(c => { const k = tid(c).find(t => t.startsWith('comp-grid-column-')).replace('comp-grid-column-', ''); if (!keys.includes(k)) keys.push(k); });
-    const byKey = k => cells.filter(c => tid(c).includes('comp-grid-column-' + k));
-    out.columns = keys.map(k => ({ key: k, label: T(byKey(k)[0]) }));
-    const rowCount = Math.max(0, ...keys.map(k => byKey(k).length - 1));
-    out.rows = [];
-    for (let r = 1; r <= Math.min(MAX_ROWS, rowCount); r++) {
-      const row = {};
-      keys.forEach(k => { const c = byKey(k)[r]; if (c) row[k] = T(c).slice(0, 160); });
-      out.rows.push(row);
-    }
-    out.rowCount = rowCount;
+    const keyOf = c => tid(c).find(t => t.startsWith('comp-grid-column-')).replace('comp-grid-column-', '');
+    const head = grid.querySelector('[data-tid~="comp-grid-header-row"]');
+    out.columns = head ? [...head.querySelectorAll('[data-tid^="comp-grid-column-"]')].map(c => ({ key: keyOf(c), label: T(c) })) : [];
+    const rowEls = [...grid.querySelectorAll('[data-tid~="comp-grid-row"]')];
+    out.rows = rowEls.slice(0, MAX_ROWS).map(r => { const o = {}; [...r.querySelectorAll('[data-tid^="comp-grid-column-"]')].forEach(c => { o[keyOf(c)] = T(c).slice(0, 160); }); return o; });
+    out.rowCount = rowEls.length;
     out.pagination = T(document.querySelector('[data-tid~="comp-pagination"]'));
   }
 

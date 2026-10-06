@@ -2,7 +2,7 @@
 'use strict';
 (() => {
  const $=id=>document.getElementById(id);
- const screens=['policiesScreen','policyScreen','placeholderScreen','profilesScreen','detailScreen','formScreen','keyScreen','workloadsScreen','workloadDetailScreen'];
+ const screens=['manifestScreen','policiesScreen','policyScreen','placeholderScreen','profilesScreen','detailScreen','formScreen','keyScreen','workloadsScreen','workloadDetailScreen'];
  const labelIds=['roleLabel','appLabel','envLabel','locLabel'];
  const overrideIds=['overrideRole','overrideApp','overrideEnv','overrideLoc'];
  const labelNames=['Role','Application','Environment','Location'];
@@ -30,7 +30,7 @@
   screens.forEach(screen=>$(screen).hidden=screen!==id);$('pageTitle').textContent=title;
   const workloads=id==='workloadsScreen'||id==='workloadDetailScreen';
   const area=id==='placeholderScreen'?currentArea:'';document.querySelectorAll('.side-nav button').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current');});
-  const pol=id==='policiesScreen'||id==='policyScreen';const navBtn=pol?$('navAllPolicies'):area?document.querySelector('.side-nav button[data-area="'+area+'"]'):$(workloads?'navWorkloads':'navProfiles');navBtn.classList.add('active');navBtn.setAttribute('aria-current','page');$('crumbServers').hidden=!pol&&!!area&&!serverAreas.includes(area);$('crumbSection').textContent=pol?'Segmentation':'Servers and Endpoints';
+  const pol=id==='policiesScreen'||id==='policyScreen';const navBtn=pol?$('navAllPolicies'):area?document.querySelector('.side-nav button[data-area="'+area+'"]'):$(workloads?'navWorkloads':'navProfiles');if(navBtn){navBtn.classList.add('active');navBtn.setAttribute('aria-current','page');}$('crumbServers').hidden=!pol&&!!area&&!serverAreas.includes(area);$('crumbSection').textContent=pol?'Segmentation':'Servers and Endpoints';
   $('breadcrumbProfiles').textContent=pol?'Policies':area||(workloads?'Workloads':'Pairing Profiles');
   const suffix=id==='policyScreen'?' / '+title:id==='detailScreen'?' / '+selected().name:id==='keyScreen'?' / Pairing Key':id==='formScreen'?' / '+(editing?'Edit':'Add'):id==='workloadDetailScreen'?' / '+title:'';
   $('breadcrumbSuffix').textContent=suffix;$('breadcrumbSuffix').hidden=!suffix;

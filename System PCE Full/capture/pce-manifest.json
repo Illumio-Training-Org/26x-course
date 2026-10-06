@@ -1343,36 +1343,35 @@
      "name": "All Services",
      "portprotos": "ALL",
      "updatedat": "05/10/2026, 17:49:26",
-     "updatedby": "System",
-     "desc": "Alternate HTTP"
+     "updatedby": "System"
     },
     {
      "name": "alt-http",
      "portprotos": "8080 TCP",
      "updatedat": "05/10/2026, 17:55:33",
      "updatedby": "admin@illumio-lab.invalid",
-     "desc": "Alternate HTTPS"
+     "desc": "Alternate HTTP"
     },
     {
      "name": "alt-https",
      "portprotos": "8443 TCP",
      "updatedat": "05/10/2026, 17:55:39",
      "updatedby": "admin@illumio-lab.invalid",
-     "desc": "Border Gateway Protocol"
+     "desc": "Alternate HTTPS"
     },
     {
      "name": "bgp",
      "portprotos": "179 TCP",
      "updatedat": "05/10/2026, 17:55:38",
      "updatedby": "admin@illumio-lab.invalid",
-     "desc": "BIND Remote Network Domain Control"
+     "desc": "Border Gateway Protocol"
     },
     {
      "name": "bind-rndc",
      "portprotos": "953 TCP",
      "updatedat": "05/10/2026, 17:55:31",
      "updatedby": "admin@illumio-lab.invalid",
-     "desc": "Dynamic Host Control Protocol/BOOTP Client"
+     "desc": "BIND Remote Network Domain Control"
     }
    ],
    "rowCount": 50,
@@ -1461,7 +1460,6 @@
      "iprange": "0.0.0.0/0 +1 more",
      "updatedat": "05/10/2026, 17:49:26",
      "updatedby": "System",
-     "desc": "",
      "knownnetwork": ""
     },
     {
@@ -1561,8 +1559,7 @@
    "rows": [
     {
      "name": "Engineering",
-     "sid": "S-1-5-21-3967917948-4012392808-1110388204-1108",
-     "rulesets": "In use"
+     "sid": "S-1-5-21-3967917948-4012392808-1110388204-1108"
     },
     {
      "name": "Finance",
@@ -1574,7 +1571,8 @@
     },
     {
      "name": "IT",
-     "sid": "S-1-5-21-3967917948-4012392808-1110388204-1109"
+     "sid": "S-1-5-21-3967917948-4012392808-1110388204-1109",
+     "rulesets": "In use"
     },
     {
      "name": "Sales",
@@ -1782,12 +1780,7 @@
     "title": "Labels",
     "text": "You can edit and filter labels and label groups, label workloads, and label groups in rules and scopes."
    },
-   "tabs": [
-    {
-     "label": "Columns",
-     "active": false
-    }
-   ],
+   "tabs": [],
    "toolbar": [
     {
      "label": "Add",
@@ -2206,12 +2199,7 @@
     "Home",
     "Label Management"
    ],
-   "tabs": [
-    {
-     "label": "Columns",
-     "active": false
-    }
-   ],
+   "tabs": [],
    "toolbar": [
     {
      "label": "Edit",
@@ -2445,42 +2433,6 @@
     {
      "key": "last",
      "label": "Last Applied Policy"
-    },
-    {
-     "key": "labels-role",
-     "label": "dc"
-    },
-    {
-     "key": "labels-app",
-     "label": "ad"
-    },
-    {
-     "key": "labels-env",
-     "label": "Production"
-    },
-    {
-     "key": "labels-loc",
-     "label": "ca"
-    },
-    {
-     "key": "labels-bu",
-     "label": "it"
-    },
-    {
-     "key": "labels-type",
-     "label": "server"
-    },
-    {
-     "key": "labels-os",
-     "label": "windows 2008"
-    },
-    {
-     "key": "labels-dfirbubble",
-     "label": "IR-CLEANBUBBLE"
-    },
-    {
-     "key": "labels-compliance",
-     "label": "HIPAA"
     }
    ],
    "rows": [
@@ -2493,7 +2445,6 @@
      "protectioncoveragescore": "55%",
      "name": "acd-dc01-prd",
      "labels": "dc ad Production ca it server windows 2008 IR-CLEANBUBBLE",
-     "last": "05/10/2026, 18:36:15",
      "labels-role": "dc",
      "labels-app": "ad",
      "labels-env": "Production",
@@ -2502,7 +2453,7 @@
      "labels-type": "server",
      "labels-os": "windows 2008",
      "labels-dfirbubble": "IR-CLEANBUBBLE",
-     "labels-compliance": "HIPAA"
+     "last": "05/10/2026, 18:36:15"
     },
     {
      "status": "Online",
@@ -2513,16 +2464,15 @@
      "protectioncoveragescore": "55%",
      "name": "acd-dc02-prd",
      "labels": "dc ad Production ca it server windows 2008 IR-CLEANBUBBLE",
-     "last": "05/10/2026, 18:36:14",
      "labels-role": "dc",
      "labels-app": "ad",
      "labels-env": "Production",
-     "labels-loc": "ny",
+     "labels-loc": "ca",
      "labels-bu": "it",
      "labels-type": "server",
      "labels-os": "windows 2008",
      "labels-dfirbubble": "IR-CLEANBUBBLE",
-     "labels-compliance": "HIPAA"
+     "last": "05/10/2026, 18:36:14"
     },
     {
      "status": "Online",
@@ -2533,7 +2483,6 @@
      "protectioncoveragescore": "55%",
      "name": "acd-dc03-prd",
      "labels": "dc ad Production ny it server windows 2008 IR-CLEANBUBBLE",
-     "last": "05/10/2026, 18:36:15",
      "labels-role": "dc",
      "labels-app": "ad",
      "labels-env": "Production",
@@ -2542,7 +2491,7 @@
      "labels-type": "server",
      "labels-os": "windows 2008",
      "labels-dfirbubble": "IR-CLEANBUBBLE",
-     "labels-compliance": "HIPAA"
+     "last": "05/10/2026, 18:36:15"
     },
     {
      "status": "Online",
@@ -2553,36 +2502,30 @@
      "protectioncoveragescore": "55%",
      "name": "acd-dc04-prd",
      "labels": "dc ad Production ny it server windows 2008 IR-CLEANBUBBLE",
-     "last": "05/10/2026, 18:36:15",
-     "labels-role": "ct",
-     "labels-app": "imaging",
-     "labels-env": "medical",
-     "labels-loc": "acme hospital",
-     "labels-bu": "health",
-     "labels-type": "OT",
-     "labels-os": "linux",
+     "labels-role": "dc",
+     "labels-app": "ad",
+     "labels-env": "Production",
+     "labels-loc": "ny",
+     "labels-bu": "it",
+     "labels-type": "server",
+     "labels-os": "windows 2008",
      "labels-dfirbubble": "IR-CLEANBUBBLE",
-     "labels-compliance": "HIPAA"
+     "last": "05/10/2026, 18:36:15"
     },
     {
      "status": "Unmanaged",
-     "enforcement": "Selective",
-     "visibility": "Enhanced Data Collection",
      "sync": "",
-     "ransomwareexposure": "Protected",
      "protectioncoveragescore": "",
      "name": "AqONEScannerSurg6",
      "labels": "ct imaging medical acme hospital health OT HIPAA IR-CLEANBUBBLE",
-     "last": "05/10/2026, 18:36:15",
      "labels-role": "ct",
      "labels-app": "imaging",
      "labels-env": "medical",
      "labels-loc": "acme hospital",
      "labels-bu": "health",
      "labels-type": "OT",
-     "labels-os": "linux",
-     "labels-dfirbubble": "IR-CLEANBUBBLE",
-     "labels-compliance": "HIPAA"
+     "labels-compliance": "HIPAA",
+     "labels-dfirbubble": "IR-CLEANBUBBLE"
     }
    ],
    "rowCount": 50,
@@ -2918,10 +2861,6 @@
     },
     {
      "label": "Kubernetes Clusters",
-     "active": false
-    },
-    {
-     "label": "Columns",
      "active": false
     }
    ],
@@ -3650,14 +3589,6 @@
     {
      "label": "Service Accounts",
      "active": false
-    },
-    {
-     "label": "Columns",
-     "active": false
-    },
-    {
-     "label": "Filters",
-     "active": false
     }
    ],
    "toolbar": [
@@ -3757,14 +3688,6 @@
     },
     {
      "label": "Service Accounts",
-     "active": false
-    },
-    {
-     "label": "Columns",
-     "active": false
-    },
-    {
-     "label": "Filters",
      "active": false
     }
    ],
@@ -3901,14 +3824,6 @@
     {
      "label": "Service Accounts",
      "active": false
-    },
-    {
-     "label": "Columns",
-     "active": false
-    },
-    {
-     "label": "Filters",
-     "active": false
     }
    ],
    "toolbar": [
@@ -3976,14 +3891,6 @@
     },
     {
      "label": "Service Accounts",
-     "active": false
-    },
-    {
-     "label": "Columns",
-     "active": false
-    },
-    {
-     "label": "Filters",
      "active": false
     }
    ],

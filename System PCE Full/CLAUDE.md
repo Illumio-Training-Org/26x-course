@@ -32,7 +32,15 @@ The lab is built in three stages:
    - 47 pages are tables, either the classic `comp-grid` or AG Grid (Labels, Label Types, Users and others), with real columns, sample rows and pagination.
    - About 15 settings/form pages (Policy Settings, Offline Timers, Security, Trusted Proxy, Quarantine, …) captured no fields yet. Improve `capture-page.js` for their layout during step 4.
    - Redirects on this org: AI Labeling goes to Tag to Label Mapping, and Essential Service Rules goes to the Insights Hub; treat both as placeholders.
-4. ⬜ Generic templates and the manifest-driven sidebar, so every menu item is clickable.
+4. ✅ (first pass, 2026-10-06) The sidebar is generated from the manifest at build time (`build.mjs` with `src/nav-icons.json`). Pages are rendered by `src/js/50-manifest-pages.js` using these templates:
+   - **list**: captured grid
+   - **static**: Dashboard and Cloud
+   - **blank-map**: Explore › Map
+   - **detail**: settings pages
+   - **placeholder**: Insights, Traffic, Mesh, and pages that redirect in the source org
+
+   Hand-built pages keep their ids: `navWorkloads`, `navProfiles`, `navAllPolicies`, `segMenu`, `serversMenu`. Reset lab now opens from the account avatar (T), top right. The smoke test clicks all 79 menu items: no errors.
+   - **TODO:** about 15 settings/form pages show "No settings to display", and the Dashboard and Cloud static views are sparse. Capture their fields and layout better. One option is cropped real screenshots for the static views.
 5. ⬜ Labels, Label Groups, Services and IP Lists fully working and wired into the policy pickers.
 6. ⬜ Static views (Dashboard, Cloud) and the blank Map.
 7. ⬜ **Stop: working console complete.**
