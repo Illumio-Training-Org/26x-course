@@ -21,6 +21,10 @@ workload's page.
   embedded in `track_scripts/setup-cloud-client`, so the lab has no
   download at start-up.
 
+## Keeping it in step with the real PCE
+
+Use the `/pce-capture` Claude Code skill. See [its README](../.claude/skills/pce-capture/README.md).
+
 ## Updating the page
 
 The page is built from `src/` by `build.mjs`; `build-setup.sh` runs it first.

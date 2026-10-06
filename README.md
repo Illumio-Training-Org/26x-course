@@ -62,6 +62,15 @@ last. Any new current track must start with a word that sorts before
   AWS account to Illumio Cloud (CloudSecure). Used only by the Select Exam
   tracks (and the AWS Automated Onboard Testing prototype) so Task 10 has an
   onboarded account. Renamed from `terraform-cloudsecure-aws` 2026-09-30.
+- `System PCE/` — **`! 26.x System PCE`** (`26x-system-pce`): an offline copy of the
+  PCE Console in Instruqt tabs (Console + Linux/Windows/AIX terminals) with no magic link,
+  PCE back end or Terraform. Its menus and pages are generated from a read-only capture of a
+  real PCE (`System PCE/capture/pce-manifest.json`); Pairing, Workloads, Policies, Labels,
+  Label Groups, Services and IP Lists work for real. 3 challenges: Pair a Workload, Writing
+  Policy (Deny rule), Lab Complete. See its `README.md` and `CLAUDE.md`.
+- `.claude/skills/pce-capture/` — the **`/pce-capture`** Claude Code skill that re-captures a
+  live PCE to keep `System PCE` up to date when the Console changes. See its
+  [README](.claude/skills/pce-capture/README.md).
 - `template/` — the org's reusable `! 000-Template for CX` scaffold
   (see its own `README.md`/`CLAUDE.md`) — the starting point for any
   new CX lab, not specific to the 26.x course itself.
