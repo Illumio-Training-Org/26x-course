@@ -82,8 +82,19 @@
     out.pagination = T(document.querySelector('.ag-paging-panel')) || T(document.querySelector('[data-tid~="comp-pagination"]'));
   }
 
-  // detail-style pages: section headings with their field labels
-  if (!grid && !ag) {
+  // settings pages: comp-sectiontitle-* headings and comp-attributerow label/value pairs
+  const attrNodes = all('[data-tid^="comp-sectiontitle"],[data-tid~="comp-attributerow"]').filter(inMain);
+  if (!grid && !ag && attrNodes.length) {
+    out.attributes = []; let cur = null;
+    attrNodes.forEach(n => {
+      if ((n.getAttribute('data-tid') || '').startsWith('comp-sectiontitle')) { cur = { section: T(n), rows: [] }; out.attributes.push(cur); return; }
+      if (!cur) { cur = { section: '', rows: [] }; out.attributes.push(cur); }
+      cur.rows.push({ label: T(n.querySelector('[data-tid~="comp-attributerow-label"]')), value: T(n.querySelector('[data-tid~="comp-attributerow-value"]')).slice(0, 300) });
+    });
+  }
+
+  // other detail-style pages: section headings with their field labels
+  if (!grid && !ag && !attrNodes.length) {
     out.sections = all('h2,h3,[data-tid*="section-title"],[class*="sectionTitle" i]').filter(e => inMain(e) && visible(e)).slice(0, 20).map(h => {
       const sec = h.closest('section,[class*="section" i]') || h.parentElement;
       const labels = sec ? all('[class*="label" i], dt, label').filter(l => sec.contains(l) && visible(l)).map(T).filter(s => s && s.length < 60) : [];

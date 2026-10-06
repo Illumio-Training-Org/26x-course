@@ -22,10 +22,17 @@ PCE_MAGIC_LINK='<fresh magic link>' node capture-pce.mjs
 2. Run `git diff capture/pce-manifest.json` to see what changed: new menu items, renamed columns, new buttons.
 3. Rebuild with `./build-setup.sh`, check any hand-built pages the diff touches, then push.
 
+## Claude skill
+The `/pce-capture` skill (`26x-course/.claude/skills/pce-capture/SKILL.md`) walks through both capture routes,
+including the browser-extension route, plus merging, rebuilding and pushing.
+
 ## Files
 | File | Purpose |
 |---|---|
 | `capture-menu.js` | Reads the sidebar tree. Runs inside the Console page. |
 | `capture-page.js` | Reads one page's structure. Runs inside the Console page. Uses the Console's own `data-tid` hooks, for example `comp-grid-column-<key>`. |
+| `extension-helpers.js` | In-page helpers for the Claude-in-Chrome route. |
+| `merge-capture.py` | Merges a capture into the manifest and prints a change report (`--dry-run`). |
+| `crop-shots.py` | Crops saved screenshots into `src/assets/static` and sets `staticImage`. |
 | `capture-pce.mjs` | Logs in, walks every route (except Insights), and writes the manifest. |
 | `menu-raw.json` | The first menu capture (2026-10-06), made through the browser extension. |
