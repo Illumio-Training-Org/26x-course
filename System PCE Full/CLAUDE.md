@@ -27,7 +27,7 @@ The lab is built in three stages:
 
 ## Build order and progress
 1. ✅ Scaffold the new track (2026-10-06, commit 03f90e1).
-2. ⬜ Split `html/Illumio-PCE-Pairing-Lab-Offline.html` into `src/` parts plus `build.mjs`, with output identical in behaviour. Prove it with the headless tests.
+2. ✅ Split into `src/` (`page.html`, `styles.css`, `js/NN-*.js` concatenated in name order into one shared scope, `assets/`) with `build.mjs` producing `html/index.html`. Build output was byte-identical to the original page (2026-10-06). **Edit `src/`, never `html/index.html`.**
 3. ⬜ Write `capture/capture-pce.mjs`. Nathan runs it once, then we review the manifest together.
 4. ⬜ Generic templates and the manifest-driven sidebar, so every menu item is clickable.
 5. ⬜ Labels, Label Groups, Services and IP Lists fully working and wired into the policy pickers.
@@ -42,7 +42,7 @@ The lab is built in three stages:
 - **Setup script:** `build-setup.sh` base64-embeds the page and the server into `track_scripts/setup-cloud-client`. Never edit the generated script by hand.
 - **Challenges:**
   - 01 Pair a Workload. Its check needs linux, windows and aix all paired.
-  - 02 Writing Policy. Its check is `RULE_TYPE=allow`. Open question: should it be Deny?
+  - 02 Writing Policy. Its check is `RULE_TYPE=deny`: a **Deny Rule** from Development to Production on All Services (Nathan, 2026-10-06; the frozen lab stays Allow).
   - 03 Lab Complete.
 - **No "simulation" wording** in anything learners see: tabs, task text, description or teaser.
 - **Linux pairing output** replays a real VEN 24.2.20 log. The Windows and AIX output, the error messages and `illumio-ven-ctl status` are approximations.

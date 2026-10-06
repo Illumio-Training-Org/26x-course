@@ -6,7 +6,7 @@
 # (/opt/pce-lab/server.py), which writes /root/pce-lab-state.json.
 
 STATE=/root/pce-lab-state.json
-RULE_TYPE=allow   # allow | deny | override - must match the task text
+RULE_TYPE=deny   # allow | deny | override - must match the task text
 
 result=$(python3 - "$STATE" "$RULE_TYPE" <<'PY'
 import json, sys
@@ -27,7 +27,7 @@ if not policy:
     fail('No policy named "%s" was found. Go to Segmentation > All Policies and select Add > Add from Scratch.' % name)
 rules = policy.get('rules', [])
 if not rules:
-    fail('The policy "%s" has no saved rules. Add an %s and select the save icon at the end of the row.' % (name, type_name))
+    fail('The policy "%s" has no saved rules. Add %s %s and select the save icon at the end of the row.' % (name, 'an' if type_name[0] in 'AO' else 'a', type_name))
 typed = [r for r in rules if r.get('type') == rule_type]
 if not typed:
     fail('The policy has no saved %s. Select Add Rule > %s, then save the rule.' % (type_name, type_name))

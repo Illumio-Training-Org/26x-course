@@ -1,11 +1,13 @@
 #!/bin/bash
-# Regenerates track_scripts/setup-cloud-client from html/*.html.
-# Run this after any change to the HTML, then `instruqt track push`.
+# Builds html/index.html from src/ (node build.mjs), then regenerates
+# track_scripts/setup-cloud-client from it. Run after any change in src/,
+# then `instruqt track push`. Edit src/, never html/index.html.
 # The page is embedded in the setup script (no download at lab start),
 # so the track has no runtime dependency on GitHub or OneDrive.
 set -euo pipefail
 cd "$(dirname "$0")"
-SRC=html/Illumio-PCE-Pairing-Lab-Offline.html
+node build.mjs
+SRC=html/index.html
 OUT=track_scripts/setup-cloud-client
 {
   cat <<'HEAD'

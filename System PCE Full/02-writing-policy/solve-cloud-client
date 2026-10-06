@@ -9,7 +9,7 @@ try:
     d = json.load(open(f))
 except Exception:
     d = {'workloads': []}
-d['policies'] = [{'name': 'Block Development to Production', 'rules': [{'type': 'allow', 'enabled': True,
+d['policies'] = [{'name': 'Block Development to Production', 'rules': [{'type': 'deny', 'enabled': True,
                   'sources': ['env:Development'], 'destinations': ['env:Production'], 'services': ['All Services']}]}]
 json.dump(d, open(f, 'w'))
 PY
