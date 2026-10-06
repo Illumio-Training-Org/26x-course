@@ -22,6 +22,33 @@ It does **not** copy Illumio's HTML, CSS or code. It reads a description of each
 - When the lab's reference screenshots look out of date.
 - When you want to check whether anything has changed. The merge step has a dry-run mode that reports differences without writing anything.
 
+## First-time setup
+
+`System PCE` isn't a separate repo. It's a folder inside the **`26x-course`** repo, alongside the skill, so you clone the whole repo once:
+
+1. **Get access** to the GitHub repo `Illumio-Training-Org/26x-course`. Ask me if you can't see it.
+2. **Clone it** (Git, GitHub Desktop or the `gh` CLI all work):
+   ```
+   git clone https://github.com/Illumio-Training-Org/26x-course.git
+   cd 26x-course
+   ```
+   Already cloned? Run `git pull` in the `26x-course` folder to get the latest.
+3. **Install Claude Code** and sign in: https://claude.com/claude-code
+4. **Choose a capture route:**
+   - **Chrome route (recommended):** install the **Claude in Chrome** extension in Google Chrome and sign in with the same Claude account. https://claude.ai/chrome
+   - **Playwright route:** install **Node.js** 18 or later. Google Chrome must also be installed.
+5. **Only if you'll push the updated lab:**
+   - Install the **Instruqt CLI**: https://docs.instruqt.com/reference/cli/commands
+   - Run `instruqt auth login`.
+   - You must be a member of the `illumio-training` Instruqt team.
+6. **Open Claude Code inside the repo folder**, so the `/pce-capture` skill is picked up:
+   ```
+   cd 26x-course
+   claude
+   ```
+
+The clone *is* the track's source: `System PCE/track.yml` and the challenge folders are what `instruqt track push` uploads. You don't need to download the track from Instruqt separately.
+
 ## How to run it
 
 **You'll need:**
@@ -31,11 +58,19 @@ It does **not** copy Illumio's HTML, CSS or code. It reads a description of each
 - This repo cloned, with **Claude Code** opened in the `26x-course` folder.
 
 **Then:**
-1. In Claude Code, type `/pce-capture`, or just ask it to "re-capture the PCE".
+1. In Claude Code, started inside the `26x-course` folder (see First-time setup), type `/pce-capture`, or just ask it to "re-capture the PCE".
 2. When asked, open your fresh magic link **yourself** in Chrome and say when you're signed in. Claude never signs in with a link or token, so don't paste links into the chat. If you do, treat that link as exposed and let it expire.
 3. Claude walks the Console read-only, page by page, and saves the capture. It takes a few minutes.
 4. Claude shows you a **change report**: added or removed menu items, new pages, and changed titles, columns, buttons and tabs. You decide whether to apply it.
 5. Claude rebuilds the lab and tests it. A headless browser clicks every menu item and runs the pairing and policy flows. Then it pushes to Instruqt and GitHub.
+
+**Before anything is pushed,** Claude checks that your copy matches what's live. If someone edited the track directly in Instruqt's web editor, those edits wouldn't be in GitHub, and a push would overwrite them. The check is:
+```
+git pull
+cd "System PCE" && instruqt track pull --force
+git diff
+```
+If `git diff` shows anything unexpected, Claude stops and asks you before pushing.
 6. Start a **new** session of `! 26.x System PCE` to see the result. The page only installs when a session starts.
 
 **Playwright route (no browser extension needed):**

@@ -13,7 +13,7 @@ The `! 26.x System PCE` lab (`26x-course/System PCE/`) is an offline Illumio Con
 4. test
 5. push
 
-Paths below are relative to `26x-course/System PCE/`. Read that folder's `CLAUDE.md` first.
+Paths below are relative to `26x-course/System PCE/`. Read that folder's `CLAUDE.md` first. If `26x-course` isn't cloned or is out of date, follow the First-time setup in this skill's `README.md` (clone `Illumio-Training-Org/26x-course` and `git pull`).
 
 ## Ground rules (non-negotiable)
 - **Read-only.** Navigate and read only. Never click Save, Add, Remove, Provision, Edit or Confirm, and never submit a dialog. The only allowed clicks are:
@@ -88,10 +88,11 @@ As of 2026-10-06 this route had **not yet been run live**. If it misbehaves, use
    - Run the pairing and policy flows.
    - Run `bash -n` and table tests on the check scripts.
 5. **Ship:**
-   1. `instruqt track validate`
-   2. `instruqt track push`
-   3. commit and push `26x-course` to GitHub
-   4. tell the user to start a **new** session, because pages install at session start
+   1. **Sync check first:** `git pull`, then in `System PCE/` run `instruqt track pull --force`, then `git diff`. If the Instruqt copy has edits that aren't in git, stop and ask the user before continuing, because pushing would overwrite them.
+   2. `instruqt track validate`
+   3. `instruqt track push`
+   4. commit and push `26x-course` to GitHub
+   5. tell the user to start a **new** session, because pages install at session start
 
 ## Files
 | File | Purpose |
