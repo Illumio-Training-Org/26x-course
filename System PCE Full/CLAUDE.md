@@ -40,8 +40,13 @@ The lab is built in three stages:
    - **placeholder**: Insights, Traffic, Mesh, and pages that redirect in the source org
 
    Hand-built pages keep their ids: `navWorkloads`, `navProfiles`, `navAllPolicies`, `segMenu`, `serversMenu`. Reset lab now opens from the account avatar (T), top right. The smoke test clicks all 79 menu items: no errors.
-   - **TODO:** about 15 settings/form pages show "No settings to display", and the Dashboard and Cloud static views are sparse. Capture their fields and layout better. One option is cropped real screenshots for the static views.
-5. ⬜ Labels, Label Groups, Services and IP Lists fully working and wired into the policy pickers.
+   - **2026-10-06 later:**
+     - 21 pages are now cropped real screenshots, read-only and anonymised (`src/assets/static/<route>.jpg`, page key `staticImage`, injected as `PCE_MANIFEST.shots`): Dashboards, all Cloud pages, Quarantine, Authentication, Connectors, Policy Check, Segmentation Templates, Cloud Connector and Policy Preferences.
+     - Settings pages show their real attribute sections (`attributes` in the manifest): Policy Settings, Offline Timers, Security, Trusted Proxy and Corporate Public IPs.
+     - The sidebar is 297px wide (Nathan: 50% wider).
+     - Placeholder pages have no "Go to Pairing Profiles" button.
+     - The setup script is now about 1.7 MB, and Instruqt accepted it.
+5. ⬜ (next) Labels, Label Groups, Services and IP Lists fully working and wired into the policy pickers.
 6. ⬜ Static views (Dashboard, Cloud) and the blank Map.
 7. ⬜ **Stop: working console complete.**
 

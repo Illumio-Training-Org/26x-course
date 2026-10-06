@@ -553,7 +553,8 @@
      "heading": "000000000",
      "labels": []
     }
-   ]
+   ],
+   "staticImage": "serversAndEndpointsDashboard.jpg"
   },
   "clouddashboard": {
    "route": "clouddashboard",
@@ -563,7 +564,8 @@
    ],
    "tabs": [],
    "toolbar": [],
-   "sections": []
+   "sections": [],
+   "staticImage": "clouddashboard.jpg"
   },
   "ransomwareDashboard": {
    "route": "ransomwareDashboard",
@@ -767,7 +769,8 @@
      "heading": "000000000",
      "labels": []
     }
-   ]
+   ],
+   "staticImage": "ransomwareDashboard.jpg"
   },
   "traffic-rules": {
    "route": "traffic-rules",
@@ -819,19 +822,16 @@
     {
      "label": "Restore",
      "disabled": true,
-     "icons": [
-      "quarantine-restore"
-     ]
+     "icons": []
     },
     {
      "label": "Refresh",
      "disabled": false,
-     "icons": [
-      "refresh"
-     ]
+     "icons": []
     }
    ],
-   "sections": []
+   "sections": [],
+   "staticImage": "quarantine.jpg"
   },
   "illuminationplus": {
    "route": "illuminationplus",
@@ -2952,7 +2952,8 @@
    "columnGroups": [],
    "rows": [],
    "rowCount": 0,
-   "pagination": "Page Size: 50 0 to 0 of 0 Page of 0"
+   "pagination": "Page Size: 50 0 to 0 of 0 Page of 0",
+   "staticImage": "onboarding.jpg"
   },
   "securityreview": {
    "route": "securityreview",
@@ -3013,7 +3014,8 @@
    ],
    "rows": [],
    "rowCount": 0,
-   "pagination": ""
+   "pagination": "",
+   "staticImage": "securityreview.jpg"
   },
   "cloudinventory": {
    "route": "cloudinventory/cloudResources",
@@ -3047,7 +3049,8 @@
      "heading": "Viewing Cloud Inventory",
      "labels": []
     }
-   ]
+   ],
+   "staticImage": "cloudinventory.jpg"
   },
   "cloudMap": {
    "route": "cloudMap",
@@ -3068,7 +3071,8 @@
      "heading": "Maps",
      "labels": []
     }
-   ]
+   ],
+   "staticImage": "cloudMap.jpg"
   },
   "traffic": {
    "route": "traffic",
@@ -3093,7 +3097,8 @@
      "heading": "Traffic",
      "labels": []
     }
-   ]
+   ],
+   "staticImage": "traffic.jpg"
   },
   "cloudReports/downloads": {
    "route": "cloudReports/downloads",
@@ -3173,7 +3178,8 @@
    ],
    "rows": [],
    "rowCount": 0,
-   "pagination": ""
+   "pagination": "",
+   "staticImage": "cloudReports__downloads.jpg"
   },
   "applications": {
    "route": "applications",
@@ -3243,7 +3249,8 @@
    ],
    "rows": [],
    "rowCount": 0,
-   "pagination": ""
+   "pagination": "",
+   "staticImage": "applications.jpg"
   },
   "cloudlabeling/applicationDiscovery/deployments": {
    "route": "cloudlabeling/applicationDiscovery/deployments",
@@ -3285,7 +3292,8 @@
      "heading": "Application Discovery",
      "labels": []
     }
-   ]
+   ],
+   "staticImage": "cloudlabeling__applicationDiscovery__deployments.jpg"
   },
   "cloudlabeling/applicationDiscovery/applicationDefinitions": {
    "route": "cloudlabeling/applicationDiscovery/applicationDefinitions",
@@ -3314,7 +3322,8 @@
     }
    ],
    "toolbar": [],
-   "sections": []
+   "sections": [],
+   "staticImage": "cloudlabeling__applicationDiscovery__applicationDefinitions.jpg"
   },
   "cloudlabeling/applicationDiscovery/discoveryRules": {
    "route": "cloudlabeling/applicationDiscovery/discoveryRules",
@@ -3390,7 +3399,8 @@
    ],
    "rows": [],
    "rowCount": 0,
-   "pagination": ""
+   "pagination": "",
+   "staticImage": "cloudlabeling__applicationDiscovery__discoveryRules.jpg"
   },
   "cloudEvents": {
    "route": "cloudEvents/audit",
@@ -3490,7 +3500,8 @@
     }
    ],
    "rowCount": 3,
-   "pagination": "1 \u2013 3 of 3 Total"
+   "pagination": "1 \u2013 3 of 3 Total",
+   "staticImage": "cloudEvents.jpg"
   },
   "usage": {
    "route": "usage",
@@ -4017,12 +4028,20 @@
     {
      "label": "Edit",
      "disabled": false,
-     "icons": [
-      "edit"
-     ]
+     "icons": []
     }
    ],
-   "sections": []
+   "attributes": [
+    {
+     "section": "",
+     "rows": [
+      {
+       "label": "Addresses",
+       "value": ""
+      }
+     ]
+    }
+   ]
   },
   "authenticationsettings": {
    "route": "authenticationsettings",
@@ -4046,7 +4065,8 @@
      "heading": "API Key Settings",
      "labels": []
     }
-   ]
+   ],
+   "staticImage": "authenticationsettings.jpg"
   },
   "connector": {
    "route": "connector",
@@ -4057,7 +4077,8 @@
    ],
    "tabs": [],
    "toolbar": [],
-   "sections": []
+   "sections": [],
+   "staticImage": "connector.jpg"
   },
   "corporatepublicips": {
    "route": "corporatepublicips/default",
@@ -4071,12 +4092,24 @@
     {
      "label": "Edit",
      "disabled": false,
-     "icons": [
-      "edit"
-     ]
+     "icons": []
     }
    ],
-   "sections": []
+   "attributes": [
+    {
+     "section": "",
+     "rows": [
+      {
+       "label": "Name",
+       "value": "default"
+      },
+      {
+       "label": "Addresses",
+       "value": ""
+      }
+     ]
+    }
+   ]
   },
   "flowcollection": {
    "route": "flowcollection",
@@ -4249,7 +4282,44 @@
     }
    ],
    "toolbar": [],
-   "sections": []
+   "attributes": [
+    {
+     "section": "VENs (versions 20.2.0 and higher)",
+     "rows": [
+      {
+       "label": "IPv6 Traffic",
+       "value": "Allowed based on policy"
+      }
+     ]
+    },
+    {
+     "section": "VENs (versions lower than 20.2.0)",
+     "rows": [
+      {
+       "label": "IPv6 Traffic",
+       "value": "All Allowed"
+      }
+     ]
+    },
+    {
+     "section": "IKE Authentication",
+     "rows": [
+      {
+       "label": "Authentication Type",
+       "value": "PSK"
+      }
+     ]
+    },
+    {
+     "section": "Public Cloud Configuration",
+     "rows": [
+      {
+       "label": "NAT Detection",
+       "value": "Private Data Center or Public Cloud with 1:1 NAT (Default)"
+      }
+     ]
+    }
+   ]
   },
   "essentialservicerules": {
    "route": "insights/insights-hub",
@@ -4437,12 +4507,47 @@
     {
      "label": "Edit",
      "disabled": false,
-     "icons": [
-      "edit"
-     ]
+     "icons": []
     }
    ],
-   "sections": []
+   "attributes": [
+    {
+     "section": "Scopes in Policies",
+     "rows": [
+      {
+       "label": "Display Scopes in Policies",
+       "value": "Yes"
+      }
+     ]
+    },
+    {
+     "section": "Provisioning",
+     "rows": [
+      {
+       "label": "Require Provision Note",
+       "value": "No"
+      }
+     ]
+    },
+    {
+     "section": "Destination & Source Order",
+     "rows": [
+      {
+       "label": "UI Column Order",
+       "value": "Display Source Column First Source Destination"
+      }
+     ]
+    },
+    {
+     "section": "Warning Setting",
+     "rows": [
+      {
+       "label": "Display warning when editing labels",
+       "value": "No"
+      }
+     ]
+    }
+   ]
   },
   "offlinetimers": {
    "route": "offlinetimers/server",
@@ -4473,12 +4578,28 @@
     {
      "label": "Edit",
      "disabled": false,
-     "icons": [
-      "edit"
-     ]
+     "icons": []
     }
    ],
-   "sections": []
+   "attributes": [
+    {
+     "section": "PCE to Workloads Global Offline Timers",
+     "rows": [
+      {
+       "label": "Decommission and IP Cleanup Timer",
+       "value": "Wait 15 minutes - High Security (Default) With this setting the PCE will: Listen for goodbye messages from the server VEN After waiting for 15 minutes, push an updated policy to remove the IP addresses of the servers that have sent a goodbye message from their peer workloads"
+      },
+      {
+       "label": "Disconnect and Quarantine Timer",
+       "value": "Wait 1 hour - High Security (Default) With this setting the PCE will: Wait for 1 hour for the server VEN to heartbeat After waiting 1 hour without receiving a heartbeat, consider the server disconnected, and push an updated policy to remove the IP addresses of the disconnected servers from their pee"
+      },
+      {
+       "label": "Disconnect and Quarantine Warning",
+       "value": "Wait one-quarter of the Disconnect and Quarantine Timer - (Default) With this setting the PCE will: Wait one-quarter of the Disconnect and Quarantine Timer for the server VEN to heartbeat before emitting a warning event indicating that the server VEN has missed heartbeats. The server VEN will appear"
+      }
+     ]
+    }
+   ]
   },
   "cloudappsintegrations": {
    "route": "cloudappsintegrations/apps",
@@ -4503,7 +4624,8 @@
     }
    ],
    "toolbar": [],
-   "sections": []
+   "sections": [],
+   "staticImage": "cloudappsintegrations.jpg"
   },
   "serviceAccounts": {
    "route": "serviceAccounts",
@@ -4568,7 +4690,8 @@
     }
    ],
    "toolbar": [],
-   "sections": []
+   "sections": [],
+   "staticImage": "securityControls.jpg"
   },
   "coreservices": {
    "route": "coreservices",
@@ -5093,34 +5216,14 @@
    "tabs": [],
    "toolbar": [
     {
-     "label": "Open",
-     "disabled": false,
-     "icons": [
-      "down"
-     ]
-    },
-    {
-     "label": "Open",
-     "disabled": false,
-     "icons": [
-      "down"
-     ]
-    },
-    {
-     "label": "Open",
-     "disabled": false,
-     "icons": [
-      "down"
-     ]
-    },
-    {
      "label": "Check",
      "disabled": true,
      "icons": []
     }
    ],
    "filter": "Source",
-   "sections": []
+   "sections": [],
+   "staticImage": "connectivity.jpg"
   },
   "segmentationtemplates": {
    "route": "segmentationtemplates",
@@ -5131,7 +5234,8 @@
    ],
    "tabs": [],
    "toolbar": [],
-   "sections": []
+   "sections": [],
+   "staticImage": "segmentationtemplates.jpg"
   },
   "venlibrary": {
    "route": "venlibrary",

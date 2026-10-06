@@ -13,8 +13,9 @@
   const r=btn.dataset.route,label=btn.dataset.label,top=btn.dataset.top;
   if(top==='Insights'||!r)return 'placeholder';
   if(top==='Explore')return label==='Map'?'blank-map':'placeholder';
-  if(top==='Dashboard'||top==='Cloud')return 'static';
   const p=PCE_MANIFEST.pages[r];
+  if(p&&p.staticImage&&PCE_MANIFEST.shots[p.staticImage])return 'image';
+  if(top==='Dashboard'||top==='Cloud')return 'static';
   if(!p||(p.route&&p.route!==r&&!p.route.startsWith(r+'/')))return 'placeholder';   // redirected in the source org
   return p.columns&&p.columns.length?'list':'detail';
  }
@@ -78,6 +79,8 @@
   mfBanner(p,box);
   if(p.tabs&&p.tabs.length){const t=el('div','ptabs');p.tabs.forEach((x,i)=>{const b=el('button','ptab'+(i===0?' active':''),x.label);b.disabled=i!==0;t.append(b);});box.append(t);}
   const tb=el('div','toolbar');(p.toolbar||[]).filter(b=>b.label).forEach(b=>tb.append(mfButton(b)));if(tb.childNodes.length)box.append(tb);
+  if(p.attributes&&p.attributes.length){p.attributes.forEach(s=>{const sec=el('section','section');if(s.section)sec.append(el('h2','',s.section));const at=el('div','attributes');
+   s.rows.forEach(rw=>{const row=el('div','row');row.append(el('span','label',rw.label),el('div','value',rw.value||'—'));at.append(row);});sec.append(at);box.append(sec);});return;}
   const secs=(p.sections||[]).filter(s=>s.heading);
   if(!secs.length){box.append(el('div','ph-card mf-empty','No settings to display.'));return;}
   secs.forEach(s=>{const sec=el('section','section');sec.append(el('h2','',s.heading));const at=el('div','attributes');
@@ -88,7 +91,8 @@
   if(kind==='placeholder'){openArea(label);markNav(btn);return;}
   const p=PCE_MANIFEST.pages[r]||{};const box=$('manifestScreen');box.replaceChildren();message();
   const title=kind==='blank-map'?label:(p.title||label);
-  if(kind==='list')mfList(p,box);else if(kind==='static')mfStatic(p,box,label);else if(kind==='blank-map')mfBlankMap(box);else mfDetail(p,box);
+  if(kind==='image'){const im=el('img','mf-shot');im.src=PCE_MANIFEST.shots[p.staticImage];im.alt=title;im.draggable=false;box.append(im);}
+  else if(kind==='list')mfList(p,box);else if(kind==='static')mfStatic(p,box,label);else if(kind==='blank-map')mfBlankMap(box);else mfDetail(p,box);
   show('manifestScreen',title);
   const bc=(p.breadcrumbs&&p.breadcrumbs.length?p.breadcrumbs:['Home',...(btn.dataset.path||'').split(' > ').filter(Boolean)]);
   $('crumbServers').hidden=bc.length<2;$('crumbSection').textContent=bc[1]||'';

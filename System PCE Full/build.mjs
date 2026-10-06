@@ -46,7 +46,11 @@ function navItem(n, depth, top, path) {
 const sidenav = manifest.menu.map(n => navItem(n, 0, null, [])).join('\n  ');
 
 // ---- assemble -------------------------------------------------------------
-const pageData = JSON.stringify({ menu: manifest.menu, pages: manifest.pages, capturedAt: manifest.capturedAt })
+// static default views: cropped real-Console screenshots (src/assets/static/<route>.jpg)
+const staticDir = join(src, 'assets', 'static');
+const staticShots = Object.fromEntries(readdirSync(staticDir).filter(f => f.endsWith('.jpg'))
+  .map(f => [f, 'data:image/jpeg;base64,' + readFileSync(join(staticDir, f)).toString('base64')]));
+const pageData = JSON.stringify({ menu: manifest.menu, pages: manifest.pages, capturedAt: manifest.capturedAt, shots: staticShots })
   .replace(/<\//g, '<\\/');
 const js = readdirSync(join(src, 'js')).filter(f => f.endsWith('.js')).sort()
   .map(f => read(join('js', f))).join('')
