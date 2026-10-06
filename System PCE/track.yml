@@ -2,7 +2,7 @@ slug: 26x-system-pce
 id: 0h4trcynkust
 title: '! 26.x System PCE'
 description: |-
-  Lab Name: 26.x System PCE - Pairing
+  Lab Name: 26.x System PCE
 
   Outcome:
   In this lab you will successfully pair Linux, Windows and AIX workloads
@@ -24,5 +24,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "17074261094915402664"
+checksum: "15093838028838340904"
 enhanced_loading: false

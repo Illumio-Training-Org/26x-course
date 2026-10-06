@@ -1,12 +1,14 @@
-# ! 26.x System PCE Full: project memory
+# ! 26.x System PCE: project memory
 
-Instruqt track `! 26.x System PCE Full`, slug `26x-system-pce-full`, track id `ufyzucbciijx`.
+Instruqt track `! 26.x System PCE`, slug `26x-system-pce`, track id `0h4trcynkust`.
 
 It is an offline, simulated Illumio PCE Console with Linux, Windows and AIX terminal tabs. It needs no magic link, no PCE back end and no Terraform. The full plan is in `docs/26x System PCE Full - Plan.docx`, approved 2026-10-06.
 
-## Relationship to the frozen lab
-- `../System PCE/` (`! 26.x System PCE`, `26x-system-pce`, commit 3885d96) is **frozen**. Nathan wants it left exactly as it is, so never edit it.
-- This folder started as a copy of that lab (commit 03f90e1) and is where all new work goes.
+## History
+- 2026-10-05: the first version of this track (Pairing + Writing Policy, hand-built pages) was built in this folder.
+- 2026-10-06: it was rebuilt as the manifest-driven full-menu version, developed as a separate track `! 26.x System PCE Full` (`26x-system-pce-full`).
+- 2026-10-06 (later): at Nathan's request, the Full version **replaced** this track. Its content was pushed into the original track (same name, slug, track id and challenge/tab ids), the Full folder was removed, and the Full track was deleted on Instruqt.
+- The plan document keeps its original file name: `docs/26x System PCE Full - Plan.docx`.
 
 ## Goal: a working console whose menus are cheap to update
 The lab is built in three stages:
@@ -58,13 +60,13 @@ The lab is built in three stages:
 
 **Later phase, not to be built yet:** tasks and check scripts on the parts of the console that match the **Foundation** and **Select** exam tasks.
 
-## How the lab works today (inherited from the frozen lab)
+## How the lab works today
 - **Container:** one `cloud-client` container (512MB). `server/server.py` serves the pages on **port 8080** and accepts `POST /api/state`, which writes `/root/pce-lab-state.json` for the check scripts.
 - **One HTML page, four tabs:** the same page is served as `index.html`, `linux.html`, `windows.html` and `aix.html`, and picks Console or terminal mode from its file name. The tabs share state through localStorage and BroadcastChannel (key `illumio-pce-lab-v1`).
 - **Setup script:** `build-setup.sh` base64-embeds the page and the server into `track_scripts/setup-cloud-client`. Never edit the generated script by hand.
 - **Challenges:**
   - 01 Pair a Workload. Its check needs linux, windows and aix all paired.
-  - 02 Writing Policy. Its check is `RULE_TYPE=deny`: a **Deny Rule** from Development to Production on All Services (Nathan, 2026-10-06; the frozen lab stays Allow).
+  - 02 Writing Policy. Its check is `RULE_TYPE=deny`: a **Deny Rule** from Development to Production on All Services (Nathan, 2026-10-06).
   - 03 Lab Complete.
 - **No "simulation" wording** in anything learners see: tabs, task text, description or teaser.
 - **Linux pairing output** replays a real VEN 24.2.20 log. The Windows and AIX output, the error messages and `illumio-ven-ctl status` are approximations.
