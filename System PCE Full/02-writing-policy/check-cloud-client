@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# Passes when the policy "Block Development to Production" has a saved
+# rule of RULE_TYPE from Environment=Development to Environment=Production
+# on All Services. The Console page reports policies to the lab web server
+# (/opt/pce-lab/server.py), which writes /root/pce-lab-state.json.
+
+STATE=/root/pce-lab-state.json
+RULE_TYPE=allow   # allow | deny | override - must match the task text
+
+result=$(python3 - "$STATE" "$RULE_TYPE" <<'PY'
+import json, sys
+state_file, rule_type = sys.argv[1], sys.argv[2]
+type_name = {'allow': 'Allow Rule', 'deny': 'Deny Rule', 'override': 'Override Deny Rule'}[rule_type]
+name = 'Block Development to Production'
+try:
+    policies = json.load(open(state_file)).get('policies', [])
+except Exception:
+    policies = []
+
+def fail(msg):
+    print(msg)
+    sys.exit(1)
+
+policy = next((p for p in policies if str(p.get('name', '')).strip().lower() == name.lower()), None)
+if not policy:
+    fail('No policy named "%s" was found. Go to Segmentation > All Policies and select Add > Add from Scratch.' % name)
+rules = policy.get('rules', [])
+if not rules:
+    fail('The policy "%s" has no saved rules. Add an %s and select the save icon at the end of the row.' % (name, type_name))
+typed = [r for r in rules if r.get('type') == rule_type]
+if not typed:
+    fail('The policy has no saved %s. Select Add Rule > %s, then save the rule.' % (type_name, type_name))
+
+def score(r):
+    return (('env:Development' in r.get('sources', [])) + ('env:Production' in r.get('destinations', []))
+            + ('All Services' in r.get('services', [])))
+
+best = max(typed, key=score)
+if 'env:Development' not in best.get('sources', []):
+    fail('The Sources of the rule must include the Development (Environment) label.')
+if 'env:Production' not in best.get('destinations', []):
+    fail('The Destinations of the rule must include the Production (Environment) label.')
+if 'All Services' not in best.get('services', []):
+    fail('The Destination Services of the rule must be All Services.')
+print('Policy "%s" has %s %s from Development to Production on All Services.' % (name, 'an' if type_name[0] in 'AO' else 'a', type_name))
+PY
+)
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

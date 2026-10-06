@@ -1,0 +1,1042 @@
+<!doctype html>
+<html lang="en-US" dir="ltr" data-theme="lightning" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'self'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title></title>
+<style>
+:root{
+ --white:#fff;--ink:#1f272f;--muted:#63788f;--subtle:#7b858f;--line:#dfe6ed;--line-strong:#b6c7d9;--pale:#f7fafd;--row:#f7f9fa;--table-head:#f7f9fa;--table-filter:#f2f5f7;--blue:#2366ed;--blue-hover:#1b51da;--blue-pale:#dbebfe;--gradient:linear-gradient(133.65deg,#0052d4 6.23%,#4364f7 53%,#6fb1fc 94.48%);--button-ink:#455465;--disabled:#a3b6c7;--disabled-bg:#e9eff5;--green:#126b29;--green-bg:#d1f0d6;--beige:#f7f4ee;--orange:#f50;--warn-bg:#fcf8f2;--warn-ink:#87531b;--code-head:#455465;--code-bg:#3b4757;--code-ink:#f0f4f7;--error:#b42318;--focus:#2366ed;--backdrop:#1f272f66;--shadow:0 1px 3px #0000001a,0 1px 2px #0000001a;--sidebar:198px;--content-pad:19px;--header-height:72px;--role:#7752b3;--app:#267cb1;--env:#479451;--loc:#be8328;color-scheme:light dark;
+}
+@media(prefers-color-scheme:dark){:root{--white:#1f272f;--ink:#edf2f7;--muted:#b6c7d9;--subtle:#abb7c2;--line:#455465;--line-strong:#63788f;--pale:#29333e;--row:#27323c;--table-head:#29333e;--table-filter:#303c47;--button-ink:#dfe6ed;--disabled:#8799ab;--disabled-bg:#344250;--blue:#69a6ff;--blue-hover:#2366ed;--blue-pale:#233e60;--green:#a9e6b4;--green-bg:#284733;--beige:#38362f;--warn-bg:#393326;--warn-ink:#eed4ac;--focus:#8dbfff;--shadow:0 1px 3px #0005,0 1px 2px #0005;--role:#c3a6f3;--app:#8ccff4;--env:#b3dcb3;--loc:#e5c291}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--white);color:var(--ink);font:13px/1.4 Geist,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{min-block-size:29px;padding:5px 12px;border:1px solid var(--line-strong);border-radius:5px;background:var(--white);color:var(--button-ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+button:hover:not(:disabled){background:var(--pale)}button:disabled{cursor:not-allowed;color:var(--disabled)}
+button.primary{background:var(--blue);border-color:var(--blue);color:var(--white)}
+button.primary:hover:not(:disabled){background:var(--blue-hover)}button.primary:disabled{background:var(--disabled-bg);border-color:var(--disabled-bg);color:var(--disabled)}
+button.link{border:0;background:none;color:var(--blue);padding:0;min-block-size:18px;text-align:start;justify-content:flex-start;border-radius:2px}
+button.link:hover:not(:disabled){background:none;text-decoration:underline}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+[hidden]{display:none!important}.icon{inline-size:15px;block-size:15px;flex:none;fill:currentColor}
+.skip{position:fixed;inset-block-start:-60px;inset-inline-start:12px;z-index:100;background:var(--white);color:var(--blue);padding:8px}.skip:focus{inset-block-start:8px}
+.sidebar{position:fixed;inset-block:0;inset-inline-start:0;inline-size:var(--sidebar);border-inline-end:1px solid var(--line);background:var(--white);z-index:25;overflow:auto}
+.sidebar-top{block-size:57px;display:flex;align-items:center;justify-content:space-between;padding-inline:11px;border-block-end:1px solid var(--line);margin-inline:8px}
+.logo{color:var(--orange);display:inline-flex;align-items:center}.logo .icon{inline-size:26px;block-size:26px}
+.collapse-icon{border:0;padding:3px;min-inline-size:20px;color:var(--muted)}
+.side-nav{padding:7px 8px 44px;display:flex;flex-direction:column;gap:2px}
+.side-nav button{inline-size:100%;justify-content:flex-start;gap:9px;min-block-size:31px;padding:5px 9px;border:0;border-radius:6px;background:none;color:var(--muted);font-size:12px;line-height:18px;text-align:start;white-space:nowrap}
+.side-nav button:disabled{color:var(--muted);background:none}.side-nav button .icon{inline-size:15px;block-size:15px}
+.side-nav .chevron{margin-inline-start:auto;font-size:14px;color:var(--subtle)}
+.side-nav .nav-children{margin-inline-start:27px;border-inline-start:1px solid var(--line);padding-inline-start:6px;display:flex;flex-direction:column;gap:2px;margin-block:0 5px}
+.side-nav .nav-children button{padding-inline:8px;font-size:11.7px;gap:7px}
+.side-nav button.active{background:var(--gradient);color:var(--white)}.side-nav button.active:hover{background:var(--gradient)}
+.shell{margin-inline-start:var(--sidebar);min-block-size:100dvh}
+.page-header{position:sticky;inset-block-start:0;z-index:15;background:var(--white);block-size:var(--header-height);padding:10px var(--content-pad) 8px;display:flex;flex-direction:column;justify-content:space-between}
+.breadcrumbs{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11.7px;min-block-size:19px;white-space:nowrap;overflow:auto;padding-block:1px}
+.breadcrumbs .icon{inline-size:13px;block-size:13px}.breadcrumbs button{font-size:11.7px;color:var(--muted);min-block-size:18px}
+.breadcrumbs .separator{color:var(--line-strong);padding-inline:3px}.breadcrumbs .current{color:var(--muted)}
+h1{font-size:22px;line-height:27px;font-weight:600;margin:0;letter-spacing:-.35px;overflow-wrap:anywhere;max-inline-size:calc(100% - 350px)}
+.header-tools{position:absolute;inset-block-start:21px;inset-inline-end:var(--content-pad);display:flex;align-items:center;gap:8px}
+.header-tools button{border:0;padding:3px;min-inline-size:23px;color:var(--muted);min-block-size:25px}.header-tools button:disabled{color:var(--muted)}
+.header-search{display:flex;align-items:center;gap:5px;inline-size:178px;color:var(--disabled);border:1px solid var(--line);border-radius:5px;padding:4px 6px;background:var(--pale)}
+.header-search input{inline-size:100%;min-inline-size:0;border:0;padding:0;background:none;color:var(--muted);font-size:11px}.header-search kbd{font:10px GeistMono,monospace;white-space:nowrap}
+.user-avatar{border:1px solid var(--line)!important;border-radius:50%;inline-size:24px;block-size:24px;font-size:12px}.mobile-menu{display:none}
+main{padding:15px var(--content-pad) 30px;outline:none}
+.intro{position:relative;min-block-size:131px;border-radius:11px;background:var(--beige);padding:18px 22px 16px;box-shadow:var(--shadow);margin-block-end:20px;overflow:hidden;display:flex;align-items:flex-start}
+.intro h2{font-size:15px;line-height:19px;font-weight:600;margin:0 0 7px}.intro p{max-inline-size:900px;font-size:12px;line-height:19px;margin:0 0 9px}
+.intro .link{font-size:12px}.intro .link:disabled{color:var(--blue)}
+.intro-graphic{position:absolute;inset-inline-end:37px;inset-block-start:0;inline-size:95px;block-size:131px;object-fit:contain}
+.intro-close{position:absolute;inset-block-start:6px;inset-inline-end:7px;border:0;background:none;padding:2px;min-block-size:24px;min-inline-size:24px;color:var(--button-ink)}
+.toolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-block-end:12px;min-block-size:28px}
+.toolbar .spacer{flex:1}.toolbar button{font-size:11.7px;min-block-size:28px;padding:4px 11px}
+.toolbar button.primary:disabled{color:var(--disabled);background:var(--disabled-bg);border-color:var(--disabled-bg)}
+.filter-bar{display:flex;align-items:center;gap:8px;border:1px solid var(--line-strong);border-radius:5px;min-block-size:33px;padding:4px 10px;color:var(--muted);margin-block-end:15px}
+.filter-bar input{inline-size:100%;border:0;background:none;font-size:12px;color:var(--muted)}.filter-bar .icon{inline-size:14px;block-size:14px}
+.table-frame{border:1px solid var(--line);border-radius:7px;overflow:hidden}.table-scroll{overflow:auto}
+table{border-collapse:collapse;inline-size:100%;text-align:start;font-size:11.5px;table-layout:auto;min-inline-size:1310px}
+th{font-weight:500;line-height:16px;white-space:nowrap;color:var(--muted);background:var(--table-head);padding:7px 10px;border-block-end:1px solid var(--line)}
+td{height:47px;padding:8px 10px;line-height:18px;border-block-end:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+tbody tr:last-child td{border-block-end:0}.column-filters th{height:30px;padding:4px 10px;background:var(--table-filter)}.column-filters input{inline-size:100%;min-inline-size:45px;block-size:21px;border:1px solid var(--line);border-radius:4px;background:var(--white);font-size:10px;padding-inline:5px;color:var(--muted)}
+th:first-child,td:first-child{inline-size:32px;padding-inline:9px}table button.link{font-size:11.5px}
+table input[type=checkbox]{inline-size:13px;block-size:13px;accent-color:var(--blue);margin:0}
+.table-status{display:inline-flex;align-items:center;gap:5px}.status-dot{inline-size:6px;block-size:6px;border-radius:50%;background:var(--green);display:inline-block}
+.pagination{min-block-size:39px;background:var(--pale);border-block-start:1px solid var(--line);padding:6px 10px;display:flex;align-items:center;gap:9px;color:var(--muted);font-size:11px}
+.pagination .spacer{flex:1}.pagination button{padding:1px 5px;min-block-size:22px;border:0;color:var(--muted);font-size:11px}
+.empty{text-align:center;color:var(--muted);padding-block:47px;white-space:normal}
+.running-banner{display:flex;gap:9px;align-items:center;background:var(--green-bg);border-radius:5px;color:var(--green);min-block-size:46px;padding:12px 15px;margin-block-end:14px;font-size:12.5px}
+.running-banner .icon{inline-size:17px;block-size:17px}.running-banner span{font-weight:500}
+.section{margin-block-start:29px}.section h2{font-size:15px;line-height:19px;font-weight:600;margin:0 0 15px;color:var(--button-ink)}
+.attributes{display:flex;flex-direction:column;gap:10px}.row{display:grid;grid-template-columns:150px minmax(0,1fr);column-gap:18px;align-items:start;min-block-size:18px}
+.row>label,.row>.label{font-weight:500;color:var(--ink);line-height:17px;overflow-wrap:anywhere}
+.value{line-height:17px;min-block-size:18px;overflow-wrap:anywhere}.hint{display:block;font-size:11.7px;line-height:16px;color:var(--subtle);margin-block-start:0;max-inline-size:990px}
+.timestamp{font-size:12px}.label-chips{display:flex;gap:6px;flex-wrap:wrap;min-block-size:18px}
+.chip{border:1px solid var(--line);border-radius:4px;font-size:11px;background:var(--pale);display:inline-flex;align-items:center;gap:7px;padding:2px 7px}.chip b{font-weight:500}.chip .role{color:var(--role)}.chip .app{color:var(--app)}.chip .env{color:var(--env)}.chip .loc{color:var(--loc)}
+#detailScreen>.section{margin-block-start:27px}#detailScreen>.section:first-of-type{margin-block-start:36px}
+.read-note{margin-block:9px 0;color:var(--subtle);font-size:11px}
+.field{max-inline-size:750px}.field input[type=text],.field textarea,.field select,.field input[type=number],.profile-picker{border:1px solid var(--line-strong);border-radius:5px;padding:6px 9px;min-block-size:32px;background:var(--white);color:var(--ink);max-inline-size:100%}
+.field input[type=text],.field textarea,.field select{inline-size:100%}.field select{max-inline-size:420px}.field textarea{resize:vertical;min-block-size:60px}
+.field input[type=number]{inline-size:84px}.field .label-input{max-inline-size:330px}
+.checks{display:flex;align-items:center;gap:14px;flex-wrap:wrap;min-block-size:29px}.checks label{display:inline-flex;gap:6px;align-items:center;font-size:12px}.checks input{accent-color:var(--blue);margin:0}
+.form-row{margin-block-end:14px;align-items:baseline}.form-row .hint{margin-block-start:4px}
+.form-footer{display:flex;gap:8px;align-items:center;padding-block-start:20px;margin-block-start:28px;border-block-start:1px solid var(--line)}
+.error{color:var(--error);font-size:12px;line-height:1.5;margin-block:10px 0}
+.page-message{font-size:12px;line-height:18px;color:var(--green);background:var(--pale);border:1px solid var(--line);border-radius:5px;padding:9px 12px;margin:0 0 15px}
+.profile-picker{inline-size:100%;max-inline-size:none;min-block-size:30px}.picker-row{align-items:start}
+.key-initial{margin-block-start:29px}.key-initial .attributes{gap:10px}.key-scripts{margin-block-start:26px}
+.script-warning{max-inline-size:1150px;padding:6px 12px;background:var(--warn-bg);border:1px solid var(--line);border-radius:5px;color:var(--warn-ink);font-size:11.7px;line-height:18px;margin-block-end:13px;display:flex;align-items:flex-start;gap:8px}
+.script-warning .icon{margin-block-start:2px}.script-row{margin-block-end:10px;grid-template-columns:160px minmax(0,1fr);column-gap:21px}.key-row{margin-block-end:11px}.script-label{padding-block-start:7px}
+.code-block{inline-size:100%;max-inline-size:820px;border-radius:4px;overflow:hidden;background:var(--code-bg);color:var(--code-ink)}
+.code-header{min-block-size:29px;padding:5px 10px;background:var(--code-head);display:flex;align-items:center;gap:5px;font-size:11.5px}
+.code-header span{margin-inline-end:auto}.code-header button{min-block-size:19px;padding:1px 3px;border:0;border-radius:2px;background:none;color:var(--code-ink)}
+.code-header button:disabled{color:var(--code-ink);opacity:.55}.code-header button:hover:not(:disabled){background:var(--code-bg)}
+.code-text{display:block;inline-size:100%;resize:none;border:0;border-radius:0;padding:6px 10px;background:var(--code-bg);color:var(--code-ink);font:11.5px/15px GeistMono,Consolas,"Courier New",monospace;block-size:58px;white-space:pre-wrap;overflow-wrap:anywhere;overflow:hidden}
+.key-code{block-size:25px;padding-block:4px}.copy-message{font-size:11px;line-height:17px;color:var(--muted);margin:5px 0 0}
+.script-meta{inline-size:calc(100% + 181px);max-inline-size:1151px;margin-inline-start:-181px;margin-block:12px 0;display:grid;grid-template-columns:160px minmax(0,1fr);gap:11px 21px;font-size:12px;line-height:17px}.linux-script .script-meta{margin-block-end:11px}
+.script-meta button{font-size:11.7px;min-block-size:17px}.script-meta button:disabled{color:var(--blue)}
+.key-settings{margin-block-start:25px}.training-panel{border:1px dashed var(--line-strong);border-radius:7px;background:var(--pale);margin-block-start:32px;max-inline-size:1151px;padding:14px}
+.training-panel>summary{font-size:14px;font-weight:600;cursor:pointer}.training-panel p{font-size:12px;line-height:19px;color:var(--muted);margin-block:10px}
+.training-panel label{display:block;font-size:12px;font-weight:500;margin-block:12px 5px}
+.training-panel select{border:1px solid var(--line-strong);border-radius:5px;min-block-size:32px;padding:6px;background:var(--white);color:var(--ink);max-inline-size:100%}
+.training-panel textarea{inline-size:100%;min-block-size:108px;resize:vertical;padding:9px;border:1px solid var(--line-strong);border-radius:5px;background:var(--white);color:var(--ink);font:11.5px/17px GeistMono,Consolas,"Courier New",monospace}
+.panel-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-block-start:12px}
+.terminal-output{background:var(--code-bg);color:var(--code-ink);font:12px/18px GeistMono,Consolas,"Courier New",monospace;padding:12px;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:5px;margin-block:12px}
+.verified{color:var(--green);font-size:12px;margin-block:13px}.training-strip{position:fixed;inset-block-end:0;inset-inline-start:var(--sidebar);inset-inline-end:0;z-index:30;background:var(--pale);border-block-start:1px solid var(--line);padding:5px var(--content-pad);display:flex;align-items:center;gap:12px;min-block-size:31px;font-size:10.5px;color:var(--muted)}
+.training-strip strong{font-weight:600}.training-strip .strip-text{flex:1}.training-strip button{font-size:10.5px;min-block-size:21px;padding:1px 7px}
+dialog{inline-size:min(670px,calc(100vw - 30px));max-block-size:calc(100dvh - 30px);padding:0;border:1px solid var(--line);border-radius:9px;background:var(--white);color:var(--ink);box-shadow:var(--shadow)}
+dialog::backdrop{background:var(--backdrop)}.dialog-head{padding:16px 20px;border-block-end:1px solid var(--line);display:flex;align-items:center;gap:10px}.dialog-head h2{font-size:18px;line-height:23px;margin:0;font-weight:600}.dialog-head button{margin-inline-start:auto;border:0;padding:2px 5px;min-block-size:24px}
+.dialog-body{padding:16px 20px;font-size:12px;line-height:19px}.dialog-body p{margin:0 0 12px}.dialog-body ol{padding-inline-start:20px}.dialog-body li{margin-block-end:8px}
+.dialog-footer{padding:12px 20px;border-block-start:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}.reset-dialog{max-inline-size:420px}.noscript{padding:12px;border:1px solid var(--line);background:var(--warn-bg);color:var(--warn-ink);margin:15px}
+@media(max-width:1150px){.intro p{max-inline-size:calc(100% - 140px)}table{min-inline-size:1350px}.header-search{inline-size:130px}.row{grid-template-columns:150px minmax(0,1fr);column-gap:18px}}
+@media(max-width:760px){:root{--sidebar:0px;--content-pad:14px;--header-height:81px}.sidebar{inline-size:198px;transform:translateX(-100%);box-shadow:var(--shadow);visibility:hidden}.sidebar.open{transform:none;visibility:visible}html[dir=rtl] .sidebar{transform:translateX(100%)}html[dir=rtl] .sidebar.open{transform:none}.sidebar-top{block-size:52px}.page-header{padding-block-start:9px}.mobile-menu{display:inline-flex;position:absolute;inset-inline-start:14px;inset-block-start:9px;min-block-size:25px;padding:3px 6px;border:0}.breadcrumbs{margin-inline-start:33px;max-inline-size:calc(100% - 65px);font-size:10px}.breadcrumbs button{font-size:10px}.breadcrumbs .icon{display:none}.header-tools{inset-block-start:11px;gap:2px}.header-search,.header-tools button:not(.user-avatar){display:none}.header-tools .user-avatar{inline-size:21px;block-size:21px;min-inline-size:21px;min-block-size:21px}h1{max-inline-size:100%;font-size:21px}.row{grid-template-columns:1fr;gap:5px}.row>.label,.row>label{font-size:12px}.attributes{gap:15px}.section{margin-block-start:25px}.section h2{margin-block-end:16px}.intro{min-block-size:135px;padding:15px 16px}.intro p{max-inline-size:100%;padding-inline-end:13px;font-size:11.5px}.intro-graphic{display:none}.toolbar .spacer{flex:1;min-inline-size:5px}.toolbar{gap:5px}.toolbar button{padding-inline:8px;font-size:11px}.running-banner{min-block-size:40px}.script-label{padding-block-start:0}.script-row{grid-template-columns:1fr;gap:5px}.script-meta{inline-size:100%;margin-inline-start:0;grid-template-columns:123px minmax(0,1fr);gap:7px}.code-text{font-size:10.5px;line-height:15px}.script-warning{font-size:11px}.training-strip{padding-inline:10px;gap:5px;flex-wrap:wrap}.training-strip .strip-text{min-inline-size:200px;font-size:10px}.training-strip button{font-size:10px;padding-inline:5px}.training-panel{padding:11px}main{padding-block-end:94px}.pagination{flex-wrap:wrap;gap:4px;font-size:10px}.pagination button{font-size:10px}.pagination .spacer{flex:1}.field{max-inline-size:100%}.form-row{margin-block-end:17px}}
+@media(forced-colors:active){.side-nav button.active{outline:2px solid Highlight}.primary{border:1px solid ButtonText!important}.code-block,.running-banner{border:1px solid CanvasText}}
+@media print{:root{--white:#fff;--ink:#000;--muted:#555;--line:#999;--pale:#fff;--sidebar:0px}.sidebar,.header-tools,.toolbar,.training-strip,.training-panel,.mobile-menu,.no-print{display:none!important}.page-header{position:static}.shell{margin:0}main{padding:0}tr,td,th{break-inside:avoid}@page{margin:.6in}}
+
+.ph-card{border:1px solid var(--line);border-radius:8px;background:var(--pale);padding:22px 24px;max-inline-size:760px;margin-block-start:8px}
+.ph-card h2{font-size:16px;margin:0 0 8px}.ph-card p{color:var(--muted);margin:0 0 16px;line-height:20px}
+.term-drawer{position:fixed;inset-inline-start:var(--sidebar);inset-inline-end:0;inset-block-end:31px;z-index:29;block-size:min(62vh,560px);display:flex;flex-direction:column;background:#0d1117;border-block-start:1px solid #30363d;box-shadow:0 -4px 14px #0004}
+.term-row .term-prompt,.term-row .term-user{flex:none}
+.term-head{display:flex;align-items:center;gap:10px;padding:5px 12px;background:#161b22;color:#c9d1d9;font-size:12px;border-block-end:1px solid #30363d}
+.term-head strong{font-weight:600}.term-head .spacer{flex:1}
+.term-head select{background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:5px;padding:3px 6px;font-size:12px}
+.term-head button{min-block-size:24px;padding:2px 9px;background:#21262d;color:#c9d1d9;border-color:#30363d;font-size:12px}
+.term-head button:hover:not(:disabled){background:#30363d}
+.term-body{flex:1;overflow:auto;padding:10px 12px 14px;font:13.5px/1.5 GeistMono,Menlo,Consolas,"Courier New",monospace;color:#d1d5da;cursor:text}
+.term-out{white-space:pre-wrap;overflow-wrap:anywhere;margin:0;font:inherit}
+.term-out .ok{color:#3fb950}.term-out .err{color:#f85149}.term-out .warn{color:#d29922}.term-out .dim{color:#8b949e}.term-out .cmd{color:#e6edf3}
+.term-row{display:flex;align-items:baseline}.term-row[hidden]{display:none!important}
+.term-prompt{white-space:pre;color:#e6edf3}.term-user{white-space:pre;color:#3fb950;font-weight:600}
+.term-input{flex:1;min-inline-size:40px;background:transparent;border:0;color:#e6edf3;font:inherit;padding:0;outline:none!important;caret-color:#e6edf3}
+body.term-open main{padding-block-end:calc(min(62vh,560px) + 67px)}
+@media print{.term-drawer{display:none!important}}
+.header-tools .term-top{border:1px solid var(--blue);background:var(--blue);color:#fff;padding:3px 11px;min-block-size:27px;font-size:12px;font-weight:600;margin-inline-end:6px;font-family:inherit}.header-tools .term-top:hover:not(:disabled){background:var(--blue-hover);color:#fff}
+.term-tabs{display:flex;gap:4px;flex-wrap:wrap}.term-head .term-tab{background:transparent;border:1px solid transparent;color:#8b949e;font-weight:500}.term-head .term-tab:hover:not(:disabled){background:#21262d;color:#c9d1d9}.term-head .term-tab.active{background:#0d1117;border-color:#30363d;color:#e6edf3;font-weight:600}
+
+body.term-page{background:#0d1117}
+body.term-page .sidebar,body.term-page .shell,body.term-page .training-strip,body.term-page .term-head{display:none!important}
+body.term-page .term-drawer{inset:0;block-size:auto;border:0;box-shadow:none}
+body.term-page .term-body{padding:12px 16px 24px}
+
+.code-block{max-inline-size:1000px}
+.code-text{font-weight:600;cursor:pointer;word-break:break-all;overflow-wrap:normal}
+.code-header{font-weight:600}
+.code-wrap{position:relative}
+.copy-tip{display:none;position:absolute;inset-block-start:6px;inset-inline-end:10px;background:#1f272f;color:#fff;font:500 12px/1.3 Geist,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;padding:6px 10px;border-radius:5px;box-shadow:0 2px 8px #0005;pointer-events:none;z-index:2}
+.code-wrap:hover .copy-tip,.copy-tip.show{display:block}
+.code-header .dl{opacity:1!important;cursor:pointer}
+.tls-row{display:grid;grid-template-columns:160px minmax(0,1fr);column-gap:21px;margin-block:4px 14px}
+.tls-warning{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;line-height:19px;max-inline-size:1000px}
+.tls-warning .icon{color:#d1600a;inline-size:16px;block-size:16px;margin-block-start:2px}
+.learn-more{min-block-size:24px;padding:2px 8px;font-size:11.5px;color:var(--ink)!important;background:var(--white);border:1px solid var(--line-strong)}
+.learn-more:disabled{color:var(--ink)!important}
+.email{color:var(--blue)}
+.running-banner.stopped{background:var(--disabled-bg);color:var(--button-ink)}
+.running-banner strong{font-weight:700;margin-inline-end:10px}
+.script-meta .icon{inline-size:14px;block-size:14px}
+@media(max-width:760px){.tls-row{grid-template-columns:1fr}}
+
+.pol-intro{min-block-size:auto}
+.ptabs{display:flex;gap:4px;border-block-end:1px solid var(--line);margin-block:4px 14px}
+.ptab{border:0;border-radius:0;background:none;color:var(--muted);font-weight:600;padding:8px 10px;border-block-end:3px solid transparent}
+.ptab:disabled{color:var(--muted)}
+.ptab.active{color:var(--blue);border-block-end-color:var(--blue)}
+.add-wrap{position:relative;display:inline-flex}
+.caret{font-size:11px;margin-inline-start:2px}
+.menu{position:absolute;inset-block-start:calc(100% + 6px);inset-inline-start:0;z-index:40;background:var(--white);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 20px #0003;padding:6px;display:flex;flex-direction:column;gap:2px;min-inline-size:210px}
+.menu button{border:0;justify-content:flex-start;background:none;color:var(--ink);padding:8px 10px;border-radius:7px;white-space:nowrap}
+.menu button:hover{background:var(--blue-pale)}
+.pol-meta{display:flex;justify-content:flex-end;gap:26px;padding:8px 14px;font:600 12px/1.4 GeistMono,Consolas,monospace;color:var(--ink);border-block-end:1px solid var(--line)}
+.pol-table td{vertical-align:middle}
+.pbadge{display:inline-flex;align-items:center;gap:5px;background:#d1f0d6;color:#126b29;font-weight:600;border-radius:4px;padding:2px 8px;font-size:12px}
+.pbadge .icon{inline-size:13px;block-size:13px}
+.pstatus{display:inline-flex;align-items:center;gap:5px;font-weight:600}
+.pstatus.enabled{color:#126b29}
+.pstatus .icon{inline-size:14px;block-size:14px}
+.scope-chip{display:inline-flex;align-items:center;gap:4px;background:var(--disabled-bg);border-radius:12px;padding:2px 9px;font-size:12px}
+.scope-chip .icon{inline-size:12px;block-size:12px;color:var(--muted)}
+.empty-row td{text-align:center;color:var(--muted);padding:28px}
+.pol-dialog{border:0;border-radius:18px;padding:0;inline-size:min(600px,92vw);box-shadow:0 10px 40px #0005;background:var(--white);color:var(--ink)}
+.pol-dialog::backdrop{background:#1f272f80}
+.pd-head{display:flex;align-items:center;justify-content:space-between;padding:22px 30px;border-block-end:1px solid var(--line)}
+.pd-head h2{margin:0;font-size:22px}
+.pd-x{border:0;background:none;font-size:20px;color:var(--ink)}
+.pd-body{padding:20px 30px 22px;display:flex;flex-direction:column}
+.pd-label{font-weight:500;font-size:14px;margin-block:12px 6px}
+.pd-label .star{color:#d92d20}
+.pd-label.invalid{color:#b42318}
+.pd-input{border:1px solid var(--line-strong);border-radius:8px;padding:10px 12px;font-size:14px;background:var(--white);color:var(--ink)}
+.pd-input.invalid{border-color:#e5484d}
+.pd-ta{min-block-size:80px;resize:vertical}
+.pd-select{display:flex;justify-content:space-between;border:1px solid var(--line-strong);border-radius:8px;padding:10px 14px;color:var(--disabled);font-size:14px}
+.pd-error{color:#b42318;font-size:12px;margin-block-start:6px}
+.pd-foot{display:flex;justify-content:flex-end;gap:10px;padding:18px 30px;border-block-start:1px solid var(--line)}
+.pd-foot button{min-block-size:34px;padding:6px 16px;font-size:14px}
+.rule-toolbar{align-items:center}
+.warn-ico{color:#d1600a;display:inline-flex}
+.show-impact{display:inline-flex;align-items:center;gap:5px}
+.rule-menu{position:absolute;inset-block-start:calc(100% + 2px);inset-inline-start:0;z-index:40;background:var(--white);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 28px #0003;inline-size:min(760px,calc(100vw - 260px));overflow:hidden}
+.rm-main{display:grid;grid-template-columns:1fr 1.5fr;min-block-size:280px}
+.rm-preview{padding:18px 20px;border-inline-end:1px solid var(--line)}
+.rm-preview h3{margin:0 0 10px;font-size:16px}
+.rm-preview svg{inline-size:220px;max-inline-size:100%;display:block;margin:10px auto 0}
+.rm-head{background:var(--blue-pale);font-size:11px;font-weight:700;letter-spacing:.3px;padding:9px 12px;color:var(--ink)}
+.rm-types{display:flex;flex-direction:column;gap:2px}
+.rm-type{border:0;border-radius:6px;background:none;justify-content:flex-start;padding:12px 14px;margin-inline:8px;color:var(--ink);font-size:13px}
+.rm-type:first-of-type{margin-block-start:8px}
+.rm-type:hover,.rm-type.sel{background:var(--blue-pale);color:var(--blue)}
+.rm-type:disabled{color:var(--disabled);background:none}
+.rm-foot{display:flex;justify-content:flex-end;gap:14px;align-items:center;padding:10px 14px;border-block-start:1px solid var(--line)}
+.rm-foot .link{font-size:13px}
+.sec{margin-block:10px}
+.sec-head{border:0;background:none;padding:6px 0;font-weight:700;font-size:13px;color:var(--ink);gap:8px}
+.sec-head .chev{display:inline-block;font-size:10px;color:var(--muted);transition:transform .15s}
+.sec.collapsed .chev{transform:rotate(180deg)}
+.sec.collapsed .sec-body{display:none}
+.rscroll{overflow-x:auto}
+.rtable{min-inline-size:1180px}
+.rrow{display:grid;grid-template-columns:22px 92px 34px 76px minmax(170px,1.3fr) minmax(130px,1fr) 22px minmax(170px,1.3fr) minmax(170px,1.3fr) minmax(120px,.9fr) 118px;align-items:center;column-gap:10px;padding:8px 10px;border-block-end:1px solid var(--line)}
+.rhead{background:var(--table-head);font-weight:600;font-size:12px;color:var(--ink);padding-block:9px;border-block:1px solid var(--line)}
+.rhead .dst{background:#dfe1f5;margin-block:-9px;padding-block:9px}
+.rrow.draft{background:#effaf1}
+.rrow.saved{background:var(--white)}
+.handle{color:var(--subtle);cursor:grab}
+.rempty{border:1px solid var(--line);border-radius:8px;margin:12px 0 4px auto;inline-size:min(520px,60%);padding:22px 26px;color:var(--disabled);font-size:20px;font-weight:600;background:var(--pale)}
+.ract{display:flex;align-items:center;gap:8px;justify-content:flex-end;white-space:nowrap;position:sticky;inset-inline-end:0;z-index:2;align-self:stretch;padding-inline-start:8px;background:inherit}
+.rrow.draft .ract{background:#effaf1}.rrow.saved .ract{background:var(--white)}.rhead>div:last-child{position:sticky;inset-inline-end:0;background:var(--table-head);align-self:stretch}
+.ract .kind{display:inline-flex;align-items:center;gap:4px;font-weight:600}
+.ract .kind.allow{color:#126b29}.ract .kind.deny,.ract .kind.override{color:#b42318}
+.ract button{border:0;background:none;padding:2px;min-block-size:22px;color:var(--ink)}
+.ract .icon{inline-size:17px;block-size:17px}
+.picker{position:relative}
+.picker-box{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-block-size:34px;border:1px solid var(--line-strong);border-radius:6px;padding:3px 22px 3px 6px;background:var(--white);cursor:text;position:relative}
+.picker.open .picker-box{border-color:#e5484d #e5484d var(--line) #e5484d;border-radius:6px 6px 0 0}
+.picker.invalid .picker-box{border-color:#e5484d}
+.picker-chips{display:contents}
+.picker-input{flex:1 1 8px;inline-size:8px;min-inline-size:8px;border:0;outline:none!important;background:none;color:var(--ink);font-size:12.5px;padding:3px 0}
+.picker-caret{position:absolute;inset-inline-end:9px;inset-block-start:50%;transform:translateY(-50%);color:var(--muted);font-size:11px}
+.picker-dd{position:fixed;z-index:60;display:flex;flex-direction:column;overflow:hidden;background:var(--white);border:1px solid var(--line);border-block-start:0;border-radius:0 0 8px 8px;box-shadow:0 8px 22px #0003;min-inline-size:340px}
+.picker.svc .picker-dd{min-inline-size:520px}
+.dd-row{display:grid;grid-template-columns:1.5fr 1fr}
+.dd-main{display:flex;flex-direction:column;max-block-size:330px;min-block-size:0;flex:1 1 auto}
+.dd-row{min-block-size:0;flex:1 1 auto;overflow:hidden}
+.picker-dd[hidden]{display:none}
+.dd-list{overflow:auto;padding:8px;display:flex;flex-direction:column;gap:4px;min-block-size:120px}
+.dd-pinned{border-block-start:1px solid var(--line);padding:8px;display:flex;flex-direction:column;gap:4px}
+.dd-opt{border:0;background:none;justify-content:space-between;padding:5px 8px;border-radius:6px;inline-size:100%;color:var(--ink)}
+.dd-opt.hi,.dd-opt:hover{background:#8fbffa}
+.dd-type{color:var(--muted);font-size:12px}
+.dd-empty{color:var(--muted);font-size:12px;padding:8px}
+.dd-side{background:var(--pale);padding:12px 10px;display:flex;flex-direction:column;gap:6px;border-inline-start:1px solid var(--line)}
+.dd-side-item{padding:8px 10px;font-size:13px;color:var(--ink);border-radius:6px;display:flex;gap:6px;align-items:center}
+.dd-side-item.active{background:var(--white);color:var(--blue);font-weight:700;border-inline-start:3px solid var(--blue)}
+.dd-side-item.add{color:var(--blue)}
+.dd-foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-block-start:1px solid var(--line);padding:7px 10px;font-size:12px;color:var(--ink)}
+.dd-adv{display:inline-flex;align-items:center;gap:4px;margin-inline-end:auto}
+.dd-tip{color:var(--blue);font-weight:700}
+.dd-key{background:var(--disabled-bg);border-radius:4px;padding:1px 6px;font-weight:700}
+.pchip{display:inline-flex;align-items:center;gap:5px;background:var(--disabled-bg);border-radius:14px;padding:2px 9px;font-size:12px;color:var(--ink);max-inline-size:100%}
+.pchip .icon{inline-size:13px;block-size:13px}
+.pchip.lbl-env .icon{color:#13867a}.pchip.lbl-app .icon{color:var(--app)}.pchip.lbl-role .icon{color:var(--role)}.pchip.lbl-loc .icon{color:var(--loc)}
+.pchip-x{border:0;background:none;padding:0 0 0 2px;min-block-size:14px;font-size:12px;color:var(--muted)}
+.svc-chip{border-radius:10px;padding:5px 10px}
+.svc-chip .icon{inline-size:18px;block-size:18px}
+.svc-text{display:flex;flex-direction:column;align-items:flex-start;line-height:1.25}
+.fake-select{display:flex;justify-content:space-between;align-items:center;min-block-size:34px;border:1px solid var(--line-strong);border-radius:6px;padding:3px 10px;color:var(--disabled);font-size:12.5px;background:var(--white)}
+
+.rrow{column-gap:0}
+.rrow>*{padding-inline:6px}
+.rrow{grid-template-columns:22px 116px 34px 72px minmax(170px,1.3fr) minmax(130px,1fr) 24px minmax(170px,1.3fr) minmax(170px,1.3fr) minmax(140px,.9fr) 118px}
+.rrow.short{grid-template-columns:22px 116px 34px 72px minmax(170px,2.3fr) 24px minmax(170px,1.3fr) minmax(170px,1.3fr) minmax(140px,.9fr) 118px}
+.rtable{min-inline-size:1220px}.rtable.short{min-inline-size:1000px}
+.rhead>div{white-space:nowrap}
+.fake-select span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rhead{background:#eef2f6;border:1px solid var(--line);border-radius:6px;padding-block:0;min-block-size:30px}
+.rhead>div{padding-block:7px}
+.rhead .dst{background:#dcdcf3;margin-block:0;padding-block:7px}
+.rrow.saved{cursor:pointer}
+.rrow.saved:hover{background:var(--pale)}
+.rrow.editing{background:#dbe8fb;border-radius:6px;border-block-end:0;margin-block-start:4px}
+.rrow.editing .ract{background:#dbe8fb}
+.rrow.draft{border-radius:6px;border-block-end:0;margin-block-start:4px}
+.rempty{margin:22px auto 10px;inline-size:min(392px,80%);padding:14px 26px;font-size:21px;line-height:1.2;color:#a8b8c8;background:#f6f9fc;border:1px solid #d5dee7;border-radius:8px}
+.save-btn{border:1px solid var(--line-strong)!important;border-radius:5px!important;background:var(--white)!important;padding:4px!important;min-block-size:26px!important}
+.save-btn:disabled{opacity:.45;cursor:default}
+.picker-box{border-color:#c9d4df;border-radius:6px;min-block-size:34px}
+.pchip{font-size:11.5px}
+.sec-count{display:inline-flex;align-items:center;justify-content:center;min-inline-size:14px;block-size:14px;border-radius:7px;background:#f97316;color:#fff;font-size:9px;font-weight:700;padding-inline:3px;margin-inline-start:-4px;transform:translateY(-6px)}
+.sec-count[hidden]{display:none}
+.arrow{text-align:center}
+
+.rrow{grid-template-columns:46px 116px 34px 72px minmax(170px,1.3fr) minmax(130px,1fr) 24px minmax(170px,1.3fr) minmax(170px,1.3fr) minmax(140px,.9fr) 118px}
+.rrow.short{grid-template-columns:46px 116px 34px 72px minmax(170px,2.3fr) 24px minmax(170px,1.3fr) minmax(170px,1.3fr) minmax(140px,.9fr) 118px}
+.rtable.framed{border:1px solid var(--line);border-radius:6px}
+.rtable.framed .rhead{border:0;border-block-end:1px solid var(--line);border-radius:6px 6px 0 0}
+.rtable.framed .rrow.saved:last-child{border-block-end:0}
+.rrow.saved{cursor:default}
+.rrow.saved:hover{background:var(--white)}
+.first-cell{display:flex;align-items:center;gap:8px}
+.first-cell input{margin:0}
+.row-btn{border:1px solid var(--line-strong)!important;border-radius:5px!important;background:var(--white)!important;padding:4px!important;min-block-size:26px!important;min-inline-size:26px}
+.row-btn .icon{inline-size:14px!important;block-size:14px!important}
+</style>
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Editor msdt:dt="string">Keith Buckley</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Editor>
+<mso:_activity msdt:dt="string">{&quot;FileActivityType&quot;:&quot;9&quot;,&quot;FileActivityTimeStamp&quot;:&quot;2026-10-02T17:09:10.677Z&quot;,&quot;FileActivityUsersOnPage&quot;:[{&quot;DisplayName&quot;:&quot;Keith Buckley&quot;,&quot;Id&quot;:&quot;keith.buckley@illumio.com&quot;},{&quot;DisplayName&quot;:&quot;Pritesh Chauhan&quot;,&quot;Id&quot;:&quot;pritesh.chauhan@illumio.com&quot;},{&quot;DisplayName&quot;:&quot;Nathan Mitchell&quot;,&quot;Id&quot;:&quot;nathan.mitchell@illumio.com&quot;}],&quot;FileActivityNavigationId&quot;:null}</mso:_activity>
+<mso:_ExtendedDescription msdt:dt="string"></mso:_ExtendedDescription>
+<mso:SharedWithUsers msdt:dt="string"></mso:SharedWithUsers>
+<mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Author msdt:dt="string">Keith Buckley</mso:display_urn_x003a_schemas-microsoft-com_x003a_office_x003a_office_x0023_Author>
+<mso:ComplianceAssetId msdt:dt="string"></mso:ComplianceAssetId>
+<mso:TriggerFlowInfo msdt:dt="string"></mso:TriggerFlowInfo>
+<mso:ContentTypeId msdt:dt="string">0x0101000EE7DB6B024AA647916E888582FA8753</mso:ContentTypeId>
+<mso:_SourceUrl msdt:dt="string"></mso:_SourceUrl>
+<mso:_SharedFileIndex msdt:dt="string"></mso:_SharedFileIndex>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+<body>
+<a class="skip" href="#main">Skip to console content</a>
+<aside id="sidebar" class="sidebar" aria-label="Console navigation">
+ <div class="sidebar-top"><span class="logo" aria-label="Illumio"><svg class="icon" viewBox="0 0 28 28" aria-hidden="true"><g fill="currentColor"><path d="M25.118 2.882v22.236H2.882V2.882zM1.344 0C.604 0 0 .605 0 1.344v25.312C0 27.396.605 28 1.344 28h25.312c.74 0 1.344-.605 1.344-1.344V1.344C28 .604 27.395 0 26.656 0z"></path><path d="m16.44 11.992 1.352-1.352h3.576c.372 0 .672-.3.672-.672V6.272c0-.371-.3-.672-.672-.672h-3.696c-.371 0-.672.3-.672.672v3.576L15.648 11.2h-4.016L9.321 8.889V6.993c0-.372-.3-.672-.672-.672H6.633c-.371 0-.672.3-.672.672v2.016c0 .371.3.672.672.672h1.896l2.311 2.31v4.017L8.53 18.32H6.632c-.371 0-.672.301-.672.672v2.016c0 .372.3.672.672.672h2.016c.371 0 .672-.3.672-.672v-1.896l2.311-2.311h4.016L17 18.152v3.576c0 .371.3.672.672.672h3.696c.372 0 .672-.3.672-.672v-3.696c0-.371-.3-.672-.672-.672h-3.576l-1.352-1.352z"></path></g></svg></span><button class="collapse-icon" disabled aria-label="Collapse sidebar (not available)"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m12.5 5-5 5 5 5"></path></svg></button></div>
+ <nav class="side-nav" aria-label="Main navigation">
+  <button data-area="Dashboard"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.22 9.5h-2.67c-1.53 0-2.78-1.24-2.78-2.75V3.76c0-1.52 1.25-2.75 2.78-2.75h2.67c1.53 0 2.78 1.24 2.78 2.75v2.99c0 1.52-1.25 2.75-2.78 2.75M13.55 3c-.43 0-.78.34-.78.75v2.99c0 .42.35.75.78.75h2.67c.43 0 .78-.34.78-.75V3.75c0-.42-.35-.75-.78-.75z"></path><path d="M6.44 9.5H3.77C2.24 9.5.99 8.26.99 6.75V3.76c0-1.52 1.25-2.75 2.78-2.75h2.67c1.53 0 2.78 1.24 2.78 2.75v2.99c0 1.52-1.25 2.75-2.78 2.75M3.78 3c-.43 0-.78.34-.78.75v2.99c0 .42.35.75.78.75h2.67c.43 0 .78-.34.78-.75V3.75c0-.42-.35-.75-.78-.75zM16.22 19h-2.67c-1.53 0-2.78-1.24-2.78-2.75v-2.99c0-1.52 1.25-2.75 2.78-2.75h2.67c1.53 0 2.78 1.24 2.78 2.75v2.99c0 1.52-1.25 2.75-2.78 2.75m-2.67-6.5c-.43 0-.78.34-.78.75v2.99c0 .42.35.75.78.75h2.67c.43 0 .78-.34.78-.75v-2.99c0-.42-.35-.75-.78-.75zM6.44 19H3.77C2.24 19 .99 17.76.99 16.25v-2.99c0-1.52 1.25-2.75 2.78-2.75h2.67c1.53 0 2.78 1.24 2.78 2.75v2.99c0 1.52-1.25 2.75-2.78 2.75m-2.67-6.5c-.43 0-.78.34-.78.75v2.99c0 .42.35.75.78.75h2.67c.43 0 .78-.34.78-.75v-2.99c0-.42-.35-.75-.78-.75z"></path></svg>Dashboard<span class="chevron">›</span></button>
+  <button data-area="Insights"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 1c.8 0 1.5.7 1.5 1.5V4c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5V2.5c0-.8.7-1.5 1.5-1.5M5.4 5.4c.6-.6 1.5-.6 2.1 0l1.1 1.1c.6.5.6 1.5 0 2.1s-1.6.6-2.1 0L5.4 7.5c-.6-.6-.6-1.5 0-2.1m21.2 0c.6.6.6 1.5 0 2.1l-1.1 1.1c-.6.6-1.5.6-2.1 0s-.6-1.5 0-2.1l1.1-1.1c.6-.6 1.5-.6 2.1 0M16 10c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6m-9 6c0-5 4-9 9-9s9 4 9 9c0 3.3-1.8 6.2-4.5 7.8v2.7c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5v-2.7C8.8 22.2 7 19.3 7 16m7.5 8.9v1.6c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5v-1.6c-.5.1-1 .1-1.5.1s-1 0-1.5-.1M1 16c0-.8.7-1.5 1.5-1.5H4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5H2.5c-.8 0-1.5-.7-1.5-1.5m25.5 0c0-.8.7-1.5 1.5-1.5h1.5c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5H28c-.8 0-1.5-.7-1.5-1.5"></path></svg>Insights<span class="chevron">›</span></button>
+  <button data-area="Quarantine"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M1.667 23.8v-1.3a1.333 1.333 0 1 1 2.666 0v1.3c0 .931.002 1.55.04 2.026.038.458.103.665.169.794.183.36.477.655.838.838.128.066.335.13.794.168.475.04 1.095.04 2.026.04h1.3a1.333 1.333 0 1 1 0 2.667H8.2c-.888 0-1.634.002-2.243-.048-.625-.05-1.221-.163-1.788-.452a4.6 4.6 0 0 1-2.002-2.002c-.29-.567-.401-1.164-.452-1.788-.05-.609-.048-1.356-.048-2.244m15.958 3.867a1.333 1.333 0 1 1 0 2.666h-3.25a1.333 1.333 0 0 1 0-2.666zm10.042-3.868V22.5a1.333 1.333 0 0 1 2.666 0v1.3c0 .887.002 1.634-.048 2.243-.051.624-.163 1.22-.452 1.788a4.6 4.6 0 0 1-2.002 2.002c-.567.29-1.164.401-1.788.452-.609.05-1.356.048-2.244.048h-1.3a1.333 1.333 0 0 1 0-2.666h1.3c.932 0 1.551-.002 2.026-.04.46-.038.666-.103.795-.169a1.92 1.92 0 0 0 .838-.838c.066-.129.13-.336.168-.794.039-.476.04-1.095.04-2.027m-7.292-4.94c0-.463-.002-.743-.016-.953-.013-.197-.033-.234-.027-.22a.57.57 0 0 0-.31-.31c.014.006-.022-.014-.22-.027-.21-.014-.49-.016-.952-.016h-5.716c-.462 0-.742.002-.952.016-.197.014-.234.033-.22.027a.57.57 0 0 0-.31.31c.006-.014-.014.023-.027.22-.014.21-.016.49-.016.952s.002.742.016.952c.013.198.033.234.027.22.058.14.17.252.31.31-.014-.006.023.014.22.027.21.014.49.016.952.016h5.716c.462 0 .742-.002.952-.016.198-.013.234-.033.22-.027a.57.57 0 0 0 .31-.31c-.006.014.014-.023.027-.22.014-.21.016-.49.016-.952M1.667 17.624v-3.25a1.333 1.333 0 1 1 2.666 0v3.25a1.333 1.333 0 1 1-2.666 0m26 0v-3.25a1.333 1.333 0 0 1 2.666 0v3.25a1.333 1.333 0 0 1-2.666 0m-26-8.125V8.2c0-.887-.002-1.634.048-2.243.05-.624.163-1.22.452-1.788a4.6 4.6 0 0 1 2.002-2.002c.567-.29 1.163-.401 1.788-.452.609-.05 1.355-.048 2.243-.048h1.3a1.333 1.333 0 0 1 0 2.666H8.2c-.931 0-1.55.002-2.026.04-.459.038-.666.103-.794.169a1.92 1.92 0 0 0-.838.838c-.066.129-.131.336-.168.794-.04.475-.04 1.095-.04 2.027V9.5a1.333 1.333 0 1 1-2.667 0m26 0V8.2c0-.931-.002-1.55-.04-2.026-.038-.458-.104-.665-.169-.794a1.92 1.92 0 0 0-.838-.838c-.129-.066-.336-.13-.795-.168-.475-.04-1.094-.04-2.026-.04h-1.3a1.333 1.333 0 0 1 0-2.667h1.3c.888 0 1.635-.002 2.244.048.624.05 1.22.163 1.788.452a4.6 4.6 0 0 1 2.002 2.002c.289.567.401 1.164.452 1.788.05.609.048 1.356.048 2.244V9.5a1.333 1.333 0 0 1-2.666 0M17.624 1.667a1.333 1.333 0 1 1 0 2.666h-3.25a1.333 1.333 0 0 1 0-2.666zm.845 12.428a2.478 2.478 0 0 0-4.956 0v.572h4.956zm2.667.862a3.24 3.24 0 0 1 1.658 1.708c.151.365.203.727.226 1.06.022.322.02.708.02 1.133s.002.811-.02 1.133a3.3 3.3 0 0 1-.226 1.06 3.24 3.24 0 0 1-1.752 1.752 3.3 3.3 0 0 1-1.06.226c-.322.022-.707.02-1.133.02h-5.716c-.425 0-.811.002-1.133-.02a3.3 3.3 0 0 1-1.06-.226 3.24 3.24 0 0 1-1.752-1.752 3.3 3.3 0 0 1-.226-1.06c-.022-.322-.02-.707-.02-1.133 0-.425-.002-.811.02-1.133.023-.333.075-.695.226-1.06.315-.76.91-1.37 1.659-1.708v-.862a5.145 5.145 0 0 1 10.289 0z"></path></svg>Quarantine</button>
+  <button data-area="Explore"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16 19H4c-1.65 0-3-1.35-3-3V6.47c0-.23.03-.45.08-.67 0-.03.01-.05.02-.08.05-.21.13-.41.22-.59l1.37-2.75C3.12 1.53 3.97 1 4.93 1h10.15c.95 0 1.81.53 2.24 1.38l1.38 2.75c.09.19.17.39.22.59 0 .03.01.05.02.08.05.22.08.45.08.67V16c0 1.65-1.35 3-3 3ZM3 7v9c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V7zm.62-2h12.76l-.86-1.72a.5.5 0 0 0-.45-.28H4.93c-.19 0-.36.11-.45.28zm8.88 4.75h-5c-.55 0-1-.45-1-1s.45-1 1-1h5c.55 0 1 .45 1 1s-.45 1-1 1"></path></svg>Explore<span class="chevron">›</span></button>
+  <button id="segMenu" aria-expanded="false" aria-controls="segChildren"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 19c-.19 0-.37-.05-.53-.15-.54-.34-1.04-.65-1.51-.94-2.98-1.82-4.95-3.02-4.95-6.22V4c0-.55.45-1 1-1 2.21 0 3.37-.07 5.35-1.76a1 1 0 0 1 1.3 0C12.64 2.93 13.8 3 16.01 3c.55 0 1 .45 1 1v7.69c0 3.2-1.97 4.4-4.95 6.22-.47.29-.98.59-1.51.94-.16.1-.35.15-.53.15ZM5 4.99v6.7c0 1.98.96 2.66 3.99 4.51.32.2.65.4 1.01.62.35-.22.69-.42 1.01-.62 3.03-1.85 3.99-2.53 3.99-4.51v-6.7c-1.77-.05-3.17-.33-5-1.71-1.83 1.38-3.23 1.65-5 1.71"></path></svg>Segmentation<span id="segChevron" class="chevron">›</span></button>
+  <div id="segChildren" class="nav-children" hidden><button id="navAllPolicies"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M4 2.5h5.5L12 5v8.5H4zM6 8h4M6 10.5h4"/></svg>All Policies</button><button data-area="Deny Rules"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2 13 4v4c0 3-2.2 5.2-5 6-2.8-.8-5-3-5-6V4z"/></svg>Deny Rules</button><button data-area="Drafts &amp; Versions"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M4 2.5h5.5L12 5v8.5H4zM6 8h4M6 10.5h4"/></svg>Drafts &amp; Versions</button></div>
+  <button data-area="Label Management"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M16.966 5.407c-.271-.065-.575-.074-1.617-.074h-4.016a1.333 1.333 0 0 1 0-2.666h4.152c.846 0 1.486-.001 2.103.147.544.13 1.065.346 1.542.639.54.331.993.784 1.591 1.383l.096.096 7.46 7.458a1.333 1.333 0 1 1-1.887 1.886l-7.458-7.459c-.737-.736-.958-.945-1.195-1.09a2.7 2.7 0 0 0-.771-.32m-2.667 4c-.271-.065-.575-.074-1.617-.074h-1.615c-1.142 0-1.919.001-2.519.05-.585.048-.883.135-1.092.241-.502.256-.91.664-1.165 1.165-.107.209-.193.508-.24 1.092C6 12.481 6 13.258 6 14.4v1.616c0 1.042.009 1.345.074 1.616s.173.532.319.771c.146.238.354.459 1.091 1.195l4.267 4.267c.807.808 1.357 1.356 1.816 1.745.447.38.72.53.942.603a2.67 2.67 0 0 0 1.648 0c.223-.073.496-.223.943-.603.459-.39 1.008-.937 1.816-1.745l1.616-1.616c.807-.807 1.356-1.357 1.745-1.816.38-.447.53-.72.602-.942a2.67 2.67 0 0 0 0-1.648c-.072-.223-.222-.496-.602-.943-.39-.459-.938-1.008-1.745-1.816l-4.267-4.267c-.737-.736-.957-.945-1.195-1.09a2.7 2.7 0 0 0-.771-.32m-1.48-2.74c.846 0 1.486-.001 2.102.147.545.13 1.065.346 1.542.639.541.331.993.784 1.592 1.383l.096.096 4.305 4.305c.76.76 1.386 1.386 1.854 1.938.487.573.881 1.153 1.106 1.844a5.33 5.33 0 0 1 0 3.296c-.225.69-.62 1.27-1.106 1.844-.468.552-1.095 1.178-1.854 1.937l-1.693 1.694c-.76.759-1.386 1.385-1.937 1.854-.574.486-1.154.88-1.845 1.105a5.33 5.33 0 0 1-3.296 0c-.69-.225-1.27-.619-1.844-1.105-.552-.47-1.178-1.095-1.937-1.854l-4.306-4.306-.096-.096c-.599-.598-1.051-1.05-1.383-1.591a5.3 5.3 0 0 1-.638-1.542c-.148-.617-.148-1.257-.148-2.104v-1.806c0-1.073 0-1.96.06-2.68.06-.75.192-1.44.522-2.086a5.33 5.33 0 0 1 2.33-2.331c.648-.33 1.336-.461 2.086-.522.722-.06 1.607-.06 2.68-.06h1.807M8.065 13.4a2 2 0 1 1 4 0 2 2 0 0 1-4 0" clip-rule="evenodd"></path></svg>Label Management<span class="chevron">›</span></button>
+  <button id="serversMenu" aria-expanded="true" aria-controls="serversChildren"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 19c-.19 0-.36-.05-.51-.14l-6.91-3.99c-.31-.18-.5-.51-.5-.87V6c0-.36.19-.69.5-.87l6.92-4c.31-.18.69-.18 1 0l6.93 4c.31.18.5.51.5.87v8c0 .36-.19.69-.5.87l-6.91 3.99c-.15.09-.32.14-.51.14Zm-5.93-5.58L9 16.26v-5.21L4.07 8.02zM11 11.06v5.21l4.93-2.84v-5.4zM4.83 6.14 10 9.32l5.17-3.18L10 3.15z"></path></svg>Servers &amp; Endpoints<span id="serversChevron" class="chevron">⌄</span></button>
+  <div id="serversChildren" class="nav-children">
+   <button id="navWorkloads"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M14.882 4h7.57c.702 0 1.309 0 1.808.04.527.044 1.051.139 1.556.396a4 4 0 0 1 1.748 1.748c.257.505.352 1.029.395 1.556.041.5.041 1.106.041 1.809v7.57c0 .702 0 1.308-.04 1.808-.044.527-.139 1.051-.396 1.556a4 4 0 0 1-1.748 1.748c-.505.257-1.029.352-1.556.395-.448.037-.981.04-1.593.04 0 .613-.005 1.146-.041 1.594-.043.527-.138 1.051-.395 1.556a4 4 0 0 1-1.748 1.748c-.505.257-1.03.352-1.556.395-.5.041-1.106.041-1.809.041h-7.57c-.702 0-1.309 0-1.808-.04-.527-.044-1.051-.139-1.556-.396a4 4 0 0 1-1.748-1.748c-.257-.505-.352-1.029-.395-1.556C4 23.76 4 23.154 4 22.451v-7.57c0-.702 0-1.308.04-1.808.044-.527.139-1.051.396-1.556A4 4 0 0 1 6.184 9.77c.505-.257 1.029-.352 1.556-.395.448-.036.981-.04 1.593-.04 0-.613.005-1.146.041-1.594.043-.527.138-1.051.395-1.556a4 4 0 0 1 1.748-1.748c.505-.257 1.03-.352 1.556-.395C13.573 4 14.18 4 14.882 4m-5.549 8c-.62 0-1.044.005-1.376.032-.362.03-.496.08-.562.113-.251.128-.455.332-.583.583-.034.066-.084.2-.113.563-.031.377-.032.874-.032 1.642V22.4c0 .769 0 1.265.032 1.643.03.362.08.496.113.562.128.251.332.455.583.583.066.034.2.084.562.113.378.031.874.032 1.643.032h7.467c.768 0 1.265 0 1.643-.032.362-.03.496-.08.562-.113.25-.128.455-.332.583-.583.033-.066.084-.2.113-.562.027-.332.031-.756.032-1.376h-5.118c-.703 0-1.31 0-1.809-.041-.527-.043-1.051-.138-1.556-.395a4 4 0 0 1-1.748-1.748c-.257-.505-.352-1.03-.395-1.556-.04-.5-.04-1.106-.04-1.809zm5.6 8c-.768 0-1.265-.001-1.642-.032-.363-.03-.497-.08-.563-.113a1.33 1.33 0 0 1-.583-.583c-.033-.066-.083-.2-.113-.562C12 18.332 12 17.835 12 17.067V9.6c0-.769.001-1.265.032-1.643.03-.362.08-.496.113-.562.128-.251.332-.455.583-.583.066-.034.2-.084.563-.113.377-.031.874-.032 1.642-.032H22.4c.769 0 1.265 0 1.643.032.362.03.496.08.562.113.251.128.455.332.583.583.034.066.084.2.113.562.031.378.032.874.032 1.643v7.467c0 .768 0 1.265-.032 1.643-.03.362-.08.496-.113.562-.128.25-.332.455-.583.583-.066.033-.2.084-.562.113-.378.031-.874.032-1.643.032z" clip-rule="evenodd"></path></svg>Workloads</button>
+   <button id="navProfiles" class="active" aria-current="page"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M9.333 10.667a5.333 5.333 0 1 0 0 10.666H12A5.333 5.333 0 0 0 17.333 16 1.333 1.333 0 1 1 20 16a8 8 0 0 1-8 8H9.333a8 8 0 1 1 0-16H10a1.333 1.333 0 1 1 0 2.667zm10.667 0A5.333 5.333 0 0 0 14.667 16 1.333 1.333 0 0 1 12 16a8 8 0 0 1 8-8h2.667a8 8 0 1 1 0 16H22a1.333 1.333 0 0 1 0-2.667h.667a5.333 5.333 0 0 0 0-10.666z" clip-rule="evenodd"></path></svg>Pairing Profiles</button>
+   <button data-area="Applications"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="m5.905 2.837.343-.674c.179-.35.521-.587.912-.63a5.4 5.4 0 0 1 1.19 0c.39.043.732.28.91.63l.343.672q.268.123.516.279l.738-.083c.39-.044.776.112 1.027.414a5.4 5.4 0 0 1 .655.993c.18.35.17.766-.024 1.108l-.376.661a4.5 4.5 0 0 1 .002 1.3l.374.658c.194.341.203.758.024 1.107a5.4 5.4 0 0 1-.654.993c-.251.302-.637.458-1.027.414l-.716-.08q-.257.165-.538.295l-.343.673c-.179.35-.521.587-.912.63a5.4 5.4 0 0 1-1.19 0 1.17 1.17 0 0 1-.91-.63l-.344-.674a4.4 4.4 0 0 1-.54-.295l-.722.081a1.17 1.17 0 0 1-1.027-.414 5.4 5.4 0 0 1-.655-.993c-.179-.35-.17-.766.025-1.108l.38-.669A4.5 4.5 0 0 1 3.37 6.22l-.383-.673a1.17 1.17 0 0 1-.024-1.108 5.4 5.4 0 0 1 .654-.993 1.17 1.17 0 0 1 1.028-.414l.75.084q.244-.155.511-.278m1.85 1.507c-.139.24-.364.432-.649.524a2.1 2.1 0 0 0-.666.363 1.17 1.17 0 0 1-.803.258c.131.256.164.553.089.833a2.1 2.1 0 0 0-.003 1.079c.072.276.04.569-.088.822.285-.011.566.082.788.264.2.165.431.293.681.374.275.09.506.278.65.527.144-.25.375-.437.65-.526.25-.082.48-.21.681-.374.22-.18.499-.274.782-.263a1.16 1.16 0 0 1-.068-.878 2.1 2.1 0 0 0-.017-1.03 1.17 1.17 0 0 1 .083-.829 1.17 1.17 0 0 1-.792-.258 2.1 2.1 0 0 0-.668-.362 1.17 1.17 0 0 1-.65-.524" clip-rule="evenodd"></path><path fill-rule="evenodd" d="M15.333 5.333c0-.736.597-1.333 1.334-1.333h8.666a4 4 0 0 1 4 4v12.006a1.467 1.467 0 0 1 1.334 1.46V24a4 4 0 0 1-4 4H5.333a4 4 0 0 1-4-4v-2.533c0-.765.586-1.394 1.334-1.461v-5.34a1.333 1.333 0 1 1 2.666 0V20h21.334V8c0-.736-.597-1.333-1.334-1.333h-8.666a1.333 1.333 0 0 1-1.334-1.334M4 22.667V24c0 .736.597 1.333 1.333 1.333h21.334c.736 0 1.333-.597 1.333-1.333v-1.333z" clip-rule="evenodd"></path></svg>Applications</button>
+   <button data-area="Reports"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M10.882 2.667h6.451c.354 0 .693.14.943.39l8 8c.25.25.39.59.39.943v11.785c0 .703 0 1.309-.04 1.808-.043.527-.138 1.052-.395 1.556a4 4 0 0 1-1.748 1.748c-.505.257-1.03.353-1.556.396-.5.04-1.106.04-1.809.04H10.882c-.703 0-1.31 0-1.809-.04-.527-.043-1.051-.139-1.556-.396A4 4 0 0 1 5.77 27.15c-.257-.504-.352-1.029-.395-1.556-.04-.499-.04-1.105-.04-1.808V8.215c0-.703 0-1.309.04-1.808.043-.527.138-1.052.395-1.556a4 4 0 0 1 1.748-1.748c.505-.257 1.03-.352 1.556-.396.5-.04 1.106-.04 1.809-.04M9.29 5.365c-.362.03-.496.08-.562.114-.25.128-.455.331-.583.582-.033.066-.084.2-.113.563C8 7.002 8 7.498 8 8.267v15.466c0 .77.001 1.265.032 1.643.03.362.08.497.113.563.128.25.332.454.583.582.066.034.2.084.562.114.378.03.875.032 1.643.032h10.134c.768 0 1.265-.001 1.642-.032.363-.03.497-.08.563-.114.25-.128.455-.331.583-.582.033-.066.083-.2.113-.563.03-.378.032-.874.032-1.643v-10.4h-4.576c-.337 0-.664 0-.942-.022a2.7 2.7 0 0 1-1.026-.268 2.67 2.67 0 0 1-1.165-1.166 2.7 2.7 0 0 1-.268-1.026C16 10.573 16 10.246 16 9.909V5.333h-5.067c-.768 0-1.265.001-1.643.032m9.377 1.854 3.447 3.448h-2.647c-.396 0-.612-.001-.768-.014l-.017-.002-.002-.017a11 11 0 0 1-.013-.767zm-8 4.781c0-.736.597-1.333 1.333-1.333h1.333a1.333 1.333 0 0 1 0 2.666H12A1.333 1.333 0 0 1 10.667 12m0 5.333c0-.736.597-1.333 1.333-1.333h8a1.333 1.333 0 0 1 0 2.667h-8a1.333 1.333 0 0 1-1.333-1.334m0 5.334c0-.737.597-1.334 1.333-1.334h8A1.333 1.333 0 1 1 20 24h-8a1.333 1.333 0 0 1-1.333-1.333" clip-rule="evenodd"></path></svg>Reports</button>
+  </div>
+  <button data-area="Cloud"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M19.4 26.3H10c-4.3 0-7.8-3.5-7.8-7.8s3.5-7.8 7.8-7.8h.5c1.8-3.2 5.2-5.2 8.9-5.2 5.7 0 10.3 4.6 10.3 10.3s-4.6 10.5-10.3 10.5m-9.4-12c-2.3 0-4.2 1.9-4.2 4.2s1.9 4.2 4.2 4.2h9.4c3.8 0 6.8-3.1 6.8-6.8 0-3.8-3.1-6.8-6.8-6.8-2.8 0-5.3 1.7-6.3 4.2-.3.8-1.2 1.3-2.1 1-.3.1-.6 0-1 0"></path></svg>Cloud<span class="chevron">›</span></button>
+  <button data-area="Usage"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M15.424 2.667h1.152c.337 0 .664 0 .942.022.305.025.664.084 1.026.268.502.256.91.664 1.165 1.166.185.362.244.721.268 1.026.023.278.023.605.023.942v19.818c0 .337 0 .665-.023.942a2.7 2.7 0 0 1-.268 1.026c-.255.502-.663.91-1.165 1.166a2.7 2.7 0 0 1-1.026.268c-.278.022-.605.022-.942.022h-1.152c-.336 0-.664 0-.942-.022a2.7 2.7 0 0 1-1.026-.268 2.67 2.67 0 0 1-1.165-1.166 2.7 2.7 0 0 1-.268-1.026 12 12 0 0 1-.023-.942V6.091c0-.337 0-.664.023-.942.025-.305.083-.664.268-1.026.255-.502.663-.91 1.165-1.166a2.7 2.7 0 0 1 1.026-.268c.278-.022.606-.022.942-.022m-.742 2.682-.002.017c-.012.156-.013.372-.013.767v19.734a11 11 0 0 0 .015.784l.018.002c.155.013.371.014.767.014h1.066c.396 0 .612-.001.768-.014l.017-.002.002-.017c.012-.156.013-.372.013-.767V6.133a11 11 0 0 0-.015-.784l-.017-.002a11 11 0 0 0-.768-.014h-1.066a11 11 0 0 0-.785.016m10.076 5.318h1.151c.337 0 .665 0 .942.022.305.025.665.084 1.026.268.502.256.91.664 1.166 1.166.184.362.243.721.268 1.026.023.278.023.605.022.942v11.818c0 .337 0 .665-.022.942a2.7 2.7 0 0 1-.268 1.026c-.256.502-.664.91-1.166 1.166a2.7 2.7 0 0 1-1.026.268c-.277.022-.605.022-.942.022h-1.151c-.337 0-.665 0-.942-.022a2.7 2.7 0 0 1-1.027-.268 2.67 2.67 0 0 1-1.165-1.166 2.7 2.7 0 0 1-.268-1.026c-.023-.277-.023-.605-.023-.942V14.091c0-.337 0-.664.023-.942.025-.305.084-.664.268-1.026.256-.502.664-.91 1.165-1.166a2.7 2.7 0 0 1 1.027-.268c.277-.022.605-.022.942-.022m-.743 2.682-.001.017c-.013.156-.014.372-.014.767v11.734a11 11 0 0 0 .015.784l.018.002c.155.013.372.014.767.014h1.067c.395 0 .611-.001.767-.014l.017-.002.002-.017c.013-.156.014-.372.014-.767V14.133a11 11 0 0 0-.016-.784l-.017-.002a11 11 0 0 0-.767-.014H24.8a11 11 0 0 0-.785.016M6.091 16h1.152c.336 0 .664 0 .941.023.305.024.665.083 1.027.268.501.255.91.663 1.165 1.165.184.362.243.722.268 1.026.023.278.023.606.023.942v6.485c0 .337 0 .665-.023.942a2.7 2.7 0 0 1-.268 1.026c-.256.502-.664.91-1.165 1.166a2.7 2.7 0 0 1-1.027.268c-.277.022-.605.022-.941.022H6.09c-.337 0-.664 0-.942-.022a2.7 2.7 0 0 1-1.026-.268 2.67 2.67 0 0 1-1.166-1.166 2.7 2.7 0 0 1-.268-1.026c-.022-.277-.022-.605-.022-.942v-6.485c0-.336 0-.664.022-.942.025-.304.084-.664.268-1.026.256-.502.664-.91 1.166-1.165a2.7 2.7 0 0 1 1.026-.268C5.427 16 5.754 16 6.091 16m-.742 2.682-.002.018c-.013.155-.014.371-.014.767v6.4a11 11 0 0 0 .016.784l.017.002c.156.013.372.014.767.014H7.2c.395 0 .612-.001.767-.014l.018-.002.001-.017C8 26.478 8 26.262 8 25.867v-6.4a11 11 0 0 0-.015-.785l-.018-.002a11 11 0 0 0-.767-.013H6.133a11 11 0 0 0-.784.015" clip-rule="evenodd"></path></svg>Usage</button>
+  <button data-area="Access"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M17.6 19.33h-4.38c-.95 0-1.73-.8-1.73-1.79v-3.97c0-.61.29-1.15.74-1.47.13-1.73 1.51-3.1 3.18-3.1s3.04 1.37 3.18 3.1c.45.33.74.86.74 1.47v3.97c0 .99-.78 1.79-1.73 1.79m-4.1-2h3.83v-3.56H13.5zm.85-5.56h2.14c-.19-.46-.6-.78-1.07-.78s-.88.32-1.07.78M2 18.99c-.55 0-1-.45-1-1v-3c0-2.21 1.79-4 4-4h5c.55 0 1 .45 1 1s-.45 1-1 1H5c-1.1 0-2 .9-2 2v3c0 .55-.45 1-1 1m7-10c-2.21 0-4-1.79-4-4S6.79 1 9 1s4 1.79 4 4-1.79 4-4 4Zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2"></path><path d="M14.92 14.93h1v1.25h-1z"></path></svg>Access<span class="chevron">›</span></button>
+  <button data-area="Settings"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.06 3.08c.53.03 1.05.05 1.58.1.29.02.5-.05.67-.31.28-.43.58-.85.88-1.27.41-.58.97-.86 1.67-.87h1.33c.67.01 1.21.28 1.6.83.3.42.61.83.88 1.26.19.3.43.39.77.36.51-.06 1.02-.08 1.54-.11.7-.04 1.27.22 1.72.76.26.31.51.62.77.93.47.59.59 1.24.36 1.96-.15.48-.32.95-.43 1.43-.04.18.02.44.13.59.32.4.68.77 1.04 1.14.52.55.69 1.19.55 1.92-.08.38-.17.76-.26 1.14-.17.73-.6 1.23-1.3 1.51-.46.18-.93.37-1.4.54-.27.1-.44.25-.47.56-.05.48-.14.96-.22 1.44-.11.69-.47 1.21-1.1 1.53-.4.2-.8.38-1.2.57-.64.3-1.26.27-1.88-.06-.45-.24-.91-.48-1.35-.74-.29-.17-.55-.19-.85 0-.42.26-.87.49-1.31.73-.6.33-1.22.36-1.84.08-.42-.19-.83-.38-1.24-.58-.6-.29-.96-.78-1.08-1.44-.09-.49-.17-.98-.24-1.48-.04-.32-.16-.53-.5-.63-.48-.14-.94-.34-1.41-.51-.67-.25-1.1-.73-1.27-1.43-.1-.39-.2-.78-.29-1.17-.16-.73 0-1.37.53-1.92.33-.35.65-.72 1-1.06.23-.23.26-.46.15-.75-.15-.42-.27-.84-.42-1.26-.26-.78-.14-1.47.39-2.1.25-.3.5-.6.74-.9.45-.56 1.05-.8 1.76-.76Zm-.02 2.01s-.13-.02-.19.04c-.27.3-.58.59-.75.94-.08.17.09.46.16.7.09.29.19.58.28.87.29.96.1 1.81-.6 2.54-.3.31-.6.62-.87.95-.1.13-.14.34-.14.51 0 .72.39 1.12 1.09 1.26.26.05.5.16.74.26.86.36 1.39.99 1.54 1.92.08.47.15.93.24 1.4.02.09.03.23.09.26.36.19.71.4 1.09.49.18.04.42-.16.63-.27.32-.17.62-.36.94-.53.78-.41 1.57-.42 2.36-.02.47.24.93.5 1.4.74.08.04.2.12.26.1.37-.15.76-.29 1.08-.52.14-.1.13-.4.17-.61.06-.31.1-.63.15-.95.14-.95.65-1.6 1.53-1.97.42-.18.85-.35 1.28-.5.27-.09.36-.25.46-.51.24-.63.11-1.11-.41-1.52-.23-.18-.4-.42-.6-.64-.4-.44-.67-.96-.64-1.54.03-.52.14-1.05.34-1.53.27-.65.21-1.14-.31-1.62-.19-.17-.33-.29-.6-.26-.45.06-.91.08-1.37.11-.93.06-1.68-.29-2.23-1.04-.2-.27-.42-.53-.57-.82-.25-.48-.6-.63-1.13-.6-.44.02-.75.11-.97.51-.18.33-.42.62-.63.93-.53.76-1.28 1.08-2.19 1.04-.5-.02-1-.06-1.62-.1Z"></path><path d="M14.32 10.06c.01 2.1-1.72 3.83-3.85 3.84-2.15 0-3.91-1.71-3.91-3.83 0-2.09 1.75-3.81 3.88-3.81 2.14 0 3.87 1.69 3.88 3.8m-2 .01c0-1.01-.85-1.82-1.89-1.81-1.03 0-1.88.85-1.87 1.85.02.98.87 1.79 1.88 1.79 1.04 0 1.88-.82 1.88-1.83"></path></svg>Settings<span class="chevron">›</span></button>
+  <button data-area="Support"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 29.8C8.4 29.8 2.2 23.6 2.2 16S8.4 2.2 16 2.2 29.8 8.4 29.8 16 23.6 29.8 16 29.8m0-24C10.3 5.8 5.8 10.3 5.8 16S10.4 26.2 16 26.2c5.7 0 10.2-4.6 10.2-10.2 0-5.7-4.5-10.2-10.2-10.2m0 18c-1 0-1.8-.8-1.8-1.8v-6c0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8v6c0 1-.8 1.8-1.8 1.8m0-10.5c-1 0-1.8-.8-1.8-1.7v-.1c0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8-.8 1.8-1.8 1.8"></path></svg>Support<span class="chevron">›</span></button>
+ </nav>
+</aside>
+<div class="shell">
+<header class="page-header">
+ <button id="mobileMenu" class="mobile-menu" aria-label="Open console navigation" aria-expanded="false" aria-controls="sidebar">☰</button>
+ <nav class="breadcrumbs" aria-label="Breadcrumb">
+  <svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.22 9.5h-2.67c-1.53 0-2.78-1.24-2.78-2.75V3.76c0-1.52 1.25-2.75 2.78-2.75h2.67c1.53 0 2.78 1.24 2.78 2.75v2.99c0 1.52-1.25 2.75-2.78 2.75M13.55 3c-.43 0-.78.34-.78.75v2.99c0 .42.35.75.78.75h2.67c.43 0 .78-.34.78-.75V3.75c0-.42-.35-.75-.78-.75z"></path><path d="M6.44 9.5H3.77C2.24 9.5.99 8.26.99 6.75V3.76c0-1.52 1.25-2.75 2.78-2.75h2.67c1.53 0 2.78 1.24 2.78 2.75v2.99c0 1.52-1.25 2.75-2.78 2.75M3.78 3c-.43 0-.78.34-.78.75v2.99c0 .42.35.75.78.75h2.67c.43 0 .78-.34.78-.75V3.75c0-.42-.35-.75-.78-.75zM16.22 19h-2.67c-1.53 0-2.78-1.24-2.78-2.75v-2.99c0-1.52 1.25-2.75 2.78-2.75h2.67c1.53 0 2.78 1.24 2.78 2.75v2.99c0 1.52-1.25 2.75-2.78 2.75m-2.67-6.5c-.43 0-.78.34-.78.75v2.99c0 .42.35.75.78.75h2.67c.43 0 .78-.34.78-.75v-2.99c0-.42-.35-.75-.78-.75zM6.44 19H3.77C2.24 19 .99 17.76.99 16.25v-2.99c0-1.52 1.25-2.75 2.78-2.75h2.67c1.53 0 2.78 1.24 2.78 2.75v2.99c0 1.52-1.25 2.75-2.78 2.75m-2.67-6.5c-.43 0-.78.34-.78.75v2.99c0 .42.35.75.78.75h2.67c.43 0 .78-.34.78-.75v-2.99c0-.42-.35-.75-.78-.75z"></path></svg><span>Home</span><span class="separator">/</span>
+  <span id="crumbServers" style="display:contents"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 19c-.19 0-.36-.05-.51-.14l-6.91-3.99c-.31-.18-.5-.51-.5-.87V6c0-.36.19-.69.5-.87l6.92-4c.31-.18.69-.18 1 0l6.93 4c.31.18.5.51.5.87v8c0 .36-.19.69-.5.87l-6.91 3.99c-.15.09-.32.14-.51.14Zm-5.93-5.58L9 16.26v-5.21L4.07 8.02zM11 11.06v5.21l4.93-2.84v-5.4zM4.83 6.14 10 9.32l5.17-3.18L10 3.15z"></path></svg><span id="crumbSection">Servers and Endpoints</span><span class="separator">/</span></span>
+  <button id="breadcrumbProfiles" class="link">Pairing Profiles</button><span id="breadcrumbSuffix" class="current" hidden></span>
+ </nav>
+ <h1 id="pageTitle" tabindex="-1">Pairing Profiles</h1>
+ <div class="header-tools"><div class="header-search"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M17 18c-.25 0-.5-.09-.7-.28l-2.24-2.17a7.5 7.5 0 0 1-4.53 1.52C5.38 17.07 2 13.69 2 9.54s3.38-7.53 7.53-7.53 7.53 3.38 7.53 7.53c0 1.74-.59 3.34-1.58 4.61l2.21 2.14c.4.38.41 1.02.02 1.41-.2.2-.46.3-.72.3ZM9.53 4C6.48 4 4 6.48 4 9.53s2.48 5.53 5.53 5.53 5.53-2.48 5.53-5.53S12.58 4 9.53 4"></path></svg><input disabled aria-label="Console search (not available)" placeholder="Search"><kbd>⌘ K</kbd></div><button disabled aria-label="Alerts (not available)"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m17.34 5.803-4.246 1.99m4.406 3.023-2.95-.091m-3.062-5.862L13.27 2.5m-8.776 15-.415-1.865M2.5 12.74l5.702-7.725 3.9 7.652z"></path></svg></button><button disabled aria-label="Help (not available)"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M16 5.333C10.109 5.333 5.333 10.11 5.333 16S10.11 26.667 16 26.667c5.89 0 10.667-4.776 10.667-10.667S21.89 5.333 16 5.333M2.667 16C2.666 8.636 8.636 2.667 16 2.667S29.333 8.637 29.333 16 23.363 29.333 16 29.333 2.667 23.363 2.667 16m13.289-3.667c-.62 0-1.143.424-1.292 1a1.333 1.333 0 1 1-2.582-.665 4.001 4.001 0 0 1 7.874.999c0 1.242-.606 2.065-1.24 2.678-.258.248-.55.49-.814.709l-.114.095c-.308.255-.602.506-.89.794a1.333 1.333 0 0 1-1.885-1.886c.379-.379.752-.694 1.07-.958l.121-.102c.273-.226.48-.398.66-.57.364-.353.425-.53.425-.76 0-.737-.597-1.334-1.333-1.334m.013 10h-.013a1.333 1.333 0 1 1 0-2.666h.013a1.333 1.333 0 1 1 0 2.666" clip-rule="evenodd"></path></svg></button><button class="user-avatar" disabled aria-label="Account menu (not available)">T</button><button disabled aria-label="Virtual advisor (not available)"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4a1 1 0 0 0-2 0v1H4a1 1 0 0 0 0 2h1v1a1 1 0 0 0 2 0V7h1a1 1 0 0 0 0-2H7z"></path><path d="M13.93 3.633a1 1 0 0 0-1.86 0l-1.753 4.444c-.206.523-.253.624-.309.7a1 1 0 0 1-.23.231c-.077.056-.178.103-.7.309L4.632 11.07a1 1 0 0 0 0 1.86l4.444 1.753c.523.206.624.253.7.309a1 1 0 0 1 .231.23c.056.077.103.178.309.7l1.753 4.445a1 1 0 0 0 1.86 0l1.753-4.445c.206-.523.253-.623.309-.7a1 1 0 0 1 .23-.23c.077-.056.177-.103.7-.309l4.445-1.753a1 1 0 0 0 0-1.86l-4.445-1.753c-.523-.206-.623-.253-.7-.309a1 1 0 0 1-.23-.23c-.056-.077-.103-.178-.309-.7z"></path><path d="M6 16a1 1 0 1 0-2 0v1H3a1 1 0 1 0 0 2h1v1a1 1 0 1 0 2 0v-1h1a1 1 0 1 0 0-2H6z"></path></svg></button></div>
+</header>
+<noscript><p class="noscript">Enable JavaScript to use the Illumio Console.</p></noscript>
+<main id="main" tabindex="-1">
+ <p id="pageMessage" class="page-message" role="status" hidden></p>
+ <section id="profilesScreen" aria-label="Pairing Profiles">
+  <div class="intro"><div><h2>Profiles</h2><p>Pairing Profiles allow you to apply specific properties to workloads as the key pair with the PCE, such as applying labels and setting workload enforcement.</p><button class="learn-more" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M2.5 3.5h4a1.5 1.5 0 0 1 1.5 1.5v8.5a1.5 1.5 0 0 0-1.5-1.5h-4zM13.5 3.5h-4A1.5 1.5 0 0 0 8 5v8.5A1.5 1.5 0 0 1 9.5 12h4z"/></svg>Learn more</button></div><img id="profileGraphic" class="intro-graphic" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF8AAACDCAIAAABk0lD2AAAOWklEQVR4nO1cW5MdV3lda+0eyZD/EX5B/loeeCOQIkVVAolNKMSlwDFgchPBTrioAFMYAmVBARJlkB3HyJJlWRePRiNLc2ZOfzzs27d7Rq2eh8M5M+5PKknT02fq7HXWWt9l7xYf7t7FHI8JrfsNbHTM6IzFjM5YzOiMxYzOWMzojMWMzljM6IzFjM5YzOiMxYzOWMzojMWMzljM6IzFjM5YzOiMxYzOWMzojMWMzljM6IzFjM5YzOiMxYzOWMzojMWMzljM6IzFjM5YzOiMxYzOWMzojMWMzljM6IzFjM5YzOiMxYzOWMzojMWMzljM6IzFjM5YzOiMxYzOWMzojMWMzlh8kNDp+7Nf/2R36afo+4mv6Fb6fjYnuksvd1/9KLav4CN/BdjUV630PW1E7Nx56txf47UfY38HFMjpLz3V6PTLM//1Ob30FexeAwBtAQIITAXolKLT9+HKL7ee+xhuXsbyERQAgQHEB5s7ZtjdPvvcJ3j5AvbuAIC2wAB2x8IlxulC52Bx5qV/03fP4d4fYfuZLwIFEOo+qL7TL8MfX+2+8Um+9Svs7wACt0ABAQTUATKRyXemxmlAh7vbZ771DC++iAfXYUi4OL4YSYgkpOOAc9LRWext/fJCeOEZ3H0Dy4dAgJSgYSh8oZiy1QdFWf1Sb//fmf/4DF7/Xzy8DTrKkEBnJCkyI8KQ0Dn1yuL998786Hm+9Bx2b8B6aKvhC4mES0zhASzc4anmzuJR9+ovwvnP8N3XcLALk8tEXdJRQcTjIgKEwin1Het18+rWf3+Bl36A998FenALBCRAxvBYHVGVQadSWbz/XvfK98N3z2HnLfQLsANSIWMMaHARoKNxIZO4JsfGo7O/CG/8pjv/NK9fwt49UMV9D+Hi+cKqrPTdCE04Ldwx061r3Q+/oVdewP0bqahjAGAUGEZxyXm9OE4F6xhvYUPR4e697nc/C99+BnffRL+XF1x81+Ey8N2CS1JZURYrgybH5qFzsK/rV85865/x/6/g4d2Up+nrl5ynC1+UVRMXr0wihcyaWCITkp1c39Hdd7qXz+sn/4r7bwMGBbAz+LrOOe4Al8Zf2FImAnq8hIXNQYcPd8Prvw7/+Wneeg0Hj0CCW/HTJo7SUfyyqinjUvkSSRTTVqRMuW1qbAA6yyVvXztz/hn+4ad4mCYy9gRcDvElJXKno8wdq2wqfcbUWDM6une7u3hBF76Me9dgPTTQUV4SfP0i9xt5wWp0hFgl0mrCKhAfI9aHzv4iXPtD981P8e3fYf8B0CEEsPBFddmP9RdVA24shnbIgNgY9tT3uDZ0+OhB97VP8PqvARm3WJky4IsTRVxeWieBNlWnErFkqKQvlgaChE6I77BfwvqIS9VRIoir+ps8NSDREDtLToyGMjW74UT5DgMVHsOX4FZe6rrBdZ+PhqbDKkAP4vGK5XWiQwkKFZdhqdL6S7POiII3Xa+jgqZqygdNAmEnppOgwM71R7lmO7o/KhVNgtKK0KIBiaxI0WU32uAHTo41osPcJRziy7CocdKIuNQiMFXA5OH8lfkCQogv5Ema74h5SJ6UgsPlSREXmVOSy0qpYvRlYfq3xZe4H+icaGqsEx1jxzL3HJpOuTLApZrOklyYPhyY9n+LjlIur5A1Sf043Fnb+Z0+Dj3LXiUFhTwkziN0dVAwBZMQf7ODOqPet/CjbX7qqkHlhcEoU8hXAiQqUHkbR8FOzlw51i8a8oUEUntpR5FoYby6wFdv2HfuhL/8C8Re1JpOYqCj7D7F1CbH+qpBgPEzB5xrPEZHJMEDcGfJF+7wS29j+yA1HSZfZBMka7vgq+dUYZ+c+Q5dZ3AYl3hRItiTj3pd3LXPX8dvd9PyzGAwFHRAqhg2weAgzl3IMWN96DTdtsPF5SBSRu4bb+zZszft/LvaH5xpY9yiappMpyMAguAmqhNzFuPpubX6Tq6Vaysg1sKEXIK7Pb931z5/Tbf2h6uKMgJFHckXx5pByp8ca+6zTOEwX2IdvDBdftB/9i27eH+oiJiv4+YLg5y/FERyU6bS0POEoZPyNIa49OCtfTz3Tv/8O1q0UoodAgChWFZXJSlXOjatGVJ3Sk4+bwqsu1ZWnjMk2vfkXs8fvGf/eBU3F5UyhJHRReKXoCggSHa4gWiuwB0XFOK0ZHJSX6MrR8vI019wCbz+Pv/hqv38Xnr3yUwApKFhXCYBY+FRKvCys5R07lNVJpSdlOkXrGZ0A7eXfPZG/7UbeNQTTkEAKi7pt8UbQhrMt7UScLhKQGzTCZDHEdZ6M7oCpH3Ty9vLv3vTbuyRSDO8lIU9KExZNt1QjgAW80rWi9KyZlwGhcKTqx4jIorr7UJ1baGPv9FfvMfeLTuyhiCzgpD+ZEj3EECIIx3l3fEmeRdccrLPhOKJUNbuYv+bb+19/XL//pI9rNgtIkAGMI3x0lQmYwdAUVxgINsNv5YvrkSkGxI+8b0pP0mxBnSWy+VvXr3yt5/90s1btw96iCaAlhkQF8FkLuWzJus8QZlHEt3Y7ChcCDSnEja4zzKzO9s7f/P0uUu/f22xf4DeQnaZpAAAgFhTEosNITUMhV8hQRDyGND5S07qdKVQ7OP5ZO7UG/586DzcW/z7/1x4/sXv7+w+6PueMArIlEGroFKTKMEUfxW3Zhorh7Rx3o7fj8Ql5/5Nm+8sl/2VN69+7J/O3bx1e/9gCSCIANlbSUOeLGUJDjjkEamBOV2nykfeejhQFgoP020blNHN7O69nb//4r/86vLvHz56tOyNjOdwQMBsmSWTh5oOoJTEfb1DkIoJN9qQYmV8mC8kJAMQ6sDUijFNjhWiszg4+PaFHz//4vfuvLd9sOxFdEFMHz0JsAeSPVSLYUGlyipvxpScTMJMgRKhvIclwlKXb0xnUQGAZWcibU0sJy9hhehcvXbj2fMvbu/sAgjKlhpza9JIXjCQbYXGWvIkNcX7k0RyCpM6IsRJYK6VrcDkbLg06PHc2AZxZ7lchvJxM2XXyBXSsEwtM4eWXNmUkIkicrcleYoIaX+55vLkL0LMiPU8XWropi9hhejEJVFKfiDkd4pCCFhMzMVxmFnDUiIzHadAWX76+UyNujm+FH9xfMnGhPb1E2KVrkxIUkGnvNtEDgOp2BQMXTlhEb+pXOkgw1doKNFUclaT1ytf0GDH40x4VpqzKFGSs+LKnNT9OB2V6/E2wd+ZsUvQEvGcBXOXn0euGcjSfznKcGonUWLlygpSYkdM5QUGs5CW7BiRS77MHgwArV8RgVScftEXOy1f8uAienbu16fGKtEhJEqVNRUEkmYS0CeElPN4Vh8qXPSulF8elRVx0VE6KmQhzc8xjhOrVRaVhJWAUU5byVPTdxLdq3wyP2odWHEpJqUITwjjOupVq2eWCdmT3vnqd2yIZMkl4GwZvcrV3EZlCFo4XIlYfxAgSXH3vWwTu5bC2rkXVYvm8XdtrHes2ncYJFR0qo/IhHhksNis54u7v5Alm1emAUm1x7e9v+SL9EN48EngNLHqnCXl4RObT55AT6XHfbPCirgqjqUAaC2ZJDpSrsk6Apc6EkNT8kyOVSuLud7JLMhcUWy25cjiCplSFDWIlCo5f62S0duN5noAo6BTDtNtTkYPqdxBzucoC5XJiccxBXCvQItPgSYTSDIFc6mqwSVeZNtnbJKy2NpyXaesp0irTp2uA0hzinIl3dXgQpAMUuobEt/U4FJPHLCBbHKsut7JnUReVVl2VFYGD155dK2mpX+7QikjLJG12GkpM5gxO/fZlB4dQGjRKR++kepBScbCkWI0uTJk9SVHmYJj6lIUhtQYHo5yZ5cniMtvd62UOyTVSWTmi++1Yi1nxWQquQYarLmufgUi+X0ZieY5aaujQXceJxg2VV6r5Y7yACOzQyUZwZD+jwog2oRK5ipF9OAvh0/8qQr5GPxg9JUoU64IccpPsuyTTYiV5iwqxHqn+fTTHwZKWVflFhwGJF1yFRNSoUxJ0FEnmlx2B93EZ4P+D5XoGqSoIpzqIRbnO0IZGBZaVSzKd5z2IrkSKUuPXkEhVbYKzZ9BAPKTA1Nj1cpSFwKOcA6gV8zoSV6s3enQbTw0kTiMv4qy1DLlEF+ANqlNjZXPd5yyCj9AELI4nmnU1IopY8HiS3WSppSz2sdkU0vvNiFY24hiRpPps1JlZfY3LpKUgtKFenzKDQUkBxpiGZ2vpCbO1Xv1aHLDptJkJblOX8GfoRrkYNkgRViPIJWKuPm2y1Dp7qOSO10X6nDJfuxQY34Iychj7YauOGdJQaHKyZtPPMRntVZs0tQQs5Y+KMioObV65G46nDdrY+bKyPVOTkHwy4Ul36niGfxR1RW/VC2FkmDF8hCpH1M4vhiaizbtoWtjOsCzYt+h6yTKDEfJd6hAW3q6NPxqaVT7VORaEE016EseYqg1Yz58uSHcYa7ZWmVk/hgoxjmGq2xaJR1WWvoq3i1JCDlnoWgH5grC/NRRPPG9Ma4cF6GgSh2fjnrnO43j5NrnKO6oTL5IphY0HwgUDS1foHa+s0lnMAgoSAfVd90ooszM855wXHhaujIWDiO/pZoKgdhJiHHGDseXcg7OP5mVZosT3/uK0QHc5NR3UjH6paS8Y36U46SXtXJy45BS73jKHOKLZxNI9cchz8onGGnOED+20klCkjEobfNVdnl3gWdP/i8PSOc6DMEdrqiHwIZPlCg/ADB1PyvFyvusIXUKJSwuU6x0YE5pHqM2crETAWbiTnoSws1JU6EQ27hyxfJ7mRir5U5oleWBklk8ujVYf2WQRmFiBCfEEqadH5fhYh2qWn4kfVMyusgPnz0b4rN38SCXmxPTeh58iP0yqyhedVJyU+aj0KGks089ZV2HqqmEYxl9DUc/mOjKKf4EuKXrBJo7AHkAAAAASUVORK5CYII="><button class="intro-close" disabled aria-label="Dismiss introduction (not available)"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.67" d="m11.333 4.667-6.666 6.666m6.666 0L4.667 4.667"></path></svg></button></div>
+  <div class="toolbar"><button id="addProfile" class="primary"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 8h5"/></svg>Remove</button><span class="spacer"></span><button disabled><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M15.9 29c-5.4 0-10.1-3.2-12.1-8.1-.4-.9.1-1.9 1-2.3s1.9.1 2.3 1c1.5 3.6 5 6 8.9 6 2.9 0 5.7-1.3 7.5-3.6h-1.1c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8H28c1 0 1.8.8 1.8 1.8v5.6c0 1-.8 1.8-1.8 1.8s-1.8-.8-1.8-1.8V24c-2.4 3.2-6.2 5-10.3 5m10.7-15.5c-.7 0-1.3-.4-1.6-1.1-1.5-3.6-5-6-8.9-6-2.9 0-5.7 1.3-7.5 3.6h1.1c1 0 1.8.8 1.8 1.8s-.8 1.8-1.8 1.8H4c-1 0-1.8-.8-1.8-1.8V6.1c0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8V8C8.2 4.8 12 3 16.1 3c5.4 0 10.1 3.2 12.1 8.1.4.9-.1 1.9-1 2.3-.2.1-.4.1-.6.1"></path></svg>Refresh</button><button disabled><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26.2 26.78v-4H15.62v-5.63H26.2v-4L32 20Z"></path><path d="M20.58 25.56v4.07H2.38V2.37H14.4v6.15h6.18v5.85h2.38V8.61l-.1-.09h.1L14.4 0v.1l-.09-.1H0v32h22.96v-6.44z"></path></svg>Export<span aria-hidden="true">⌄</span></button></div>
+  <div class="filter-bar"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M6.09 2.667H25.91c.337 0 .664 0 .942.022.305.025.664.084 1.026.268.502.256.91.664 1.166 1.166.184.362.243.721.268 1.026.022.278.022.605.022.942v2.427c.001.253.002.572-.073.886a2.7 2.7 0 0 1-.32.77c-.168.276-.394.5-.574.679l-.048.048-8.084 8.084a8 8 0 0 0-.227.232l-.004.003v.005c-.003.063-.003.15-.003.325v3.117c0 .353-.14.692-.39.942l-5.334 5.334A1.333 1.333 0 0 1 12 28v-8.45c0-.174 0-.262-.003-.325v-.005l-.004-.003a8 8 0 0 0-.227-.232L3.682 10.9l-.048-.048c-.18-.179-.406-.403-.574-.679a2.7 2.7 0 0 1-.32-.77c-.075-.314-.074-.633-.073-.886V6.09c0-.337 0-.664.022-.942.025-.305.084-.664.268-1.026.256-.502.664-.91 1.166-1.166a2.7 2.7 0 0 1 1.026-.268c.278-.022.605-.022.942-.022M5.35 5.349l-.002.017c-.013.156-.014.372-.014.767V8.45c0 .174 0 .262.004.325v.005l.003.003c.043.047.104.109.228.232L13.65 17.1l.049.048c.179.179.405.404.574.679.146.238.254.498.319.77.075.314.074.633.074.886v5.299l2.666-2.667v-2.632c0-.253-.001-.572.074-.886.065-.272.173-.532.32-.77.168-.276.394-.5.573-.679l.049-.048 8.083-8.084c.124-.123.185-.185.228-.232l.003-.003v-.005a8 8 0 0 0 .004-.325V6.133a11 11 0 0 0-.016-.784l-.017-.002a11 11 0 0 0-.767-.014H6.133a11 11 0 0 0-.784.016" clip-rule="evenodd"></path></svg><input disabled placeholder="Select properties to filter view" aria-label="Filter by properties (not available)"></div>
+  <div class="table-frame"><div class="table-scroll"><table><thead><tr><th><input type="checkbox" disabled aria-label="Select all profiles (not available)"></th><th>Pairing Status</th><th>Enforcement Node Type</th><th>Name</th><th>Enforcement</th><th>Labels</th><th>Last Modified On</th><th>Last Modified By</th><th>Last Used On</th><th>Description</th></tr><tr class="column-filters"><th></th><th><input disabled aria-label="Filter pairing status (not available)" placeholder="All"></th><th><input disabled aria-label="Filter enforcement node type (not available)" placeholder="All"></th><th><input disabled aria-label="Filter profile name (not available)" placeholder="Search"></th><th><input disabled aria-label="Filter enforcement (not available)" placeholder="All"></th><th><input disabled aria-label="Filter labels (not available)" placeholder="All"></th><th><input disabled aria-label="Filter modified date (not available)"></th><th><input disabled aria-label="Filter modified by (not available)" placeholder="Search"></th><th><input disabled aria-label="Filter last used date (not available)"></th><th><input disabled aria-label="Filter description (not available)" placeholder="Search"></th></tr></thead><tbody id="profilesBody"></tbody></table></div><div class="pagination"><button disabled>Customize columns <span aria-hidden="true">⌄</span></button><span class="spacer"></span><button disabled>50 per page <span aria-hidden="true">⌄</span></button><span id="profilePagination">1 – 4 of 4 Total</span><button disabled aria-label="Previous page">‹</button><button disabled>1</button><button disabled aria-label="Next page">›</button></div></div>
+ </section>
+ <section id="detailScreen" aria-label="Pairing profile details" hidden>
+  <div id="profileBanner" class="running-banner"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.333 8.222 6.974 10l3.693-4M14 8A6 6 0 1 1 2 8a6 6 0 0 1 12 0"></path></svg><span><strong id="pairingState">Running:</strong><span id="pairingStateText">Allow pairing requests from all valid keys generated by this Pairing Profile</span></span></div>
+  <div class="toolbar"><button id="editProfile" class="primary"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M10.5 2.5l3 3L6 13H3v-3z"/></svg>Edit</button><button id="generateKey"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="5" cy="11" r="3" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 9l6-6M11 5l1.5 1.5M9.5 6.5 11 8"/></svg>Generate Key</button><button id="stopPairing"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10" fill="currentColor"/></svg>Stop Pairing</button><button id="removeProfile"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 8h5"/></svg>Remove</button></div>
+  <section class="section"><h2>General</h2><div class="attributes">
+   <div class="row"><span class="label">Name</span><div id="detailName" class="value"></div></div>
+   <div class="row"><span class="label">URI</span><div id="detailUri" class="value"></div></div>
+   <div class="row"><span class="label">Description</span><div id="detailDescription" class="value"></div></div>
+   <div class="row"><span class="label">Created</span><div id="detailCreated" class="value timestamp"></div></div>
+   <div class="row"><span class="label">Last Modified</span><div id="detailModified" class="value timestamp"></div></div>
+   <div id="lastKeyRow" class="row" hidden><span class="label">Last Pairing Key Generated</span><div id="detailLastKey" class="value timestamp"></div></div>
+   <div class="row"><span class="label">Enforcement</span><div class="value"><span id="detailEnforcement"></span><span id="detailEnforcementHint" class="hint"></span></div></div>
+   <div class="row"><span class="label">Visibility</span><div class="value"><span id="detailVisibility"></span><span id="detailVisibilityHint" class="hint"></span></div></div>
+   <div class="row"><span class="label">Initial VEN Version</span><div class="value"><span id="detailVersion"></span><span class="hint">Install the selected VEN version</span></div></div>
+   <div class="row"><span class="label">Enforcement Node Type</span><div class="value"><span id="detailNodeType"></span><span id="detailNodeHint" class="hint"></span></div></div>
+  </div></section>
+  <section class="section"><h2>Label Assignment</h2><div class="row"><span class="label">Labels</span><div id="detailLabels" class="label-chips"></div></div></section>
+  <section class="section"><h2>Key Usage &amp; Lifespan</h2><div class="attributes"><div class="row"><span class="label">Uses Per Key</span><div class="value"><span id="detailUsage"></span><span id="detailUsageHint" class="hint"></span></div></div><div class="row"><span class="label">Maximum Key Age</span><div class="value"><span id="detailAge"></span><span id="detailAgeHint" class="hint"></span></div></div></div></section>
+  <section class="section"><h2>Command Line Overrides</h2><div class="attributes"><div class="row"><span class="label">Enforcement</span><div class="value"><span id="detailLockPolicy"></span><span id="detailLockPolicyHint" class="hint"></span></div></div><div class="row"><span class="label">Label Assignment</span><div class="value"><span id="detailLockLabels"></span><span id="detailLockLabelsHint" class="hint"></span></div></div></div></section>
+ </section>
+ <section id="formScreen" aria-label="Pairing profile form" hidden>
+  <form id="profileForm">
+   <section class="section" style="margin-block-start:0"><h2>General</h2>
+    <div class="row form-row"><label for="profileName">Name *</label><div class="field"><input id="profileName" type="text" required maxlength="120" placeholder="Pairing Profile name"></div></div>
+    <div class="row form-row"><label for="profileDescription">Description</label><div class="field"><textarea id="profileDescription" maxlength="300" placeholder=""></textarea></div></div>
+    <div class="row form-row"><label for="enforcement">Enforcement</label><div class="field"><select id="enforcement"><option>Idle</option><option selected>Visibility Only</option><option>Selective Enforcement</option><option>Full Enforcement</option></select></div></div>
+    <div class="row form-row"><label for="visibility">Visibility</label><div class="field"><select id="visibility"><option>Off</option><option>Blocked</option><option>Blocked + Allowed</option><option selected>Enhanced Data Collection</option></select></div></div>
+    <div class="row form-row"><label for="venVersion">Initial VEN Version</label><div class="field"><select id="venVersion"><option>Default (24.2.20-2091)</option></select></div></div>
+    <div class="row form-row"><label for="nodeType">Enforcement Node Type</label><div class="field"><select id="nodeType"><option>Server VEN</option><option>Endpoint VEN</option></select></div></div>
+   </section>
+   <section class="section"><h2>Label Assignment</h2><div class="row form-row"><label for="roleLabel">Role</label><div class="field"><input id="roleLabel" class="label-input" type="text" maxlength="60" placeholder="No label"></div></div><div class="row form-row"><label for="appLabel">Application</label><div class="field"><input id="appLabel" class="label-input" type="text" maxlength="60" placeholder="No label"></div></div><div class="row form-row"><label for="envLabel">Environment</label><div class="field"><input id="envLabel" class="label-input" type="text" maxlength="60" placeholder="No label"></div></div><div class="row form-row"><label for="locLabel">Location</label><div class="field"><input id="locLabel" class="label-input" type="text" maxlength="60" placeholder="No label"></div></div></section>
+   <section class="section"><h2>Key Usage &amp; Lifespan</h2><div class="row form-row"><span id="usageLabel" class="label">Uses Per Key</span><div class="field checks" role="group" aria-labelledby="usageLabel"><label><input type="radio" name="usage" value="unlimited" checked>Unlimited</label><label><input type="radio" name="usage" value="limited">Limited</label><input id="maxUses" type="number" min="1" max="100" value="1" disabled aria-label="Maximum uses per key"></div></div><div class="row form-row"><span id="ageLabel" class="label">Maximum Key Age</span><div class="field checks" role="group" aria-labelledby="ageLabel"><label><input type="radio" name="age" value="unlimited" checked>Unlimited</label><label><input type="radio" name="age" value="custom">Custom</label><input id="ageDays" type="number" min="1" max="365" value="1" disabled aria-label="Maximum key age in days"><span>Day(s)</span></div></div></section>
+   <section class="section"><h2>Command Line Overrides</h2><div class="row form-row"><span class="label">Enforcement</span><div class="field checks"><label><input id="lockPolicy" type="checkbox" checked>Lock Enforcement</label></div></div><div class="row form-row"><span class="label">Label Assignment</span><div class="field"><div class="checks"><label><input id="lockLabels" type="checkbox" checked>Lock Label assignment</label></div><div class="checks" role="group" aria-label="Allowed custom label assignments"><label><input id="overrideRole" type="checkbox" disabled>Role</label><label><input id="overrideApp" type="checkbox" disabled>Application</label><label><input id="overrideEnv" type="checkbox" disabled>Environment</label><label><input id="overrideLoc" type="checkbox" disabled>Location</label></div></div></div></section>
+   <p id="formError" class="error" role="alert" hidden></p><div class="form-footer"><button type="submit" class="primary">Save</button><button type="button" id="cancelForm">Cancel</button></div>
+  </form>
+ </section>
+ <section id="keyScreen" aria-label="Pairing Key" hidden>
+  <div class="row picker-row"><label for="keyProfile">Pick a Pairing Profile</label><select id="keyProfile" class="profile-picker"></select></div>
+  <section class="section key-initial"><h2>Initial Workload State</h2><div class="attributes">
+   <div class="row"><span class="label">Source Pairing Profile</span><div class="value"><button id="keySourceProfile" class="link"></button></div></div>
+   <div class="row"><span class="label">Labels</span><div id="keyLabels" class="label-chips"></div></div>
+   <div class="row"><span class="label">Enforcement</span><div class="value"><span id="keyEnforcement"></span><span id="keyEnforcementHint" class="hint"></span></div></div>
+   <div class="row"><span class="label">Visibility</span><div class="value"><span id="keyVisibility"></span><span id="keyVisibilityHint" class="hint"></span></div></div>
+   <div class="row"><span class="label">Initial VEN Version</span><div class="value"><span id="keyVersion"></span><span class="hint">Install the selected VEN version</span></div></div>
+   <div class="row"><span class="label">Enforcement Node Type</span><div class="value"><span id="keyNodeType"></span><span id="keyNodeHint" class="hint"></span></div></div>
+  </div></section>
+  <section class="section key-scripts"><h2>Pairing Scripts</h2>
+   <div class="tls-row"><span></span><div class="tls-warning"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2.5 14 13H2zM8 6.5v3M8 11.25v.25"/></svg><span>If you are pairing an older OS that does not support TLS 1.2, then the pairing script may fail to communicate with the PCE. In case of failure, you may upgrade your OS to support TLS 1.2 or use alternate means of pairing</span></div></div>
+   <div class="row script-row key-row"><span class="label script-label">Key</span><div><div class="code-block"><div class="code-header"><span>Key</span><button class="dl" data-dl="fakeKey" aria-label="Download key" title="Download"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2.5v7.5m0 0L5 7m3 3 3-3M2.5 10.5v1.75c0 .69.56 1.25 1.25 1.25h8.5c.69 0 1.25-.56 1.25-1.25V10.5"/></svg></button></div><div class="code-wrap"><span class="copy-tip" aria-hidden="true">Copy to clipboard</span><textarea id="fakeKey" class="code-text key-code" readonly spellcheck="false" aria-label="Pairing key"></textarea></div></div></div></div>
+   <div class="row script-row aix-script"><span class="label script-label">AIX OS Pairing Script</span><div><div class="code-block"><div class="code-header"><span>Script</span><button hidden id="copyAix" aria-label="Copy AIX pairing script" title="Copy"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M14.882 4h7.57c.702 0 1.309 0 1.808.04.527.044 1.051.139 1.556.396a4 4 0 0 1 1.748 1.748c.257.505.352 1.029.395 1.556.041.5.041 1.106.041 1.809v7.57c0 .702 0 1.308-.04 1.808-.044.527-.139 1.051-.396 1.556a4 4 0 0 1-1.748 1.748c-.505.257-1.029.352-1.556.395-.448.037-.981.04-1.593.04 0 .613-.005 1.146-.041 1.594-.043.527-.138 1.051-.395 1.556a4 4 0 0 1-1.748 1.748c-.505.257-1.03.352-1.556.395-.5.041-1.106.041-1.809.041h-7.57c-.702 0-1.309 0-1.808-.04-.527-.044-1.051-.139-1.556-.396a4 4 0 0 1-1.748-1.748c-.257-.505-.352-1.029-.395-1.556C4 23.76 4 23.154 4 22.451v-7.57c0-.702 0-1.308.04-1.808.044-.527.139-1.051.396-1.556A4 4 0 0 1 6.184 9.77c.505-.257 1.029-.352 1.556-.395.448-.036.981-.04 1.593-.04 0-.613.005-1.146.041-1.594.043-.527.138-1.051.395-1.556a4 4 0 0 1 1.748-1.748c.505-.257 1.03-.352 1.556-.395C13.573 4 14.18 4 14.882 4m-5.549 8c-.62 0-1.044.005-1.376.032-.362.03-.496.08-.562.113-.251.128-.455.332-.583.583-.034.066-.084.2-.113.563-.031.377-.032.874-.032 1.642V22.4c0 .769 0 1.265.032 1.643.03.362.08.496.113.562.128.251.332.455.583.583.066.034.2.084.562.113.378.031.874.032 1.643.032h7.467c.768 0 1.265 0 1.643-.032.362-.03.496-.08.562-.113.25-.128.455-.332.583-.583.033-.066.084-.2.113-.562.027-.332.031-.756.032-1.376h-5.118c-.703 0-1.31 0-1.809-.041-.527-.043-1.051-.138-1.556-.395a4 4 0 0 1-1.748-1.748c-.257-.505-.352-1.03-.395-1.556-.04-.5-.04-1.106-.04-1.809zm5.6 8c-.768 0-1.265-.001-1.642-.032-.363-.03-.497-.08-.563-.113a1.33 1.33 0 0 1-.583-.583c-.033-.066-.083-.2-.113-.562C12 18.332 12 17.835 12 17.067V9.6c0-.769.001-1.265.032-1.643.03-.362.08-.496.113-.562.128-.251.332-.455.583-.583.066-.034.2-.084.563-.113.377-.031.874-.032 1.642-.032H22.4c.769 0 1.265 0 1.643.032.362.03.496.08.562.113.251.128.455.332.583.583.034.066.084.2.113.562.031.378.032.874.032 1.643v7.467c0 .768 0 1.265-.032 1.643-.03.362-.08.496-.113.562-.128.25-.332.455-.583.583-.066.033-.2.084-.562.113-.378.031-.874.032-1.643.032z" clip-rule="evenodd"></path></svg></button><button class="dl" data-dl="sampleAix" aria-label="Download AIX script" title="Download"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2.5v7.5m0 0L5 7m3 3 3-3M2.5 10.5v1.75c0 .69.56 1.25 1.25 1.25h8.5c.69 0 1.25-.56 1.25-1.25V10.5"/></svg></button></div><div class="code-wrap"><span class="copy-tip" aria-hidden="true">Copy to clipboard</span><textarea id="sampleAix" class="code-text" readonly spellcheck="false" aria-label="AIX pairing script"></textarea></div></div><p id="copyAixStatus" class="copy-message" role="status" hidden></p><div class="script-meta"><span>Operating Systems</span><button class="link" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M9.5 2.5h4v4M13.5 2.5 7.5 8.5M11.5 9.5v3a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h3"/></svg>Supported Versions</button><span>Dependencies</span><button class="link" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M9.5 2.5h4v4M13.5 2.5 7.5 8.5M11.5 9.5v3a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h3"/></svg>Required OS Packages</button></div></div></div>
+   <div class="row script-row linux-script"><span class="label script-label">Linux OS Pairing Script</span><div><div class="code-block"><div class="code-header"><span>Script</span><button hidden id="copyLinux" aria-label="Copy Linux pairing script" title="Copy"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M14.882 4h7.57c.702 0 1.309 0 1.808.04.527.044 1.051.139 1.556.396a4 4 0 0 1 1.748 1.748c.257.505.352 1.029.395 1.556.041.5.041 1.106.041 1.809v7.57c0 .702 0 1.308-.04 1.808-.044.527-.139 1.051-.396 1.556a4 4 0 0 1-1.748 1.748c-.505.257-1.029.352-1.556.395-.448.037-.981.04-1.593.04 0 .613-.005 1.146-.041 1.594-.043.527-.138 1.051-.395 1.556a4 4 0 0 1-1.748 1.748c-.505.257-1.03.352-1.556.395-.5.041-1.106.041-1.809.041h-7.57c-.702 0-1.309 0-1.808-.04-.527-.044-1.051-.139-1.556-.396a4 4 0 0 1-1.748-1.748c-.257-.505-.352-1.029-.395-1.556C4 23.76 4 23.154 4 22.451v-7.57c0-.702 0-1.308.04-1.808.044-.527.139-1.051.396-1.556A4 4 0 0 1 6.184 9.77c.505-.257 1.029-.352 1.556-.395.448-.036.981-.04 1.593-.04 0-.613.005-1.146.041-1.594.043-.527.138-1.051.395-1.556a4 4 0 0 1 1.748-1.748c.505-.257 1.03-.352 1.556-.395C13.573 4 14.18 4 14.882 4m-5.549 8c-.62 0-1.044.005-1.376.032-.362.03-.496.08-.562.113-.251.128-.455.332-.583.583-.034.066-.084.2-.113.563-.031.377-.032.874-.032 1.642V22.4c0 .769 0 1.265.032 1.643.03.362.08.496.113.562.128.251.332.455.583.583.066.034.2.084.562.113.378.031.874.032 1.643.032h7.467c.768 0 1.265 0 1.643-.032.362-.03.496-.08.562-.113.25-.128.455-.332.583-.583.033-.066.084-.2.113-.562.027-.332.031-.756.032-1.376h-5.118c-.703 0-1.31 0-1.809-.041-.527-.043-1.051-.138-1.556-.395a4 4 0 0 1-1.748-1.748c-.257-.505-.352-1.03-.395-1.556-.04-.5-.04-1.106-.04-1.809zm5.6 8c-.768 0-1.265-.001-1.642-.032-.363-.03-.497-.08-.563-.113a1.33 1.33 0 0 1-.583-.583c-.033-.066-.083-.2-.113-.562C12 18.332 12 17.835 12 17.067V9.6c0-.769.001-1.265.032-1.643.03-.362.08-.496.113-.562.128-.251.332-.455.583-.583.066-.034.2-.084.563-.113.377-.031.874-.032 1.642-.032H22.4c.769 0 1.265 0 1.643.032.362.03.496.08.562.113.251.128.455.332.583.583.034.066.084.2.113.562.031.378.032.874.032 1.643v7.467c0 .768 0 1.265-.032 1.643-.03.362-.08.496-.113.562-.128.25-.332.455-.583.583-.066.033-.2.084-.562.113-.378.031-.874.032-1.643.032z" clip-rule="evenodd"></path></svg></button><button class="dl" data-dl="sampleLinux" aria-label="Download Linux script" title="Download"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2.5v7.5m0 0L5 7m3 3 3-3M2.5 10.5v1.75c0 .69.56 1.25 1.25 1.25h8.5c.69 0 1.25-.56 1.25-1.25V10.5"/></svg></button></div><div class="code-wrap"><span class="copy-tip" aria-hidden="true">Copy to clipboard</span><textarea id="sampleLinux" class="code-text" readonly spellcheck="false" aria-label="Linux pairing script"></textarea></div></div><p id="copyLinuxStatus" class="copy-message" role="status" hidden></p><div class="script-meta"><span>Operating Systems</span><button class="link" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M9.5 2.5h4v4M13.5 2.5 7.5 8.5M11.5 9.5v3a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h3"/></svg>Supported Versions</button><span>Dependencies</span><button class="link" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M9.5 2.5h4v4M13.5 2.5 7.5 8.5M11.5 9.5v3a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h3"/></svg>Required OS Packages</button></div></div></div>
+   <div class="row script-row win-script"><span class="label script-label">Windows OS Pairing Script</span><div><div class="code-block"><div class="code-header"><span>Script</span><button hidden id="copyWindows" aria-label="Copy Windows pairing script" title="Copy"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M14.882 4h7.57c.702 0 1.309 0 1.808.04.527.044 1.051.139 1.556.396a4 4 0 0 1 1.748 1.748c.257.505.352 1.029.395 1.556.041.5.041 1.106.041 1.809v7.57c0 .702 0 1.308-.04 1.808-.044.527-.139 1.051-.396 1.556a4 4 0 0 1-1.748 1.748c-.505.257-1.029.352-1.556.395-.448.037-.981.04-1.593.04 0 .613-.005 1.146-.041 1.594-.043.527-.138 1.051-.395 1.556a4 4 0 0 1-1.748 1.748c-.505.257-1.03.352-1.556.395-.5.041-1.106.041-1.809.041h-7.57c-.702 0-1.309 0-1.808-.04-.527-.044-1.051-.139-1.556-.396a4 4 0 0 1-1.748-1.748c-.257-.505-.352-1.029-.395-1.556C4 23.76 4 23.154 4 22.451v-7.57c0-.702 0-1.308.04-1.808.044-.527.139-1.051.396-1.556A4 4 0 0 1 6.184 9.77c.505-.257 1.029-.352 1.556-.395.448-.036.981-.04 1.593-.04 0-.613.005-1.146.041-1.594.043-.527.138-1.051.395-1.556a4 4 0 0 1 1.748-1.748c.505-.257 1.03-.352 1.556-.395C13.573 4 14.18 4 14.882 4m-5.549 8c-.62 0-1.044.005-1.376.032-.362.03-.496.08-.562.113-.251.128-.455.332-.583.583-.034.066-.084.2-.113.563-.031.377-.032.874-.032 1.642V22.4c0 .769 0 1.265.032 1.643.03.362.08.496.113.562.128.251.332.455.583.583.066.034.2.084.562.113.378.031.874.032 1.643.032h7.467c.768 0 1.265 0 1.643-.032.362-.03.496-.08.562-.113.25-.128.455-.332.583-.583.033-.066.084-.2.113-.562.027-.332.031-.756.032-1.376h-5.118c-.703 0-1.31 0-1.809-.041-.527-.043-1.051-.138-1.556-.395a4 4 0 0 1-1.748-1.748c-.257-.505-.352-1.03-.395-1.556-.04-.5-.04-1.106-.04-1.809zm5.6 8c-.768 0-1.265-.001-1.642-.032-.363-.03-.497-.08-.563-.113a1.33 1.33 0 0 1-.583-.583c-.033-.066-.083-.2-.113-.562C12 18.332 12 17.835 12 17.067V9.6c0-.769.001-1.265.032-1.643.03-.362.08-.496.113-.562.128-.251.332-.455.583-.583.066-.034.2-.084.563-.113.377-.031.874-.032 1.642-.032H22.4c.769 0 1.265 0 1.643.032.362.03.496.08.562.113.251.128.455.332.583.583.034.066.084.2.113.562.031.378.032.874.032 1.643v7.467c0 .768 0 1.265-.032 1.643-.03.362-.08.496-.113.562-.128.25-.332.455-.583.583-.066.033-.2.084-.562.113-.378.031-.874.032-1.643.032z" clip-rule="evenodd"></path></svg></button><button class="dl" data-dl="sampleWindows" aria-label="Download Windows script" title="Download"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2.5v7.5m0 0L5 7m3 3 3-3M2.5 10.5v1.75c0 .69.56 1.25 1.25 1.25h8.5c.69 0 1.25-.56 1.25-1.25V10.5"/></svg></button></div><div class="code-wrap"><span class="copy-tip" aria-hidden="true">Copy to clipboard</span><textarea id="sampleWindows" class="code-text" readonly spellcheck="false" aria-label="Windows pairing script"></textarea></div></div><p id="copyWindowsStatus" class="copy-message" role="status" hidden></p><div class="script-meta"><span>Operating Systems</span><button class="link" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M9.5 2.5h4v4M13.5 2.5 7.5 8.5M11.5 9.5v3a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h3"/></svg>Supported Versions</button><span>Dependencies</span><button class="link" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M9.5 2.5h4v4M13.5 2.5 7.5 8.5M11.5 9.5v3a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h3"/></svg>Required OS Packages</button></div></div></div>
+   <div class="row script-row mac-script"><span class="label script-label">macOS Pairing Script</span><div><div class="code-block"><div class="code-header"><span>Script</span><button hidden id="copyMac" aria-label="Copy macOS pairing script" title="Copy"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M14.882 4h7.57c.702 0 1.309 0 1.808.04.527.044 1.051.139 1.556.396a4 4 0 0 1 1.748 1.748c.257.505.352 1.029.395 1.556.041.5.041 1.106.041 1.809v7.57c0 .702 0 1.308-.04 1.808-.044.527-.139 1.051-.396 1.556a4 4 0 0 1-1.748 1.748c-.505.257-1.029.352-1.556.395-.448.037-.981.04-1.593.04 0 .613-.005 1.146-.041 1.594-.043.527-.138 1.051-.395 1.556a4 4 0 0 1-1.748 1.748c-.505.257-1.03.352-1.556.395-.5.041-1.106.041-1.809.041h-7.57c-.702 0-1.309 0-1.808-.04-.527-.044-1.051-.139-1.556-.396a4 4 0 0 1-1.748-1.748c-.257-.505-.352-1.029-.395-1.556C4 23.76 4 23.154 4 22.451v-7.57c0-.702 0-1.308.04-1.808.044-.527.139-1.051.396-1.556A4 4 0 0 1 6.184 9.77c.505-.257 1.029-.352 1.556-.395.448-.036.981-.04 1.593-.04 0-.613.005-1.146.041-1.594.043-.527.138-1.051.395-1.556a4 4 0 0 1 1.748-1.748c.505-.257 1.03-.352 1.556-.395C13.573 4 14.18 4 14.882 4m-5.549 8c-.62 0-1.044.005-1.376.032-.362.03-.496.08-.562.113-.251.128-.455.332-.583.583-.034.066-.084.2-.113.563-.031.377-.032.874-.032 1.642V22.4c0 .769 0 1.265.032 1.643.03.362.08.496.113.562.128.251.332.455.583.583.066.034.2.084.562.113.378.031.874.032 1.643.032h7.467c.768 0 1.265 0 1.643-.032.362-.03.496-.08.562-.113.25-.128.455-.332.583-.583.033-.066.084-.2.113-.562.027-.332.031-.756.032-1.376h-5.118c-.703 0-1.31 0-1.809-.041-.527-.043-1.051-.138-1.556-.395a4 4 0 0 1-1.748-1.748c-.257-.505-.352-1.03-.395-1.556-.04-.5-.04-1.106-.04-1.809zm5.6 8c-.768 0-1.265-.001-1.642-.032-.363-.03-.497-.08-.563-.113a1.33 1.33 0 0 1-.583-.583c-.033-.066-.083-.2-.113-.562C12 18.332 12 17.835 12 17.067V9.6c0-.769.001-1.265.032-1.643.03-.362.08-.496.113-.562.128-.251.332-.455.583-.583.066-.034.2-.084.563-.113.377-.031.874-.032 1.642-.032H22.4c.769 0 1.265 0 1.643.032.362.03.496.08.562.113.251.128.455.332.583.583.034.066.084.2.113.562.031.378.032.874.032 1.643v7.467c0 .768 0 1.265-.032 1.643-.03.362-.08.496-.113.562-.128.25-.332.455-.583.583-.066.033-.2.084-.562.113-.378.031-.874.032-1.643.032z" clip-rule="evenodd"></path></svg></button><button class="dl" data-dl="sampleMac" aria-label="Download macOS script" title="Download"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2.5v7.5m0 0L5 7m3 3 3-3M2.5 10.5v1.75c0 .69.56 1.25 1.25 1.25h8.5c.69 0 1.25-.56 1.25-1.25V10.5"/></svg></button></div><div class="code-wrap"><span class="copy-tip" aria-hidden="true">Copy to clipboard</span><textarea id="sampleMac" class="code-text" readonly spellcheck="false" aria-label="macOS pairing script"></textarea></div></div><p id="copyMacStatus" class="copy-message" role="status" hidden></p><div class="script-meta"><span>Operating Systems</span><button class="link" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M9.5 2.5h4v4M13.5 2.5 7.5 8.5M11.5 9.5v3a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h3"/></svg>Supported Versions</button><span>Dependencies</span><button class="link" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M9.5 2.5h4v4M13.5 2.5 7.5 8.5M11.5 9.5v3a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h3"/></svg>Required OS Packages</button></div></div></div>
+  </section>
+  <section class="section key-settings"><h2>Pairing Key Settings</h2><div class="attributes"><div class="row"><span class="label">Generated On</span><div id="keyGenerated" class="value timestamp"></div></div><div class="row"><span class="label">Lifespan</span><div id="keyLifespan" class="value"></div></div><div class="row"><span class="label">Remaining Uses</span><div id="keyRemaining" class="value"></div></div></div></section>
+  <div hidden><details id="trainingPanel"></details><select id="trainingHost"></select><textarea id="executionInput"></textarea><button id="runExecution"></button><button id="viewWorkloads"></button><p id="executionError"></p><pre id="executionOutput"></pre></div>
+ </section>
+ <section id="policiesScreen" aria-label="Policies" hidden><div class="intro pol-intro"><div><h2>Overview of Policies</h2><p>Illumio security policies are declarative, intent-based allow and deny rules, built using labels. This means that you can describe the end state of your security posture and let Illumio determine the network details of that.</p><button class="learn-more" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M2.5 3.5h4a1.5 1.5 0 0 1 1.5 1.5v8.5a1.5 1.5 0 0 0-1.5-1.5h-4zM13.5 3.5h-4A1.5 1.5 0 0 0 8 5v8.5A1.5 1.5 0 0 1 9.5 12h4z"/></svg>Learn more</button></div></div><div class="ptabs"><button class="ptab active">All Policies</button><button class="ptab" disabled>Organization Policies</button><button class="ptab" disabled>Application Policies</button><button class="ptab" disabled>Rule Search</button></div><div class="toolbar"><div class="add-wrap"><button id="addPolicyBtn" class="primary" aria-haspopup="true"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add<span class="caret">⌄</span></button><div id="addPolicyMenu" class="menu" hidden><button id="addFromScratch"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add from Scratch</button><button id="addFromTemplate"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add from Template</button></div></div><button class="primary" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 10.5V3m0 0L5 6m3-3 3 3M2.5 10.5v1.75c0 .69.56 1.25 1.25 1.25h8.5c.69 0 1.25-.56 1.25-1.25V10.5"/></svg>Provision</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 3.5 3 6l2.5 2.5M3 6h7a3 3 0 0 1 0 6H6"/></svg>Revert</button><button id="polRemove" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 8h5"/></svg>Remove</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><rect fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="1.5" y="4.5" width="13" height="7" rx="3.5"/><circle cx="5" cy="8" r="2" fill="currentColor"/></svg>Disable</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M3 8.5 6.5 12 13 4.5"/></svg>Enable</button><span class="spacer"></span><button disabled>Provisioning Errors</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M13 4v3h-3M3 12V9h3M12.6 7A5 5 0 0 0 3.8 5.5M3.4 9a5 5 0 0 0 8.8 1.5"/></svg>Refresh</button><button disabled aria-label="Export"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M9.5 2.5H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h5.5M7 8h7m0 0-2.5-2.5M14 8l-2.5 2.5"/></svg></button></div><div class="filter-bar"><input disabled placeholder="Select properties to filter view" aria-label="Filter policies (not available)"></div><div class="table-frame"><div class="pol-meta"><span>Customize columns ⌄</span><span>50 per page ⌄</span><span id="policiesCount"></span></div><div class="table-scroll"><table class="pol-table"><thead><tr><th><input id="polSelectAll" type="checkbox" aria-label="Select all policies"></th><th>Provision Status</th><th>Status</th><th>Name</th><th>Scopes</th><th>Last Modified On</th><th>Last Modified By</th></tr></thead><tbody id="policiesBody"></tbody></table></div></div></section>
+<section id="policyScreen" aria-label="Policy" hidden><div class="toolbar rule-toolbar"><div class="add-wrap"><button id="addRuleBtn" class="primary" aria-haspopup="true"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v5M5.5 8h5"/></svg>Add Rule<span class="caret">⌄</span></button><div id="addRuleMenu" class="rule-menu" hidden><div class="rm-main"><div class="rm-preview"><h3 id="rmTitle"></h3><div id="rmArt"></div></div><div class="rm-types"><div class="rm-head">RULE TYPE</div><button class="rm-type" data-type="override">Override Deny Rule</button><button class="rm-type" data-type="allow">Allow Rule</button><button class="rm-type" data-type="deny">Deny Rule</button><button class="rm-type" data-type="iptables">Custom IP Table Rule</button></div></div><div class="rm-foot"><button id="rmCancel" class="link">Cancel</button><button id="rmAdd" class="primary" disabled>Add Rule</button></div></div></div><button id="ruleRemove" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 8h5"/></svg>Remove</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><rect fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" x="1.5" y="4.5" width="13" height="7" rx="3.5"/><circle cx="5" cy="8" r="2" fill="currentColor"/></svg>Disable</button><button disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M3 8.5 6.5 12 13 4.5"/></svg>Enable</button><span class="warn-ico" title="Policy changes are not provisioned"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2.5 14 13H2zM8 6.5v3M8 11.25v.25"/></svg></span><span class="spacer"></span><button id="editPolicyBtn"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M10.5 2.5l3 3L6 13H3v-3z"/></svg>Edit Policy</button><button class="link show-impact" disabled><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="6"/><circle fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" cx="8" cy="8" r="3"/><circle cx="8" cy="8" r="1" fill="currentColor"/></svg>Show Impact</button></div><div class="filter-bar"><input disabled placeholder="Select properties to filter view" aria-label="Filter rules (not available)"></div><div id="sec-override" class="sec"><button class="sec-head" data-sec="override"><span class="chev">⌃</span>Override Deny Rules<span class="sec-count" hidden></span></button><div class="sec-body"></div></div><div id="sec-allow" class="sec"><button class="sec-head" data-sec="allow"><span class="chev">⌃</span>Allow Rules<span class="sec-count" hidden></span></button><div class="sec-body"></div></div><div id="sec-deny" class="sec"><button class="sec-head" data-sec="deny"><span class="chev">⌃</span>Deny Rules<span class="sec-count" hidden></span></button><div class="sec-body"></div></div></section>
+<section id="placeholderScreen" aria-label="Console area" hidden><div class="ph-card"><h2 id="phHeading"></h2><p id="phText"></p><button id="phBack" class="primary">Go to Pairing Profiles</button> <button id="phReset" hidden>Reset lab</button></div></section>
+<section id="workloadsScreen" aria-label="Workloads" hidden><div class="toolbar"><button disabled>Add</button><button disabled>Remove</button><span class="spacer"></span><button disabled><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M15.9 29c-5.4 0-10.1-3.2-12.1-8.1-.4-.9.1-1.9 1-2.3s1.9.1 2.3 1c1.5 3.6 5 6 8.9 6 2.9 0 5.7-1.3 7.5-3.6h-1.1c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8H28c1 0 1.8.8 1.8 1.8v5.6c0 1-.8 1.8-1.8 1.8s-1.8-.8-1.8-1.8V24c-2.4 3.2-6.2 5-10.3 5m10.7-15.5c-.7 0-1.3-.4-1.6-1.1-1.5-3.6-5-6-8.9-6-2.9 0-5.7 1.3-7.5 3.6h1.1c1 0 1.8.8 1.8 1.8s-.8 1.8-1.8 1.8H4c-1 0-1.8-.8-1.8-1.8V6.1c0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8V8C8.2 4.8 12 3 16.1 3c5.4 0 10.1 3.2 12.1 8.1.4.9-.1 1.9-1 2.3-.2.1-.4.1-.6.1"></path></svg>Refresh</button><button disabled><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26.2 26.78v-4H15.62v-5.63H26.2v-4L32 20Z"></path><path d="M20.58 25.56v4.07H2.38V2.37H14.4v6.15h6.18v5.85h2.38V8.61l-.1-.09h.1L14.4 0v.1l-.09-.1H0v32h22.96v-6.44z"></path></svg>Export</button></div><div class="filter-bar"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M6.09 2.667H25.91c.337 0 .664 0 .942.022.305.025.664.084 1.026.268.502.256.91.664 1.166 1.166.184.362.243.721.268 1.026.022.278.022.605.022.942v2.427c.001.253.002.572-.073.886a2.7 2.7 0 0 1-.32.77c-.168.276-.394.5-.574.679l-.048.048-8.084 8.084a8 8 0 0 0-.227.232l-.004.003v.005c-.003.063-.003.15-.003.325v3.117c0 .353-.14.692-.39.942l-5.334 5.334A1.333 1.333 0 0 1 12 28v-8.45c0-.174 0-.262-.003-.325v-.005l-.004-.003a8 8 0 0 0-.227-.232L3.682 10.9l-.048-.048c-.18-.179-.406-.403-.574-.679a2.7 2.7 0 0 1-.32-.77c-.075-.314-.074-.633-.073-.886V6.09c0-.337 0-.664.022-.942.025-.305.084-.664.268-1.026.256-.502.664-.91 1.166-1.166a2.7 2.7 0 0 1 1.026-.268c.278-.022.605-.022.942-.022M5.35 5.349l-.002.017c-.013.156-.014.372-.014.767V8.45c0 .174 0 .262.004.325v.005l.003.003c.043.047.104.109.228.232L13.65 17.1l.049.048c.179.179.405.404.574.679.146.238.254.498.319.77.075.314.074.633.074.886v5.299l2.666-2.667v-2.632c0-.253-.001-.572.074-.886.065-.272.173-.532.32-.77.168-.276.394-.5.573-.679l.049-.048 8.083-8.084c.124-.123.185-.185.228-.232l.003-.003v-.005a8 8 0 0 0 .004-.325V6.133a11 11 0 0 0-.016-.784l-.017-.002a11 11 0 0 0-.767-.014H6.133a11 11 0 0 0-.784.016" clip-rule="evenodd"></path></svg><input disabled placeholder="Select properties to filter view" aria-label="Filter workloads (not available)"></div><div class="table-frame"><div class="table-scroll"><table style="min-inline-size:950px"><thead><tr><th><input type="checkbox" disabled aria-label="Select all workloads (not available)"></th><th>Hostname</th><th>VEN Status</th><th>Enforcement</th><th>Labels</th><th>Operating System</th></tr></thead><tbody id="workloadsBody"></tbody></table></div><div class="pagination"><span id="workloadCount">0 workloads</span><span class="spacer"></span></div></div><p id="verifiedMessage" class="verified" hidden></p></section>
+ <section id="workloadDetailScreen" aria-label="Workload details" hidden><div class="running-banner"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.333 8.222 6.974 10l3.693-4M14 8A6 6 0 1 1 2 8a6 6 0 0 1 12 0"></path></svg><span>Online</span></div><div class="toolbar"><button id="backWorkloads">Back to Workloads</button><button disabled>Edit</button><button id="unpairWorkload">Unpair</button></div><section class="section"><h2>General</h2><div class="attributes"><div class="row"><span class="label">Hostname</span><div id="workloadHost" class="value"></div></div><div class="row"><span class="label">Operating System</span><div id="workloadOS" class="value"></div></div><div class="row"><span class="label">Enforcement</span><div id="workloadEnforcement" class="value"></div></div><div class="row"><span class="label">Visibility</span><div id="workloadVisibility" class="value"></div></div><div class="row"><span class="label">VEN Version</span><div id="workloadVersion" class="value"></div></div><div class="row"><span class="label">Enforcement Node Type</span><div id="workloadNodeType" class="value"></div></div><div class="row"><span class="label">Pairing Profile</span><div id="workloadProfile" class="value"></div></div><div class="row"><span class="label">Paired</span><div id="workloadPaired" class="value timestamp"></div></div></div></section><section class="section"><h2>Label Assignment</h2><div class="row"><span class="label">Labels</span><div id="workloadLabels" class="label-chips"></div></div></section></section>
+</main>
+</div>
+<section id="termDrawer" class="term-drawer" aria-label="Terminal" hidden><div class="term-head"><strong>Workload terminal</strong><select id="termHost" aria-label="Workload" hidden><option value="linux">linux-ven-01 · Rocky Linux 9</option><option value="windows">windows-ven-01 · Windows Server 2022</option><option value="aix">aix-ven-01 · AIX 7.3</option></select><div class="term-tabs" role="tablist" aria-label="Workload"><button class="term-tab active" role="tab" aria-selected="true" data-os="linux">linux-ven-01 · Rocky Linux 9</button><button class="term-tab" role="tab" aria-selected="false" data-os="windows">windows-ven-01 · Windows Server 2022</button><button class="term-tab" role="tab" aria-selected="false" data-os="aix">aix-ven-01 · AIX 7.3</button></div><span class="spacer"></span><button id="termClear">Clear</button><button id="termClose" aria-label="Close terminal">Close</button></div><div id="termBody" class="term-body"><pre id="termOut" class="term-out"></pre><div id="termRow" class="term-row"><span id="termPrompt" class="term-prompt"></span><input id="termInput" class="term-input" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Terminal input"></div></div></section>
+<aside hidden class="training-strip no-print" aria-label="Lab controls"><span class="strip-text"></span><button id="openTraining">Workload terminal</button><button id="labGuide">Lab guide</button><button id="resetLab">Reset lab</button></aside>
+<dialog id="guideDialog" aria-labelledby="guideTitle"><div class="dialog-head"><h2 id="guideTitle">Lab guide</h2><button id="closeGuide" aria-label="Close lab guide"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-width="1.67" d="m11.333 4.667-6.666 6.666m6.666 0L4.667 4.667"></path></svg></button></div><div class="dialog-body"><ol><li>Go to Servers &amp; Endpoints → Pairing Profiles. Open Default (Servers), or select Add to create your own profile.</li><li>Select Generate Key. The Pairing Key page shows the profile's initial workload settings, a key and the pairing scripts.</li><li>Copy the Linux OS Pairing Script. If copying is blocked, the script is selected for you: press Ctrl+C or ⌘C.</li><li>Select Workload terminal in the bottom strip, choose linux-ven-01, paste the script at the prompt and press Enter.</li><li>Watch the VEN install and pair, then run <code>illumio-ven-ctl status</code>.</li><li>Open Servers &amp; Endpoints → Workloads and inspect the new workload.</li></ol><p>Reset lab restores the four sample profiles, removes all paired workloads and clears the terminals. Reloading the page also resets it.</p><p>All names, keys, dates and addresses are fictional. Nothing on this page connects to a network or runs on a real machine.</p></div><div class="dialog-footer"><button id="guideDone" class="primary">Close</button></div></dialog>
+<dialog id="polConfirm" class="reset-dialog" aria-labelledby="pcTitle"><div class="dialog-head"><h2 id="pcTitle"></h2></div><div class="dialog-body"><p id="pcText"></p></div><div class="dialog-footer"><button id="pcCancel" autofocus>Cancel</button><button id="pcOk" class="primary">Remove</button></div></dialog>
+<dialog id="addPolicyDialog" class="pol-dialog" aria-labelledby="apTitle"><div class="pd-head"><h2 id="apTitle">Add Policy</h2><button id="apClose" class="pd-x" aria-label="Close">✕</button></div><div class="pd-body"><label for="apName" id="apNameLabel" class="pd-label invalid"><span class="star">*</span> Name</label><input id="apName" class="pd-input invalid" placeholder="Type a name for the new Policy" maxlength="200" autocomplete="off"><div id="apError" class="pd-error" hidden></div><label for="apDesc" class="pd-label">Description</label><textarea id="apDesc" class="pd-input pd-ta" placeholder="Type a description for the new Policy"></textarea><span class="pd-label">Scope</span><div class="pd-select" aria-label="Scope (no scopes in this lab)"><span>Select Scope</span><span>⌄</span></div></div><div class="pd-foot"><button id="apCancel">Cancel</button><button id="apSave" class="primary" disabled>Save</button></div></dialog>
+<dialog id="removeDialog" class="reset-dialog" aria-labelledby="removeTitle"><div class="dialog-head"><h2 id="removeTitle">Remove Pairing Profile</h2></div><div class="dialog-body"><p id="removeText"></p></div><div class="dialog-footer"><button id="cancelRemove" autofocus>Cancel</button><button id="confirmRemove" class="primary">Remove</button></div></dialog>
+<dialog id="resetDialog" class="reset-dialog" aria-labelledby="resetTitle"><div class="dialog-head"><h2 id="resetTitle">Reset lab?</h2></div><div class="dialog-body"><p>This restores the default pairing profiles and removes all pairing keys, added profiles and paired workloads.</p></div><div class="dialog-footer"><button id="cancelReset" autofocus>Cancel</button><button id="confirmReset" class="primary">Reset lab</button></div></dialog>
+<script>
+'use strict';
+(() => {
+ const $=id=>document.getElementById(id);
+ const screens=['policiesScreen','policyScreen','placeholderScreen','profilesScreen','detailScreen','formScreen','keyScreen','workloadsScreen','workloadDetailScreen'];
+ const labelIds=['roleLabel','appLabel','envLabel','locLabel'];
+ const overrideIds=['overrideRole','overrideApp','overrideEnv','overrideLoc'];
+ const labelNames=['Role','Application','Environment','Location'];
+ const labelClasses=['role','app','env','loc'];
+ const osNames={aix:'AIX',linux:'Linux',windows:'Windows'};
+ const hostnames={aix:'aix-ven-01',linux:'linux-ven-01',windows:'windows-ven-01'};
+ const sampleDate=(()=>{const d=new Date(Date.now()-180000);return d.toLocaleDateString('en-GB')+', '+d.toLocaleTimeString('en-GB');})();
+ const nodeHint='Activate server VENs with pairing keys generated via this pairing profile. VENs that do not support server mode cannot be activated using this pairing profile. VENs cannot be activated using a command-line option to specify endpoint mode with this pairing profile.';
+ function seeds(){
+  return ['Default (Endpoints)','Default (Servers)','Default-Endpoints','Default-Servers'].map((name,i)=>({
+   id:'sample-profile-'+(i+1),name,description:i<2?name:'',nodeType:i%2?'Server VEN':'Endpoint VEN',
+   enforcement:'Visibility Only',visibility:'Enhanced Data Collection',version:'Default (24.2.20-2091)',
+   labels:['','','',''],limited:false,maxUses:1,unlimitedAge:true,days:1,lockPolicy:true,lockLabels:true,
+   overrides:[false,false,false,false],created:sampleDate,modified:sampleDate,by:'admin@illumio-lab.invalid',lastUsed:'',lastKey:''
+  }));
+ }
+ let state={profiles:seeds(),selectedId:'sample-profile-2',key:null,serial:0,os:'linux',workloads:[],nextProfile:5,keys:[],resets:0};
+ let editing=false;
+ const selected=()=>state.profiles.find(p=>p.id===state.selectedId);
+ function message(text=''){ $('pageMessage').textContent=text;$('pageMessage').hidden=!text; }
+ function error(id,text=''){ $(id).textContent=text;$(id).hidden=!text; }
+ function timestamp(){const d=new Date();return d.toLocaleDateString('en-GB')+', '+d.toLocaleTimeString('en-GB');}
+ function closeSidebar(focus=false){$('sidebar').classList.remove('open');$('mobileMenu').setAttribute('aria-expanded','false');if(focus)$('mobileMenu').focus();}
+ function show(id,title){
+  screens.forEach(screen=>$(screen).hidden=screen!==id);$('pageTitle').textContent=title;
+  const workloads=id==='workloadsScreen'||id==='workloadDetailScreen';
+  const area=id==='placeholderScreen'?currentArea:'';document.querySelectorAll('.side-nav button').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current');});
+  const pol=id==='policiesScreen'||id==='policyScreen';const navBtn=pol?$('navAllPolicies'):area?document.querySelector('.side-nav button[data-area="'+area+'"]'):$(workloads?'navWorkloads':'navProfiles');navBtn.classList.add('active');navBtn.setAttribute('aria-current','page');$('crumbServers').hidden=!pol&&!!area&&!serverAreas.includes(area);$('crumbSection').textContent=pol?'Segmentation':'Servers and Endpoints';
+  $('breadcrumbProfiles').textContent=pol?'Policies':area||(workloads?'Workloads':'Pairing Profiles');
+  const suffix=id==='policyScreen'?' / '+title:id==='detailScreen'?' / '+selected().name:id==='keyScreen'?' / Pairing Key':id==='formScreen'?' / '+(editing?'Edit':'Add'):id==='workloadDetailScreen'?' / '+title:'';
+  $('breadcrumbSuffix').textContent=suffix;$('breadcrumbSuffix').hidden=!suffix;
+  closeSidebar();$('pageTitle').focus();window.scrollTo({top:0});if(id==='keyScreen')fitScripts();
+ }
+ function fitScripts(){['sampleAix','sampleLinux','sampleWindows','sampleMac'].forEach(id=>{const t=$(id);if(!t)return;t.style.blockSize='auto';t.style.blockSize=(t.scrollHeight+2)+'px';});}
+ window.addEventListener('resize',()=>{if(!$('keyScreen').hidden)fitScripts();});
+ function chips(id,labels){
+  $(id).replaceChildren();labels.forEach((value,i)=>{if(!value)return;
+   const chip=document.createElement('span');chip.className='chip';const kind=document.createElement('b');kind.className=labelClasses[i];kind.textContent=labelNames[i];const text=document.createElement('span');text.textContent=value;chip.append(kind,text);$(id).append(chip);
+  });
+ }
+ function statusCell(row,text){const span=document.createElement('span');span.className='table-status';const dot=document.createElement('span');dot.className='status-dot';dot.setAttribute('aria-hidden','true');span.append(dot,document.createTextNode(text));row.insertCell().append(span);}
+ function checkboxCell(row,label){const input=document.createElement('input');input.type='checkbox';input.disabled=true;input.setAttribute('aria-label',label+' (not available)');row.insertCell().append(input);}
+ function renderProfiles(){
+  const body=$('profilesBody');body.replaceChildren();$('profilePagination').textContent='1 – '+state.profiles.length+' of '+state.profiles.length+' Total';
+  state.profiles.forEach(p=>{
+   const row=body.insertRow();checkboxCell(row,'Select profile');statusCell(row,p.stopped?'Stopped':'Running');row.insertCell().textContent=p.nodeType;
+   const link=document.createElement('button');link.className='link';link.textContent=p.name;link.addEventListener('click',()=>openProfile(p.id));row.insertCell().append(link);
+   row.insertCell().textContent=p.enforcement;row.insertCell().textContent=p.labels.filter(Boolean).join(' · ');row.insertCell().textContent=p.modified;row.insertCell().append(emailLink(p.by));row.insertCell().textContent=p.lastUsed||'Never';row.insertCell().textContent=p.description;
+  });
+ }
+ function initialValues(prefix,p){
+  $(prefix+'Enforcement').textContent=p.enforcement;$(prefix+'EnforcementHint').textContent=p.enforcement==='Visibility Only'?'No traffic is denied by policy':p.enforcement==='Idle'?'Policy and traffic collection are idle':(p.enforcement==='Full Enforcement'?'Traffic that is not allowed by policy is blocked':'Policy is enforced only where enforcement boundaries apply');
+  $(prefix+'Visibility').textContent=p.visibility;$(prefix+'VisibilityHint').textContent=p.visibility==='Enhanced Data Collection'?'VEN logs byte counts in addition to connection details for traffic which is allowed, denied or has no rule':p.visibility==='Off'?'Traffic visibility is off':(p.visibility==='Blocked'?'VEN logs connection details for blocked traffic only':'VEN logs connection details for allowed and blocked traffic');
+  $(prefix+'Version').textContent=p.version;$(prefix+'NodeType').textContent=p.nodeType;$(prefix+'NodeHint').textContent=p.nodeType==='Server VEN'?nodeHint:'Activate endpoint VENs with pairing keys generated via this pairing profile. VENs that do not support endpoint mode cannot be activated using this pairing profile.';
+  chips(prefix+'Labels',p.labels);
+ }
+ function renderDetail(){
+  const p=selected();$('detailName').textContent=p.name;$('detailUri').textContent='/orgs/'+ORG_ID+'/pairing_profiles/'+profileNum(p);$('detailDescription').textContent=p.description;
+  $('detailCreated').textContent=at(p.created);$('detailModified').replaceChildren(document.createTextNode(at(p.modified)+' by '),emailLink(p.by));$('detailLastKey').textContent=at(p.lastKey)||'Not generated';renderPairingState(p);$('lastKeyRow').hidden=!p.lastKey;
+  initialValues('detail',p);$('detailUsage').textContent=p.limited?String(p.maxUses):'Unlimited';$('detailUsageHint').textContent=p.limited?p.maxUses+' Workload(s) can be paired per key':'Unlimited Workloads can be paired using this Pairing Profile';
+  $('detailAge').textContent=p.unlimitedAge?'Unlimited':p.days+' Day(s)';$('detailAgeHint').textContent=p.unlimitedAge?'No time limit set for pairing Workloads with this Pairing Profile':'Pairing keys expire after the configured age';
+  $('detailLockPolicy').textContent=p.lockPolicy?'Locked':'Unlocked';$('detailLockPolicyHint').textContent=p.lockPolicy?'Deny Enforcement changes during script execution':'Allow Enforcement changes during script execution';
+  $('detailLockLabels').textContent=p.lockLabels?'Lock Label assignment':'Allow custom label assignments';$('detailLockLabelsHint').textContent=p.lockLabels?'Deny Workload Label assignment during script execution':labelNames.filter((_,i)=>p.overrides[i]).join(', ')||'No label dimensions selected';
+ }
+ function openProfile(id=state.selectedId){state.selectedId=id;message();renderDetail();show('detailScreen',selected().name);}
+ function syncForm(){
+  $('maxUses').disabled=!document.querySelector('input[name=usage][value=limited]').checked;
+  $('ageDays').disabled=!document.querySelector('input[name=age][value=custom]').checked;
+  overrideIds.forEach(id=>$(id).disabled=$('lockLabels').checked);
+ }
+ function openForm(isEdit){
+  editing=isEdit;$('profileForm').reset();error('formError');message();const p=isEdit?selected():null;
+  if(p){$('profileName').value=p.name;$('profileDescription').value=p.description;$('enforcement').value=p.enforcement;$('visibility').value=p.visibility;$('venVersion').value=p.version;$('nodeType').value=p.nodeType;labelIds.forEach((id,i)=>$(id).value=p.labels[i]);
+   document.querySelector('input[name=usage][value='+ (p.limited?'limited':'unlimited') +']').checked=true;document.querySelector('input[name=age][value='+ (p.unlimitedAge?'unlimited':'custom') +']').checked=true;
+   $('maxUses').value=p.maxUses;$('ageDays').value=p.days;$('lockPolicy').checked=p.lockPolicy;$('lockLabels').checked=p.lockLabels;overrideIds.forEach((id,i)=>$(id).checked=p.overrides[i]);
+  }
+  syncForm();show('formScreen',isEdit?'Edit Pairing Profile':'Add Pairing Profile');$('profileName').focus();
+ }
+ function sample(os){
+  const p=selected();if(!p||!state.key)return '';
+  const pid=profileNum(p),code=state.key.value;
+  if(os==='windows')return 'PowerShell -Command "& {Set-ExecutionPolicy -Scope process remotesigned -Force; Start-Sleep -s 3; Set-Variable -Name ErrorActionPreference -Value SilentlyContinue; [System.Net.ServicePointManager]::SecurityProtocol=[Enum]::ToObject([System.Net.SecurityProtocolType], 3072); Set-Variable -Name ErrorActionPreference -Value Continue; (New-Object System.Net.WebClient).DownloadFile(\'https://'+PCE+'/api/v26/software/ven/image?pair_script=pair.ps1&profile_id='+pid+'\', (echo $env:windir\\temp\\pair.ps1)); & $env:windir\\temp\\pair.ps1 -management-server '+PCE+' -activation-code '+code+';}"';
+  return 'rm -fr /opt/illumio_ven_data/tmp && umask 026 && mkdir -p /opt/illumio_ven_data/tmp && curl --tlsv1 "https://'+PCE+'/api/v26/software/ven/image?pair_script=pair.sh&profile_id='+pid+'" -o /opt/illumio_ven_data/tmp/pair.sh && chmod +x /opt/illumio_ven_data/tmp/pair.sh && /opt/illumio_ven_data/tmp/pair.sh --management-server '+PCE+' --activation-code '+code;
+ }
+ function renderKey(){
+  const p=selected();$('keyProfile').replaceChildren();state.profiles.forEach(profile=>{const option=document.createElement('option');option.value=profile.id;option.textContent=profile.name;$('keyProfile').append(option);});$('keyProfile').value=p.id;
+  $('keySourceProfile').textContent=p.name;initialValues('key',p);$('fakeKey').value=state.key.value;{const ep=p.nodeType==='Endpoint VEN';document.querySelector('.aix-script').hidden=ep;document.querySelector('.linux-script').hidden=ep;document.querySelector('.mac-script').hidden=!ep;$('sampleMac').value=sampleMac();}
+  ['aix','linux','windows'].forEach(os=>{$('sample'+osNames[os][0]+osNames[os].slice(1).toLowerCase()).value=sample(os);$('copy'+osNames[os][0]+osNames[os].slice(1).toLowerCase()+'Status').hidden=true;});
+  $('keyGenerated').textContent=at(state.key.generated);$('keyLifespan').textContent=p.unlimitedAge?'Unlimited':p.days+' Day(s)';$('keyRemaining').textContent=p.limited?String(Math.max(0,p.maxUses-state.key.uses)):'Unlimited';
+ }
+ function generateKey(){
+  const p=selected();state.serial++;const now=Date.now();state.key={value:fakeCode(),profileId:p.id,generated:timestamp(),expires:p.unlimitedAge?null:now+p.days*86400000,uses:0};state.keys.push(state.key);
+  p.lastKey=state.key.generated;$('trainingPanel').open=false;$('executionInput').value='';$('executionOutput').hidden=true;$('viewWorkloads').hidden=!state.workloads.length;error('executionError');message();renderKey();show('keyScreen','Pairing Key');
+save();
+ }
+ async function copySample(os){
+  state.os=os;const title=osNames[os][0]+osNames[os].slice(1).toLowerCase();const area=$('sample'+title);const output=$('copy'+title+'Status');const key=state.key.value;let copied=false;
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(area.value);copied=true;}}catch(_){}
+  if(!copied){area.focus();area.select();try{copied=document.execCommand('copy');}catch(_){}}
+  if(!state.key||key!==state.key.value)return;
+  output.hidden=false;output.textContent=copied?osNames[os]+' script copied. Open the '+osNames[os]+' tab and paste it at the prompt.':'Copying is blocked here. The script is selected: press Ctrl+C or ⌘C, then open the '+osNames[os]+' tab and paste it.';
+ }
+ function openTraining(){openTerm(state.os);}
+ function simulate(){}
+ function renderWorkloads(){
+  const body=$('workloadsBody');body.replaceChildren();$('workloadCount').textContent=state.workloads.length+' workload'+(state.workloads.length===1?'':'s');$('verifiedMessage').hidden=true;
+  if(!state.workloads.length){const row=body.insertRow();const cell=row.insertCell();cell.colSpan=6;cell.className='empty';cell.textContent='No workloads.';}
+  state.workloads.forEach(w=>{const row=body.insertRow();checkboxCell(row,'Select workload');const link=document.createElement('button');link.className='link';link.textContent=w.hostname;link.addEventListener('click',()=>openWorkload(w));row.insertCell().append(link);statusCell(row,'Online');row.insertCell().textContent=w.enforcement;row.insertCell().textContent=w.labels.filter(Boolean).join(' · ');row.insertCell().textContent=osNames[w.os];});
+ }
+ function openWorkloads(){message();renderWorkloads();show('workloadsScreen','Workloads');}
+ function openWorkload(w){curWorkload=w;message();$('workloadHost').textContent=w.hostname;$('workloadOS').textContent=osNames[w.os];$('workloadEnforcement').textContent=w.enforcement;$('workloadVisibility').textContent=w.visibility;$('workloadVersion').textContent=w.version;$('workloadNodeType').textContent=w.nodeType;$('workloadProfile').textContent=w.profile;$('workloadPaired').textContent=w.paired;chips('workloadLabels',w.labels);show('workloadDetailScreen',w.hostname);}
+ $('serversMenu').addEventListener('click',()=>{const open=$('serversChildren').hidden;$('serversChildren').hidden=!open;$('serversMenu').setAttribute('aria-expanded',String(open));$('serversChevron').textContent=open?'⌄':'›';});
+ $('navProfiles').addEventListener('click',()=>{message();renderProfiles();show('profilesScreen','Pairing Profiles');});$('navWorkloads').addEventListener('click',openWorkloads);
+ $('breadcrumbProfiles').addEventListener('click',()=>{if($('navAllPolicies').classList.contains('active')){openPolicies();return;}if($('navWorkloads').classList.contains('active'))openWorkloads();else{message();renderProfiles();show('profilesScreen','Pairing Profiles');}});
+ $('mobileMenu').addEventListener('click',()=>{const open=!$('sidebar').classList.contains('open');$('sidebar').classList.toggle('open',open);$('mobileMenu').setAttribute('aria-expanded',String(open));if(open)$('serversMenu').focus();});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('sidebar').classList.contains('open')){closeSidebar(true);e.preventDefault();}});
+ document.addEventListener('click',e=>{if($('sidebar').classList.contains('open')&&!$('sidebar').contains(e.target)&&!$('mobileMenu').contains(e.target))closeSidebar();});
+ $('addProfile').addEventListener('click',()=>openForm(false));$('editProfile').addEventListener('click',()=>openForm(true));$('cancelForm').addEventListener('click',()=>editing?openProfile():show('profilesScreen','Pairing Profiles'));
+ document.querySelectorAll('input[name=usage],input[name=age]').forEach(input=>input.addEventListener('change',syncForm));$('lockLabels').addEventListener('change',syncForm);
+ $('profileForm').addEventListener('submit',e=>{
+  e.preventDefault();const name=$('profileName').value.trim();if(!name){error('formError','Enter a profile name.');$('profileName').focus();return;}
+  if(state.profiles.some(p=>p.name===name&&(!editing||p.id!==state.selectedId))){error('formError','A pairing profile already has this name. Choose another name.');return;}
+  const limited=document.querySelector('input[name=usage][value=limited]').checked;const unlimitedAge=document.querySelector('input[name=age][value=unlimited]').checked;const maxUses=Number($('maxUses').value);const days=Number($('ageDays').value);
+  if((limited&&(!Number.isInteger(maxUses)||maxUses<1||maxUses>100))||(!unlimitedAge&&(!Number.isInteger(days)||days<1||days>365))){error('formError','Enter whole numbers: 1–100 uses and 1–365 days.');return;}
+  const now=timestamp();const base=editing?selected():{id:'sample-profile-'+state.nextProfile++,created:now,lastUsed:'',lastKey:''};
+  const p={...base,name,description:$('profileDescription').value.trim(),enforcement:$('enforcement').value,visibility:$('visibility').value,version:$('venVersion').value,nodeType:$('nodeType').value,labels:labelIds.map(id=>$(id).value.trim()),limited,maxUses,unlimitedAge,days,lockPolicy:$('lockPolicy').checked,lockLabels:$('lockLabels').checked,overrides:overrideIds.map(id=>$(id).checked),modified:now,by:'admin@illumio-lab.invalid'};
+  if(editing)state.profiles[state.profiles.findIndex(profile=>profile.id===p.id)]=p;else state.profiles.push(p);state.selectedId=p.id;state.key=null;$('trainingPanel').open=false;renderProfiles();openProfile();save();message(editing?'Profile saved.':'Pairing profile created. Select Generate Key. No workload has been paired yet.');
+ });
+ $('generateKey').addEventListener('click',generateKey);$('keyProfile').addEventListener('change',()=>{state.selectedId=$('keyProfile').value;generateKey();});$('keySourceProfile').addEventListener('click',()=>openProfile());
+ ['aix','linux','windows'].forEach(os=>{const title=osNames[os][0]+osNames[os].slice(1).toLowerCase();$('copy'+title).addEventListener('click',()=>copySample(os));});
+ $('openTraining').addEventListener('click',openTraining);$('runExecution').addEventListener('click',simulate);$('viewWorkloads').addEventListener('click',openWorkloads);$('backWorkloads').addEventListener('click',openWorkloads);
+ $('labGuide').addEventListener('click',()=>$('guideDialog').showModal());$('closeGuide').addEventListener('click',()=>$('guideDialog').close());$('guideDone').addEventListener('click',()=>$('guideDialog').close());
+ $('resetLab').addEventListener('click',()=>$('resetDialog').showModal());$('cancelReset').addEventListener('click',()=>$('resetDialog').close());$('confirmReset').addEventListener('click',()=>{
+  $('resetDialog').close();state={profiles:seeds(),selectedId:'sample-profile-2',key:null,serial:0,os:'linux',workloads:[],nextProfile:5,keys:[],resets:state.resets};editing=false;$('trainingPanel').open=false;$('executionInput').value='';$('executionOutput').hidden=true;$('viewWorkloads').hidden=true;error('executionError');error('formError');$('profileForm').reset();syncForm();renderProfiles();renderWorkloads();show('profilesScreen','Pairing Profiles');message('Lab reset. The four sample profiles are restored.');
+ });
+ 
+ // ---- System PCE additions: clickable navigation + workload terminal ----
+ const PCE='pce.illumio-lab.invalid:443';
+ const serverAreas=['Applications','Reports'];
+ let currentArea='';
+ const areaText={
+  'Dashboard':'An overview of your organization, such as workload counts, VEN health and policy status.',
+  'Insights':'Insights into risk and traffic across your environment.',
+  'Quarantine':'Isolate a compromised workload from the rest of the network.',
+  'Explore':'Tools such as the Map and Traffic to investigate traffic flows between workloads.',
+  'Segmentation':'Rulesets, rules and policy objects such as services and IP lists.',
+  'Label Management':'Labels and label groups used to describe workloads.',
+  'Applications':'Workloads grouped by their Application label.',
+  'Reports':'Scheduled and on-demand reports.',
+  'Cloud':'Cloud accounts and the cloud resources discovered in them.',
+  'Usage':'Licence and workload usage for the organization.',
+  'Access':'Users, roles and API keys.',
+  'Settings':'Organization-wide settings, such as VEN and event settings.','Deny Rules':'All Deny Rules across your policies.','Drafts & Versions':'Draft policy changes and provisioned policy versions.',
+  'Support':'Support reports and product documentation.'
+ };
+ function openArea(area){currentArea=area;message();$('phHeading').textContent=area;$('phText').textContent=(areaText[area]||'')+' This area is not available in this lab.';$('phReset').hidden=area!=='Settings';show('placeholderScreen',area);}
+ document.querySelectorAll('.side-nav button[data-area]').forEach(b=>b.addEventListener('click',()=>openArea(b.dataset.area)));
+ $('phBack').addEventListener('click',()=>{message();renderProfiles();show('profilesScreen','Pairing Profiles');});
+
+ function fakeCode(){const a=new Uint8Array(41);crypto.getRandomValues(a);return ('1'+Array.from(a,b=>b.toString(16).padStart(2,'0')).join('')).slice(0,81);}
+
+ const PROMPT={linux:['root@linux-ven-01',':~# '],windows:['','PS C:\\Windows\\system32> '],aix:['','root@aix-ven-01:/ # ']};
+ function promptNodes(os){const a=document.createElement('span');a.className='term-user';a.textContent=PROMPT[os][0];const b=document.createElement('span');b.className='term-prompt';b.textContent=PROMPT[os][1];return [a,b];}
+ const BANNER={
+  linux:[],
+  windows:[['','Windows PowerShell'],['','Copyright (C) Microsoft Corporation. All rights reserved.'],['','']],
+  aix:[['','AIX Version 7.3'],['','']]
+ };
+ const term={os:'linux',busy:false,hist:[],hi:0,buf:{linux:null,windows:null,aix:null}};
+ const shortHost=os=>hostnames[os].split('.')[0];
+ const venVersion=p=>((p&&p.version||'').match(/\d+\.\d+\.\d+-\d+/)||['24.2.20-2091'])[0];
+
+ // ---- VEN output. Kept in one place so it can be swapped for a captured real pairing log. ----
+ const INSTALL_PAUSE_MS=15000; // real "Installing Illumio Packages" pause is ~30s
+ function dots(label,n,ms){return {dots:true,label,n,ms};}
+ function venSuccess(os,p){
+  const v=venVersion(p);
+  if(os==='linux'){const rpm=v+'.el9';return [
+   ['','  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current'],
+   ['','                                 Dload  Upload   Total   Spent    Left  Speed'],
+   ['','100 38042    0 38042    0     0   103k      0 --:--:-- --:--:-- --:--:--  103k'],
+   ['',''],['','             Installing Illumio'],['','             ------------------'],
+   dots('Retrieving Illumio Packages [x86_64][CentOS][9.4] ',10,2200),
+   dots('Validating sha256 ',17,1400),
+   dots('Installing Illumio Packages ',10,INSTALL_PAUSE_MS),
+   ['','EXPECTED_VERSION: '+rpm],['','INSTALLED_VERSION: '+rpm],
+   dots('Starting Illumio processes ',16,1800),
+   dots('Checking Runtime Environment',10,1200),
+   ['','Starting illumio-control:'],
+   ['',' - Environment Setting up Illumio VEN Environment:    ...done.'],
+   ['',' - venAgentMgr Starting venAgentMgr:    ...done.'],
+   ['',' - IPSec Starting IPSec: feature not enabled'],
+   ['',' - venPlatformHandler Starting venPlatformHandler:    ...done.'],
+   ['',' - venVtapServer Starting venVtapServer:    ...done.'],
+   ['',' - venAgentMonitor Starting venAgentMonitor:    ...done.'],
+   ['',''],
+   dots('Pairing with Illumio ',16,2500),
+   ['','Created /opt/illumio_ven_data/tmp/illumio_install.'],
+   {pair:true},
+   ['',''],['','               Pairing Status'],['','               --------------'],
+   ['','Pairing Configuration exists ......SUCCESS'],['','VEN Manager Daemon running ........SUCCESS'],
+   ['','Master Configuration retrieval ....SUCCESS'],['','VEN Configuration retrieval .......SUCCESS'],
+   ['',''],['','VEN has been SUCCESSFULLY paired with Illumio'],['','']];}
+  // Windows and AIX: not yet captured from a live pairing - approximate
+  const out=[];
+  if(os==='windows')out.push(['','Downloading Illumio VEN pairing script ... done'],['','Checking prerequisites ... done'],['','Downloading VEN package ('+v+') ... done'],dots('Installing Illumio VEN '+v+' ',10,INSTALL_PAUSE_MS),['','Starting Illumio VEN services ... done']);
+  else out.push(['','Checking prerequisites ... done'],['','Downloading VEN package ('+v+') ... done'],dots('Installing illumio-ven '+v+' (installp) ',10,INSTALL_PAUSE_MS),['','Starting Illumio VEN services ... done']);
+  out.push(dots('Pairing with Illumio ',16,2500),{pair:true},['',''],['','Pairing Status'],['','Pairing Configuration exists ......SUCCESS'],['','VEN Manager Daemon running ........SUCCESS'],
+   ['','Master Configuration retrieval ....SUCCESS'],['','VEN Configuration retrieval .......SUCCESS'],['',''],['','VEN has been SUCCESSFULLY paired with Illumio'],['','']);
+  return out;
+ }
+ // not yet captured from a live pairing - approximate
+ function venKeyRejected(){return [['','  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current'],['','                                 Dload  Upload   Total   Spent    Left  Speed'],['','100 38042    0 38042    0     0   103k      0 --:--:-- --:--:-- --:--:--  103k'],['',''],dots('Pairing with Illumio ',16,2500),['','ERROR: Activation failed. The pairing key is invalid, expired or has no uses remaining.'],['','Generate a new pairing key in the PCE and run the new pairing script.'],['','']];}
+ function venAlreadyPaired(os){return [['err','ERROR: The Illumio VEN is already installed and paired on '+shortHost(os)+'.'],['err','Unpair the VEN before pairing it again.']];}
+ function venStatus(os){
+  const w=state.workloads.find(w=>w.os===os);
+  return [['','Illumio VEN status'],['',''],['','  Hostname ............ '+hostnames[os]],['','  VEN version ......... '+venVersion(w)],['','  PCE ................. '+PCE],['','  Pairing profile ..... '+w.profile],['','  Enforcement ......... '+w.enforcement],['','  Visibility .......... '+w.visibility],['',''],
+   ['','venAgentMgr:          ',['ok','running']],['','venPlatformHandler:   ',['ok','running']],['','venVtapServer:        ',['ok','running']],['','venAgentMonitor:      ',['ok','running']]];
+ }
+ // ---- end of VEN output ----
+
+ function termLine(cls,text,extra){
+  const line=document.createElement('span');if(cls)line.className=cls;line.textContent=text;
+  const frag=document.createDocumentFragment();frag.append(line);
+  if(extra){const e=document.createElement('span');e.className=extra[0];e.textContent=extra[1];frag.append(e);}
+  frag.append(document.createTextNode('\n'));$('termOut').append(frag);$('termBody').scrollTop=$('termBody').scrollHeight;
+ }
+ function termEcho(cmd){const p=document.createDocumentFragment();p.append(...promptNodes(term.os));const c=document.createElement('span');c.className='cmd';c.textContent=cmd;$('termOut').append(p,c,document.createTextNode('\n'));}
+ function termSave(){term.buf[term.os]=$('termOut').innerHTML;try{localStorage.setItem(STORE+'-term-'+term.os,term.buf[term.os]);}catch(_){}}
+ function termLoad(os){
+  term.os=os;state.os=os;$('termHost').value=os;document.querySelectorAll('.term-tab').forEach(t=>{const on=t.dataset.os===os;t.classList.toggle('active',on);t.setAttribute('aria-selected',String(on));});$('termPrompt').replaceChildren(...promptNodes(os));$('termOut').replaceChildren();
+  if(term.buf[os]!==null)$('termOut').innerHTML=term.buf[os];else BANNER[os].forEach(l=>termLine(l[0],l[1]));
+  $('termBody').scrollTop=$('termBody').scrollHeight;
+ }
+ function openTerm(os){
+  $('termDrawer').hidden=false;document.body.classList.add('term-open');
+  if(!term.busy&&(term.os!==os||!$('termOut').childNodes.length)){termSave();termLoad(os);}
+  $('termInput').focus();
+ }
+ function closeTerm(){termSave();$('termDrawer').hidden=true;document.body.classList.remove('term-open');$('openTraining').focus();}
+ const wait=ms=>new Promise(r=>setTimeout(r,ms));
+ async function stream(lines,slow,onPair){
+  for(const l of lines){
+   if(l.pair){if(onPair)onPair();continue;}
+   if(l.dots){const span=document.createElement('span');span.textContent=l.label;$('termOut').append(span);
+    for(let i=0;i<l.n;i++){await wait(l.ms/l.n);span.textContent+='.';$('termBody').scrollTop=$('termBody').scrollHeight;}
+    $('termOut').append(document.createTextNode('\n'));continue;}
+   termLine(l[0],l[1],l[2]);await wait(l[1]===''?60:slow?120+Math.random()*180:60+Math.random()*80);
+  }
+ }
+ function notFound(cmd){
+  const w=cmd.split(/\s+/)[0];
+  if(term.os==='windows')return [['err',w+" : The term '"+w+"' is not recognized as the name of a cmdlet, function, script file, or operable program."],['err','Check the spelling of the name, or if a path was included, verify that the path is correct and try again.']];
+  if(term.os==='aix')return [['err','ksh: '+w+':  not found.']];
+  return [['err','bash: '+w+': command not found']];
+ }
+ function pairWorkload(os,key){
+  const p=state.profiles.find(pr=>pr.id===key.profileId)||selected();
+  const w={hostname:hostnames[os],os,profile:p.name,labels:[...p.labels],enforcement:p.enforcement,visibility:p.visibility,version:p.version,nodeType:p.nodeType,paired:timestamp()};
+  state.workloads.push(w);key.uses++;p.lastUsed=w.paired;
+  if(state.key===key)$('keyRemaining').textContent=p.limited?String(Math.max(0,p.maxUses-key.uses)):'Unlimited';
+  renderProfiles();renderWorkloads();save();return p;
+ }
+ async function runCommand(raw){
+  const cmd=raw.trim();termEcho(raw);if(!cmd)return;load();
+  term.hist.push(cmd);term.hi=term.hist.length;
+  const os=term.os,ps=/pair\.ps1|^PowerShell\b/i.test(cmd),sh=/pair\.sh\b/.test(cmd);
+  const code=(cmd.match(/-activation-code\s+([A-Za-z0-9-]+)/)||[])[1];
+  if(/^(clear|cls|clear-host)$/i.test(cmd)){$('termOut').replaceChildren();return;}
+  if(/^hostname$/i.test(cmd)){termLine('',os==='windows'?shortHost(os).toUpperCase():shortHost(os));return;}
+  if(os!=='windows'&&/^ls(\s|$)/.test(cmd)){termLine('',os==='linux'?'anaconda-ks.cfg':'smit.log  smit.script');return;}
+  if(os!=='windows'&&/^pwd$/.test(cmd)){termLine('',os==='linux'?'/root':'/');return;}
+  if(os==='linux'&&/^uname(\s|$)/.test(cmd)){termLine('',/-a/.test(cmd)?'Linux linux-ven-01 5.14.0-427.13.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC x86_64 x86_64 x86_64 GNU/Linux':'Linux');return;}
+  if(/^whoami$/i.test(cmd)){termLine('',os==='windows'?'nt authority\\system':'root');return;}
+  if(/illumio-ven-ctl(\.ps1)?'?\s+status/i.test(cmd)){
+   if(state.workloads.some(w=>w.os===os)){await stream(venStatus(os),false);}
+   else await stream(notFound(os==='windows'?'illumio-ven-ctl':'illumio-ven-ctl'),false);
+   return;
+  }
+  if(ps&&os!=='windows'){await stream(os==='aix'?[['err','ksh: PowerShell:  not found.']]:[['err','bash: PowerShell: command not found']],false);return;}
+  if(sh&&os==='windows'){await stream([['err','At line:1 char:33'],['err','+ rm -fr /opt/illumio_ven_data/tmp && umask 026 && mkdir -p /opt/illumi ...'],['err','+                                 ~~'],['err',"The token '&&' is not a valid statement separator in this version."],['err','    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException'],['err','    + FullyQualifiedErrorId : InvalidEndOfLine']],false);return;}
+  if(sh&&/\bnscurl\b/.test(cmd)&&os!=='windows'){await stream(os==='aix'?[['err','ksh: nscurl:  not found.']]:[['err','bash: nscurl: command not found']],false);return;}
+  if((ps||sh)&&code){
+   if(state.workloads.some(w=>w.os===os)){await stream(venAlreadyPaired(os),false);return;}
+   const key=state.keys.find(k=>k.value===code);
+   const kp=key&&state.profiles.find(pr=>pr.id===key.profileId);
+   const valid=key&&kp&&!kp.stopped&&(key.expires===null||Date.now()<=key.expires)&&!(kp.limited&&key.uses>=kp.maxUses);
+   if(!valid){await stream(venKeyRejected(),true);return;}
+   await stream(venSuccess(os,kp),true,()=>pairWorkload(os,key));
+   return;
+  }
+  await stream(notFound(cmd),false);
+ }
+ $('termInput').addEventListener('keydown',async e=>{
+  if(e.key==='ArrowUp'&&term.hi>0){term.hi--;$('termInput').value=term.hist[term.hi];e.preventDefault();return;}
+  if(e.key==='ArrowDown'){term.hi=Math.min(term.hist.length,term.hi+1);$('termInput').value=term.hist[term.hi]||'';e.preventDefault();return;}
+  if(e.key!=='Enter'||term.busy)return;
+  e.preventDefault();const v=$('termInput').value;$('termInput').value='';
+  term.busy=true;$('termRow').hidden=true;$('termHost').disabled=true;
+  try{await runCommand(v);}finally{term.busy=false;$('termRow').hidden=false;$('termHost').disabled=false;termSave();$('termBody').scrollTop=$('termBody').scrollHeight;$('termInput').focus();}
+ });
+ $('termBody').addEventListener('click',()=>{if(!window.getSelection().toString())$('termInput').focus();});
+ document.querySelectorAll('.term-tab').forEach(t=>t.addEventListener('click',()=>{if(term.busy||t.dataset.os===term.os)return;$('termHost').value=t.dataset.os;$('termHost').dispatchEvent(new Event('change'));}));
+ $('termHost').addEventListener('change',()=>{termSave();termLoad($('termHost').value);$('termInput').focus();});
+ $('termClear').addEventListener('click',()=>{$('termOut').replaceChildren();termSave();$('termInput').focus();});
+ $('termClose').addEventListener('click',closeTerm);
+ $('confirmReset').addEventListener('click',()=>{state.resets=(state.resets||0)+1;state.policies=[];save();});
+
+
+ // ---- real-PCE look: dates, email links, profile IDs, copy-on-click, download, stop/remove ----
+ const ORG_ID='4140453';
+ function at(s){return s?String(s).replace(', ',' at '):'';}
+ function emailLink(addr){const a=document.createElement('span');a.className='email';a.textContent=addr;return a;}
+ function profileNum(p){return '177329235328045'+p.id.replace('sample-profile-','').padStart(2,'0');}
+ function sampleMac(){
+  const p=selected();if(!p||!state.key)return '';
+  return 'rm -fr /opt/illumio_ven_data/tmp && umask 026 && mkdir -p /opt/illumio_ven_data/tmp && nscurl "https://'+PCE+'/api/v26/software/ven/image?pair_script=pair.sh&profile_id='+profileNum(p)+'" -o /opt/illumio_ven_data/tmp/pair.sh && chmod +x /opt/illumio_ven_data/tmp/pair.sh && /opt/illumio_ven_data/tmp/pair.sh --management-server '+PCE+' --activation-code '+state.key.value;
+ }
+ const copyOs={sampleAix:'aix',sampleLinux:'linux',sampleWindows:'windows'};
+ async function copyArea(id){
+  const area=$(id);let ok=false;
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(area.value);ok=true;}}catch(_){}
+  if(!ok){area.focus();area.select();try{ok=document.execCommand('copy');}catch(_){}}
+  if(copyOs[id])state.os=copyOs[id];
+  const tip=area.parentElement.querySelector('.copy-tip');
+  if(tip){tip.textContent=ok?'Copied':'Press Ctrl+C or ⌘C to copy';tip.classList.add('show');clearTimeout(tip._t);tip._t=setTimeout(()=>{tip.classList.remove('show');tip.textContent='Copy to clipboard';},1800);}
+ }
+ ['sampleAix','sampleLinux','sampleWindows','sampleMac','fakeKey'].forEach(id=>$(id).addEventListener('click',()=>copyArea(id)));
+ const dlName={fakeKey:'pairing_key.txt',sampleAix:'pair_aix.sh',sampleLinux:'pair_linux.sh',sampleWindows:'pair_windows.ps1',sampleMac:'pair_macos.sh'};
+ document.querySelectorAll('.code-header .dl').forEach(b=>b.addEventListener('click',()=>{
+  const id=b.dataset.dl,text=$(id).value;if(!text)return;
+  const url=URL.createObjectURL(new Blob([text+'\n'],{type:'text/plain'}));const a=document.createElement('a');a.href=url;a.download=dlName[id]||'download.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ }));
+ function renderPairingState(p){
+  $('profileBanner').classList.toggle('stopped',!!p.stopped);
+  $('pairingState').textContent=p.stopped?'Stopped:':'Running:';
+  $('pairingStateText').textContent=p.stopped?'Deny pairing requests from all keys generated by this Pairing Profile':'Allow pairing requests from all valid keys generated by this Pairing Profile';
+  $('stopPairing').replaceChildren();$('stopPairing').insertAdjacentHTML('beforeend',p.stopped?'<svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>Start Pairing':'<svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10" fill="currentColor"/></svg>Stop Pairing');
+ }
+ $('stopPairing').addEventListener('click',()=>{const p=selected();p.stopped=!p.stopped;p.modified=timestamp();renderDetail();renderProfiles();save();message(p.stopped?'Pairing stopped for '+p.name+'.':'Pairing started for '+p.name+'.');});
+ $('removeProfile').addEventListener('click',()=>{$('removeText').textContent='Are you sure you want to remove the Pairing Profile "'+selected().name+'"?';$('removeDialog').showModal();});
+ $('cancelRemove').addEventListener('click',()=>$('removeDialog').close());
+ $('confirmRemove').addEventListener('click',()=>{const p=selected();$('removeDialog').close();state.profiles=state.profiles.filter(x=>x.id!==p.id);if(state.key&&state.key.profileId===p.id)state.key=null;state.selectedId=(state.profiles[0]||{}).id;renderProfiles();show('profilesScreen','Pairing Profiles');save();message('Pairing Profile "'+p.name+'" has been removed.');});
+
+ // ---- Segmentation: All Policies, policy page and rules ----
+ const I2={"pencil": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M10.5 2.5l3 3L6 13H3v-3z\"/></svg>", "more": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"3.5\" r=\"1.3\" fill=\"currentColor\"/><circle cx=\"8\" cy=\"8\" r=\"1.3\" fill=\"currentColor\"/><circle cx=\"8\" cy=\"12.5\" r=\"1.3\" fill=\"currentColor\"/></svg>"};
+ const I={"plus": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" cx=\"8\" cy=\"8\" r=\"6\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8 5.5v5M5.5 8h5\"/></svg>", "minus": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" cx=\"8\" cy=\"8\" r=\"6\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M5.5 8h5\"/></svg>", "upload": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8 10.5V3m0 0L5 6m3-3 3 3M2.5 10.5v1.75c0 .69.56 1.25 1.25 1.25h8.5c.69 0 1.25-.56 1.25-1.25V10.5\"/></svg>", "revert": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M5.5 3.5 3 6l2.5 2.5M3 6h7a3 3 0 0 1 0 6H6\"/></svg>", "toggle": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" x=\"1.5\" y=\"4.5\" width=\"13\" height=\"7\" rx=\"3.5\"/><circle cx=\"5\" cy=\"8\" r=\"2\" fill=\"currentColor\"/></svg>", "check": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M3 8.5 6.5 12 13 4.5\"/></svg>", "checkc": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" cx=\"8\" cy=\"8\" r=\"6\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M5.5 8.2 7.2 10l3.3-3.7\"/></svg>", "refresh": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M13 4v3h-3M3 12V9h3M12.6 7A5 5 0 0 0 3.8 5.5M3.4 9a5 5 0 0 0 8.8 1.5\"/></svg>", "export": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M9.5 2.5H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h5.5M7 8h7m0 0-2.5-2.5M14 8l-2.5 2.5\"/></svg>", "book": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M2.5 3.5h4a1.5 1.5 0 0 1 1.5 1.5v8.5a1.5 1.5 0 0 0-1.5-1.5h-4zM13.5 3.5h-4A1.5 1.5 0 0 0 8 5v8.5A1.5 1.5 0 0 1 9.5 12h4z\"/></svg>", "warn": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8 2.5 14 13H2zM8 6.5v3M8 11.25v.25\"/></svg>", "target": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" cx=\"8\" cy=\"8\" r=\"6\"/><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" cx=\"8\" cy=\"8\" r=\"3\"/><circle cx=\"8\" cy=\"8\" r=\"1\" fill=\"currentColor\"/></svg>", "save": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M2 2h9.5L14 4.5V14H2z\" fill=\"currentColor\"/><rect x=\"4.5\" y=\"2\" width=\"6\" height=\"3.5\" fill=\"#fff\"/><rect x=\"4\" y=\"9\" width=\"8\" height=\"5\" rx=\".5\" fill=\"#fff\"/></svg>", "ban": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1.8\" cx=\"8\" cy=\"8\" r=\"6\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1.8\" d=\"M3.8 12.2 12.2 3.8\"/></svg>", "label": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"6.5\" fill=\"currentColor\"/><path d=\"M8 1.5v13M1.5 8h13M3.2 3.8c2.6 1.4 7 1.4 9.6 0M3.2 12.2c2.6-1.4 7-1.4 9.6 0\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1\"/></svg>", "gear": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle cx=\"6\" cy=\"8\" r=\"4.5\" fill=\"#9aa9b8\"/><circle cx=\"6\" cy=\"8\" r=\"1.6\" fill=\"#fff\"/><circle cx=\"11.5\" cy=\"11\" r=\"3\" fill=\"#b6c3cf\"/><circle cx=\"11.5\" cy=\"11\" r=\"1\" fill=\"#fff\"/></svg>", "globe": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" cx=\"8\" cy=\"8\" r=\"6\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M3 5.5h10M3 10.5h10M8 2a9 9 0 0 1 0 12M8 2a9 9 0 0 0 0 12\"/></svg>", "doc": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M4 2.5h5.5L12 5v8.5H4zM6 8h4M6 10.5h4\"/></svg>", "shield": "<svg class=\"icon\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8 2 13 4v4c0 3-2.2 5.2-5 6-2.8-.8-5-3-5-6V4z\"/></svg>"};
+ const ART={allow:"<svg viewBox=\"0 0 220 180\" aria-hidden=\"true\"><path d=\"M48 58C70 0 150 0 172 58\" fill=\"none\" stroke=\"#3ccf6b\" stroke-width=\"9\" stroke-linecap=\"round\"/><path d=\"M36 46l14 20 10-22z\" fill=\"#3ccf6b\"/><path d=\"M184 46l-14 20-10-22z\" fill=\"#3ccf6b\"/><g transform=\"translate(18 0)\"><path d=\"M0 72l32-16 32 16v58l-32 16-32-16z\" fill=\"#d3dbe6\" stroke=\"#5c6f84\" stroke-width=\"3\"/><path d=\"M0 72l32 16 32-16M32 88v58M0 101l32 16 32-16\" fill=\"none\" stroke=\"#5c6f84\" stroke-width=\"3\"/><circle cx=\"10\" cy=\"92\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"96\" r=\"3\" fill=\"#fff\"/><circle cx=\"10\" cy=\"121\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"125\" r=\"3\" fill=\"#fff\"/></g><g transform=\"translate(138 0)\"><path d=\"M0 72l32-16 32 16v58l-32 16-32-16z\" fill=\"#9fc4ff\" stroke=\"#2366ed\" stroke-width=\"3\"/><path d=\"M0 72l32 16 32-16M32 88v58M0 101l32 16 32-16\" fill=\"none\" stroke=\"#2366ed\" stroke-width=\"3\"/><circle cx=\"10\" cy=\"92\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"96\" r=\"3\" fill=\"#fff\"/><circle cx=\"10\" cy=\"121\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"125\" r=\"3\" fill=\"#fff\"/></g><rect x=\"22\" y=\"152\" width=\"56\" height=\"16\" rx=\"3\" fill=\"#3b4757\"/><text x=\"50\" y=\"163\" font-size=\"8\" fill=\"#fff\" text-anchor=\"middle\" font-family=\"Arial\">SOURCE</text><rect x=\"132\" y=\"152\" width=\"76\" height=\"16\" rx=\"3\" fill=\"#3b4757\"/><text x=\"170\" y=\"163\" font-size=\"8\" fill=\"#fff\" text-anchor=\"middle\" font-family=\"Arial\">DESTINATION</text></svg>",deny:"<svg viewBox=\"0 0 220 180\" aria-hidden=\"true\"><path d=\"M48 58C70 0 150 0 172 58\" fill=\"none\" stroke=\"#e5484d\" stroke-width=\"9\" stroke-linecap=\"round\"/><path d=\"M36 46l14 20 10-22z\" fill=\"#e5484d\"/><path d=\"M184 46l-14 20-10-22z\" fill=\"#e5484d\"/><path d=\"M100 18l20 20M120 18l-20 20\" stroke=\"#e5484d\" stroke-width=\"7\" stroke-linecap=\"round\"/><g transform=\"translate(18 0)\"><path d=\"M0 72l32-16 32 16v58l-32 16-32-16z\" fill=\"#d3dbe6\" stroke=\"#5c6f84\" stroke-width=\"3\"/><path d=\"M0 72l32 16 32-16M32 88v58M0 101l32 16 32-16\" fill=\"none\" stroke=\"#5c6f84\" stroke-width=\"3\"/><circle cx=\"10\" cy=\"92\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"96\" r=\"3\" fill=\"#fff\"/><circle cx=\"10\" cy=\"121\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"125\" r=\"3\" fill=\"#fff\"/></g><g transform=\"translate(138 0)\"><path d=\"M0 72l32-16 32 16v58l-32 16-32-16z\" fill=\"#9fc4ff\" stroke=\"#2366ed\" stroke-width=\"3\"/><path d=\"M0 72l32 16 32-16M32 88v58M0 101l32 16 32-16\" fill=\"none\" stroke=\"#2366ed\" stroke-width=\"3\"/><circle cx=\"10\" cy=\"92\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"96\" r=\"3\" fill=\"#fff\"/><circle cx=\"10\" cy=\"121\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"125\" r=\"3\" fill=\"#fff\"/></g><rect x=\"22\" y=\"152\" width=\"56\" height=\"16\" rx=\"3\" fill=\"#3b4757\"/><text x=\"50\" y=\"163\" font-size=\"8\" fill=\"#fff\" text-anchor=\"middle\" font-family=\"Arial\">SOURCE</text><rect x=\"132\" y=\"152\" width=\"76\" height=\"16\" rx=\"3\" fill=\"#3b4757\"/><text x=\"170\" y=\"163\" font-size=\"8\" fill=\"#fff\" text-anchor=\"middle\" font-family=\"Arial\">DESTINATION</text></svg>",override:"<svg viewBox=\"0 0 220 180\" aria-hidden=\"true\"><path d=\"M48 58C70 0 150 0 172 58\" fill=\"none\" stroke=\"#3ccf6b\" stroke-width=\"9\" stroke-linecap=\"round\"/><path d=\"M36 46l14 20 10-22z\" fill=\"#3ccf6b\"/><path d=\"M184 46l-14 20-10-22z\" fill=\"#3ccf6b\"/><g transform=\"translate(18 0)\"><path d=\"M0 72l32-16 32 16v58l-32 16-32-16z\" fill=\"#d3dbe6\" stroke=\"#5c6f84\" stroke-width=\"3\"/><path d=\"M0 72l32 16 32-16M32 88v58M0 101l32 16 32-16\" fill=\"none\" stroke=\"#5c6f84\" stroke-width=\"3\"/><circle cx=\"10\" cy=\"92\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"96\" r=\"3\" fill=\"#fff\"/><circle cx=\"10\" cy=\"121\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"125\" r=\"3\" fill=\"#fff\"/></g><g transform=\"translate(138 0)\"><path d=\"M0 72l32-16 32 16v58l-32 16-32-16z\" fill=\"#9fc4ff\" stroke=\"#2366ed\" stroke-width=\"3\"/><path d=\"M0 72l32 16 32-16M32 88v58M0 101l32 16 32-16\" fill=\"none\" stroke=\"#2366ed\" stroke-width=\"3\"/><circle cx=\"10\" cy=\"92\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"96\" r=\"3\" fill=\"#fff\"/><circle cx=\"10\" cy=\"121\" r=\"3\" fill=\"#fff\"/><circle cx=\"18\" cy=\"125\" r=\"3\" fill=\"#fff\"/></g><rect x=\"22\" y=\"152\" width=\"56\" height=\"16\" rx=\"3\" fill=\"#3b4757\"/><text x=\"50\" y=\"163\" font-size=\"8\" fill=\"#fff\" text-anchor=\"middle\" font-family=\"Arial\">SOURCE</text><rect x=\"132\" y=\"152\" width=\"76\" height=\"16\" rx=\"3\" fill=\"#3b4757\"/><text x=\"170\" y=\"163\" font-size=\"8\" fill=\"#fff\" text-anchor=\"middle\" font-family=\"Arial\">DESTINATION</text></svg>"};
+ const LABELS=[['env','Development'],['env','Production'],['env','Staging'],['app','ordering'],['app','payment'],['app','crm'],['role','web'],['role','app'],['role','db'],['loc','ca'],['loc','us'],['loc','uk']];
+ const LABEL_TYPE={role:'Role',app:'Application',env:'Environment',loc:'Location'};
+ const SERVICES=[['S-HTTP','80 TCP'],['S-HTTPS','443 TCP'],['S-SSH','22 TCP'],['S-RDP','3389 TCP'],['S-SMB','445 TCP'],['S-8443','8443 TCP'],['S-BGP','179 TCP'],['S-DHCP-CLIENT','68 UDP, 68 TCP'],['S-DHCP-SERVER','67 UDP, 67 TCP'],['S-BIND-RNDC','953 TCP'],['S-DNS','53 TCP, 53 UDP']];
+ const RULE_NAME={override:'Override Deny Rule',allow:'Allow Rule',deny:'Deny Rule',iptables:'Custom IP Table Rule'};
+ const SECTION_NAME={override:'Override Deny Rules',allow:'Allow Rules',deny:'Deny Rules'};
+ let curPolicyId=null,draft=null,rmSel=null,edit=null;
+ const pols=()=>state.policies||(state.policies=[]);
+ const curPolicy=()=>pols().find(p=>p.id===curPolicyId);
+ function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+ function ico(name){const s=document.createElement('span');s.style.display='inline-flex';s.innerHTML=I[name]||I2[name];return s.firstChild;}
+ function itemStr(i){return i.kind==='label'?i.key+':'+i.value:i.kind==='all'?'All Workloads':i.kind==='any'?'Any':i.name;}
+ function polSummary(){return pols().map(p=>({name:p.name,rules:['override','allow','deny'].flatMap(t=>(p.rules[t]||[]).map(r=>({type:t,enabled:r.enabled!==false,sources:r.sources.map(itemStr),destinations:r.destinations.map(itemStr),services:r.services.map(itemStr)})))}));}
+ function pchip(item,onRemove){
+  const c=el('span','pchip'+(item.kind==='label'?' lbl-'+item.key:''));
+  if(item.kind==='label')c.append(ico('label'));else if(item.kind==='service'&&item.name==='All Services')c.append(ico('gear'));
+  c.append(el('span','',item.kind==='label'?item.value:item.name));
+  if(onRemove){const x=el('button','pchip-x','×');x.type='button';x.setAttribute('aria-label','Remove');x.addEventListener('mousedown',e=>{e.preventDefault();e.stopPropagation();onRemove();});c.append(x);}
+  return c;
+ }
+ function sameItem(a,b){return a.kind===b.kind&&a.key===b.key&&a.value===b.value&&a.name===b.name;}
+ function picker(kind,list,placeholder,onChange){
+  const wrap=el('div','picker'+(kind==='svc'?' svc':''));const box=el('div','picker-box');const chips=el('span','picker-chips');
+  const input=el('input','picker-input');input.placeholder=placeholder;input.setAttribute('aria-label',placeholder);
+  box.append(chips,input,el('span','picker-caret','⌄'));const dd=el('div','picker-dd');dd.hidden=true;wrap.append(box,dd);
+  let hi=0,opts=[];
+  function draw(){chips.replaceChildren(...list.map((it,i)=>pchip(it,()=>{list.splice(i,1);draw();if(!dd.hidden)render();})));input.placeholder=list.length?'':placeholder;if(onChange)onChange();}
+  function options(){
+   const q=input.value.trim().toLowerCase();let o;
+   if(kind==='svc'){o=SERVICES.filter(s=>!q||s[0].toLowerCase().includes(q)||s[1].toLowerCase().includes(q)).map(s=>({kind:'service',name:s[0],ports:s[1]}));if(!q||'all services'.includes(q))o.push({kind:'service',name:'All Services',pin:true});}
+   else{o=LABELS.filter(l=>!q||l[1].toLowerCase().includes(q)).map(l=>({kind:'label',key:l[0],value:l[1]}));o.push({kind:'all',name:'All Workloads',pin:true},{kind:'any',name:'Any (0.0.0.0/0 and ::/0)',pin:true});}
+   return o.filter(a=>!list.some(b=>sameItem(a,b)));
+  }
+  function render(){
+   opts=options();hi=Math.max(0,Math.min(hi,opts.length-1));dd.replaceChildren();
+   const main=el('div','dd-main'),lst=el('div','dd-list'),pin=el('div','dd-pinned');
+   opts.forEach((o,i)=>{
+    const b=el('button','dd-opt'+(i===hi?' hi':''));b.type='button';b.tabIndex=-1;
+    if(o.kind==='label'){b.append(pchip(o),el('span','dd-type',LABEL_TYPE[o.key]));}
+    else if(o.kind==='service'&&!o.pin){const c=el('span','pchip svc-chip');c.append(ico('gear'));const t=el('span','svc-text');t.append(el('b','',o.name),el('span','',o.ports));c.append(t);b.append(c);b.style.justifyContent='flex-start';}
+    else{b.append(pchip(o));b.style.justifyContent='flex-start';}
+    b.addEventListener('mousedown',e=>{e.preventDefault();pick(o);});
+    (o.pin?pin:lst).append(b);
+   });
+   if(!lst.childNodes.length)lst.append(el('div','dd-empty',kind==='svc'?'No matching services':'No matching labels'));
+   main.append(lst);if(pin.childNodes.length)main.append(pin);
+   const foot=el('div','dd-foot');
+   if(kind==='svc'){
+    const side=el('div','dd-side');side.append(el('div','dd-side-item active','Policy Services'),el('div','dd-side-item','Port/Port Range'));
+    const add=el('div','dd-side-item add');add.append(ico('plus'),el('span','','Add a new Service'));side.append(add);
+    const row=el('div','dd-row');row.append(main,side);dd.append(row);
+    foot.append(el('span','dd-tip','? Filtering Tips(cmd+i)'),el('span','dd-key','↓↑'),el('span','','to navigate'),el('span','dd-key','↵'),el('span','','to select'),el('span','dd-key','esc'),el('span','','to close'));
+   }else{
+    dd.append(main);const adv=el('label','dd-adv');const cb=el('input');cb.type='checkbox';cb.disabled=true;adv.append(cb,document.createTextNode('Advanced Options(cmd+a)'));
+    foot.append(adv,el('span','dd-tip','? Filtering Tips(cmd+i)'));
+   }
+   dd.append(foot);
+   const h=dd.querySelector('.dd-opt.hi');if(h)h.scrollIntoView({block:'nearest'});
+  }
+  function pick(o){const v={kind:o.kind};if(o.key)v.key=o.key;if(o.value)v.value=o.value;if(o.name)v.name=o.name;list.push(v);input.value='';draw();hi=0;render();place();wrap.classList.remove('invalid');}
+  function place(){const b=box.getBoundingClientRect();const below=window.innerHeight-b.bottom-8,above=b.top-8;if(below<300&&above>below){dd.style.insetBlockStart='auto';dd.style.insetBlockEnd=(window.innerHeight-b.top)+'px';dd.style.maxBlockSize=above+'px';}else{dd.style.insetBlockEnd='auto';dd.style.insetBlockStart=b.bottom+'px';dd.style.maxBlockSize=below+'px';}const w=Math.max(b.width,kind==='svc'?520:340);dd.style.inlineSize=w+'px';dd.style.insetInlineStart=Math.max(8,Math.min(b.left,window.innerWidth-w-8))+'px';}
+  function open(){document.querySelectorAll('.picker.open').forEach(p=>{if(p!==wrap)p._close();});wrap.classList.add('open');opts=options();hi=kind==='svc'?opts.length-1:0;render();place();dd.hidden=false;}
+  function close(){wrap.classList.remove('open');dd.hidden=true;input.value='';}
+  wrap._close=close;wrap._place=place;
+  box.addEventListener('mousedown',e=>{if(e.target!==input){e.preventDefault();input.focus();}});
+  input.addEventListener('focus',open);
+  input.addEventListener('input',()=>{hi=0;render();place();dd.hidden=false;wrap.classList.add('open');});
+  input.addEventListener('keydown',e=>{
+   if(e.key==='ArrowDown'){hi=Math.min(opts.length-1,hi+1);render();e.preventDefault();}
+   else if(e.key==='ArrowUp'){hi=Math.max(0,hi-1);render();e.preventDefault();}
+   else if(e.key==='Enter'){if(opts[hi])pick(opts[hi]);e.preventDefault();}
+   else if(e.key==='Escape'){close();input.blur();}
+   else if(e.key==='Backspace'&&!input.value&&list.length){list.pop();draw();render();}
+  });
+  input.addEventListener('blur',()=>setTimeout(()=>{if(!wrap.contains(document.activeElement))close();},150));
+  draw();return wrap;
+ }
+ function renderPolicies(){
+  const body=$('policiesBody');body.replaceChildren();const ps=pols();$('polRemove').disabled=true;$('polSelectAll').checked=false;
+  $('policiesCount').textContent=ps.length?'1 – '+ps.length+' of '+ps.length+' Total':'0 Total';
+  if(!ps.length){const r=body.insertRow();r.className='empty-row';const c=r.insertCell();c.colSpan=7;c.textContent='No Policies';return;}
+  ps.forEach(p=>{
+   const r=body.insertRow();const cb=el('input');cb.type='checkbox';cb.dataset.id=p.id;cb.addEventListener('change',updPolRemove);cb.setAttribute('aria-label','Select policy '+p.name);r.insertCell().append(cb);
+   const b=el('span','pbadge');b.append(ico('plus'),el('span','','Pending'));r.insertCell().append(b);
+   const st=el('span','pstatus enabled');st.append(ico('checkc'),el('span','','Enabled'));r.insertCell().append(st);
+   const a=el('button','link',p.name);a.addEventListener('click',()=>openPolicy(p.id));r.insertCell().append(a);
+   const sc=el('span','scope-chip');sc.append(ico('globe'),el('span','','All'));r.insertCell().append(sc);
+   r.insertCell().textContent=p.modified;r.insertCell().append(emailLink(p.by));
+  });
+ }
+ function closeMenus(){$('addPolicyMenu').hidden=true;$('addRuleMenu').hidden=true;}
+ function expandSeg(){$('segChildren').hidden=false;$('segMenu').setAttribute('aria-expanded','true');$('segChevron').textContent='⌄';}
+ function openPolicies(){curPolicyId=null;draft=null;edit=null;message();closeMenus();expandSeg();renderPolicies();show('policiesScreen','Policies');}
+ function openPolicy(id){curPolicyId=id;draft=null;edit=null;message();closeMenus();renderPolicy();show('policyScreen',curPolicy().name);}
+ function ruleHeader(full){
+  const h=el('div','rrow rhead'+(full?'':' short'));let firstDone=false;
+  (full?['','Provision Status','No.','Status','Sources','Source Process / Service','→','Destinations','Destination Services','Rule Options','']
+       :['','Provision Status','No.','Status','Sources','→','Destinations','Destination Services','Rule Options','']).forEach(t=>{
+   const c=el('div',t==='Destinations'||t==='Destination Services'?'dst':t==='→'?'arrow':'',t);if(full&&!firstDone){firstDone=true;const cb=el('input');cb.type='checkbox';cb.disabled=true;cb.setAttribute('aria-label','Select all rules');c.append(cb);c.style.textAlign='center';}h.append(c);});
+  return h;
+ }
+ function chipsCell(list){const d=el('div');list.forEach(it=>d.append(pchip(it)));d.style.display='flex';d.style.flexWrap='wrap';d.style.gap='4px';return d;}
+ function kindLabel(t){const k=el('span','kind '+t);k.append(ico(t==='allow'?'check':'ban'),el('span','',t==='allow'?'Allow':t==='deny'?'Deny':'Override Deny'));return k;}
+ function pendingCell(){const b=el('span','pbadge');b.append(ico('plus'),el('span','','Pending'));const d=el('div');d.append(b);return d;}
+ function stripRule(r){return {sources:r.sources,srcServices:r.srcServices||[],destinations:r.destinations,services:r.services,enabled:true};}
+ const copyRule=r=>JSON.parse(JSON.stringify(stripRule(r)));
+ function savedRow(t,r,i){
+  const row=el('div','rrow saved');
+  const fc=el('div','first-cell');const cb=el('input');cb.type='checkbox';cb.dataset.t=t;cb.dataset.i=String(i);cb.addEventListener('change',updRuleRemove);cb.setAttribute('aria-label','Select rule');fc.append(el('span','handle','⠿'),cb);
+  const st=el('span','pstatus enabled');st.append(ico('checkc'),el('span','','Enabled'));const sc=el('div');sc.append(st);
+  row.append(fc,pendingCell(),el('div','',String(i+1)),sc,chipsCell(r.sources),chipsCell(r.srcServices||[]),el('div','arrow','→'),chipsCell(r.destinations),chipsCell(r.services),el('div'));
+  const act=el('div','ract');act.append(kindLabel(t));
+  const ed=el('button','row-btn');ed.type='button';ed.title='Edit';ed.setAttribute('aria-label','Edit rule');ed.append(ico('pencil'));
+  const more=el('button','row-btn');more.type='button';more.title='More';more.setAttribute('aria-label','More actions (not available)');more.append(ico('more'));
+  ed.addEventListener('click',()=>{if(draft)return;edit={type:t,i,rule:copyRule(r),orig:JSON.stringify(stripRule(r))};renderPolicy();});
+  act.append(ed,more);row.append(act);return row;
+ }
+ function editableRow(t,r,mode){
+  const row=el('div','rrow '+(mode==='new'?'draft':'editing'));
+  row.append(el('span','handle','⠿'),mode==='new'?el('div'):pendingCell(),el('div'),el('div'));
+  let sv=null;const changed=()=>{if(mode==='edit'&&sv)sv.disabled=JSON.stringify(stripRule(r))===edit.orig;};
+  const src=picker('ws',r.sources,'Select Sources',changed),ssvc=picker('svc',r.srcServices,'Select Services',changed),dst=picker('ws',r.destinations,'Select Destinations',changed),svc=picker('svc',r.services,'Select Services',changed);
+  const opt=el('div','fake-select');opt.append(el('span','','Select Rule Options'),el('span','','⌄'));
+  row.append(src,ssvc,el('div','arrow','→'),dst,svc,opt);
+  const act=el('div','ract');act.append(kindLabel(t));
+  sv=el('button','save-btn');sv.type='button';sv.title='Save';sv.setAttribute('aria-label','Save rule');sv.append(ico('save'));
+  const cn=el('button');cn.type='button';cn.title='Cancel';cn.setAttribute('aria-label','Cancel');cn.append(ico('ban'));
+  sv.addEventListener('click',()=>{
+   const miss=[[src,r.sources],[dst,r.destinations],[svc,r.services]].filter(([w,l])=>!l.length);
+   miss.forEach(([w])=>w.classList.add('invalid'));if(miss.length)return;
+   const p=curPolicy();const rule=stripRule(r);p.rules[t]=p.rules[t]||[];
+   if(mode==='new'){p.rules[t].push(rule);draft=null;}
+   else{p.rules[t][edit.i]=rule;edit=null;}
+   p.modified=timestamp();p.provision='Pending';save();renderPolicy();
+  });
+  cn.addEventListener('click',()=>{if(mode==='new')draft=null;else edit=null;renderPolicy();});
+  act.append(sv,cn);row.append(act);changed();row._first=src;return row;
+ }
+ function renderPolicy(){
+  const p=curPolicy();if(!p)return;let first=null;$('ruleRemove').disabled=true;
+  ['override','allow','deny'].forEach(t=>{
+   const sec=$('sec-'+t),body=sec.querySelector('.sec-body');body.replaceChildren();
+   const rules=p.rules[t]||[],hasDraft=!!(draft&&draft.type===t),full=rules.length>0||hasDraft;
+   const cnt=sec.querySelector('.sec-count');cnt.textContent=String(rules.length);cnt.hidden=!rules.length;
+   const wrap=el('div','rscroll'),tbl=el('div','rtable'+(full?'':' short')+(rules.length?' framed':''));tbl.append(ruleHeader(full));
+   rules.forEach((r,i)=>{if(edit&&edit.type===t&&edit.i===i){edit.rule.srcServices=edit.rule.srcServices||[];tbl.append(editableRow(t,edit.rule,'edit'));}else tbl.append(savedRow(t,r,i));});
+   if(hasDraft){const d=editableRow(t,draft.rule,'new');tbl.append(d);first=d._first;}
+   wrap.append(tbl);body.append(wrap);
+   if(!full)body.append(el('div','rempty','There are no '+SECTION_NAME[t]+' defined'));
+  });
+  if(first)setTimeout(()=>first.querySelector('input').focus(),0);
+ }
+ function rmPreview(t){const k=t==='iptables'?'allow':t;$('rmTitle').textContent=(RULE_NAME[t]||'Allow Rule')+' No Scope';$('rmArt').innerHTML=ART[k];}
+ $('segMenu').addEventListener('click',()=>{const open=$('segChildren').hidden;$('segChildren').hidden=!open;$('segMenu').setAttribute('aria-expanded',String(open));$('segChevron').textContent=open?'⌄':'›';});
+ $('navAllPolicies').addEventListener('click',openPolicies);
+ $('addPolicyBtn').addEventListener('click',e=>{e.stopPropagation();$('addPolicyMenu').hidden=!$('addPolicyMenu').hidden;});
+ $('addFromTemplate').addEventListener('click',()=>{closeMenus();message('Policy templates are not available in this lab. Select Add from Scratch.');});
+ function apValidate(){const v=$('apName').value.trim();$('apNameLabel').classList.toggle('invalid',!v);$('apName').classList.toggle('invalid',!v);$('apSave').disabled=!v;$('apError').hidden=true;}
+ $('addFromScratch').addEventListener('click',()=>{apEditId=null;$('apTitle').textContent='Add Policy';closeMenus();$('apName').value='';$('apDesc').value='';apValidate();$('addPolicyDialog').showModal();$('apName').focus();});
+ $('apName').addEventListener('input',apValidate);
+ ['apClose','apCancel'].forEach(id=>$(id).addEventListener('click',()=>$('addPolicyDialog').close()));
+ $('apSave').addEventListener('click',()=>{
+  const name=$('apName').value.trim();if(!name)return;
+  if(apEditId){const p=pols().find(o=>o.id===apEditId);if(pols().some(o=>o.id!==apEditId&&o.name.toLowerCase()===name.toLowerCase())){$('apError').textContent='A Policy with this name already exists.';$('apError').hidden=false;return;}p.name=name;p.description=$('apDesc').value.trim();p.modified=timestamp();save();$('addPolicyDialog').close();openPolicy(p.id);message('Policy updated.');return;}
+  if(pols().some(p=>p.name.toLowerCase()===name.toLowerCase())){$('apError').textContent='A Policy with this name already exists.';$('apError').hidden=false;return;}
+  const now=timestamp();const p={id:'pol-'+Date.now(),name,description:$('apDesc').value.trim(),scope:'All',created:now,modified:now,by:'admin@illumio-lab.invalid',provision:'Pending',rules:{override:[],allow:[],deny:[]}};
+  pols().push(p);save();$('addPolicyDialog').close();openPolicy(p.id);
+ });
+ $('apName').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('apSave').disabled){e.preventDefault();$('apSave').click();}});
+ $('addRuleBtn').addEventListener('click',e=>{e.stopPropagation();const m=$('addRuleMenu');m.hidden=!m.hidden;if(!m.hidden){rmSel=null;document.querySelectorAll('.rm-type').forEach(b=>b.classList.remove('sel'));$('rmAdd').disabled=true;rmPreview('allow');}});
+ $('addRuleMenu').addEventListener('click',e=>e.stopPropagation());
+ document.querySelectorAll('.rm-type').forEach(b=>{
+  b.addEventListener('mouseenter',()=>rmPreview(b.dataset.type));
+  b.addEventListener('mouseleave',()=>rmPreview(rmSel||'allow'));
+  b.addEventListener('click',()=>{rmSel=b.dataset.type;document.querySelectorAll('.rm-type').forEach(x=>x.classList.toggle('sel',x===b));$('rmAdd').disabled=false;rmPreview(rmSel);});
+  b.addEventListener('dblclick',()=>{rmSel=b.dataset.type;$('rmAdd').click();});
+ });
+ $('rmCancel').addEventListener('click',closeMenus);
+ $('rmAdd').addEventListener('click',()=>{
+  if(!rmSel)return;closeMenus();
+  if(rmSel==='iptables'){message('Custom IP Table Rules are not available in this lab.');return;}
+  edit=null;draft={type:rmSel,rule:{sources:[],srcServices:[],destinations:[],services:[]}};
+  document.querySelector('#sec-'+rmSel).classList.remove('collapsed');renderPolicy();
+ });
+ document.querySelectorAll('.sec-head').forEach(h=>h.addEventListener('click',()=>h.parentElement.classList.toggle('collapsed')));
+ document.addEventListener('click',e=>{if(!e.target.closest('.add-wrap'))closeMenus();});
+ document.addEventListener('scroll',e=>{if(e.target.closest&&e.target.closest('.picker-dd'))return;document.querySelectorAll('.picker.open').forEach(p=>p._place());},true);
+ window.addEventListener('resize',()=>document.querySelectorAll('.picker.open').forEach(p=>p._place()));
+
+ // ---- remove policies / rules, edit policy ----
+ let apEditId=null,pcAction=null;
+ function confirmRemove(title,text,fn){$('pcTitle').textContent=title;$('pcText').textContent=text;pcAction=fn;$('polConfirm').showModal();}
+ $('pcCancel').addEventListener('click',()=>$('polConfirm').close());
+ $('pcOk').addEventListener('click',()=>{$('polConfirm').close();if(pcAction)pcAction();pcAction=null;});
+ const polSel=()=>[...document.querySelectorAll('#policiesBody input[type=checkbox]:checked')].map(c=>c.dataset.id);
+ function updPolRemove(){const n=polSel().length;$('polRemove').disabled=!n;$('polSelectAll').checked=n>0&&n===pols().length;}
+ $('polSelectAll').addEventListener('change',()=>{document.querySelectorAll('#policiesBody input[type=checkbox]').forEach(c=>c.checked=$('polSelectAll').checked);updPolRemove();});
+ $('polRemove').addEventListener('click',()=>{
+  const ids=polSel();if(!ids.length)return;const names=pols().filter(p=>ids.includes(p.id)).map(p=>p.name);
+  confirmRemove(ids.length>1?'Remove Policies':'Remove Policy','Are you sure you want to remove '+(ids.length>1?'these Policies':'this Policy')+'? '+names.join(', '),
+   ()=>{state.policies=pols().filter(p=>!ids.includes(p.id));save();renderPolicies();message((ids.length>1?'Policies':'Policy')+' removed: '+names.join(', '));});
+ });
+ const ruleSel=()=>[...document.querySelectorAll('#policyScreen .rrow.saved input[type=checkbox]:checked')].map(c=>({t:c.dataset.t,i:+c.dataset.i}));
+ function updRuleRemove(){$('ruleRemove').disabled=!ruleSel().length;}
+ $('ruleRemove').addEventListener('click',()=>{
+  const sel=ruleSel();if(!sel.length)return;
+  confirmRemove(sel.length>1?'Remove Rules':'Remove Rule','Are you sure you want to remove '+(sel.length>1?'the '+sel.length+' selected rules':'the selected rule')+'?',()=>{
+   const p=curPolicy();sel.sort((a,b)=>b.i-a.i).forEach(({t,i})=>p.rules[t].splice(i,1));edit=null;p.modified=timestamp();save();renderPolicy();
+   message(sel.length>1?'Rules removed.':'Rule removed.');
+  });
+ });
+ $('editPolicyBtn').addEventListener('click',()=>{
+  const p=curPolicy();if(!p)return;apEditId=p.id;$('apTitle').textContent='Edit Policy';$('apName').value=p.name;$('apDesc').value=p.description||'';apValidate();$('addPolicyDialog').showModal();$('apName').focus();
+ });
+ // ---- Instruqt tabs: index.html = Console; linux.html / windows.html / aix.html = one terminal each.
+ // All four are served from the same host, so they share state via localStorage + BroadcastChannel.
+ const STORE='illumio-pce-lab-v1';
+ const MODE=(location.pathname.match(/(linux|windows|aix)\.html/)||[])[1]||'console';
+ let bc=null;try{bc=new BroadcastChannel(STORE);}catch(_){}
+ let curWorkload=null;
+ function snapshot(){return JSON.stringify({policies:state.policies||[],profiles:state.profiles,keys:state.keys,workloads:state.workloads,serial:state.serial,nextProfile:state.nextProfile,resets:state.resets||0,curKey:state.key?state.key.value:null});}
+ function report(){try{fetch('api/state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({workloads:state.workloads.map(w=>w.os),policies:polSummary()}),keepalive:true}).catch(()=>{});}catch(_){}}
+ function save(post=true){const s=snapshot();try{localStorage.setItem(STORE,s);}catch(_){}if(post)report();if(bc)try{bc.postMessage(s);}catch(_){}}
+ function applySnapshot(s){
+  let d;try{d=JSON.parse(s);}catch(_){return false;}if(!d||!d.profiles)return false;
+  const prevResets=state.resets||0;
+  state.profiles=d.profiles;state.policies=d.policies||[];state.keys=d.keys||[];state.workloads=d.workloads||[];state.serial=d.serial||0;state.nextProfile=d.nextProfile||5;state.resets=d.resets||0;
+  const cur=MODE==='console'&&state.key?state.key.value:d.curKey;state.key=state.keys.find(k=>k.value===cur)||null;
+  if(!state.profiles.some(p=>p.id===state.selectedId))state.selectedId=state.profiles[0].id;
+  if(MODE!=='console'&&state.resets!==prevResets){term.buf[term.os]=null;try{localStorage.removeItem(STORE+'-term-'+term.os);}catch(_){}termLoad(term.os);}
+  return true;
+ }
+ function load(){try{const s=localStorage.getItem(STORE);if(s)applySnapshot(s);}catch(_){}}
+ function refreshConsole(){
+  renderProfiles();renderWorkloads();
+  if(!$('keyScreen').hidden&&state.key){const p=state.profiles.find(pr=>pr.id===state.key.profileId);if(p)$('keyRemaining').textContent=p.limited?String(Math.max(0,p.maxUses-state.key.uses)):'Unlimited';}
+  if(!$('workloadDetailScreen').hidden&&curWorkload&&!state.workloads.some(w=>w.os===curWorkload.os))openWorkloads();
+ }
+ function incoming(s){if(applySnapshot(s)&&MODE==='console')refreshConsole();}
+ window.addEventListener('storage',e=>{if(e.key===STORE&&e.newValue)incoming(e.newValue);});
+ if(bc)bc.onmessage=e=>incoming(e.data);
+ $('phReset').addEventListener('click',()=>$('resetDialog').showModal());
+ $('unpairWorkload').addEventListener('click',()=>{if(!curWorkload)return;const h=curWorkload.hostname;state.workloads=state.workloads.filter(w=>w.os!==curWorkload.os);curWorkload=null;save();openWorkloads();message(h+' has been unpaired.');});
+ load();
+ if(MODE!=='console'){
+  document.body.classList.add('term-page');document.title=osNames[MODE];
+  try{const b=localStorage.getItem(STORE+'-term-'+MODE);if(b)term.buf[MODE]=b;}catch(_){}
+  term.os='';openTerm(MODE);
+ }else{save(false);}
+ renderProfiles();renderWorkloads();syncForm();
+})();
+</script>
+</body>
+</html>

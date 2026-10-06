@@ -1,0 +1,28 @@
+slug: 26x-system-pce-full
+id: ufyzucbciijx
+title: '! 26.x System PCE Full'
+description: |-
+  Lab Name: 26.x System PCE Full
+
+  Outcome:
+  In this lab you will successfully pair Linux, Windows and AIX workloads
+  with the PCE using a pairing profile and a pairing key.
+icon: ./assets/logo.png
+tags:
+- ilt
+owner: illumio-training
+developers:
+- nathan.mitchell@illumio.com
+show_timer: true
+idle_timeout: 1800
+timelimit: 3600
+lab_config:
+  extend_ttl: 600
+  sidebar_enabled: true
+  feedback_recap_enabled: true
+  feedback_tab_enabled: false
+  loadingMessages: true
+  override_challenge_layout: false
+  hideStopButton: false
+checksum: "14718856466292961493"
+enhanced_loading: false
