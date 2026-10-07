@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# Passes when the Environment label group non-production contains exactly Development, Staging and QA.
+# The Console page reports its objects to the lab web server
+# (/opt/pce-lab/server.py), which writes /root/pce-lab-state.json.
+
+STATE=/root/pce-lab-state.json
+
+result=$(python3 - "$STATE" <<'PY'
+import json, sys
+try:
+    state = json.load(open(sys.argv[1]))
+except Exception:
+    state = {}
+
+def fail(msg):
+    print(msg)
+    sys.exit(1)
+
+def same(a, b):
+    return str(a).strip().lower() == str(b).strip().lower()
+groups = state.get('labelGroups', [])
+group = next((g for g in groups if same(g.get('name'), 'non-production')), None)
+if not group:
+    fail('No Label Group named "non-production" was found. Go to Label Groups and select Add.')
+if group.get('key') != 'env':
+    fail('The Label Group "non-production" must be an Environment Label Group. Remove it and add it again with Type Environment.')
+members = sorted(str(m).lower() for m in group.get('members', []))
+want = ['development', 'qa', 'staging']
+missing = [m for m in ['Development', 'Staging', 'QA'] if m.lower() not in members]
+if missing:
+    fail('The Label Group "non-production" is missing: %s. Edit the group and select the missing labels.' % ', '.join(missing))
+extra = [m for m in group.get('members', []) if str(m).lower() not in want]
+if extra:
+    fail('The Label Group "non-production" must contain only Development, Staging and QA. Remove: %s.' % ', '.join(extra))
+print('The Label Group "non-production" contains Development, Staging and QA.')
+PY
+)
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

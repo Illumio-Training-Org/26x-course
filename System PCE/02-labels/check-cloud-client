@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# Passes when the labels Application=inventory, Environment=QA and Location=de exist.
+# The Console page reports its objects to the lab web server
+# (/opt/pce-lab/server.py), which writes /root/pce-lab-state.json.
+
+STATE=/root/pce-lab-state.json
+
+result=$(python3 - "$STATE" <<'PY'
+import json, sys
+try:
+    state = json.load(open(sys.argv[1]))
+except Exception:
+    state = {}
+
+def fail(msg):
+    print(msg)
+    sys.exit(1)
+
+def same(a, b):
+    return str(a).strip().lower() == str(b).strip().lower()
+labels = state.get('labels', [])
+want = [('app', 'Application', 'inventory'), ('env', 'Environment', 'QA'), ('loc', 'Location', 'de')]
+for key, type_name, value in want:
+    if any(same(l.get('value'), value) and l.get('key') == key for l in labels):
+        continue
+    other = next((l for l in labels if same(l.get('value'), value)), None)
+    if other:
+        fail('A label named "%s" exists but it is not an %s label. Remove it and add it again with Type %s.' % (value, type_name, type_name))
+    fail('No %s label named "%s" was found. Go to Labels and select Add.' % (type_name, value))
+print('The labels inventory (Application), QA (Environment) and de (Location) exist.')
+PY
+)
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

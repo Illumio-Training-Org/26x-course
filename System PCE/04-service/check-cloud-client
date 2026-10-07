@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Passes when the service Elasticsearch has exactly 9200 TCP and 9300 TCP.
+# The Console page reports its objects to the lab web server
+# (/opt/pce-lab/server.py), which writes /root/pce-lab-state.json.
+
+STATE=/root/pce-lab-state.json
+
+result=$(python3 - "$STATE" <<'PY'
+import json, sys
+try:
+    state = json.load(open(sys.argv[1]))
+except Exception:
+    state = {}
+
+def fail(msg):
+    print(msg)
+    sys.exit(1)
+
+def same(a, b):
+    return str(a).strip().lower() == str(b).strip().lower()
+services = state.get('services', [])
+svc = next((s for s in services if same(s.get('name'), 'Elasticsearch')), None)
+if not svc:
+    fail('No Service named "Elasticsearch" was found. Go to Services and select Add.')
+ports = sorted(p.strip().upper() for p in str(svc.get('ports', '')).split(',') if p.strip())
+if ports != ['9200 TCP', '9300 TCP']:
+    fail('The Service "Elasticsearch" must have exactly 9200 TCP and 9300 TCP. It currently has: %s. Edit the Service and correct the ports.' % (', '.join(ports) or 'no ports'))
+print('The Service "Elasticsearch" has 9200 TCP and 9300 TCP.')
+PY
+)
+status=$?
+if [ "$status" -ne 0 ]; then
+  fail-message "$result"
+  exit 1
+fi
+echo "$result"
+exit 0

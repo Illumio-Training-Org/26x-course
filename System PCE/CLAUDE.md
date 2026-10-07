@@ -64,10 +64,16 @@ The lab is built in three stages:
 - **Container:** one `cloud-client` container (512MB). `server/server.py` serves the pages on **port 8080** and accepts `POST /api/state`, which writes `/root/pce-lab-state.json` for the check scripts.
 - **One HTML page, four tabs:** the same page is served as `index.html`, `linux.html`, `windows.html` and `aix.html`, and picks Console or terminal mode from its file name. The tabs share state through localStorage and BroadcastChannel (key `illumio-pce-lab-v1`).
 - **Setup script:** `build-setup.sh` base64-embeds the page and the server into `track_scripts/setup-cloud-client`. Never edit the generated script by hand.
-- **Challenges:**
+- **Challenges (mock Foundation exam, started 2026-10-07):** Nathan wants this lab to become a **mock exam** to take before the real Foundation Exam. The plan is 10 questions on labels, policy objects and policy, at a similar level to Foundation but with different questions, and **no AWS onboarding**. The first 5 are built for review:
   - 01 Pair a Workload. Its check needs linux, windows and aix all paired.
-  - 02 Writing Policy. Its check is `RULE_TYPE=deny`: a **Deny Rule** from Development to Production on All Services (Nathan, 2026-10-06).
-  - 03 Lab Complete.
+  - 02 Label Creation: Application `inventory`, Environment `QA`, Location `de`.
+  - 03 Label Group Creation: Environment group `non-production` with exactly Development, Staging and QA.
+  - 04 Service Definition: `Elasticsearch` with exactly 9200 TCP and 9300 TCP.
+  - 05 Writing Policy (**policy last**, Nathan). Its check is `RULE_TYPE=deny`: a **Deny Rule** from Development to Production on All Services.
+  - 06 Lab Complete.
+  - The new questions are exam-style task statements; 01 and 05 are still the original step-by-step text.
+  - Checks read `/root/pce-lab-state.json`. The page now reports `labels`, `labelGroups` (members as label names) and `services` as well as workloads and policies.
+  - End-to-end test: Playwright script in the scratchpad (`mock/e2e.mjs`), driving the real UI against `server/server.py`.
 - **No "simulation" wording** in anything learners see: tabs, task text, description or teaser.
 - **Linux pairing output** replays a real VEN 24.2.20 log. The Windows and AIX output, the error messages and `illumio-ven-ctl status` are approximations.
 

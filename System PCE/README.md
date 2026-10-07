@@ -4,7 +4,20 @@ An offline Illumio PCE Console generated from a capture of the real Console (`ca
 working Pairing, Workloads, Policies, Labels, Label Groups, Services and IP Lists. The plan is in
 `docs/26x System PCE Full - Plan.docx`.
 
-A single-challenge Instruqt track (`26x-system-pce`) with four tabs:
+It's becoming a **mock Foundation exam**: practice questions to take before the real Foundation Exam, checked against the offline Console instead of a real PCE. The questions so far:
+
+| # | Challenge | What the check needs |
+|---|---|---|
+| 1 | Workload Pairing | Linux, Windows and AIX all paired |
+| 2 | Label Creation | Labels `inventory` (Application), `QA` (Environment), `de` (Location) |
+| 3 | Label Group Creation | Environment group `non-production` with exactly Development, Staging and QA |
+| 4 | Service Definition | Service `Elasticsearch` with exactly 9200 TCP and 9300 TCP |
+| 5 | Writing Policy | Policy `Block Development to Production` with a Deny Rule from Development to Production on All Services |
+| 6 | Lab Complete | none |
+
+The Console reports its workloads, policies, labels, label groups and services to the lab web server, which saves them to `/root/pce-lab-state.json` for the check scripts.
+
+An Instruqt track (`26x-system-pce`) with four tabs:
 **Illumio Console | Linux | Windows | AIX**. The Console is an offline
 recreation of the Pairing Profiles workflow; each OS tab is a terminal where
 the learner pastes the pairing script copied from the Console. All four tabs
@@ -16,7 +29,7 @@ simulation. Reset lab is on the Console's Settings page; Unpair works on a
 workload's page.
 
 - No magic link, Terraform, secrets or real PCE. One small `cloud-client`
-  container serves the page on port 80 through a website (service) tab.
+  container serves the page on port 8080 through a website (service) tab.
 - The page source is `src/ (built into html/index.html)`. It is
   embedded in `track_scripts/setup-cloud-client`, so the lab has no
   download at start-up.

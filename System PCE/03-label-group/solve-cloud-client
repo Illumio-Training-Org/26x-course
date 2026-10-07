@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Used by `instruqt track test`: records the expected objects so the check
+# passes, keeping anything already recorded.
+python3 - <<'PY'
+import json
+f = '/root/pce-lab-state.json'
+try:
+    d = json.load(open(f))
+except Exception:
+    d = {'workloads': []}
+groups = [g for g in d.get('labelGroups', []) if g.get('name', '').lower() != 'non-production']
+d['labelGroups'] = groups + [{'name': 'non-production', 'key': 'env', 'members': ['Development', 'Staging', 'QA']}]
+json.dump(d, open(f, 'w'))
+PY

@@ -2,8 +2,8 @@
 """Web server for ! 26.x System PCE (runs on cloud-client).
 
 Serves the four tab pages (index/linux/windows/aix.html) from ROOT and
-accepts POST /api/state from the page with the list of paired workloads
-and a summary of the policies, saved to STATE for the check scripts.
+accepts POST /api/state from the page with the list of paired workloads,
+a summary of the policies, and the labels, label groups and services, saved to STATE for the check scripts.
 """
 import http.server
 import json
@@ -37,12 +37,16 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             policies = data.get('policies', [])
             if not isinstance(policies, list):
                 policies = []
+            objects = {}
+            for k in ('labels', 'labelGroups', 'services'):
+                v = data.get(k, [])
+                objects[k] = v[:500] if isinstance(v, list) else []
         except (ValueError, AttributeError, TypeError):
             self.send_error(400)
             return
         tmp = STATE + '.tmp'
         with open(tmp, 'w') as f:
-            json.dump({'workloads': paired, 'policies': policies[:100]}, f)
+            json.dump(dict({'workloads': paired, 'policies': policies[:100]}, **objects), f)
         os.replace(tmp, STATE)
         self.send_response(204)
         self.end_headers()
