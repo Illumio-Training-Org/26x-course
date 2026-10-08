@@ -1,5 +1,5 @@
  // ---- VEN output. Kept in one place so it can be swapped for a captured real pairing log. ----
- const INSTALL_PAUSE_MS=15000; // real "Installing Illumio Packages" pause is ~30s
+ const INSTALL_PAUSE_MS=5000; // real "Installing Illumio Packages" pause is ~30s
  function dots(label,n,ms){return {dots:true,label,n,ms};}
  function venSuccess(os,p){
   const v=venVersion(p);
