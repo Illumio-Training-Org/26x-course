@@ -16,8 +16,7 @@ enhanced_loading: null
 Please notify your instructor you have finished before closing the
 lab, so your results can be collected.
 
-Please take a moment to complete our survey:
-[Take the survey](https://forms.office.com/r/9whfE2CDwq)
+[Please complete your course survey](https://forms.cloud.microsoft/r/TcwFAeGT92)
 
 Clicking **NEXT** below will permanently end this session.
 

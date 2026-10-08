@@ -16,8 +16,7 @@ enhanced_loading: null
 Avisa a tu instructor de que has terminado antes de cerrar el
 laboratorio, para que se puedan recoger tus resultados.
 
-Dedica un momento a completar nuestra encuesta:
-[Responder a la encuesta](https://forms.office.com/r/9whfE2CDwq)
+[Completa la encuesta del curso](https://forms.cloud.microsoft/r/TcwFAeGT92)
 
 Al hacer clic en **NEXT** a continuación, esta sesión finalizará de forma permanente.
 
