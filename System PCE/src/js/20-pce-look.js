@@ -17,11 +17,8 @@
   if(tip){tip.textContent=ok?'Copied':'Press Ctrl+C or ⌘C to copy';tip.classList.add('show');clearTimeout(tip._t);tip._t=setTimeout(()=>{tip.classList.remove('show');tip.textContent='Copy to clipboard';},1800);}
  }
  ['sampleAix','sampleLinux','sampleWindows','sampleMac','fakeKey'].forEach(id=>$(id).addEventListener('click',()=>copyArea(id)));
- const dlName={fakeKey:'pairing_key.txt',sampleAix:'pair_aix.sh',sampleLinux:'pair_linux.sh',sampleWindows:'pair_windows.ps1',sampleMac:'pair_macos.sh'};
- document.querySelectorAll('.code-header .dl').forEach(b=>b.addEventListener('click',()=>{
-  const id=b.dataset.dl,text=$(id).value;if(!text)return;
-  const url=URL.createObjectURL(new Blob([text+'\n'],{type:'text/plain'}));const a=document.createElement('a');a.href=url;a.download=dlName[id]||'download.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
- }));
+ // The header icon copies to the clipboard (a file download is no use inside the lab).
+ document.querySelectorAll('.code-header .dl').forEach(b=>b.addEventListener('click',()=>copyArea(b.dataset.dl)));
  function renderPairingState(p){
   $('profileBanner').classList.toggle('stopped',!!p.stopped);
   $('pairingState').textContent=p.stopped?'Stopped:':'Running:';
