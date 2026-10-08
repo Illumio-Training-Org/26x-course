@@ -39,12 +39,12 @@ def resolve_labels(entries):
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-ringfenceordering'), None)
 if not rs:
-    print('Policy \"Task6-RingfenceOrdering\" not found')
+    print('No se encontró la Policy \"Task6-RingfenceOrdering\"')
     sys.exit(1)
 
 for scope in rs.get('scopes', []):
     if scope:
-        print('Task6-RingfenceOrdering should not use a Scope - build the rule with Application=ordering, Environment=Development, Location=ca on both source and destination instead')
+        print('Task6-RingfenceOrdering no debe usar un Scope - crea la regla con Application=ordering, Environment=Development, Location=ca tanto en el Source como en el Destination')
         sys.exit(1)
 
 expected = {'app': 'ordering', 'env': 'development', 'loc': 'ca'}
@@ -55,10 +55,10 @@ def label_problems(side_name, entries):
     for key, want in expected.items():
         got = found.get(key)
         if got != want:
-            problems.append(side_name + ' ' + key + ' should be ' + want + ', found ' + (got or 'missing'))
+            problems.append(side_name + ' ' + key + ' debería ser ' + want + ', se encontró ' + (got or 'ninguno'))
     extra = set(found) - set(expected)
     if extra:
-        problems.append(side_name + ' has unexpected extra label(s): ' + ', '.join(sorted(extra)))
+        problems.append(side_name + ' tiene label(s) adicional(es) inesperada(s): ' + ', '.join(sorted(extra)))
     return problems
 
 def is_all_services(ingress_services):
@@ -78,20 +78,20 @@ def is_all_services(ingress_services):
 
 enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
 if len(enabled_rules) != 1:
-    print('Task6-RingfenceOrdering should have exactly one enabled allow rule, found ' + str(len(enabled_rules)))
+    print('Task6-RingfenceOrdering debe tener exactamente una regla allow habilitada, se encontraron ' + str(len(enabled_rules)))
     sys.exit(1)
 
 rule = enabled_rules[0]
-problems = label_problems('source', rule.get('consumers', [])) + label_problems('destination', rule.get('providers', []))
+problems = label_problems('Source', rule.get('consumers', [])) + label_problems('Destination', rule.get('providers', []))
 svc_ok = is_all_services(rule.get('ingress_services'))
 if not svc_ok:
-    problems.append('service should be All Services, not restricted to a specific service')
+    problems.append('el service debe ser All Services, sin restringirlo a un service concreto')
 
 if not problems:
-    print('Task6-RingfenceOrdering ringfences the ordering application (Development, ca) correctly')
+    print('Task6-RingfenceOrdering aplica ringfencing a la aplicación ordering (Development, ca) correctamente')
     sys.exit(0)
 
-print('Task6-RingfenceOrdering has a rule but: ' + '; '.join(problems))
+print('Task6-RingfenceOrdering tiene una regla, pero: ' + '; '.join(problems))
 sys.exit(1)
 ")
 status=$?

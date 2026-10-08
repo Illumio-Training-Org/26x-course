@@ -5,12 +5,12 @@
 #
 # Scopes aren't taught in this course, so this task does NOT accept a
 # Scope-based ruleset - it requires two plain rules: the intra-Payment
-# ringfence (Application=Payment, Location=LDN repeated on both source
+# ringfence (Application=payment, Location=ldn repeated on both source
 # and destination) and the inbound Ordering->Payment/LDN rule on
 # TCP/443 (HTTPS).
 #
 # Fixed 2026-09-11: the inbound rule's source only checked that
-# Application=Ordering was present (extras allowed) and its
+# Application=ordering was present (extras allowed) and its
 # destination used a subset check (extras allowed there too) -
 # live-caught by Nathan, who wants no other labels on either side.
 # Both now require an exact label match, same as the ringfence rule
@@ -34,12 +34,12 @@ def get(path):
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task9-ringfencepayment'), None)
 if not rs:
-    print('Policy \"Task9-RingfencePayment\" not found')
+    print('No se encontró la Policy \"Task9-RingfencePayment\"')
     sys.exit(1)
 
 for scope in rs.get('scopes', []):
     if scope:
-        print('Task9-RingfencePayment should not use a Scope - build the ringfence rule with Application=Payment, Location=LDN on both source and destination instead')
+        print('Task9-RingfencePayment no debe usar un Scope - crea la regla de ringfencing con Application=payment, Location=ldn tanto en el Source como en el Destination')
         sys.exit(1)
 
 def resolve_labels(entries):
@@ -78,7 +78,7 @@ def has_tcp_443(ingress_services):
 
 enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
 if len(enabled_rules) != 2:
-    print('Task9-RingfencePayment should have exactly two enabled rules (the ringfence allow rule, and the inbound Ordering->Payment rule), found ' + str(len(enabled_rules)))
+    print('Task9-RingfencePayment debe tener exactamente dos reglas habilitadas (la regla allow de ringfencing y la regla entrante ordering->payment), se encontraron ' + str(len(enabled_rules)))
     sys.exit(1)
 
 ringfence_rule = next((r for r in enabled_rules if is_all_services(r.get('ingress_services'))), None)
@@ -87,30 +87,30 @@ inbound_rule = next((r for r in enabled_rules if has_tcp_443(r.get('ingress_serv
 reasons = []
 
 if not ringfence_rule:
-    reasons.append('missing the intra-Payment ringfence rule for All Services')
+    reasons.append('falta la regla de ringfencing interna de payment para All Services')
 else:
     src_ok = resolve_labels(ringfence_rule.get('consumers', [])) == expected
     dst_ok = resolve_labels(ringfence_rule.get('providers', [])) == expected
     if not src_ok:
-        reasons.append('ringfence rule source is wrong - should be Application=Payment, Location=LDN')
+        reasons.append('el Source de la regla de ringfencing es incorrecto - debe ser Application=payment, Location=ldn')
     if not dst_ok:
-        reasons.append('ringfence rule destination is wrong - should be Application=Payment, Location=LDN')
+        reasons.append('el Destination de la regla de ringfencing es incorrecto - debe ser Application=payment, Location=ldn')
 
 if not inbound_rule:
-    reasons.append('missing the inbound allow rule for Ordering -> Payment on TCP/443 (HTTPS)')
+    reasons.append('falta la regla allow entrante ordering -> payment en TCP/443 (HTTPS)')
 else:
     consumer_labels = resolve_labels(inbound_rule.get('consumers', []))
     if consumer_labels != {('app', 'ordering')}:
-        reasons.append('inbound rule source is wrong - should be exactly Application=Ordering, no other labels, found ' + str(sorted(consumer_labels)))
+        reasons.append('el Source de la regla entrante es incorrecto - debe ser exactamente Application=ordering, sin otras labels, se encontró ' + str(sorted(consumer_labels)))
     provider_labels = resolve_labels(inbound_rule.get('providers', []))
     if provider_labels != expected:
-        reasons.append('inbound rule destination is wrong - should be exactly Application=Payment, Location=LDN, no other labels, found ' + str(sorted(provider_labels)))
+        reasons.append('el Destination de la regla entrante es incorrecto - debe ser exactamente Application=payment, Location=ldn, sin otras labels, se encontró ' + str(sorted(provider_labels)))
 
 if reasons:
     print('; '.join(reasons))
     sys.exit(1)
 
-print('Task9-RingfencePayment ringfences Payment/LDN and allows inbound HTTPS from Ordering')
+print('Task9-RingfencePayment aplica ringfencing a payment/ldn y permite HTTPS entrante desde ordering')
 sys.exit(0)
 ")
 status=$?

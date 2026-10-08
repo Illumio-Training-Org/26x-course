@@ -15,6 +15,12 @@ apt-get update -y
 apt-get install --only-upgrade -y curl git
 
 
+# Command echoing (set -x) is off from here until the tile is rendered:
+# this section handles the learner's API secrets and magic link (a
+# login URL for their PCE org), and xtrace would print them all into
+# the Instruqt track logs. Values stay available via agent variables.
+set +x
+
 # ---------------------------------------
 # Sanitize AUTOACCOUNT_* values
 # ---------------------------------------
@@ -56,6 +62,16 @@ done
   done
 } > /root/.autoaccount_env
 
+# Deliberately NOT exporting CRYSTAL_API_KEY into .bashrc the way the
+# AUTOACCOUNT_* values above are. Unlike those (each scoped to one
+# learner's own single-use, ephemeral PCE org), CRYSTAL_API_KEY is a
+# single team-level secret shared across every learner session - if
+# it were exposed to an interactive shell, any learner could extract
+# it and get full account-wide Crystal access (list/create/stop/
+# delete any deployment for the whole team) from outside the sandbox
+# entirely. It stays available only within this script's own process,
+# which is all it's actually needed for.
+
 # ---------------------------------------
 # Parse PCE FQDN
 # ---------------------------------------
@@ -84,8 +100,7 @@ agent variable set SASECRET "$AUTOACCOUNT_SAAPIKEY_SECRET"
 # ---------------------------------------
 MAGIC_LINK=$(echo "${AUTOACCOUNT_MAGICLINK}" | tr -d '{}[]"')
 
-echo "Generated MAGIC LINK:"
-echo "$MAGIC_LINK"
+echo "Magic link generated (not printed, to keep it out of the logs)"
 
 # ---------------------------------------
 # Save MAGIC LINK (Instruqt state)
@@ -102,96 +117,148 @@ gomplate -f ~/illumio-instruqt-terraform-template/index.html.tmpl -o /var/www/ht
 # template repo keeps that file at its root, so the tile showed the alt text "icon".
 mkdir -p /var/www/html/assets
 cp ~/illumio-instruqt-terraform-template/Illumio_Glyph_Orange_RGB.png /var/www/html/assets/
+set -x
 date
 
 # ---------------------------------------
-# VENSIM TRAFFIC GENERATION
+# PROJECT CRYSTAL TRAFFIC GENERATION
 # ---------------------------------------
-STARTUP_REPO_DIR=~/manual-instruqt-startup
-VENSIM_FILES_DIR=~/vensim_files
+# Replaces vensim for this lab variant. Project Crystal creates a new
+# deployment via its own REST API (using CRYSTAL_API_KEY, a team-level
+# Instruqt secret - not tenant-specific), binds it live to THIS
+# sandbox's own freshly-provisioned PCE org (the AUTOACCOUNT_* values
+# below), applies the built-in "default" vensim-style template, and
+# starts it. See github.com/justinvid/pc-connector for the module
+# source - main.tf does 4 API calls: POST /api/deployments, PUT
+# .../config, POST .../vensim-template, POST .../start.
 
-git clone https://github.com/Illumio-Training-Org/manual-instruqt-startup "$STARTUP_REPO_DIR"
-git clone https://github.com/Illumio-Training-Org/vensim_files.git "$VENSIM_FILES_DIR"
+# Install Terraform
+# apt-key is removed on this image's Debian version (trixie) - use the
+# modern keyring-file method instead of the colleague's original
+# apt-key add call.
+curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/hashicorp.list
+apt-get update -y
+apt-get -y install terraform
 
-mkdir -p "$STARTUP_REPO_DIR/vensim-templates"
-rm -rf "$STARTUP_REPO_DIR/vensim-templates/standard-demo"
-ln -s "$VENSIM_FILES_DIR/files" "$STARTUP_REPO_DIR/vensim-templates/standard-demo"
+# Command echoing (set -x) is switched off for the whole Crystal block
+# below, because every curl here carries CRYSTAL_API_KEY - a shared,
+# team-level secret - and xtrace would print it into the Instruqt
+# track logs. Progress is still logged via the echo lines. Switched
+# back on once the deployment is running.
+set +x
+echo "--- Crystal block start (command echo off to keep the API key out of logs) ---"
 
-cp -f "$VENSIM_FILES_DIR/workloader" "$STARTUP_REPO_DIR/workloader"
-cp -f "$VENSIM_FILES_DIR/vensim" "$STARTUP_REPO_DIR/vensim"
-chmod +x "$STARTUP_REPO_DIR/workloader" "$STARTUP_REPO_DIR/vensim" \
-         "$STARTUP_REPO_DIR/vensimscheduler.sh"
+CRYSTAL_BASE_URL="https://crystal.illumio.com"
+TEMPLATE_NAME="default"
 
-# Call newstartup.sh directly (unmodified) rather than maintaining our
-# own copy of its steps — deliberately matches uc-orgs-5-vs's own
-# behavior now, deletes included: any pre-existing pairing profiles/
-# labels/services on the org get wiped before vensim's own content goes
-# in, so the org ends up with vensim's content only, not vensim's
-# content layered on top of the platform's defaults. Calling the file
-# directly (rather than hand-copying its steps) also means we can't
-# silently drift from upstream if it changes later. newstartup.sh
-# already signals /tmp/startup.done itself at its own end; we wait for
-# it to finish (no backgrounding here) before handing off to
-# vensimscheduler.sh, avoiding the race in uc-orgs-5-vs's own script
-# (which launches newstartup.sh and vensimscheduler.sh concurrently and
-# touches /tmp/startup.done itself immediately, before newstartup.sh has
-# actually finished).
-nohup bash -c "
-  cd \"$STARTUP_REPO_DIR\"
+# Diagnostics: confirm this sandbox container can actually reach
+# Crystal before handing off to terraform, since terraform's own
+# error on a network-level failure is an opaque "context deadline
+# exceeded" with no detail on which stage (DNS/TCP/TLS) failed.
+echo "--- Crystal reachability diagnostics ---"
+getent hosts crystal.illumio.com || echo "DNS resolution FAILED for crystal.illumio.com"
+# -w timings instead of -v: -v prints request headers, including the
+# API key. Zero connect/tls time shows which stage failed.
+curl -sS --connect-timeout 5 -m 8 -o /dev/null \
+  -w "HTTP %{http_code} dns=%{time_namelookup}s connect=%{time_connect}s tls=%{time_appconnect}s\n" \
+  -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" || echo "curl exit code: $?"
+echo "--- end diagnostics ---"
 
-  bash \"$STARTUP_REPO_DIR/newstartup.sh\" -f \"$pceFqdn\" -P \"$pcePort\" \
-    -u \"api_${AUTOACCOUNT_APIKEY_ID}\" -s \"$AUTOACCOUNT_APIKEY_SECRET\" \
-    -o \"$AUTOACCOUNT_ORG_ID\"
+# Deployment naming: SelectExam_<DDMM>_<PCE org ID>_<learner>, e.g.
+# SelectExam_3009_4140393_keith. The org ID is unique per session and
+# is the same number the learner sees in their Console and the Advanced
+# section, so an instructor can match a learner's lab to its Crystal
+# deployment directly. <learner> is the part of the learner's email
+# before the @ (Instruqt only passes it with the learner's consent),
+# else the name they signed up with. Team members starting the track
+# directly from the Instruqt UI get neither (seen 2026-10-01), so their
+# INSTRUQT_USER_ID is looked up in the team list below; an ID not in the
+# list is used as-is, and with no ID at all it's "team". Forename only
+# (see below), lower-case letters and digits, max 30 characters.
+# Team list from Instruqt (illumio-training team members, 2026-10-01) -
+# add new team members here (name = their forename, lower case).
+team_member_name() {
+  case "$1" in
+    6cj4yyx4rpcs) echo nathan ;;
+    hzr0el9p4xq1) echo pritesh ;;
+    36UKnCyZVsgasTEsujZw0yVvHr13) echo james ;;
+    ltp9hziadn3q) echo keith ;;
+    elqoiercnof4) echo steve ;;
+    0ve5nbttzjpe) echo adrianna ;;
+    1y8ce1p7yzw6) echo luca ;;
+    yi944naccdvp) echo michael ;;
+    I91sO8Qu7NShpx19Q0docpUbWcr1) echo harpreet ;;
+    rqjmagbplzhh) echo resourcetraining ;;
+  esac
+}
+if [ -n "${INSTRUQT_USER_EMAIL%%@*}" ]; then
+  LEARNER="${INSTRUQT_USER_EMAIL%%@*}"; LEARNER_SOURCE="email"
+elif [ -n "$INSTRUQT_USER_NAME" ]; then
+  LEARNER="$INSTRUQT_USER_NAME"; LEARNER_SOURCE="name"
+elif [ -n "$(team_member_name "$INSTRUQT_USER_ID")" ]; then
+  LEARNER="$(team_member_name "$INSTRUQT_USER_ID")"; LEARNER_SOURCE="team list"
+elif [ -n "$INSTRUQT_USER_ID" ]; then
+  LEARNER="$INSTRUQT_USER_ID"; LEARNER_SOURCE="user ID (not in team list)"
+else
+  LEARNER="team"; LEARNER_SOURCE="none (no user details from Instruqt)"
+fi
+echo "Deployment name learner part from: $LEARNER_SOURCE"
+# Forename only: everything before the first dot, space, underscore,
+# dash or plus (jane.smith@... -> jane, "Jane Smith" -> jane), lower case.
+LEARNER="${LEARNER%%[. _+-]*}"
+LEARNER="$(printf '%s' "$LEARNER" | tr -cd 'A-Za-z0-9' | tr 'A-Z' 'a-z' | cut -c1-30)"
+DEPLOYMENT_NAME="SelectExam_$(date -u +%d%m)_${AUTOACCOUNT_ORG_ID}${LEARNER:+_$LEARNER}"
+echo "Crystal deployment name: $DEPLOYMENT_NAME"
 
-  exec bash \"$STARTUP_REPO_DIR/vensimscheduler.sh\"
-" > /var/log/vensim-startup.log 2>&1 < /dev/null &
+cd ~
+git clone https://github.com/justinvid/pc-connector.git
+cd ~/pc-connector/
+# terraform init downloads the terracurl provider from github.com, which
+# has returned one-off HTTP 500s here (twice on 2026-09-30, each failing
+# the whole lab setup) - retry a few times before giving up.
+for i in 1 2 3; do
+  terraform init && break
+  if [ "$i" = "3" ]; then echo "terraform init failed 3 times - giving up"; exit 1; fi
+  echo "terraform init failed (attempt $i) - retrying in 15s"
+  sleep 15
+done
+terraform apply -auto-approve -input=false \
+  -var "crystal_api_key=$CRYSTAL_API_KEY" \
+  -var "crystal_base_url=$CRYSTAL_BASE_URL" \
+  -var "pce_api_user=api_${AUTOACCOUNT_APIKEY_ID}" \
+  -var "pce_api_secret=$AUTOACCOUNT_APIKEY_SECRET" \
+  -var "org_id=$AUTOACCOUNT_ORG_ID" \
+  -var "name=$DEPLOYMENT_NAME" \
+  -var "template_name=$TEMPLATE_NAME" \
+  -var "pce_fqdn=$pceFqdn"
 
-# ---------------------------------------
-# DISABLE DEFAULT (NON-TASK) POLICIES - newstartup.sh seeds a library of
-# demo rulesets (numbered "1. ..." through "15. ...", plus "Quarantine
-# Policy: Strict") that aren't part of any task in this exam. Left
-# enabled, they can interfere with (or mask problems in) the policies
-# learners actually build. Waits for newstartup.sh's own completion
-# signal (/tmp/startup.done, already relied on above) before running,
-# since that's what seeds this content; only disables rulesets whose
-# name does NOT start with "Task" (case-insensitive), so every
-# exam-created policy - whenever in the exam it gets created - is left
-# untouched.
-# ---------------------------------------
-cat > /root/disable-default-policies.py <<'PYEOF'
-import json, os, subprocess
+CRYSTAL_DEPLOYMENT_ID="$(terraform output -raw deployment_id)"
+agent variable set CRYSTALDEPLOYMENT "$CRYSTAL_DEPLOYMENT_ID"
+agent variable set CRYSTALBASEURL "$CRYSTAL_BASE_URL"
 
-fqdn_port = os.environ['AUTOACCOUNT_PCE_FQDN']
-org_id = os.environ['AUTOACCOUNT_ORG_ID']
-auth = 'api_' + os.environ['AUTOACCOUNT_APIKEY_ID'] + ':' + os.environ['AUTOACCOUNT_APIKEY_SECRET']
-base = 'https://' + fqdn_port + '/api/v2'
+# The module's own start_request fires immediately after
+# template_request with no delay, but the CSV/object import behind
+# the template takes a few seconds to actually finish on Crystal's
+# backend - calling /start that fast returns 200 but silently doesn't
+# launch anything (confirmed live: same call worked once retried a
+# few minutes later). Poll status and retry /start until it's
+# actually running, rather than trusting the first 200.
+for i in 1 2 3 4 5 6; do
+  status="$(curl -s -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID" | python3 -c "import json,sys; print(json.load(sys.stdin).get('status'))")"
+  if [ "$status" = "running" ]; then
+    echo "Crystal deployment is running (attempt $i)"
+    break
+  fi
+  echo "Crystal deployment status is '$status' (attempt $i) - retrying /start"
+  curl -s -o /dev/null -X POST -H "X-API-Key: $CRYSTAL_API_KEY" -H "Content-Type: application/json" \
+    -d '{"interval":"5m","auto_attacks":false}' \
+    "$CRYSTAL_BASE_URL/api/deployments/$CRYSTAL_DEPLOYMENT_ID/start"
+  sleep 10
+done
 
-def call(method, path, body=None):
-    cmd = ['curl', '-s', '-u', auth, '-X', method, base + path]
-    if body is not None:
-        cmd += ['-H', 'Content-Type: application/json', '-d', json.dumps(body)]
-    out = subprocess.run(cmd, capture_output=True, text=True).stdout
-    try:
-        return json.loads(out)
-    except Exception:
-        return out
-
-rulesets = call('GET', '/orgs/' + org_id + '/sec_policy/draft/rule_sets?max_results=1000') or []
-for rs in rulesets:
-    name = rs.get('name') or ''
-    if name.lower().startswith('task'):
-        continue
-    href = rs.get('href')
-    if not href:
-        continue
-    call('PUT', href, {'enabled': False})
-    print('Disabled default policy:', name)
-PYEOF
-
-nohup bash -c '
-  while [ ! -f /tmp/startup.done ]; do sleep 5; done
-  python3 /root/disable-default-policies.py
-' > /var/log/disable-default-policies.log 2>&1 < /dev/null &
+echo "--- Crystal block end ---"
+set -x
 
 # ---------------------------------------
 # AWS BUILD (Terraform) + AUTOMATED CLOUDSECURE ONBOARDING - runs in
@@ -308,5 +375,75 @@ nohup bash -c "
   date
 
 " > /var/log/aws-onboard-startup.log 2>&1 < /dev/null &
+
+# ---------------------------------------
+# EXAM START STATE - runs once Crystal's own object import has finished
+# ---------------------------------------
+# Crystal imports labels/rulesets/user groups asynchronously after /start
+# (a few minutes, and the ruleset import can briefly 406 before
+# self-recovering), so this waits until the org looks fully built -
+# >=100 labels and a ruleset count that has stopped growing - checking
+# every 20s for up to 30 min,
+# then:
+#   Disables every default (non-Task) ruleset in draft so the demo
+#   policy library can't interfere with the policies learners build.
+#   Rulesets whose name starts with "Task" are left alone. Re-checked
+#   5 and 10 min later for any late-arriving rulesets.
+# Backgrounded so setup (and the learner's first challenge) isn't held
+# up; log at /var/log/exam-start-state.log.
+cat > /root/exam-start-state.py <<'PYEOF'
+import json, os, subprocess, time
+fqdn_port = os.environ['AUTOACCOUNT_PCE_FQDN']
+org_id = os.environ['AUTOACCOUNT_ORG_ID']
+auth = 'api_' + os.environ['AUTOACCOUNT_APIKEY_ID'] + ':' + os.environ['AUTOACCOUNT_APIKEY_SECRET']
+base = 'https://' + fqdn_port + '/api/v2'
+org = '/orgs/' + org_id
+
+def call(method, path, body=None):
+    cmd = ['curl', '-s', '-m', '60', '-u', auth, '-X', method, base + path]
+    if body is not None:
+        cmd += ['-H', 'Content-Type: application/json', '-d', json.dumps(body)]
+    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    try:
+        return json.loads(out)
+    except Exception:
+        return out
+
+def count(path):
+    r = call('GET', org + path)
+    return len(r) if isinstance(r, list) else 0
+
+# Import is treated as done once there are >=100 labels and >=10 rulesets
+# and the ruleset count hasn't changed for 3 checks in a row (~1 min).
+# Crystal's default template gives ~15 rulesets, but the exact number
+# isn't fixed, so no hard target count.
+history = []
+for i in range(90):
+    labels, rulesets = count('/labels?max_results=1000'), count('/sec_policy/draft/rule_sets?max_results=1000')
+    print(time.strftime('%H:%M:%S'), 'labels', labels, 'rulesets', rulesets, flush=True)
+    history.append(rulesets)
+    if labels >= 100 and rulesets >= 10 and len(history) >= 3 and len(set(history[-3:])) == 1:
+        break
+    time.sleep(20)
+else:
+    print('WARNING: Crystal import did not look complete after 30 min - continuing anyway', flush=True)
+
+def disable_defaults():
+    for rs in call('GET', org + '/sec_policy/draft/rule_sets?max_results=1000') or []:
+        name = rs.get('name') or ''
+        if name.lower().startswith('task') or not rs.get('href') or not rs.get('enabled'):
+            continue
+        call('PUT', rs['href'], {'enabled': False})
+        print(time.strftime('%H:%M:%S'), 'Disabled default policy:', name, flush=True)
+
+# First pass now, then two more passes 5 and 10 min later to catch any
+# ruleset Crystal adds late (its ruleset import can retry after a 406).
+disable_defaults()
+for wait in (300, 300):
+    time.sleep(wait)
+    disable_defaults()
+print('Exam start state done', flush=True)
+PYEOF
+nohup python3 /root/exam-start-state.py > /var/log/exam-start-state.log 2>&1 < /dev/null &
 
 echo "===== MAGIC LINK + ACCOUNT SETUP END ====="

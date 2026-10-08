@@ -46,12 +46,12 @@ expected_per_host = {
 for host, want in expected_per_host.items():
     wl = ws.get(host)
     if not wl:
-        reasons.append(host + ' not found')
+        reasons.append(host + ' no encontrado')
         continue
     labels = dict(resolve_labels(wl.get('labels', [])))
     for key, val in want.items():
         if labels.get(key) != val:
-            reasons.append(host + ' ' + key + ' should be ' + val + ', found ' + (labels.get(key) or 'missing'))
+            reasons.append(host + ' ' + key + ' debería ser ' + val + ', se encontró ' + (labels.get(key) or 'ninguno'))
 
 if reasons:
     print('; '.join(reasons))
@@ -60,7 +60,7 @@ if reasons:
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task2-ringfence'), None)
 if not rs:
-    print('Policy \"Task2-Ringfence\" not found')
+    print('No se encontró la Policy \"Task2-Ringfence\"')
     sys.exit(1)
 
 scope_labels = set()
@@ -73,7 +73,7 @@ for scope in rs.get('scopes', []):
         if entry.get('label_group'):
             scope_labels.add(('label_group', 'used'))
 if scope_labels:
-    print('Task2-Ringfence should not use a Scope - build the rule with all 5 labels on both source and destination instead')
+    print('Task2-Ringfence no debe usar un Scope - crea la regla con las 5 labels tanto en el Source como en el Destination')
     sys.exit(1)
 
 expected = {('app', 'portal'), ('env', 'production'), ('loc', 'ca'), ('type', 'server'), ('dfirbubble', 'ir-cleanbubble')}
@@ -91,7 +91,7 @@ def is_all_services(ingress_services):
 
 enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
 if len(enabled_rules) != 1:
-    print('Task2-Ringfence should have exactly one enabled allow rule, found ' + str(len(enabled_rules)))
+    print('Task2-Ringfence debe tener exactamente una regla allow habilitada, se encontraron ' + str(len(enabled_rules)))
     sys.exit(1)
 
 rule = enabled_rules[0]
@@ -100,17 +100,17 @@ dst_ok = resolve_labels(rule.get('providers', [])) == expected
 svc_ok = is_all_services(rule.get('ingress_services'))
 
 if src_ok and dst_ok and svc_ok:
-    print('Both workloads have the 2 extra labels, and Task2-Ringfence ringfences the portal application correctly')
+    print('Ambos workloads tienen las 2 labels adicionales y Task2-Ringfence aplica ringfencing a la aplicación portal correctamente')
     sys.exit(0)
 
 missing = []
 if not src_ok:
-    missing.append('source is wrong - should have all 5 labels (Application=portal, Environment=Production, Location=ca, Type=server, IR=IR-CLEANBUBBLE)')
+    missing.append('el Source es incorrecto - debe tener las 5 labels (Application=portal, Environment=Production, Location=ca, Type=server, IR=IR-CLEANBUBBLE)')
 if not dst_ok:
-    missing.append('destination is wrong - should have all 5 labels')
+    missing.append('el Destination es incorrecto - debe tener las 5 labels')
 if not svc_ok:
-    missing.append('service should be All Services, not restricted to a specific service')
-print('Task2-Ringfence has a rule but: ' + '; '.join(missing))
+    missing.append('el service debe ser All Services, sin restringirlo a un service concreto')
+print('Task2-Ringfence tiene una regla, pero: ' + '; '.join(missing))
 sys.exit(1)
 ")
 status=$?

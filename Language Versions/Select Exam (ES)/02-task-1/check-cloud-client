@@ -49,7 +49,7 @@ expected_role = {'linux-vm': 'web', 'windows-vm': 'db'}
 
 unpaired = [host for host in expected_role if not ws.get(host) or not ws[host].get('ven')]
 if unpaired:
-    print('Not both workloads are paired as VENs yet')
+    print('Todavía no están emparejados ambos workloads como VENs')
     sys.exit(1)
 
 labels_ok = True
@@ -62,10 +62,15 @@ for host, want_role in expected_role.items():
             labels_ok = False
 
 if not labels_ok:
-    print('Both workloads are paired, but the labeling is not correct')
+    print('Ambos workloads están emparejados, pero el etiquetado no es correcto')
     sys.exit(1)
 
-print('Both workloads paired and labeled correctly into the portal application')
+not_idle = [host for host in expected_role if ws[host].get('enforcement_mode') != 'idle']
+if not_idle:
+    print('Ambos workloads están emparejados y etiquetados correctamente, pero no en modo Idle: ' + ', '.join(not_idle) + ' - empareja usando un Pairing Profile con el Enforcement Mode configurado en Idle')
+    sys.exit(1)
+
+print('Ambos workloads emparejados en modo Idle y etiquetados correctamente en la aplicación portal')
 sys.exit(0)
 ")
 status=$?

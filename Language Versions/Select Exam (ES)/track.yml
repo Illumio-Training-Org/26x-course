@@ -8,7 +8,7 @@ description: |-
   Este examen tiene 10 preguntas. La primera tarea (emparejar los
   workloads) debe completarse para continuar y no se puede omitir.
   Cualquier otra tarea se puede omitir, pero omitirla cuenta en contra
-  de tu puntuacion. Para aprobar el examen necesitas una puntuacion de
+  de tu puntuación. Para aprobar el examen necesitas una puntuación de
   al menos 80% u 8 de 10 respuestas correctas.
 icon: ./assets/logo.png
 tags:
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "12092870426526371338"
+checksum: "7717579390446625384"
 enhanced_loading: false

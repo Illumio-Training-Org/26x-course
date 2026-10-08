@@ -2,26 +2,42 @@
 slug: task-9
 id: vwwy2pauscgp
 type: challenge
-title: 09-Payment Application Ringfencing and Dependency
+title: 09-Ringfencing de la aplicación payment y su dependencia
 difficulty: ""
 timelimit: 0
 enhanced_loading: null
 ---
+📝 Tarea
+==========
+
 Crea una Policy llamada `Task9-RingfencePayment`.
 
-Ringfence la aplicacion `Payment` en `LDN` creando una allow rule que
-permita a los workloads que coincidan con:
+Aplica ringfencing a la aplicación `payment` en `ldn` creando una regla
+allow que permita los workloads que coincidan con:
 
-- Application: `Payment`
-- Location: `LDN`
+- Application: `payment`
+- Location: `ldn`
 
-Dentro de la misma Policy, crea una segunda allow rule que permita
-comunicacion entrante desde la aplicacion `Ordering` hacia la
-aplicacion `Payment` en `LDN`, para que Ordering pueda seguir
-alcanzando a Payment una vez que este ringfenced.
+Dentro de la misma Policy, crea una segunda regla allow que permita la
+comunicación entrante desde la aplicación `ordering` hacia la
+aplicación `payment` en `ldn`, para que `ordering` pueda seguir
+llegando a `payment` una vez aplicado el ringfencing.
 
 La segunda regla debe permitir:
 
-- Origen: la aplicacion `Ordering`
-- Destino: la aplicacion `Payment`, Location: `LDN`
+- Source: la aplicación `ordering`
+- Destination: la aplicación `payment`, Location: `ldn`
 - Service: **HTTPS**, puerto **TCP** `443`
+
+🔑 ¿Se ha cerrado tu sesión en la Consola?
+==========
+
+Solo es necesario si la Consola de Illumio ha cerrado tu sesión (lo hace tras 10-15 minutos de inactividad). Si sigues conectado, ignora esto y continúa en la pestaña de la Consola que tienes abierta.
+
+**[Haz clic aquí para volver a iniciar sesión]([[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]])** - tu trabajo se conserva.
+
+Si el enlace no se abre, copia esto en una nueva pestaña del navegador:
+
+```
+[[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]]
+```

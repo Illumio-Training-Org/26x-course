@@ -31,7 +31,7 @@ def get(path):
 label_groups = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups')
 lg = next((g for g in label_groups if (g.get('name') or '').lower() == 'dev-prod'), None)
 if not lg:
-    print('Label Group \"dev-prod\" not found')
+    print('No se encontró el Label Group \"dev-prod\"')
     sys.exit(1)
 
 values = set()
@@ -41,18 +41,18 @@ for l in lg.get('labels', []):
         lbl = get(href.replace('/api/v2', ''))
         values.add((lbl.get('value') or '').lower())
 if not {'development', 'production'}.issubset(values):
-    print('Label Group \"dev-prod\" should contain Development and Production, found ' + str(sorted(values)))
+    print('El Label Group \"dev-prod\" debe contener Development y Production, se encontró ' + str(sorted(values)))
     sys.exit(1)
 
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-ringfenceordering'), None)
 if not rs:
-    print('Policy \"Task6-RingfenceOrdering\" not found - do Task 6 first')
+    print('No se encontró la Policy \"Task6-RingfenceOrdering\" - completa primero la Tarea 6')
     sys.exit(1)
 
 for scope in rs.get('scopes', []):
     if scope:
-        print('Task6-RingfenceOrdering should not use a Scope - update the rule\'s labels directly instead')
+        print('Task6-RingfenceOrdering no debe usar un Scope - actualiza directamente las labels de la regla')
         sys.exit(1)
 
 def entry_kv(entry):
@@ -67,7 +67,7 @@ def entry_group_href(entry):
 
 enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
 if len(enabled_rules) != 1:
-    print('Task6-RingfenceOrdering should have exactly one enabled rule, found ' + str(len(enabled_rules)))
+    print('Task6-RingfenceOrdering debe tener exactamente una regla habilitada, se encontraron ' + str(len(enabled_rules)))
     sys.exit(1)
 rule = enabled_rules[0]
 
@@ -77,18 +77,18 @@ def side_problems(side_name, entries):
     group_hrefs = {entry_group_href(e) for e in entries if entry_group_href(e)}
     problems = []
     if ('app', 'ordering') not in kvs:
-        problems.append(side_name + ' app should be ordering, found ' + (kv_dict.get('app') or 'missing'))
+        problems.append(side_name + ' app debería ser ordering, se encontró ' + (kv_dict.get('app') or 'ninguno'))
     if ('loc', 'ca') not in kvs:
-        problems.append(side_name + ' loc should be ca, found ' + (kv_dict.get('loc') or 'missing'))
+        problems.append(side_name + ' loc debería ser ca, se encontró ' + (kv_dict.get('loc') or 'ninguno'))
     if lg.get('href') not in group_hrefs:
-        problems.append(side_name + ' is missing the dev-prod Label Group')
+        problems.append(side_name + ' no tiene el Label Group dev-prod')
     if 'env' in kv_dict:
-        problems.append(side_name + ' still has a plain env=' + kv_dict['env'] + ' label - remove it, the dev-prod Label Group replaces it')
+        problems.append(side_name + ' todavía tiene una label env=' + kv_dict['env'] + ' independiente - elimínala, el Label Group dev-prod la sustituye')
     return problems
 
-problems = side_problems('source', rule.get('consumers', [])) + side_problems('destination', rule.get('providers', []))
+problems = side_problems('Source', rule.get('consumers', [])) + side_problems('Destination', rule.get('providers', []))
 if not problems:
-    print('dev-prod Label Group exists and Task6-RingfenceOrdering\'s rule now uses it instead of Development')
+    print('El Label Group dev-prod existe y la regla de Task6-RingfenceOrdering ahora lo usa en lugar de Development')
     sys.exit(0)
 print('; '.join(problems))
 sys.exit(1)

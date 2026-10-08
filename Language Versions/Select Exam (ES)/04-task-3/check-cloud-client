@@ -40,7 +40,7 @@ def resolve(entries):
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task3-coreservices'), None)
 if not rs:
-    print('Policy \"Task3-CoreServices\" not found')
+    print('No se encontró la Policy \"Task3-CoreServices\"')
     sys.exit(1)
 
 def has_tcp_5666(ingress_services):
@@ -64,24 +64,24 @@ for rule in rs.get('rules', []):
     labels_ok = all(providers.get(k) == v for k, v in expected_providers.items()) and all(consumers.get(k) == v for k, v in expected_consumers.items())
     service_ok = has_tcp_5666(rule.get('ingress_services'))
     if labels_ok and service_ok:
-        print('Found the nagios -> portal allow rule for tcp/5666 in Task3-CoreServices')
+        print('Se encontró la regla allow nagios -> portal para tcp/5666 en Task3-CoreServices')
         sys.exit(0)
     reasons = []
     for k, v in expected_consumers.items():
         if consumers.get(k) != v:
-            reasons.append('source ' + k + ' should be ' + v + ', found ' + (consumers.get(k) or 'missing'))
+            reasons.append('Source ' + k + ' debería ser ' + v + ', se encontró ' + (consumers.get(k) or 'ninguno'))
     for k, v in expected_providers.items():
         if providers.get(k) != v:
-            reasons.append('destination missing ' + k + '=' + v)
+            reasons.append('al Destination le falta ' + k + '=' + v)
     if labels_ok and not service_ok:
-        reasons.append('service is wrong - should be TCP port 5666 (Nagios NRPE)')
+        reasons.append('el service es incorrecto - debe ser el puerto TCP 5666 (Nagios NRPE)')
     if best_reasons is None or len(reasons) < len(best_reasons):
         best_reasons = reasons
 
 if best_reasons:
-    print('Task3-CoreServices rule is close but: ' + '; '.join(best_reasons))
+    print('La regla de Task3-CoreServices casi es correcta, pero: ' + '; '.join(best_reasons))
 else:
-    print('Task3-CoreServices exists but has no rule allowing the California Nagios instance to reach the portal application')
+    print('Task3-CoreServices existe pero no tiene ninguna regla que permita a la instancia de Nagios de California llegar a la aplicación portal')
 sys.exit(1)
 ")
 status=$?
