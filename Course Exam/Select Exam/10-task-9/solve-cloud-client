@@ -49,8 +49,8 @@ def find_all_services_href():
             return s['href']
     return None
 
-app_href = find_or_create_label('app', 'Payment')
-loc_href = find_or_create_label('loc', 'LDN')
+app_href = find_or_create_label('app', 'payment')
+loc_href = find_or_create_label('loc', 'ldn')
 ordering_href = find_or_create_label('app', 'ordering')
 all_services_href = find_all_services_href()
 

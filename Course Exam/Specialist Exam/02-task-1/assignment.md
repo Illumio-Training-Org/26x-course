@@ -28,7 +28,7 @@ following labels:
 
 `linux-vm`
 
-- Role: `Web`
+- Role: `web`
 - Application: `portal`
 - Environment: `Production`
 - Location: `ca`

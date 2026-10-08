@@ -12,21 +12,21 @@ enhanced_loading: null
 
 Create a Policy named `Task9-RingfencePayment`.
 
-Ringfence the `Payment` application in `LDN` by creating an allow
+Ringfence the `payment` application in `ldn` by creating an allow
 rule that permits workloads matching:
 
-- Application: `Payment`
-- Location: `LDN`
+- Application: `payment`
+- Location: `ldn`
 
 Within the same Policy, create a second allow rule permitting inbound
-communication from the `Ordering` application to the `Payment`
-application in `LDN`, so Ordering can still reach Payment once it's
+communication from the `ordering` application to the `payment`
+application in `ldn`, so `ordering` can still reach `payment` once it's
 ringfenced.
 
 The second rule must allow:
 
-- Source: the `Ordering` application
-- Destination: the `Payment` application, Location: `LDN`
+- Source: the `ordering` application
+- Destination: the `payment` application, Location: `ldn`
 - Service: **HTTPS**, **TCP** port `443`
 
 🔑 Logged out of the Console?
