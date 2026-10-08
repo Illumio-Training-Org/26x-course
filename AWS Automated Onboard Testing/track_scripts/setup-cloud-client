@@ -71,6 +71,10 @@ agent variable set MAGICURL "$MAGIC_LINK"
 git clone https://github.com/jdschmitz15/illumio-instruqt-terraform-template.git
 AUTOACCOUNT_MAGICLINK="$MAGIC_LINK"
 gomplate -f ~/illumio-instruqt-terraform-template/index.html.tmpl -o /var/www/html/index.html
+# The tile's <img> points at /assets/Illumio_Glyph_Orange_RGB.png, but the
+# template repo keeps that file at its root, so the tile showed the alt text "icon".
+mkdir -p /var/www/html/assets
+cp ~/illumio-instruqt-terraform-template/Illumio_Glyph_Orange_RGB.png /var/www/html/assets/
 date
 
 # ---------------------------------------
