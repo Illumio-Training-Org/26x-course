@@ -2,7 +2,7 @@
 
 The four current certification exams, all Crystal-based. Each subfolder is
 its own Instruqt track. The previous vensim-based versions are in
-`../Legacy/Course Exam/` (`! 26.x Superseded: ...`).
+`../Legacy/Course Exam/` (`! 26.x Withdrawn: ...`).
 
 | Audience | Folder | Title / slug | Tasks | Time limit |
 |---|---|---|---|---|

@@ -1,6 +1,6 @@
 slug: 26x-superseded-foundation-exam
 id: gxjje2s7qsqe
-title: '! 26.x Superseded: Foundation Exam'
+title: '! 26.x Withdrawn: Foundation Exam'
 description: |-
   Lab Name: 26.x FOUNDATION EXAM
 
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "7869858122306397707"
+checksum: "10536624743974643189"
 enhanced_loading: false

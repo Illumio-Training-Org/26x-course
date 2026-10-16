@@ -1,6 +1,6 @@
 slug: 26x-superseded-associate-exam
 id: 6px1aiuadzpu
-title: '! 26.x Superseded: Associate Exam'
+title: '! 26.x Withdrawn: Associate Exam'
 description: |-
   Lab Name: 26.x ASSOCIATE EXAM
 
@@ -30,5 +30,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "14133812059883103275"
+checksum: "18012594474917503162"
 enhanced_loading: false

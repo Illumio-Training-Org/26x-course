@@ -1,6 +1,6 @@
 slug: 26x-superseded-specialist-exam
 id: bcdr9ohudyaj
-title: '! 26.x Superseded: Specialist Exam'
+title: '! 26.x Withdrawn: Specialist Exam'
 description: |-
   Lab Name: 26.x SPECIALIST EXAM
 
@@ -29,5 +29,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "4889110361940759857"
+checksum: "3908090338162345945"
 enhanced_loading: false

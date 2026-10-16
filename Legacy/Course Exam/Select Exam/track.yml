@@ -1,6 +1,6 @@
 slug: 26x-superseded-select-exam
 id: 3lvzwrfzwdoj
-title: '! 26.x Superseded: Select Exam'
+title: '! 26.x Withdrawn: Select Exam'
 description: |-
   Lab Name: 26.x SELECT EXAM
 
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "13278323746404468871"
+checksum: "4221127553698447474"
 enhanced_loading: false

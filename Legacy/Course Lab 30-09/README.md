@@ -1,4 +1,4 @@
-# Course Lab 30-09 — `! 26.x Superseded: Lab 30/09`
+# Course Lab 30-09 — `! 26.x Withdrawn: Lab 30/09`
 
 **Superseded on 2026-09-30** by the 2-challenge `! 26.x Lab` in
 `../../Course Lab/`. Slug `26x-superseded-lab-3009`. Kept as a "this is

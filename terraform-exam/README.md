@@ -5,7 +5,7 @@ without the browser wizard. It runs **after** the shared `../terraform/`
 build (the `crm` app, VPC and flows S3 bucket) and is cloned at boot by the
 tracks that need an already-onboarded account:
 
-- `! 26.x Select Exam` (current) and `! 26.x Superseded: Select Exam` —
+- `! 26.x Select Exam` (current) and `! 26.x Withdrawn: Select Exam` —
   background job in `setup-cloud-client`, so Task 10 has an onboarded
   account.
 - `! 26.x Test: Select Exam (ES)` / `(JA)`.

@@ -9,7 +9,7 @@ when the lab ends. (Root `README.md`, section 5, has the full Crystal
 detail.)
 
 Became the main lab on 2026-09-30, replacing the earlier 3-challenge layout
-(kept as `! 26.x Superseded: Lab 30/09` in `../Legacy/Course Lab 30-09/`).
+(kept as `! 26.x Withdrawn: Lab 30/09` in `../Legacy/Course Lab 30-09/`).
 
 ## What learners see
 

@@ -12,11 +12,12 @@ fresh and torn down after use — no state carries across sessions.
   doesn't interfere with their own Instruqt track sync.
 Tracks sort together at the top of the Instruqt track list (alphabetical,
 case-insensitive): the current tracks are plain `! 26.x <name>` and come
-first; the previous vensim-based build is `! 26.x Superseded: <name>`
-(kept frozen as a backup and example) and sorts straight after them
-because "Superseded" comes after "Specialist"; `! 26.x Test: ...` sorts
-last. Any new current track must start with a word that sorts before
-"Superseded" to stay in the top group. Restructured 2026-09-28.
+first, then `! 26.x Test: ...`. Older builds are `! 26.x Withdrawn: <name>`
+(kept frozen as a backup and example) and sort last, because "Withdrawn"
+comes after "Test". Any new current track must start with a word that sorts
+before "Test" to stay in the top group. Restructured 2026-09-28; the old
+tracks were renamed from "Superseded" to "Withdrawn" on 2026-10-16 so they
+sort after the Test tracks. Their slugs still say `26x-superseded-...`.
 
 - `Course Lab/` — **`! 26.x Lab`** (`26x-lab`), 2 challenges (the lab on
   one page, then Close Lab) since 2026-09-30. The shared
@@ -44,14 +45,14 @@ last. Any new current track must start with a word that sorts before
   (5 questions) then the Specialist Exam (5 questions). Partners take the
   Foundation Exam (10 questions) then the Specialist Exam (5 questions).
 - `Legacy/` — earlier versions, kept frozen as backup/reference:
-  - `Legacy/Course Lab 30-09/` — `! 26.x Superseded: Lab 30/09`
+  - `Legacy/Course Lab 30-09/` — `! 26.x Withdrawn: Lab 30/09`
     (`26x-superseded-lab-3009`): the 3-challenge Crystal lab used until
     2026-09-30 (magic-link page, lab page, Close Lab).
-  - `Legacy/Course Lab 28-09/` — `! 26.x Superseded: Lab 28/09`
+  - `Legacy/Course Lab 28-09/` — `! 26.x Withdrawn: Lab 28/09`
     (`26x-superseded-lab-2809`): the original vensim lab, superseded by
     Crystal on 2026-09-28.
   - `Legacy/Course Exam/{Foundation,Associate,Select,Specialist} Exam/` —
-    `! 26.x Superseded: <x> Exam` (`26x-superseded-<x>-exam`), the 4 certification
+    `! 26.x Withdrawn: <x> Exam` (`26x-superseded-<x>-exam`), the 4 certification
     exams matching the `Foundation & Select agenda` spreadsheet tab.
 - `Language Versions/` — `! 26.x Test: Select Exam (ES)` / `(JA)`
   (`26x-test-select-exam-es` / `-ja`), translated test copies of the
@@ -196,9 +197,9 @@ took ~15-65 minutes to become queryable. The first `partner100` run
 "database cache" 503s and no lost early traffic. One more run is needed to
 confirm.
 
-#### Superseded tracks (vensim)
+#### Withdrawn tracks (vensim)
 
-The `! 26.x Superseded:` tracks (in `Legacy/`) use the previous mechanism,
+The `! 26.x Withdrawn:` tracks (in `Legacy/`) use the previous mechanism,
 which runs inside the sandbox instead of Crystal:
 
 - [`Illumio-Training-Org/manual-instruqt-startup`](https://github.com/Illumio-Training-Org/manual-instruqt-startup) —
