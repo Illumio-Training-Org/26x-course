@@ -1,8 +1,10 @@
 # Language Versions - translated exams
 
 Spanish and Brazilian Portuguese copies of the current Select and
-Foundation exams, each with the English text after the translation, plus an
-older Japanese test copy.
+Foundation exams, each with the English text after the translation. The old Japanese test copy
+(`! 26.x Test: Select Exam (JA)`) was deleted on 2026-10-16. It can be
+rebuilt from the current English exam with the `lab-translate` skill, or
+restored from git history.
 
 | Folder | Title / slug | Built from |
 |---|---|---|
@@ -10,7 +12,6 @@ older Japanese test copy.
 | `Foundation Exam (ES)/` | `! 26.x Test: Foundation Exam (ES/EN)` / `26x-test-foundation-exam-es` | current `! 26.x Foundation Exam` (2026-10-08) |
 | `Select Exam (PT-BR)/` | `! 26.x Test: Select Exam (PT-BR/EN)` / `26x-test-select-exam-pt-br` | current `! 26.x Select Exam` (2026-10-16) |
 | `Foundation Exam (PT-BR)/` | `! 26.x Test: Foundation Exam (PT-BR/EN)` / `26x-test-foundation-exam-pt-br` | current `! 26.x Foundation Exam` (2026-10-16) |
-| `Select Exam (JA)/` | `! 26.x Test: Select Exam (JA)` / `26x-test-select-exam-ja` | old vensim Select Exam - out of date |
 
 ## Naming
 

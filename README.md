@@ -54,7 +54,7 @@ sort after the Test tracks. Their slugs still say `26x-superseded-...`.
   - `Legacy/Course Exam/{Foundation,Associate,Select,Specialist} Exam/` —
     `! 26.x Withdrawn: <x> Exam` (`26x-superseded-<x>-exam`), the 4 certification
     exams matching the `Foundation & Select agenda` spreadsheet tab.
-- `Language Versions/` — `! 26.x Test: Select Exam (ES)` / `(JA)`
+- `Language Versions/` — `! 26.x Test: Select Exam (ES/EN)` / `Foundation Exam (ES/EN)` and the `(PT-BR/EN)` pair
   (`26x-test-select-exam-es` / `-ja`), translated test copies of the
   legacy Select Exam.
 - `AWS Automated Onboard Testing/` — `! 26.x Test: AWS Automated Onboard

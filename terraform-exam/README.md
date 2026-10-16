@@ -8,7 +8,7 @@ tracks that need an already-onboarded account:
 - `! 26.x Select Exam` (current) and `! 26.x Withdrawn: Select Exam` —
   background job in `setup-cloud-client`, so Task 10 has an onboarded
   account.
-- `! 26.x Test: Select Exam (ES)` / `(JA)`.
+- `! 26.x Test: Select Exam (ES/EN)` / `(PT-BR/EN)`.
 - `! 26.x Test: AWS Automated Onboard Testing` — the prototype this came
   from (its own `README.md` has the full investigation).
 
