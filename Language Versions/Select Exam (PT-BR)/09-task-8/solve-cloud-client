@@ -1,0 +1,107 @@
+#!/bin/sh
+#
+# Runs when the learner clicks Skip. Creates Task8-DenyGlobal with a
+# Dev->Prod deny (All Services) for ordering, plus a plain Dev->Prod
+# Allow Rule that permits SSH - pure org-level objects, no scope.
+#
+# Live-verified 2026-09-07 (org 4138910): re-PUTing an existing
+# ruleset's own deny_rules array (read straight from GET) fails with a
+# 406 - GET returns each deny_rule with read-only fields (href,
+# created_at, updated_by, caps, etc.) that the PUT schema rejects as
+# "additional properties". Only bites the idempotent-append path (a
+# ruleset that already has a deny_rule when Skip runs), not a
+# from-scratch run - fixed by stripping each existing entry down to
+# just the writable fields before re-sending.
+#
+# Fixed 2026-09-10: previously only added the correct deny/allow rule
+# if an exact-match pair wasn't already present, so a learner's own
+# close-but-wrong attempt (e.g. missing the App=ordering label) was
+# left in place alongside the newly-added correct one, leaving 2 deny
+# rules - live-caught by Nathan. This task expects exactly one deny
+# rule and one allow rule in this ruleset, so Skip now REPLACES
+# deny_rules and rules outright with the single correct entry each,
+# rather than merging/appending.
+
+. /root/.autoaccount_env
+
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+python3 -c "
+import json, subprocess
+
+def call(method, path, body=None):
+    cmd = ['curl', '-s', '-u', '$AUTH', '-X', method, 'https://$FQDN/api/v2' + path]
+    if body is not None:
+        cmd += ['-H', 'Content-Type: application/json', '-d', json.dumps(body)]
+    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    try:
+        return json.loads(out)
+    except Exception:
+        return None
+
+def find_or_create_label(key, value):
+    labels = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
+    for l in labels:
+        if l.get('key') == key and (l.get('value') or '').lower() == value.lower():
+            return l['href']
+    created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
+    return created['href'] if created else None
+
+def find_service_href(name_contains):
+    services = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/services?max_results=1000') or []
+    for s in services:
+        if name_contains in (s.get('name') or '').lower():
+            return s['href']
+    return None
+
+app_href = find_or_create_label('app', 'ordering')
+dev_href = find_or_create_label('env', 'Development')
+prod_href = find_or_create_label('env', 'Production')
+all_services_href = find_service_href('all services')
+ssh_href = find_service_href('ssh')
+
+rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets?max_results=1000') or []
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task8-denyglobal'), None)
+if not rs:
+    rs = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
+        'name': 'Task8-DenyGlobal',
+        'scopes': [[]],
+    })
+
+if rs and rs.get('href'):
+    # Replace deny_rules outright - this task expects exactly one deny
+    # rule, so any existing close-but-wrong attempt is discarded rather
+    # than kept alongside the correct one.
+    call('PUT', rs['href'], {
+        'deny_rules': [{
+            'enabled': True,
+            'providers': [{'label': {'href': app_href}, 'exclusion': False}, {'label': {'href': prod_href}, 'exclusion': False}],
+            'consumers': [{'label': {'href': app_href}, 'exclusion': False}, {'label': {'href': dev_href}, 'exclusion': False}],
+            'ingress_services': [{'href': all_services_href}] if all_services_href else [],
+            'network_type': 'brn',
+            'override': False,
+            'egress_services': [],
+            'unscoped_consumers': False,
+            'all_ips_except_for_in_consumers': False,
+            'all_ips_except_for_in_providers': False,
+        }],
+    })
+
+    # Same for the allow rule - delete any existing rule(s) in this
+    # ruleset first, then create exactly the one correct one, so a
+    # learner's wrong attempt doesn't survive alongside it.
+    for rule in rs.get('rules', []):
+        href = rule.get('href')
+        if href:
+            call('DELETE', href)
+    call('POST', rs['href'] + '/sec_rules', {
+        'enabled': True,
+        'ingress_services': [{'href': ssh_href}] if ssh_href else [],
+        'consumers': [{'label': {'href': app_href}}, {'label': {'href': dev_href}}],
+        'providers': [{'label': {'href': app_href}}, {'label': {'href': prod_href}}],
+        'resolve_labels_as': {'consumers': ['workloads'], 'providers': ['workloads']},
+    })
+"
+
+exit 0

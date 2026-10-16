@@ -1,13 +1,29 @@
 # Language Versions - translated exams
 
-Spanish copies of the current Select and Foundation exams, plus an older
-Japanese test copy.
+Spanish and Brazilian Portuguese copies of the current Select and
+Foundation exams, each with the English text after the translation, plus an
+older Japanese test copy.
 
 | Folder | Title / slug | Built from |
 |---|---|---|
 | `Select Exam (ES)/` | `! 26.x Test: Select Exam (ES/EN)` / `26x-test-select-exam-es` | current `! 26.x Select Exam` (2026-10-08) |
 | `Foundation Exam (ES)/` | `! 26.x Test: Foundation Exam (ES/EN)` / `26x-test-foundation-exam-es` | current `! 26.x Foundation Exam` (2026-10-08) |
+| `Select Exam (PT-BR)/` | `! 26.x Test: Select Exam (PT-BR/EN)` / `26x-test-select-exam-pt-br` | current `! 26.x Select Exam` (2026-10-16) |
+| `Foundation Exam (PT-BR)/` | `! 26.x Test: Foundation Exam (PT-BR/EN)` / `26x-test-foundation-exam-pt-br` | current `! 26.x Foundation Exam` (2026-10-16) |
 | `Select Exam (JA)/` | `! 26.x Test: Select Exam (JA)` / `26x-test-select-exam-ja` | old vensim Select Exam - out of date |
+
+## Naming
+
+The track title names both languages (`(PT-BR/EN)`), so learners can see that
+English is included. The folder and slug name only the translated language
+(`Select Exam (PT-BR)`, `26x-test-select-exam-pt-br`), so they never have to
+change. Use the standard language code: `PT-BR` (Brazilian Portuguese, not
+`PT` or `BR`), `ES`, `DE`, `JA`, `FR`, and so on.
+
+## Making a new language version
+
+Use the `lab-translate` Claude skill (see `.claude/skills/lab-translate/` in
+this repo). The Brazilian Portuguese tracks were the first built with it.
 
 ## How the Spanish versions were made
 
