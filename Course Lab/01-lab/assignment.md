@@ -332,7 +332,7 @@ Set your real values as variables (no YAML syntax to get wrong):
 Your PCE URL:
 
 ```run
-PCE_URL="poc4.illum.io:443"
+PCE_URL="[[ Instruqt-Var key="PCEFQDN" hostname="cloud-client" ]]:[[ Instruqt-Var key="PCEPort" hostname="cloud-client" ]]"
 ```
 
 Your Cluster ID from step 3:

@@ -231,7 +231,7 @@ which one to use depends on what's being checked:
   resources fetched by the browser (Application Discovery, Inventory)
   live on this same backend and are not queryable from the Core PCE
   API at all, regardless of credential — a bare `curl` against
-  `poc4.illum.io` will never see AWS-onboarded resources.
+  `partner100.illum.io` will never see AWS-onboarded resources.
 
 ## Troubleshooting reference (the lab's Advanced section)
 
@@ -322,7 +322,7 @@ https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID/<endpoint>
 ```
 
 - `$AUTOACCOUNT_PCE_FQDN` - the PCE FQDN and port together (e.g.
-  `poc4.illum.io:443`)
+  `partner100.illum.io:443`)
 - `/api/v2` - Illumio's REST API version prefix
 - `/orgs/$AUTOACCOUNT_ORG_ID` - this org
 - `/<endpoint>` - the object collection (`/labels`, `/workloads`,
