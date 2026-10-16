@@ -51,7 +51,7 @@ the run fails. (Typing YES by hand is not tested.)
 
 **Not checked:** things that happen after the test has already torn the
 sandbox down - Crystal's object import (~5-10 min), the policies actually
-being disabled, and traffic appearing (~15-65 min on poc4).
+being disabled, and traffic appearing (~13 min on partner100 in the 2026-10-16 run; it was ~15-65 min on poc4).
 
 ## What you need
 

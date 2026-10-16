@@ -5,7 +5,20 @@ integration, separate from the general build history in git log.
 
 ## Traffic flows slow to appear in the PCE's Traffic Explorer / Map
 
-**Status:** open. First clean timing run (2026-09-28): **~55 minutes**.
+**Status:** much improved; awaiting a confirming repeat. First clean timing run (2026-09-28): **~55 minutes**.
+
+**Update 2026-10-16: moved to `partner100`.** Lab orgs now land on the
+`partner100` PCE instead of the overloaded `poc4`. The first run there
+(org 5701859, Episode 30 in the platform issues report) showed:
+
+- traffic queryable after **~13 minutes**, against ~53-58 on `poc4` in Episodes 27-29
+- **no** "database cache" 503s
+- **no** lost early or attack traffic
+- one agent (`pacs-01`) on 503 instead of ~40, with no visible effect
+- Explorer queries taking 4-6 s instead of 60-73 s
+
+Traffic still lands in batches every ~5-11 minutes. The history below is
+from `poc4`.
 
 **Clean run, 2026-09-28 (org 4140289, deployment
 `26x_lab_crystal_test_280926_01`)** - one deployment, nothing else run

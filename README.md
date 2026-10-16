@@ -117,7 +117,12 @@ side), used later for hands-on VEN pairing exercises.
 A single-node k3s cluster with Cilium pre-installed as its CNI, used for a
 Container VEN (CVEN) onboarding exercise: creating the Container Cluster
 object in the PCE, generating a pairing profile, and deploying Illumio's
-Helm chart against the cluster.
+Helm chart against the cluster. The PCE address in the learner's
+`illumio-values.yaml` is filled in automatically from the org's own PCE
+(the `PCEFQDN`/`PCEPort` agent variables, through Instruqt variable
+substitution in the instructions). It is never hard-coded, so the step keeps
+working when orgs move between PCEs, as they did from `poc4` to
+`partner100` in October 2026.
 
 ### 5. Synthetic objects and traffic (Project Crystal)
 
@@ -184,10 +189,12 @@ Instruqt secret (UI or `instruqt secrets update CRYSTAL_API_KEY`).
 
 **Known limitations** (full detail in `Course Lab/ISSUES.md` and the running
 platform issues report): Crystal cannot report traffic for unmanaged
-(no-VEN) workloads; and a new PCE org on the shared `poc4` platform can take
-anywhere from ~15 to ~60 minutes before traffic is queryable (two
-back-to-back PCE-side delays, attributed by engineering to poc4 overload,
-with a planned move to partner100).
+(no-VEN) workloads. Traffic timing has improved: lab orgs moved from the
+overloaded `poc4` PCE to `partner100` (by 2026-10-16). On `poc4`, traffic
+took ~15-65 minutes to become queryable. The first `partner100` run
+(Episode 30, 2026-10-16) showed traffic after ~13 minutes, with no
+"database cache" 503s and no lost early traffic. One more run is needed to
+confirm.
 
 #### Superseded tracks (vensim)
 

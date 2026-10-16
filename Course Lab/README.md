@@ -50,11 +50,16 @@ Measured on 2026-09-29: page ready **~2 min 50 s** after the sandbox starts.
 ## Timing to expect
 
 - **Objects** (labels, workloads, policies) appear ~5-10 minutes after start.
-- **Traffic** in Explore/Map currently takes **anywhere from ~15 to ~65
-  minutes** to become visible (median ~45 min) - a known issue with the
-  shared `poc4` PCE, which engineering attributes to platform overload; a move
-  to `partner100` is planned. Start the lab well before any map-based
-  teaching. Details: `ISSUES.md` and the platform issues report.
+- **Traffic** in Explore/Map took **~13 minutes** to become visible on the
+  first run after lab orgs moved to the `partner100` PCE (2026-10-16). On the
+  old `poc4` PCE it took ~15-65 minutes. Until a repeat run confirms this,
+  start the lab **~15-20 minutes** before any map-based teaching. New traffic
+  arrives in batches every ~5-11 minutes, so the totals can stand still for
+  up to ~10 minutes between batches. Details: `ISSUES.md` and the platform
+  issues report (Episode 30).
+- **Containers:** step 5 fills in the PCE URL for `illumio-values.yaml`
+  automatically from the org's own PCE. Learners don't type it, and it
+  follows the org if the platform moves PCE again.
 - The attack runs for **3 hours** from start, then stops; its traffic stays
   in history.
 
