@@ -2,8 +2,8 @@
 slug: magic-link
 id: lojirpslefq0
 type: challenge
-title: 26.x Select Exam (ES)
-teaser: Accede a la Consola de Illumio
+title: 26.x Select Exam (ES/EN)
+teaser: Accede a la Consola de Illumio / Access the Illumio Console
 notes:
 - type: text
   contents: |-
@@ -80,6 +80,32 @@ O haz clic aquí: [Abrir la Consola de Illumio]([[ Instruqt-Var key="MAGICURL" h
 
 ---
 
+🇬🇧 **English**
+
+> [!IMPORTANT]
+> You have a maximum of **2 hours 30 minutes** to complete the exam.
+
+**Please note:**
+- **The first task (pairing the workloads) must be completed and cannot be skipped.**
+- Any other task can be skipped, but skipping counts against your score. To pass, you need a score of at least **80%** (8 out of 10 correct answers).
+- There is no requirement to provision any of the rules or objects in this exam.
+- All pre-existing default policies in this org are automatically disabled before you start - only policies you create as part of the exam's tasks are active. You don't need to do anything about them.
+- Please ensure that the name of any Policies that you create are correct and there are no additional spaces in their names.
+
+**1 )** Open the following link in a new browser tab
+
+```
+[[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]]
+```
+
+Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]])
+
+**2 )** Verify the Illumio Console dashboard is visible
+
+**3 )** Once you're logged into the Console, return to this lab window and press **NEXT** to begin. Good luck!
+
+---
+
 Avanzado
 ===
 
@@ -106,6 +132,37 @@ curl -s -o /dev/null -w "PCE API: HTTP %{http_code}\n" -u "api_${AUTOACCOUNT_API
 ```
 
 Para comprobar que la API de CloudSecure funciona (HTTP 200 = correcto):
+
+```run
+curl -s -o /dev/null -w "Cloud API: HTTP %{http_code}\n" -u "${AUTOACCOUNT_SAAPIKEY_KEYID}:${AUTOACCOUNT_SAAPIKEY_SECRET}" -H "X-Tenant-Id: ${AUTOACCOUNT_TENANT_ID}" "https://cloud.illum.io/api/v1/integrations"
+```
+
+Advanced (English)
+===
+
+> [!WARNING]
+> Advanced options below. Typically used in troubleshooting:
+
+To show the PCE and Cloud API credentials for this account, run the
+following in the **cloud console** tab:
+
+```run
+echo "PCE_FQDN=$AUTOACCOUNT_PCE_FQDN"
+echo "ORG_ID=$AUTOACCOUNT_ORG_ID"
+echo "APIKEY_ID=$AUTOACCOUNT_APIKEY_ID"
+echo "APIKEY_SECRET=$AUTOACCOUNT_APIKEY_SECRET"
+echo "SAKEYID=$AUTOACCOUNT_SAAPIKEY_KEYID"
+echo "SASECRET=$AUTOACCOUNT_SAAPIKEY_SECRET"
+echo "TENANT=$AUTOACCOUNT_TENANT_ID"
+```
+
+To check the PCE REST API is up (HTTP 200 = healthy):
+
+```run
+curl -s -o /dev/null -w "PCE API: HTTP %{http_code}\n" -u "api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}" "https://${AUTOACCOUNT_PCE_FQDN}/api/v2/orgs/${AUTOACCOUNT_ORG_ID}/workloads?max_results=1"
+```
+
+To check the CloudSecure API is up (HTTP 200 = healthy):
 
 ```run
 curl -s -o /dev/null -w "Cloud API: HTTP %{http_code}\n" -u "${AUTOACCOUNT_SAAPIKEY_KEYID}:${AUTOACCOUNT_SAAPIKEY_SECRET}" -H "X-Tenant-Id: ${AUTOACCOUNT_TENANT_ID}" "https://cloud.illum.io/api/v1/integrations"

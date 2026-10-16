@@ -2,8 +2,8 @@
 slug: magic-link
 id: izkh2j7ulojk
 type: challenge
-title: 26.x Foundation Exam (ES)
-teaser: Accede a la Consola de Illumio
+title: 26.x Foundation Exam (ES/EN)
+teaser: Accede a la Consola de Illumio / Access the Illumio Console
 notes:
 - type: text
   contents: |-
@@ -77,3 +77,29 @@ O haz clic aquí: [Abrir la Consola de Illumio]([[ Instruqt-Var key="MAGICURL" h
 **2 )** Comprueba que el panel (dashboard) de la Consola de Illumio es visible
 
 **3 )** Cuando hayas iniciado sesión en la Consola, vuelve a esta ventana del laboratorio y pulsa **NEXT** para empezar. ¡Buena suerte!
+
+---
+
+🇬🇧 **English**
+
+> [!IMPORTANT]
+> You have a maximum of **1 hour 15 minutes** to complete the exam.
+
+**Please note:**
+- **The first task (pairing the workloads) must be completed and cannot be skipped.**
+- Any other task can be skipped, but skipping counts against your score. To pass, you need a score of at least **80%** (8 out of 10 correct answers).
+- There is no requirement to provision any of the rules or objects in this exam.
+- All pre-existing default policies in this org are automatically disabled before you start - only policies you create as part of the exam's tasks are active. You don't need to do anything about them.
+- Please ensure that the name of any Policies that you create are correct and there are no additional spaces in their names.
+
+**1 )** Open the following link in a new browser tab
+
+```
+[[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]]
+```
+
+Or click here: [Open the Illumio Console]([[ Instruqt-Var key="MAGICURL" hostname="cloud-client" ]])
+
+**2 )** Verify the Illumio Console dashboard is visible
+
+**3 )** Once you're logged into the Console, return to this lab window and press **NEXT** to begin. Good luck!
