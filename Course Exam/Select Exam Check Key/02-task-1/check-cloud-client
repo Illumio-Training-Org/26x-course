@@ -49,7 +49,7 @@ expected_role = {'linux-vm': 'web', 'windows-vm': 'db'}
 
 unpaired = [host for host in expected_role if not ws.get(host) or not ws[host].get('ven')]
 if unpaired:
-    print('Not both workloads are paired as VENs yet')
+    print('Both workloads are not paired as VENs yet')
     sys.exit(1)
 
 labels_ok = True
