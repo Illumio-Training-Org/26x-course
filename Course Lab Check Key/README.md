@@ -1,11 +1,18 @@
-# Course Lab POC4 — `! 26.x Lab POC4`
+# Course Lab Check Key — `! 26.x Test: Lab Check Key`
 
-A copy of `! 26.x Lab` (slug `26x-lab-poc4`) that creates its org on the old
-**poc4** PCE instead of partner100, for side-by-side comparison. The only
-difference is in `config.yml`: the `autoaccount` input `pce_cluster_name` is
-fixed to `poc4.illum.io:443` instead of reading the team secret (which is set to
-partner100 since 2026-10-14). Plain `poc4` failed at launch; `poc4.illum.io:443` (the full FQDN:port)
-worked, live-tested 2026-10-18 (org 4140776). Created 2026-10-18.
+A test copy of `! 26.x Lab` (slug `26x-test-lab-check-key`), created
+2026-10-18 to test a workaround for the mid-lab PCE API 401s. The only
+change is in `track_scripts/setup-cloud-client`: right after the agent
+variables, setup uses the magic-link key to create a second PCE API key
+named `check-scripts` (`GET /users/login` for the user href, then
+`POST <user>/api_keys`) and saves it to `/root/.pce-check-key`. The
+`check-workloads`, `check-containers` and `check-pce-api` commands use
+that key; Crystal, Terraform and `disable-all-rulesets` keep the
+magic-link key. If key creation fails (`CHECK-FAIL: check-key` in the
+setup log) the checks fall back to the magic-link key.
+
+To watch both keys during a test, `cat /root/.pce-check-key` on
+cloud-client gives the dedicated key's credentials.
 
 The rest of this README describes the original `! 26.x Lab`.
 

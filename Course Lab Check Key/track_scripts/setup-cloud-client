@@ -83,6 +83,42 @@ agent variable set SACLIENT "$AUTOACCOUNT_SAAPIKEY_KEYID"
 agent variable set SASECRET "$AUTOACCOUNT_SAAPIKEY_SECRET"
 
 # ---------------------------------------
+# DEDICATED CHECK-SCRIPT API KEY
+# ---------------------------------------
+# The self-check commands (check-workloads, check-containers,
+# check-pce-api) use their own PCE API key, created here with the
+# magic-link key, so they don't share a key with Crystal/Terraform -
+# testing whether this survives the mid-lab 401s on the magic-link key.
+# Saved to /root/.pce-check-key (root only); if creation fails the
+# checks fall back to the magic-link key.
+python3 - << 'KEYEOF' || true
+import base64, json, os, time, urllib.request
+base = "https://" + os.environ["AUTOACCOUNT_PCE_FQDN"] + "/api/v2"
+auth = "Basic " + base64.b64encode(("api_" + os.environ["AUTOACCOUNT_APIKEY_ID"] + ":" + os.environ["AUTOACCOUNT_APIKEY_SECRET"]).encode()).decode()
+
+def call(method, path, body=None):
+    req = urllib.request.Request(base + path, method=method, data=json.dumps(body).encode() if body else None,
+                                 headers={"Authorization": auth, "Content-Type": "application/json", "Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return json.loads(r.read())
+
+for attempt in range(1, 6):
+    try:
+        user = call("GET", "/users/login")["href"]
+        key = call("POST", user + "/api_keys", {"name": "check-scripts", "description": "Lab self-check commands"})
+        with open("/root/.pce-check-key", "w") as f:
+            f.write("CHECK_KEY_USER=%s\nCHECK_KEY_SECRET=%s\n" % (key["auth_username"], key["secret"]))
+        os.chmod("/root/.pce-check-key", 0o600)
+        print("CHECK-OK: check-key (%s)" % key["auth_username"])
+        break
+    except Exception as e:
+        print("check-key attempt %d failed: %s" % (attempt, e))
+        time.sleep(15)
+else:
+    print("CHECK-FAIL: check-key (checks will use the magic-link key)")
+KEYEOF
+
+# ---------------------------------------
 # MAGIC LINK SETUP
 # ---------------------------------------
 MAGIC_LINK=$(echo "${AUTOACCOUNT_MAGICLINK}" | tr -d '{}[]"')
@@ -121,6 +157,8 @@ cat > /usr/local/bin/check-workloads << 'CHECKEOF'
 clear
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+# Use the dedicated check-script key created at setup, if there is one
+[ -f /root/.pce-check-key ] && . /root/.pce-check-key && AUTH="$CHECK_KEY_USER:$CHECK_KEY_SECRET"
 curl -s -u "$AUTH" "$BASE/workloads?max_results=1000" | python3 -c "
 import json, sys
 workloads = {w.get('hostname'): w for w in json.load(sys.stdin)}
@@ -157,6 +195,8 @@ cat > /usr/local/bin/check-containers << 'CHECKEOF'
 clear
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+# Use the dedicated check-script key created at setup, if there is one
+[ -f /root/.pce-check-key ] && . /root/.pce-check-key && AUTH="$CHECK_KEY_USER:$CHECK_KEY_SECRET"
 
 echo "--- pairing profile ---"
 curl -s -u "$AUTH" "$BASE/pairing_profiles" | python3 -c "
@@ -194,6 +234,8 @@ cat > /usr/local/bin/check-pce-api << 'CHECKEOF'
 clear
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+# Use the dedicated check-script key created at setup, if there is one
+[ -f /root/.pce-check-key ] && . /root/.pce-check-key && AUTH="$CHECK_KEY_USER:$CHECK_KEY_SECRET"
 code=$(curl -s -o /dev/null -w "%{http_code}" -u "$AUTH" "$BASE/workloads?max_results=1")
 if [ "$code" = "200" ]; then
   echo "PASS - PCE API is responding normally"

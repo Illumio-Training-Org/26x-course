@@ -111,6 +111,7 @@ aws_accounts:
   admin_managed_policies:
   - arn:aws:iam::aws:policy/AdministratorAccess
 secrets:
+- name: pce_cluster_name
 - name: base_url
 - name: api_token
 - name: CRYSTAL_API_KEY
@@ -149,8 +150,8 @@ custom_resources:
     source: user_defined
     value: amer
   - name: pce_cluster_name
-    source: user_defined
-    value: poc4.illum.io:443
+    source: secret
+    value: pce_cluster_name
   - name: insights_type
     source: user_defined
     value: FREE_TRIAL
