@@ -11,6 +11,9 @@ that key; Crystal, Terraform and `disable-all-rulesets` keep the
 magic-link key. If key creation fails (`CHECK-FAIL: check-key` in the
 setup log) the checks fall back to the magic-link key.
 
+`check-api-keys` (in the assignment under `check-pce-api`) tests both
+keys side by side and prints PASS/FAIL with the HTTP code for each.
+
 To watch both keys during a test, `cat /root/.pce-check-key` on
 cloud-client gives the dedicated key's credentials.
 

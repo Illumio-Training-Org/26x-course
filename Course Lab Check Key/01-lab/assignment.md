@@ -204,6 +204,14 @@ Type of Integration: **Create IAM Roles on AWS**.
 check-pce-api
 ```
 
+**Test the API check key** (run in the **CloudCLI** tab):
+
+```
+check-api-keys
+```
+
+This tests the lab's main API key and the separate check-script key created at lab start. Both should show **PASS**. If the main key shows **FAIL (HTTP 401)** but the check-script key still passes, tell your instructor.
+
 **Check your work** (run in the **CloudCLI** tab):
 
 ```

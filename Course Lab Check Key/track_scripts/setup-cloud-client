@@ -245,6 +245,31 @@ fi
 CHECKEOF
 chmod +x /usr/local/bin/check-pce-api
 
+# check-api-keys: tests the magic-link key and the dedicated check-script
+# key side by side, to see whether one survives when the other gets a 401.
+cat > /usr/local/bin/check-api-keys << 'CHECKEOF'
+#!/bin/bash
+clear
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+test_key() {
+  code=$(curl -s -o /dev/null -m 60 -w "%{http_code}" -u "$2" "$BASE/workloads?max_results=1")
+  if [ "$code" = "200" ]; then
+    echo "PASS - $1 key is working (HTTP 200)"
+  else
+    echo "FAIL - $1 key returned HTTP $code (expected 200)"
+  fi
+}
+echo "$(date -u '+%H:%M:%S UTC')"
+test_key "Magic-link" "api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+if [ -f /root/.pce-check-key ]; then
+  . /root/.pce-check-key
+  test_key "Check-script" "$CHECK_KEY_USER:$CHECK_KEY_SECRET"
+else
+  echo "FAIL - no check-script key was created at setup (/root/.pce-check-key missing)"
+fi
+CHECKEOF
+chmod +x /usr/local/bin/check-api-keys
+
 cat > /usr/local/bin/check-cloud << 'CHECKEOF'
 #!/bin/bash
 clear
