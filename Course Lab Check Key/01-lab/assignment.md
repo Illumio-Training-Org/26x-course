@@ -547,6 +547,15 @@ AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
 curl -s -o /dev/null -w "%{http_code}\n" -u "$AUTH" "$BASE/workloads?max_results=1"
 ```
 
+To test the Check-script API:
+
+```run
+. /root/.pce-check-key
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+echo "Check-script key: $CHECK_KEY_USER"
+curl -s -o /dev/null -w "%{http_code}\n" -u "$CHECK_KEY_USER:$CHECK_KEY_SECRET" "$BASE/workloads?max_results=1"
+```
+
 To test the deployment process:
 
 ```run
