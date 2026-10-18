@@ -4,9 +4,8 @@ A copy of `! 26.x Lab` (slug `26x-lab-poc4`) that creates its org on the old
 **poc4** PCE instead of partner100, for side-by-side comparison. The only
 difference is in `config.yml`: the `autoaccount` input `pce_cluster_name` is
 fixed to `poc4.illum.io:443` instead of reading the team secret (which is set to
-partner100 since 2026-10-14). The exact secret format was never visible, so
-`poc4.illum.io:443` is a guess (plain `poc4` failed at launch on 2026-10-18): check `env | grep PCE_FQDN` on cloud-client shows
-`poc4.illum.io:443` after launch. Created 2026-10-18.
+partner100 since 2026-10-14). Plain `poc4` failed at launch; `poc4.illum.io:443` (the full FQDN:port)
+worked, live-tested 2026-10-18 (org 4140776). Created 2026-10-18.
 
 The rest of this README describes the original `! 26.x Lab`.
 
