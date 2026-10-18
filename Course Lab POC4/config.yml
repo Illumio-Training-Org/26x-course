@@ -150,7 +150,7 @@ custom_resources:
     value: amer
   - name: pce_cluster_name
     source: user_defined
-    value: poc4
+    value: poc4.illum.io:443
   - name: insights_type
     source: user_defined
     value: FREE_TRIAL
