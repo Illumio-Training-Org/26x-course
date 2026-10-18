@@ -1,6 +1,6 @@
 slug: 26x-test-lab-check-key
 id: lajmjf6wghz0
-title: '! 26.x Test: Lab Check Key'
+title: '! 26.x Lab Check Key'
 description: |-
   This lab provides access to:
 
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "7466187788212268903"
+checksum: "12640543157398305680"
 enhanced_loading: false

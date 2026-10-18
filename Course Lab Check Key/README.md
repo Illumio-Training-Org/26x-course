@@ -1,4 +1,4 @@
-# Course Lab Check Key — `! 26.x Test: Lab Check Key`
+# Course Lab Check Key — `! 26.x Lab Check Key`
 
 A test copy of `! 26.x Lab` (slug `26x-test-lab-check-key`), created
 2026-10-18 to test a workaround for the mid-lab PCE API 401s. The only
