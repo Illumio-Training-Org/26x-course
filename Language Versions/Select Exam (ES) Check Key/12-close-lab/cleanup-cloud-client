@@ -1,0 +1,54 @@
+#!/bin/bash
+# No set -x: the curls below carry CRYSTAL_API_KEY, a shared team-level
+# secret, and xtrace would print it into the Instruqt track logs.
+
+echo "===== PROJECT CRYSTAL TEARDOWN START ====="
+
+# Deletes the Crystal deployment created in setup-cloud-client so it
+# doesn't stay listed in the shared Crystal dashboard after the lab.
+#
+# The same script runs from two places, so it must be safe to run
+# twice:
+#   - 03-close-lab/cleanup-cloud-client: when the learner clicks NEXT
+#     on Close Lab (the normal finish)
+#   - track_scripts/cleanup-cloud-client: when the sandbox is stopped
+#     or expires without the learner reaching Close Lab
+# A deployment that's already gone (404) counts as done.
+#
+# Calls the API directly rather than via github.com/justinvid/
+# pc-connector/teardown's Terraform module - that module's main.tf has
+# a path bug (singular "/api/deployment/{id}/stop", 405 Method Not
+# Allowed) where every other confirmed-working endpoint in this API
+# uses the plural "/api/deployments/...".
+#
+# No set -e: a failed call is logged rather than aborting, and the
+# script always exits 0 so it can never block the learner finishing.
+
+CRYSTALDEPLOYMENT="$(agent variable get CRYSTALDEPLOYMENT 2>/dev/null)"
+CRYSTALBASEURL="$(agent variable get CRYSTALBASEURL 2>/dev/null)"
+CRYSTALBASEURL="${CRYSTALBASEURL:-https://crystal.illumio.com}"
+
+if [ -z "$CRYSTALDEPLOYMENT" ]; then
+  echo "No CRYSTALDEPLOYMENT variable set - nothing to tear down"
+  exit 0
+fi
+
+# Stop first so the engine isn't mid-tick when the record is removed
+curl -s -m 30 -w "\nstop: HTTP %{http_code}\n" -X POST \
+  -H "X-API-Key: $CRYSTAL_API_KEY" -H "Content-Type: application/json" -d '{}' \
+  "$CRYSTALBASEURL/api/deployments/$CRYSTALDEPLOYMENT/stop"
+
+for i in 1 2 3; do
+  code="$(curl -s -m 30 -o /tmp/crystal-delete.json -w "%{http_code}" -X DELETE \
+    -H "X-API-Key: $CRYSTAL_API_KEY" \
+    "$CRYSTALBASEURL/api/deployments/$CRYSTALDEPLOYMENT")"
+  if [ "${code:0:1}" = "2" ] || [ "$code" = "404" ]; then
+    echo "Crystal deployment $CRYSTALDEPLOYMENT deleted (HTTP $code, attempt $i)"
+    break
+  fi
+  echo "Crystal delete returned HTTP $code (attempt $i): $(cat /tmp/crystal-delete.json 2>/dev/null)"
+  sleep 5
+done
+
+echo "===== PROJECT CRYSTAL TEARDOWN END ====="
+exit 0

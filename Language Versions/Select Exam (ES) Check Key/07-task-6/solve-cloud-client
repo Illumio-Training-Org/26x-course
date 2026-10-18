@@ -1,0 +1,93 @@
+#!/bin/sh
+#
+# Runs when the learner clicks Skip. Creates Task6-RingfenceOrdering as
+# a scopeless ruleset with an allow rule that has Application=ordering,
+# Environment=Development, Location=ca on both source and destination -
+# Scopes aren't taught in this course and check-cloud-client does not
+# accept a Scope-based equivalent. Task 7 extends this same ruleset, so
+# it needs to already have this rule in place if Task 6 was skipped.
+#
+# Fixed 2026-09-11: previously only added the correct rule when there
+# was no enabled rule at all - so a learner's own close-but-wrong
+# attempt (e.g. a Label Group used instead of a plain Environment
+# label) was already "enabled", and Skip did nothing at all -
+# live-caught by Nathan. Now always replaces whatever rule(s) exist
+# with exactly the one correct rule.
+
+. /root/.autoaccount_env
+
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+FQDN="$AUTOACCOUNT_PCE_FQDN"
+
+python3 -c "
+import json, subprocess
+
+def call(method, path, body=None):
+    cmd = ['curl', '-s', '-u', '$AUTH', '-X', method, 'https://$FQDN/api/v2' + path]
+    if body is not None:
+        cmd += ['-H', 'Content-Type: application/json', '-d', json.dumps(body)]
+    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    try:
+        return json.loads(out)
+    except Exception:
+        return None
+
+def find_or_create_label(key, value):
+    labels = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/labels?max_results=1000') or []
+    for l in labels:
+        if l.get('key') == key and (l.get('value') or '').lower() == value.lower():
+            return l['href']
+    created = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/labels', {'key': key, 'value': value})
+    return created['href'] if created else None
+
+def find_all_services_href():
+    # Live-verified 2026-09-04: an empty ingress_services list is
+    # REJECTED by the API at rule-creation time
+    # ('ingress_service_required: At least one service is required if
+    # provider resolve_labels_as includes workloads') even though the
+    # UI's own 'All Services' selection resolves to a real linked
+    # service object of that exact name, not an empty list. Must
+    # reference that real object explicitly.
+    services = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/services?max_results=1000') or []
+    for s in services:
+        if (s.get('name') or '').lower() == 'all services':
+            return s['href']
+    return None
+
+app_href = find_or_create_label('app', 'ordering')
+dev_href = find_or_create_label('env', 'Development')
+loc_href = find_or_create_label('loc', 'ca')
+all_services_href = find_all_services_href()
+
+rulesets = call('GET', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets?max_results=1000') or []
+rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task6-ringfenceordering'), None)
+if not rs:
+    rs = call('POST', '/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets', {
+        'name': 'Task6-RingfenceOrdering',
+        'scopes': [[]],
+    })
+
+if rs and rs.get('href'):
+    # Replace whatever rule(s) exist with exactly the one correct rule
+    # - a learner's own close-but-wrong attempt (wrong label, or a
+    # Label Group used instead of a plain label) is deleted rather
+    # than left in place alongside/instead of the correct one.
+    for rule in rs.get('rules', []):
+        href = rule.get('href')
+        if href:
+            call('DELETE', href)
+    entries = [
+        {'label': {'href': app_href}},
+        {'label': {'href': dev_href}},
+        {'label': {'href': loc_href}},
+    ]
+    call('POST', rs['href'] + '/sec_rules', {
+        'enabled': True,
+        'providers': entries,
+        'consumers': entries,
+        'ingress_services': [{'href': all_services_href}] if all_services_href else [],
+        'resolve_labels_as': {'providers': ['workloads'], 'consumers': ['workloads']},
+    })
+"
+
+exit 0

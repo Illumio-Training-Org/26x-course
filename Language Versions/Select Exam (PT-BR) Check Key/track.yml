@@ -1,0 +1,37 @@
+slug: 26x-test-select-exam-pt-br-check-key
+id: gynktyx9f7gy
+title: '! 26.x Test: Select Exam (PT-BR/EN) Check Key'
+description: |-
+  Lab Name: 26.x SELECT EXAM (PT-BR/EN)
+
+  Outcome:
+  Este exame tem 10 questões. A primeira tarefa (parear os workloads)
+  deve ser concluída para continuar e não pode ser pulada. Qualquer
+  outra tarefa pode ser pulada, mas pular conta contra a sua pontuação.
+  Para ser aprovado no exame, você precisa de uma pontuação de pelo
+  menos 80%, ou 8 de 10 respostas corretas.
+
+  This exam has 10 questions. The first task (pairing the workloads)
+  must be completed to continue and cannot be skipped. Any other task
+  can be skipped, but skipping counts against your score. In order to
+  pass the exam you need a score of at least 80% or 8 out of 10 correct
+  answers.
+icon: ./assets/logo.png
+tags:
+- ilt
+owner: illumio-training
+developers:
+- nathan.mitchell@illumio.com
+show_timer: true
+skipping_enabled: true
+idle_timeout: 3600
+timelimit: 9000
+lab_config:
+  sidebar_enabled: true
+  feedback_recap_enabled: true
+  feedback_tab_enabled: false
+  loadingMessages: true
+  override_challenge_layout: false
+  hideStopButton: false
+checksum: "12134276974259655787"
+enhanced_loading: false
