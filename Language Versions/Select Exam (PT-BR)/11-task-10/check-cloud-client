@@ -27,14 +27,14 @@ def matches_app_tag(rule):
 
 matching = [r for r in rules if matches_app_tag(r)]
 if not matching:
-CHK|    print('Nenhuma Application Discovery Rule encontrada para a cloud tag aws:app')
+    print('Nenhuma Application Discovery Rule encontrada para a cloud tag aws:app')
     sys.exit(1)
 
 if not any(r.get('auto_approve_applications') for r in matching):
-CHK|    print('Discovery Rule encontrada para aws:app, mas o Auto Approve não está ativado')
+    print('Discovery Rule encontrada para aws:app, mas o Auto Approve não está ativado')
     sys.exit(1)
 
-CHK|print('Encontrada a Application Discovery Rule em aws:app com Auto Approve ativado')
+print('Encontrada a Application Discovery Rule em aws:app com Auto Approve ativado')
 sys.exit(0)
 ")
 status=$?

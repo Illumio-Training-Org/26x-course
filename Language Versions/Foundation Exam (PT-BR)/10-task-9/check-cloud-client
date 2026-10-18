@@ -16,9 +16,9 @@ import json, sys
 d = json.load(sys.stdin)
 found = [x for x in d if x.get('key') == 'role' and (x.get('value') or '').lower() == 'rogue-donotuse']
 if found:
-CHK|    print('A label de Role não autorizada ainda existe - encontre-a e exclua-a')
+    print('A label de Role não autorizada ainda existe - encontre-a e exclua-a')
     sys.exit(1)
-CHK|print('Label não autorizada removida')
+print('Label não autorizada removida')
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

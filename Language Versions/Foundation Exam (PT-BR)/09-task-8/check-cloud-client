@@ -39,7 +39,7 @@ expected_scope = {'env': 'production', 'loc': 'ca'}
 
 perms = get('/orgs/$AUTOACCOUNT_ORG_ID/permissions')
 if perms is None:
-CHK|    print('Não foi possível ler /permissions - crie uma atribuição de função com scope para um usuário')
+    print('Não foi possível ler /permissions - crie uma atribuição de função com scope para um usuário')
     sys.exit(1)
 
 def resolve_label(href):
@@ -78,17 +78,17 @@ for p in perms:
                 has_viewer = True
                 break
         if not has_viewer:
-CHK|            print('A função Ruleset Manager com scope foi encontrada, mas o mesmo usuário não tem mais a função padrão Viewer com scope All - ela deve ser mantida junto com a nova função')
+            print('A função Ruleset Manager com scope foi encontrada, mas o mesmo usuário não tem mais a função padrão Viewer com scope All - ela deve ser mantida junto com a nova função')
             sys.exit(1)
-CHK|        print('Encontrado um usuário com Ruleset Manager com scope exatamente Environment=Production, Location=ca, e a função padrão Viewer (scope All) continua ativa')
+        print('Encontrado um usuário com Ruleset Manager com scope exatamente Environment=Production, Location=ca, e a função padrão Viewer (scope All) continua ativa')
         sys.exit(0)
     if all(matched.get(k) == v for k, v in expected_scope.items()):
         too_broad = sorted(matched.keys())
 
 if too_broad:
-CHK|    print('O scope tem labels além de Environment=Production, Location=ca - reduza para somente essas 2, encontrado: ' + str(too_broad))
+    print('O scope tem labels além de Environment=Production, Location=ca - reduza para somente essas 2, encontrado: ' + str(too_broad))
 else:
-CHK|    print('Nenhum usuário encontrado com a função Ruleset Manager com scope específico Environment=Production, Location=ca')
+    print('Nenhum usuário encontrado com a função Ruleset Manager com scope específico Environment=Production, Location=ca')
 sys.exit(1)
 ")
 status=$?

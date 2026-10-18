@@ -16,18 +16,18 @@ import json, sys
 ws = {w.get('hostname'): w for w in json.load(sys.stdin)}
 wl = ws.get('linux-vm')
 if not wl:
-CHK|    print('Workload linux-vm não encontrado')
+    print('Workload linux-vm não encontrado')
     sys.exit(1)
 labels = {l.get('key'): (l.get('value') or '') for l in (wl.get('labels') or [])}
 fails = []
 expected = {'app': 'ordering', 'env': 'Production', 'loc': 'ca'}
 for k, v in expected.items():
     if labels.get(k, '').lower() != v.lower():
-CHK|        fails.append(k + ' deveria ser ' + v + ', encontrado ' + str(labels.get(k)))
+        fails.append(k + ' deveria ser ' + v + ', encontrado ' + str(labels.get(k)))
 if fails:
     print('; '.join(fails))
     sys.exit(1)
-CHK|print('linux-vm com as labels corretas: Application=ordering, Environment=Production, Location=ca')
+print('linux-vm com as labels corretas: Application=ordering, Environment=Production, Location=ca')
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

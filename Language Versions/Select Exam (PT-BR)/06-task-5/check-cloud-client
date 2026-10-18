@@ -36,7 +36,7 @@ def resolve(entries):
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task5-denydevprod'), None)
 if not rs:
-CHK|    print('Policy \"Task5-DenyDevProd\" não encontrada')
+    print('Policy \"Task5-DenyDevProd\" não encontrada')
     sys.exit(1)
 
 # Scopes aren't taught in this course - this task does NOT accept a
@@ -44,7 +44,7 @@ CHK|    print('Policy \"Task5-DenyDevProd\" não encontrada')
 # consumer and provider side of the deny rule.
 for scope_group in rs.get('scopes', []):
     if scope_group:
-CHK|        print('Task5-DenyDevProd não deve usar um Scope - repita Location=ca explicitamente nos dois lados da regra deny')
+        print('Task5-DenyDevProd não deve usar um Scope - repita Location=ca explicitamente nos dois lados da regra deny')
         sys.exit(1)
 
 def is_all_services(ingress_services):
@@ -66,20 +66,20 @@ def label_problems(name, found, expected):
     for key, want in expected.items():
         got = found.get(key)
         if got != want:
-CHK|            problems.append(name + ' ' + key + ' deveria ser ' + want + ', encontrado ' + (got or 'nenhum'))
+            problems.append(name + ' ' + key + ' deveria ser ' + want + ', encontrado ' + (got or 'nenhum'))
     extra = set(found) - set(expected)
     if extra:
-CHK|        problems.append(name + ' tem label(s) extra(s) inesperada(s): ' + ', '.join(sorted(extra)))
+        problems.append(name + ' tem label(s) extra(s) inesperada(s): ' + ', '.join(sorted(extra)))
     return problems
 
 best_reasons = None
 for dr in rs.get('deny_rules', []):
     consumers = resolve(dr.get('consumers', []))
     providers = resolve(dr.get('providers', []))
-CHK|    problems = label_problems('Source', consumers, want_consumer) + label_problems('Destination', providers, want_provider)
+    problems = label_problems('Source', consumers, want_consumer) + label_problems('Destination', providers, want_provider)
     service_ok = is_all_services(dr.get('ingress_services'))
     if not problems and service_ok:
-CHK|        print('Encontrada a regra deny Dev->Prod para ordering em ca, All Services')
+        print('Encontrada a regra deny Dev->Prod para ordering em ca, All Services')
         sys.exit(0)
     if not problems and not service_ok:
         problems = ['should be for All Services, not a specific service/port range']
@@ -87,9 +87,9 @@ CHK|        print('Encontrada a regra deny Dev->Prod para ordering em ca, All Se
         best_reasons = problems
 
 if best_reasons:
-CHK|    print('A regra de Task5-DenyDevProd está quase certa, mas: ' + '; '.join(best_reasons))
+    print('A regra de Task5-DenyDevProd está quase certa, mas: ' + '; '.join(best_reasons))
 else:
-CHK|    print('Task5-DenyDevProd existe, mas não tem nenhuma regra que negue Dev->Prod para ordering em ca')
+    print('Task5-DenyDevProd existe, mas não tem nenhuma regra que negue Dev->Prod para ordering em ca')
 sys.exit(1)
 ")
 status=$?

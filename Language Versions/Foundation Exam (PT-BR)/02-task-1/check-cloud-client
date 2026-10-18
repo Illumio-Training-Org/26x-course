@@ -29,13 +29,13 @@ import json, sys
 ws = {w.get('hostname'): w for w in json.load(sys.stdin)}
 wl = ws.get('linux-vm')
 if not wl or not wl.get('ven'):
-CHK|    print('linux-vm ainda não está pareado como VEN')
+    print('linux-vm ainda não está pareado como VEN')
     sys.exit(1)
 mode = wl.get('enforcement_mode')
 if mode != 'idle':
-CHK|    print('linux-vm está pareado, mas em modo ' + str(mode) + ' - o novo Pairing Profile deve definir o Enforcement Mode como Idle')
+    print('linux-vm está pareado, mas em modo ' + str(mode) + ' - o novo Pairing Profile deve definir o Enforcement Mode como Idle')
     sys.exit(1)
-CHK|print('linux-vm pareado como VEN em modo Idle')
+print('linux-vm pareado como VEN em modo Idle')
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

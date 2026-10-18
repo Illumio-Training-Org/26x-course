@@ -27,12 +27,12 @@ def resolve_label_value(href):
 label_groups = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/label_groups')
 lg = next((g for g in label_groups if (g.get('name') or '').lower() == 'pci-staging'), None)
 if not lg:
-CHK|    print('Label Group \"pci-staging\" não encontrado')
+    print('Label Group \"pci-staging\" não encontrado')
     sys.exit(1)
 
 labels = lg.get('labels', [])
 if len(labels) != 2:
-CHK|    print('Label Group \"pci-staging\" deve conter exatamente 2 labels, encontradas ' + str(len(labels)))
+    print('Label Group \"pci-staging\" deve conter exatamente 2 labels, encontradas ' + str(len(labels)))
     sys.exit(1)
 
 values = set()
@@ -42,10 +42,10 @@ for l in labels:
         values.add(resolve_label_value(href))
 
 if values != {'pci', 'staging'}:
-CHK|    print('Label Group \"pci-staging\" deve conter somente as labels de Environment PCI e Staging, encontrado ' + str(sorted(values)))
+    print('Label Group \"pci-staging\" deve conter somente as labels de Environment PCI e Staging, encontrado ' + str(sorted(values)))
     sys.exit(1)
 
-CHK|print('Label Group pci-staging encontrado com exatamente as labels PCI e Staging')
+print('Label Group pci-staging encontrado com exatamente as labels PCI e Staging')
 sys.exit(0)
 ")
 status=$?

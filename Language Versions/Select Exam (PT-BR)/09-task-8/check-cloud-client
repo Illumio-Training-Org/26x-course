@@ -81,17 +81,17 @@ def side_problems(name, found, expected):
     for key, want in expected.items():
         got = found.get(key)
         if got != want:
-CHK|            probs.append(name + ' ' + key + ' deveria ser ' + want + ', encontrado ' + (got or 'nenhum'))
+            probs.append(name + ' ' + key + ' deveria ser ' + want + ', encontrado ' + (got or 'nenhum'))
     extra = set(found) - set(expected)
     if extra:
-CHK|        probs.append(name + ' tem label(s) extra(s) inesperada(s): ' + ', '.join(sorted(extra)))
+        probs.append(name + ' tem label(s) extra(s) inesperada(s): ' + ', '.join(sorted(extra)))
     return probs
 
 def run():
     rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
     rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task8-denyglobal'), None)
     if not rs:
-CHK|        print('Policy \"Task8-DenyGlobal\" não encontrada')
+        print('Policy \"Task8-DenyGlobal\" não encontrada')
         sys.exit(1)
 
     expected_consumer = {'app': 'ordering', 'env': 'development'}
@@ -104,14 +104,14 @@ CHK|        print('Policy \"Task8-DenyGlobal\" não encontrada')
     for dr in deny_rules:
         consumers = resolve(dr.get('consumers', []))
         providers = resolve(dr.get('providers', []))
-CHK|        reasons = side_problems('Source', consumers, expected_consumer) + side_problems('Destination', providers, expected_provider)
+        reasons = side_problems('Source', consumers, expected_consumer) + side_problems('Destination', providers, expected_provider)
         if not reasons and is_all_services(dr.get('ingress_services')):
             dev_to_prod = True
             dev_to_prod_all_services = True
             best_deny_reasons = []
             break
         if not reasons:
-CHK|            reasons = ['a regra deny deve cobrir All Services, não um service específico']
+            reasons = ['a regra deny deve cobrir All Services, não um service específico']
         if best_deny_reasons is None or len(reasons) < len(best_deny_reasons):
             best_deny_reasons = reasons
 
@@ -121,30 +121,30 @@ CHK|            reasons = ['a regra deny deve cobrir All Services, não um servi
     for rule in enabled_rules:
         consumers = resolve(rule.get('consumers', []))
         providers = resolve(rule.get('providers', []))
-CHK|        reasons = side_problems('Source', consumers, expected_consumer) + side_problems('Destination', providers, expected_provider)
+        reasons = side_problems('Source', consumers, expected_consumer) + side_problems('Destination', providers, expected_provider)
         if not reasons and is_ssh_only(rule.get('ingress_services')):
             ssh_dev_to_prod = True
             best_ssh_reasons = []
             break
         if not reasons:
-CHK|            reasons = ['deve permitir somente SSH, não All Services nem outro service específico']
+            reasons = ['deve permitir somente SSH, não All Services nem outro service específico']
         if best_ssh_reasons is None or len(reasons) < len(best_ssh_reasons):
             best_ssh_reasons = reasons
 
     missing = []
     if not (dev_to_prod and dev_to_prod_all_services):
         if not deny_rules:
-CHK|            missing.append('falta a regra deny Dev->Prod')
+            missing.append('falta a regra deny Dev->Prod')
         else:
-CHK|            missing.append('a regra deny Dev->Prod está quase certa, mas: ' + '; '.join(best_deny_reasons))
+            missing.append('a regra deny Dev->Prod está quase certa, mas: ' + '; '.join(best_deny_reasons))
     if not ssh_dev_to_prod:
         if not enabled_rules:
-CHK|            missing.append('falta uma Allow Rule que permita SSH de Development para Production em ordering')
+            missing.append('falta uma Allow Rule que permita SSH de Development para Production em ordering')
         else:
-CHK|            missing.append('a regra allow de SSH está quase certa, mas: ' + '; '.join(best_ssh_reasons))
+            missing.append('a regra allow de SSH está quase certa, mas: ' + '; '.join(best_ssh_reasons))
 
     if not missing:
-CHK|        print('Encontrados o deny Dev->Prod (All Services) para ordering e uma regra allow de SSH')
+        print('Encontrados o deny Dev->Prod (All Services) para ordering e uma regra allow de SSH')
         sys.exit(0)
 
     print('Task8-DenyGlobal: ' + '; '.join(missing))
@@ -155,7 +155,7 @@ try:
 except SystemExit:
     raise
 except Exception:
-CHK|    print('A verificação de Task8-DenyGlobal encontrou um erro inesperado (não é um problema na sua policy) - clique em Check novamente. Detalhes: ' + traceback.format_exc().splitlines()[-1])
+    print('A verificação de Task8-DenyGlobal encontrou um erro inesperado (não é um problema na sua policy) - clique em Check novamente. Detalhes: ' + traceback.format_exc().splitlines()[-1])
     sys.exit(1)
 ")
 status=$?

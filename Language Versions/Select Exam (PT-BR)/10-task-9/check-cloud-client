@@ -34,12 +34,12 @@ def get(path):
 rulesets = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/rule_sets')
 rs = next((r for r in rulesets if (r.get('name') or '').lower() == 'task9-ringfencepayment'), None)
 if not rs:
-CHK|    print('Policy \"Task9-RingfencePayment\" não encontrada')
+    print('Policy \"Task9-RingfencePayment\" não encontrada')
     sys.exit(1)
 
 for scope in rs.get('scopes', []):
     if scope:
-CHK|        print('Task9-RingfencePayment não deve usar um Scope - crie a regra de ringfencing com Application=payment, Location=ldn tanto no Source quanto no Destination')
+        print('Task9-RingfencePayment não deve usar um Scope - crie a regra de ringfencing com Application=payment, Location=ldn tanto no Source quanto no Destination')
         sys.exit(1)
 
 def resolve_labels(entries):
@@ -78,7 +78,7 @@ def has_tcp_443(ingress_services):
 
 enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
 if len(enabled_rules) != 2:
-CHK|    print('Task9-RingfencePayment deve ter exatamente duas regras habilitadas (a regra allow de ringfencing e a regra de entrada ordering->payment), encontradas ' + str(len(enabled_rules)))
+    print('Task9-RingfencePayment deve ter exatamente duas regras habilitadas (a regra allow de ringfencing e a regra de entrada ordering->payment), encontradas ' + str(len(enabled_rules)))
     sys.exit(1)
 
 ringfence_rule = next((r for r in enabled_rules if is_all_services(r.get('ingress_services'))), None)
@@ -87,30 +87,30 @@ inbound_rule = next((r for r in enabled_rules if has_tcp_443(r.get('ingress_serv
 reasons = []
 
 if not ringfence_rule:
-CHK|    reasons.append('falta a regra de ringfencing interna de payment para All Services')
+    reasons.append('falta a regra de ringfencing interna de payment para All Services')
 else:
     src_ok = resolve_labels(ringfence_rule.get('consumers', [])) == expected
     dst_ok = resolve_labels(ringfence_rule.get('providers', [])) == expected
     if not src_ok:
-CHK|        reasons.append('o Source da regra de ringfencing está incorreto - deve ser Application=payment, Location=ldn')
+        reasons.append('o Source da regra de ringfencing está incorreto - deve ser Application=payment, Location=ldn')
     if not dst_ok:
-CHK|        reasons.append('o Destination da regra de ringfencing está incorreto - deve ser Application=payment, Location=ldn')
+        reasons.append('o Destination da regra de ringfencing está incorreto - deve ser Application=payment, Location=ldn')
 
 if not inbound_rule:
-CHK|    reasons.append('falta a regra allow de entrada ordering -> payment em TCP/443 (HTTPS)')
+    reasons.append('falta a regra allow de entrada ordering -> payment em TCP/443 (HTTPS)')
 else:
     consumer_labels = resolve_labels(inbound_rule.get('consumers', []))
     if consumer_labels != {('app', 'ordering')}:
-CHK|        reasons.append('o Source da regra de entrada está incorreto - deve ser exatamente Application=ordering, sem outras labels, encontrado ' + str(sorted(consumer_labels)))
+        reasons.append('o Source da regra de entrada está incorreto - deve ser exatamente Application=ordering, sem outras labels, encontrado ' + str(sorted(consumer_labels)))
     provider_labels = resolve_labels(inbound_rule.get('providers', []))
     if provider_labels != expected:
-CHK|        reasons.append('o Destination da regra de entrada está incorreto - deve ser exatamente Application=payment, Location=ldn, sem outras labels, encontrado ' + str(sorted(provider_labels)))
+        reasons.append('o Destination da regra de entrada está incorreto - deve ser exatamente Application=payment, Location=ldn, sem outras labels, encontrado ' + str(sorted(provider_labels)))
 
 if reasons:
     print('; '.join(reasons))
     sys.exit(1)
 
-CHK|print('Task9-RingfencePayment aplica ringfencing a payment/ldn e permite HTTPS de entrada a partir de ordering')
+print('Task9-RingfencePayment aplica ringfencing a payment/ldn e permite HTTPS de entrada a partir de ordering')
 sys.exit(0)
 ")
 status=$?

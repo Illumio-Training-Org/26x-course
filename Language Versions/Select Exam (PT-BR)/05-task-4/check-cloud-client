@@ -32,7 +32,7 @@ def get(path):
 ws = {w.get('hostname'): w for w in get('/orgs/$AUTOACCOUNT_ORG_ID/workloads?max_results=1000')}
 wl = ws.get('linux-vm')
 if not wl:
-CHK|    print('linux-vm não encontrado')
+    print('linux-vm não encontrado')
     sys.exit(1)
 
 labels = {(e.get('key') or '').lower(): (e.get('value') or '').lower() for e in wl.get('labels', [])}
@@ -50,13 +50,13 @@ wrong = []
 for key, want in expected.items():
     got = labels.get(key)
     if got != want:
-CHK|        wrong.append(key + ' deveria ser ' + want + ', encontrado ' + (got or 'nenhum'))
+        wrong.append(key + ' deveria ser ' + want + ', encontrado ' + (got or 'nenhum'))
 
 if wrong:
-CHK|    print('As labels de linux-vm não estão todas corretas: ' + '; '.join(wrong))
+    print('As labels de linux-vm não estão todas corretas: ' + '; '.join(wrong))
     sys.exit(1)
 
-CHK|print('linux-vm está marcado como violado (IR-DIRTYBUBBLE) e as outras labels estão intactas')
+print('linux-vm está marcado como violado (IR-DIRTYBUBBLE) e as outras labels estão intactas')
 sys.exit(0)
 ")
 status=$?

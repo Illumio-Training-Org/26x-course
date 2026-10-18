@@ -49,7 +49,7 @@ expected_role = {'linux-vm': 'web', 'windows-vm': 'db'}
 
 unpaired = [host for host in expected_role if not ws.get(host) or not ws[host].get('ven')]
 if unpaired:
-CHK|    print('Os dois workloads ainda não estão pareados como VENs')
+    print('Os dois workloads ainda não estão pareados como VENs')
     sys.exit(1)
 
 labels_ok = True
@@ -62,15 +62,15 @@ for host, want_role in expected_role.items():
             labels_ok = False
 
 if not labels_ok:
-CHK|    print('Os dois workloads estão pareados, mas as labels não estão corretas')
+    print('Os dois workloads estão pareados, mas as labels não estão corretas')
     sys.exit(1)
 
 not_idle = [host for host in expected_role if ws[host].get('enforcement_mode') != 'idle']
 if not_idle:
-CHK|    print('Os dois workloads estão pareados e com as labels corretas, mas não estão em modo Idle: ' + ', '.join(not_idle) + ' - faça o pareamento com um Pairing Profile com Enforcement Mode definido como Idle')
+    print('Os dois workloads estão pareados e com as labels corretas, mas não estão em modo Idle: ' + ', '.join(not_idle) + ' - faça o pareamento com um Pairing Profile com Enforcement Mode definido como Idle')
     sys.exit(1)
 
-CHK|print('Os dois workloads estão pareados em modo Idle e com as labels corretas na aplicação portal')
+print('Os dois workloads estão pareados em modo Idle e com as labels corretas na aplicação portal')
 sys.exit(0)
 ")
 status=$?

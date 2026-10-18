@@ -16,13 +16,13 @@ import json, sys
 ws = {w.get('hostname'): w for w in json.load(sys.stdin)}
 wl = ws.get('linux-vm')
 if not wl:
-CHK|    print('Workload linux-vm não encontrado')
+    print('Workload linux-vm não encontrado')
     sys.exit(1)
 mode = wl.get('enforcement_mode')
 if mode != 'selective':
-CHK|    print('O enforcement_mode de linux-vm é \'' + str(mode) + '\', o esperado é Selective')
+    print('O enforcement_mode de linux-vm é \'' + str(mode) + '\', o esperado é Selective')
     sys.exit(1)
-CHK|print('linux-vm está em Selective enforcement')
+print('linux-vm está em Selective enforcement')
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

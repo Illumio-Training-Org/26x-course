@@ -15,9 +15,9 @@ import json, sys
 d = json.load(sys.stdin)
 aws = d.get('aws', [])
 if not aws:
-CHK|    print('Nenhuma conta AWS incorporada ainda - use Cloud -> Onboarding -> Add AWS')
+    print('Nenhuma conta AWS incorporada ainda - use Cloud -> Onboarding -> Add AWS')
     sys.exit(1)
-CHK|print('Conta AWS incorporada: ' + str(aws[0].get('name')))
+print('Conta AWS incorporada: ' + str(aws[0].get('name')))
 ")
 status=$?
 if [ "$status" -ne 0 ]; then

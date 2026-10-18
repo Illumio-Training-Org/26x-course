@@ -38,7 +38,7 @@ for policy in ('draft', 'active'):
 
 named = [rs for rs in rulesets if (rs.get('name') or '').lower() == 'task4-denypolicy']
 if not named:
-CHK|    print('Policy Task4-DenyPolicy não encontrada')
+    print('Policy Task4-DenyPolicy não encontrada')
     sys.exit(1)
 
 # Must be a scopeless policy. A scope of ca/Production/ordering plus an
@@ -46,7 +46,7 @@ CHK|    print('Policy Task4-DenyPolicy não encontrada')
 # traffic, but isn't what the task asks for. Scopeless = no scope rows,
 # or a single empty one.
 if any(any(scope for scope in (rs.get('scopes') or [])) for rs in named):
-CHK|    print('Task4-DenyPolicy deve ser uma policy sem scope - remova o scope e coloque as labels Application, Environment e Location no Destination da regra')
+    print('Task4-DenyPolicy deve ser uma policy sem scope - remova o scope e coloque as labels Application, Environment e Location no Destination da regra')
     sys.exit(1)
 
 def has_tcp_22(ingress_services):
@@ -124,20 +124,20 @@ for rs in named:
         svc_ok = has_tcp_22(dr.get('ingress_services'))
         from_all_ok = is_all_workloads(dr.get('consumers', []))
         if labels_ok and svc_ok and from_all_ok:
-CHK|            print('Encontrada uma regra deny: SSH, de All Workloads, para Application=ordering/Environment=Production/Location=ca em Task4-DenyPolicy')
+            print('Encontrada uma regra deny: SSH, de All Workloads, para Application=ordering/Environment=Production/Location=ca em Task4-DenyPolicy')
             sys.exit(0)
         if labels_ok:
             missing = []
             if not svc_ok:
-CHK|                missing.append('o service deve negar SSH - o service SSH integrado, ou tcp/22 e udp/22 inseridos manualmente, encontrado ' + str(describe_services(dr.get('ingress_services'))))
+                missing.append('o service deve negar SSH - o service SSH integrado, ou tcp/22 e udp/22 inseridos manualmente, encontrado ' + str(describe_services(dr.get('ingress_services'))))
             if not from_all_ok:
-CHK|                missing.append('o Source deve ser All Workloads, encontrado ' + str(describe_consumers(dr.get('consumers'))))
+                missing.append('o Source deve ser All Workloads, encontrado ' + str(describe_consumers(dr.get('consumers'))))
             reasons.append('; '.join(missing))
 
 if reasons:
-CHK|    print('Task4-DenyPolicy tem uma regra com as labels certas, mas: ' + '; '.join(reasons))
+    print('Task4-DenyPolicy tem uma regra com as labels certas, mas: ' + '; '.join(reasons))
 else:
-CHK|    print('Task4-DenyPolicy existe, mas não tem nenhuma regra deny para Application=ordering, Environment=Production, Location=ca')
+    print('Task4-DenyPolicy existe, mas não tem nenhuma regra deny para Application=ordering, Environment=Production, Location=ca')
 sys.exit(1)
 ")
 status=$?

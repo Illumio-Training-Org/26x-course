@@ -27,10 +27,10 @@ has_service = any(
     for s in services
 )
 if not has_service:
-CHK|    print('Nenhum Service chamado \"Redis\" encontrado com TCP porta 6379')
+    print('Nenhum Service chamado \"Redis\" encontrado com TCP porta 6379')
     sys.exit(1)
 
-CHK|print('Service Redis encontrado com tcp/6379')
+print('Service Redis encontrado com tcp/6379')
 sys.exit(0)
 ")
 status=$?

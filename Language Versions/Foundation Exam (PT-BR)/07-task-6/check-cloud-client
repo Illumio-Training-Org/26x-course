@@ -23,7 +23,7 @@ def get(path):
 ip_lists = get('/orgs/$AUTOACCOUNT_ORG_ID/sec_policy/draft/ip_lists')
 ip_list = next((i for i in ip_lists if (i.get('name') or '').lower() == 'remote-office'), None)
 if not ip_list:
-CHK|    print('IP List \"remote-office\" não encontrada')
+    print('IP List \"remote-office\" não encontrada')
     sys.exit(1)
 
 ranges = ip_list.get('ip_ranges', [])
@@ -32,15 +32,15 @@ has_excl = any(r.get('from_ip') == '45.54.45.254' and r.get('exclusion') for r i
 
 reasons = []
 if not has_range:
-CHK|    reasons.append('falta o intervalo 45.54.45.0/24')
+    reasons.append('falta o intervalo 45.54.45.0/24')
 if not has_excl:
-CHK|    reasons.append('falta a exclusão 45.54.45.254')
+    reasons.append('falta a exclusão 45.54.45.254')
 
 if reasons:
-CHK|    print('IP List \"remote-office\": ' + '; '.join(reasons))
+    print('IP List \"remote-office\": ' + '; '.join(reasons))
     sys.exit(1)
 
-CHK|print('IP List remote-office encontrada com o intervalo e a exclusão corretos')
+print('IP List remote-office encontrada com o intervalo e a exclusão corretos')
 sys.exit(0)
 ")
 status=$?
