@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# Runs when the learner clicks Check on Close Lab. Exit 0 = pass (the
+# session then ends), non-zero = fail (the learner stays in the lab).
+#
+# Only passes once the learner has run close-lab in the CloudCLI tab and
+# typed YES, so an accidental click can't end the session.
+
+if [ ! -f /root/.close-lab-confirmed ]; then
+  fail-message "Your lab is still running. To end it, type close-lab in the CloudCLI tab, confirm with YES, then click Check again. Not finished? Click Overview at the top and re-open Illumio Lab Environment."
+  exit 1
+fi
+
+exit 0

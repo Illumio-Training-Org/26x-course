@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# Runs during `instruqt track test` (the Course Lab Check pre-class quick
+# check) - Skip is off for this track. Does what close-lab does after a
+# YES, so the check passes.
+
+touch /root/.close-lab-confirmed
