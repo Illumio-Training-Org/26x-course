@@ -595,6 +595,9 @@ Container Troubleshooting
 
 Using the k3s console Tab
 
+> [!NOTE]
+> Notify NM of findings.
+
 To check the Hubble relay status (`CrashLoopBackOff` means it keeps restarting):
 
 ```run
