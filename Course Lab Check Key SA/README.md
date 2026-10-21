@@ -54,8 +54,8 @@ Measured on 2026-09-29: page ready **~2 min 50 s** after the sandbox starts.
 1. **Sandbox build** (Instruqt, ~1-1.5 min): VMs, k3s node, AWS account.
 2. **Track setup** (`track_scripts/setup-cloud-client`, ~20 s):
    - creates the magic link and the learner `check-*` commands;
-   - creates a Crystal deployment named **`Lab_<DDMM>_<PCE org ID>_<learner>`**
-     (e.g. `Lab_3009_4140393_keith`) - the org ID is what the learner
+   - creates a Crystal deployment named **`Lab_<NN>_<instructor>_<PCE org ID>_<learner>`**
+     (e.g. `Lab_03_keith_4140393_jane`) - the org ID is what the learner
      sees in their Console, and `<learner>` is their forename, from their email before the @ (or
      their Instruqt name; for team members starting it from the Instruqt UI,
      their name from the team list in `setup-cloud-client`), so you can

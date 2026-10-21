@@ -165,8 +165,8 @@ curl -sS --connect-timeout 5 -m 8 -o /dev/null \
   -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" || echo "curl exit code: $?"
 echo "--- end diagnostics ---"
 
-# Deployment naming: SpecialistExam_<DDMM>_<PCE org ID>_<learner>, e.g.
-# SpecialistExam_3009_4140393_keith. The org ID is unique per session and
+# Deployment naming: SpecialistExam_<NN>_<instructor>_<PCE org ID>_<learner>, e.g.
+# SpecialistExam_03_keith_4140393_jane. The org ID is unique per session and
 # is the same number the learner sees in their Console and the Advanced
 # section, so an instructor can match a learner's lab to its Crystal
 # deployment directly. <learner> is the part of the learner's email
@@ -208,7 +208,34 @@ echo "Deployment name learner part from: $LEARNER_SOURCE"
 # dash or plus (jane.smith@... -> jane, "Jane Smith" -> jane), lower case.
 LEARNER="${LEARNER%%[. _+-]*}"
 LEARNER="$(printf '%s' "$LEARNER" | tr -cd 'A-Za-z0-9' | tr 'A-Z' 'a-z' | cut -c1-30)"
-DEPLOYMENT_NAME="SpecialistExam_$(date -u +%d%m)_${AUTOACCOUNT_ORG_ID}${LEARNER:+_$LEARNER}"
+# Instructor: the invite's "instructor" runtime parameter (Instruqt invite ->
+# Runtime parameters -> Add variable, key instructor, value e.g. keith).
+# Not set (direct starts from the Instruqt UI, hot start pools) -> left out.
+INSTRUCTOR="${instructor:-${INSTRUCTOR:-}}"
+INSTRUCTOR="${INSTRUCTOR%%[. _+-]*}"
+INSTRUCTOR="$(printf '%s' "$INSTRUCTOR" | tr -cd 'A-Za-z0-9' | tr 'A-Z' 'a-z' | cut -c1-30)"
+echo "Deployment name instructor part: ${INSTRUCTOR:-none (no instructor runtime parameter)}"
+# <NN>: running number per instructor (and per prefix), 01-99 then back to
+# 01 - one more than the highest <NN> among that instructor's deployments
+# currently in Crystal. Deleted deployments drop out of the list, so numbers
+# can be reused, and labs starting in the same few seconds can share a
+# number (names stay unique via the org ID). Any lookup failure -> 01.
+PREFIX=SpecialistExam
+SEQ="$(curl -s -m 15 -H "X-API-Key: $CRYSTAL_API_KEY" "$CRYSTAL_BASE_URL/api/deployments" | PREFIX="$PREFIX" INSTRUCTOR="$INSTRUCTOR" python3 -c '
+import json, os, re, sys
+try:
+    d = json.load(sys.stdin)
+except Exception:
+    d = []
+if isinstance(d, dict):
+    d = next((v for v in d.values() if isinstance(v, list)), [])
+inst = os.environ["INSTRUCTOR"]
+pat = re.compile(re.escape(os.environ["PREFIX"]) + r"_(\d\d)_" + (re.escape(inst) + "_" if inst else "") + r"\d+(_|$)")
+nums = [int(m.group(1)) for x in d if isinstance(x, dict) for m in [pat.match(str(x.get("name", "")))] if m]
+print("%02d" % (max(nums) % 99 + 1 if nums else 1))
+' 2>/dev/null || true)"
+SEQ="${SEQ:-01}"
+DEPLOYMENT_NAME="${PREFIX}_${SEQ}${INSTRUCTOR:+_$INSTRUCTOR}_${AUTOACCOUNT_ORG_ID}${LEARNER:+_$LEARNER}"
 echo "Crystal deployment name: $DEPLOYMENT_NAME"
 
 cd ~
