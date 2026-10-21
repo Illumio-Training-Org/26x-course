@@ -612,6 +612,15 @@ kubectl -n kube-system logs deploy/hubble-relay --previous | tail -20
 free -m
 ```
 
+If `illumio-storage-0` shows `ErrImagePull` or `ImagePullBackOff` (Docker Hub `429 Too Many Requests`), pull its image from Google's mirror and restart the pods:
+
+```run
+k3s ctr -n k8s.io images pull mirror.gcr.io/bitnamilegacy/etcd:3.6.4
+k3s ctr -n k8s.io images tag --force mirror.gcr.io/bitnamilegacy/etcd:3.6.4 docker.io/bitnamilegacy/etcd:3.6.4
+kubectl -n illumio-system delete pod illumio-storage-0
+kubectl -n illumio-system delete pod -l app=illumio-kubelink
+```
+
 To restart the Hubble relay (fixes a crash loop left over from the Firewall Coexistence restart):
 
 ```run
