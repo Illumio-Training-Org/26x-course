@@ -590,3 +590,28 @@ print(f'Rulesets:          {len(d)}')
 print(f'Rules:             {rules}')
 "
 ```
+
+Container Troubleshooting
+
+Using the k3s console Tab
+
+To check the Hubble relay status (`CrashLoopBackOff` means it keeps restarting):
+
+```run
+kubectl -n kube-system get pods -l k8s-app=hubble-relay
+```
+
+To show why it last stopped (`OOMKilled` means the node ran out of memory):
+
+```run
+kubectl -n kube-system describe pod -l k8s-app=hubble-relay | grep -iA3 'last state\|reason'
+kubectl -n kube-system logs deploy/hubble-relay --previous | tail -20
+free -m
+```
+
+To restart the Hubble relay (fixes a crash loop left over from the Firewall Coexistence restart):
+
+```run
+kubectl -n kube-system rollout restart deploy/hubble-relay
+kubectl -n kube-system rollout status deploy/hubble-relay --timeout=120s
+```
