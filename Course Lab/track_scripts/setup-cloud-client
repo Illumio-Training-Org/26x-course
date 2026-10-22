@@ -225,6 +225,8 @@ def ports(rule):
                 p.update(range(e['port'], (e.get('to_port') or e['port']) + 1))
     return p
 deny = [x for x in r.get('deny_rules') or [] if role_jumpbox(x.get('consumers') or []) and role_jumpbox(x.get('providers') or [])]
+if any(x.get('unscoped_consumers') for x in deny):
+    fails.append('Deny Rule Scope Type should be Intra-Scope, found Extra-Scope')
 if not deny:
     fails.append('no Deny Rule with Source Role jumpbox and Destination Role jumpbox')
 else:

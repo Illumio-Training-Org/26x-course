@@ -421,8 +421,9 @@ Ransomware relies on a small set of well-known services to move laterally once i
 - Name: `Jumphost-Ransomware-Protection`
 - Scope — Application: `jump-infra`, Environment: `Production`, Location: `ca`
 
-Inside the ruleset, add a **Deny Rule**:
+Inside the ruleset, add a **Deny Rule**. Create an **Intra-Scope** rule:
 
+- Scope Type: `Intra-Scope`
 - Source: Role `jumpbox`
 - Destination: Role `jumpbox`
 - Services: `RDP` (3389), `SMB` (445), `MSFT RPC` (135), `WinRM` (`winrm` 5985 **and** `winrm-secure` 5986 — two separate services)
