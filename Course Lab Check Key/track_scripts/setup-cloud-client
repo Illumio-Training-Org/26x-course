@@ -229,6 +229,63 @@ else:
 CHECKEOF
 chmod +x /usr/local/bin/check-containers
 
+cat > /usr/local/bin/check-ransomware << 'CHECKEOF'
+#!/bin/bash
+clear
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+# Use the dedicated check-script key created at setup, if there is one
+[ -f /root/.pce-check-key ] && . /root/.pce-check-key && AUTH="$CHECK_KEY_USER:$CHECK_KEY_SECRET"
+T=$(mktemp -d)
+curl -s -u "$AUTH" "$BASE/labels?max_results=10000" > "$T/labels"
+curl -s -u "$AUTH" "$BASE/sec_policy/draft/services?max_results=10000" > "$T/services"
+curl -s -u "$AUTH" "$BASE/sec_policy/draft/rule_sets" > "$T/rule_sets"
+python3 - "$T" << 'PYEOF'
+import json, sys
+d = sys.argv[1]
+load = lambda n: json.load(open(d + '/' + n))
+labels = {l['href']: (l['key'], (l.get('value') or '').lower()) for l in load('labels')}
+services = {s['href']: s for s in load('services')}
+rs = [r for r in load('rule_sets') if (r.get('name') or '').strip().lower() == 'jumphost-ransomware-protection']
+if not rs:
+    print('FAIL - no ruleset named Jumphost-Ransomware-Protection found (step 1)')
+    sys.exit()
+r = rs[0]
+fails = []
+want = {'app': 'jump-infra', 'env': 'production', 'loc': 'ca'}
+scope = {labels.get(s.get('label', {}).get('href'), (None, None)) for s in (r.get('scopes') or [[]])[0]}
+for k, v in want.items():
+    if (k, v) not in scope:
+        fails.append('scope is missing ' + k + '=' + v)
+def role_jumpbox(side):
+    return [labels.get(a.get('label', {}).get('href')) for a in side] == [('role', 'jumpbox')]
+def ports(rule):
+    p = set()
+    for s in rule.get('ingress_services') or []:
+        for e in (services.get(s.get('href'), {}).get('service_ports') or [s] if s.get('href') else [s]):
+            if e.get('port'):
+                p.update(range(e['port'], (e.get('to_port') or e['port']) + 1))
+    return p
+deny = [x for x in r.get('deny_rules') or [] if role_jumpbox(x.get('consumers') or []) and role_jumpbox(x.get('providers') or [])]
+if not deny:
+    fails.append('no Deny Rule with Source Role jumpbox and Destination Role jumpbox')
+else:
+    names = {3389: 'RDP 3389', 445: 'SMB 445', 135: 'MSFT RPC 135', 5985: 'WinRM 5985', 5986: 'WinRM 5986 (winrm-secure)'}
+    got = set().union(*(ports(x) for x in deny))
+    missing = [n for p, n in names.items() if p not in got]
+    if missing:
+        fails.append('Deny Rule services are missing: ' + ', '.join(missing))
+if fails:
+    print('FAIL')
+    for f in fails:
+        print(' - ' + f)
+else:
+    print('PASS - Jumphost-Ransomware-Protection scoped to jump-infra/Production/ca, Deny Rule jumpbox -> jumpbox on RDP, SMB, MSFT RPC and WinRM')
+PYEOF
+rm -rf "$T"
+CHECKEOF
+chmod +x /usr/local/bin/check-ransomware
+
 cat > /usr/local/bin/check-pce-api << 'CHECKEOF'
 #!/bin/bash
 clear

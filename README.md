@@ -148,7 +148,7 @@ What `setup-cloud-client` does, in order:
    template import hasn't finished).
 3. **Lab only:** fires the Lateral Movement attack
    (`POST /api/deployments/{id}/attack`,
-   `lateralMovement_firstTimeConnection`, 3h) so the Incident Response
+   `lateralMovement_firstTimeConnection`, 3h) so the IR - Response
    Investigation exercise has attack traffic without an instructor pressing
    Fire Attack in Crystal.
 4. **Lab:** starts a background job that waits for Crystal's import, then

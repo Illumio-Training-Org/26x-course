@@ -404,12 +404,10 @@ check-containers
 
 **Lab Complete**
 
-🧩 Incident Response
+🧩 IR - Prevent
 ==========
 
-Investigate and Contain an Incident
-
-**Part 1 — Ransomware Protection**
+Ransomware Protection
 
 Practical ransomware use cases & high-risk services.
 
@@ -433,13 +431,28 @@ Inside the ruleset, add a **Deny Rule**:
 
 - Source: Role `jumpbox`
 - Destination: Role `jumpbox`
-- Services: `RDP` (3389), `SMB` (445), `MSFT RPC` (135), `WinRM` (5985, 5986)
+- Services: `RDP` (3389), `SMB` (445), `MSFT RPC` (135), `WinRM` (`winrm` 5985 **and** `winrm-secure` 5986 — two separate services)
 
 No need to provision this policy in the lab — but in production, once provisioned, it would block jumphost-to-jumphost traffic on every ransomware-critical service, containing lateral movement between `inf-jh01-prd` and `inf-jh02-prd` if one is compromised.
 
+There's no jumphost-to-jumphost traffic in the lab, so you won't see this rule match anything in Explorer — it closes the path *before* the attacker uses it.
+
 ---
 
-**Part 2 — Investigation**
+**Check your work** (run in the **CloudCLI** tab):
+
+```
+check-ransomware
+```
+
+---
+
+**Lab Complete**
+
+🧩 IR - Response
+==========
+
+Investigate and Contain an Incident
 
 Live traffic investigation and containment.
 
