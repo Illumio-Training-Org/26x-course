@@ -429,7 +429,6 @@ Ransomware relies on a small set of well-known services to move laterally once i
 **Segmentation → All Policies → Add → Add from Scratch**:
 
 - Name: `Jumphost-Ransomware-Protection`
-- Scope: leave empty (no scope), so the policy applies to every jump host
 
 Inside the ruleset, add a **Deny Rule**:
 
