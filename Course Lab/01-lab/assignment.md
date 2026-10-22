@@ -511,7 +511,7 @@ The jump host itself is the clearest containment target — it's the actual pivo
 
 **6) Confirm containment**
 
-Wait about **10 minutes** after labeling: the PCE takes that long to apply the new label to the traffic it has already recorded.
+Wait **a few minutes** after labeling: the PCE takes a little time to apply the new label to the traffic it has already recorded.
 
 **Explore → Map**, select **Draft View** and **re-run** the query (check the **Timestamp** is later than your label change; refreshing Draft View alone keeps the old data). Locate `inf-jh01-prd`, click its line to a Clean application (e.g. `assetmgmt` or `procurement`) and confirm:
 
