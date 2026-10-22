@@ -55,23 +55,23 @@ def has_tcp_5666(ingress_services):
                     return True
     return False
 
-expected_providers = {'app': 'portal', 'env': 'production', 'loc': 'ca'}
-expected_consumers = {'app': 'monitoring', 'env': 'production', 'loc': 'ca', 'role': 'nagios'}
+expected_destinations = {'app': 'portal', 'env': 'production', 'loc': 'ca'}
+expected_sources = {'app': 'monitoring', 'env': 'production', 'loc': 'ca', 'role': 'nagios'}
 best_reasons = None
 for rule in rs.get('rules', []):
-    providers = resolve(rule.get('providers', []))
-    consumers = resolve(rule.get('consumers', []))
-    labels_ok = all(providers.get(k) == v for k, v in expected_providers.items()) and all(consumers.get(k) == v for k, v in expected_consumers.items())
+    destinations = resolve(rule.get('providers', []))
+    sources = resolve(rule.get('consumers', []))
+    labels_ok = all(destinations.get(k) == v for k, v in expected_destinations.items()) and all(sources.get(k) == v for k, v in expected_sources.items())
     service_ok = has_tcp_5666(rule.get('ingress_services'))
     if labels_ok and service_ok:
         print('Se encontró la regla allow nagios -> portal para tcp/5666 en Task3-CoreServices')
         sys.exit(0)
     reasons = []
-    for k, v in expected_consumers.items():
-        if consumers.get(k) != v:
-            reasons.append('Source ' + k + ' debería ser ' + v + ', se encontró ' + (consumers.get(k) or 'ninguno'))
-    for k, v in expected_providers.items():
-        if providers.get(k) != v:
+    for k, v in expected_sources.items():
+        if sources.get(k) != v:
+            reasons.append('Source ' + k + ' debería ser ' + v + ', se encontró ' + (sources.get(k) or 'ninguno'))
+    for k, v in expected_destinations.items():
+        if destinations.get(k) != v:
             reasons.append('al Destination le falta ' + k + '=' + v)
     if labels_ok and not service_ok:
         reasons.append('el service es incorrecto - debe ser el puerto TCP 5666 (Nagios NRPE)')

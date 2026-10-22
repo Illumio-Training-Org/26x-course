@@ -26,7 +26,7 @@ notes:
       <p>This is your opportunity to:</p>
       <ul>
         <li>Learn how Zero Trust Segmentation protects against breaches</li>
-        <li>Discover how Illumio seamlessly integrates with Cloud Providers</li>
+        <li>Discover how Illumio seamlessly integrates with cloud platforms</li>
         <li>Gain actionable strategies to enhance your security posture</li>
         <li>Connect with industry experts and peers in your field</li>
       </ul>

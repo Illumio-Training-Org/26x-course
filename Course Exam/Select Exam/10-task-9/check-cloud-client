@@ -99,12 +99,12 @@ else:
 if not inbound_rule:
     reasons.append('missing the inbound allow rule for ordering -> payment on TCP/443 (HTTPS)')
 else:
-    consumer_labels = resolve_labels(inbound_rule.get('consumers', []))
-    if consumer_labels != {('app', 'ordering')}:
-        reasons.append('inbound rule source is wrong - should be exactly Application=ordering, no other labels, found ' + str(sorted(consumer_labels)))
-    provider_labels = resolve_labels(inbound_rule.get('providers', []))
-    if provider_labels != expected:
-        reasons.append('inbound rule destination is wrong - should be exactly Application=payment, Location=ldn, no other labels, found ' + str(sorted(provider_labels)))
+    source_labels = resolve_labels(inbound_rule.get('consumers', []))
+    if source_labels != {('app', 'ordering')}:
+        reasons.append('inbound rule source is wrong - should be exactly Application=ordering, no other labels, found ' + str(sorted(source_labels)))
+    destination_labels = resolve_labels(inbound_rule.get('providers', []))
+    if destination_labels != expected:
+        reasons.append('inbound rule destination is wrong - should be exactly Application=payment, Location=ldn, no other labels, found ' + str(sorted(destination_labels)))
 
 if reasons:
     print('; '.join(reasons))

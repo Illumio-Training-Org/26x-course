@@ -41,7 +41,7 @@ if not rs:
 
 # Scopes aren't taught in this course - this task does NOT accept a
 # Scope-based ruleset, ca must be repeated explicitly on both the
-# consumer and provider side of the deny rule.
+# source and destination side of the deny rule.
 for scope_group in rs.get('scopes', []):
     if scope_group:
         print('Task5-DenyDevProd não deve usar um Scope - repita Location=ca explicitamente nos dois lados da regra deny')
@@ -58,8 +58,8 @@ def is_all_services(ingress_services):
                 return True
     return False
 
-want_consumer = {'app': 'ordering', 'env': 'development', 'loc': 'ca'}
-want_provider = {'app': 'ordering', 'env': 'production', 'loc': 'ca'}
+want_source = {'app': 'ordering', 'env': 'development', 'loc': 'ca'}
+want_destination = {'app': 'ordering', 'env': 'production', 'loc': 'ca'}
 
 def label_problems(name, found, expected):
     problems = []
@@ -74,9 +74,9 @@ def label_problems(name, found, expected):
 
 best_reasons = None
 for dr in rs.get('deny_rules', []):
-    consumers = resolve(dr.get('consumers', []))
-    providers = resolve(dr.get('providers', []))
-    problems = label_problems('Source', consumers, want_consumer) + label_problems('Destination', providers, want_provider)
+    sources = resolve(dr.get('consumers', []))
+    destinations = resolve(dr.get('providers', []))
+    problems = label_problems('Source', sources, want_source) + label_problems('Destination', destinations, want_destination)
     service_ok = is_all_services(dr.get('ingress_services'))
     if not problems and service_ok:
         print('Encontrada a regra deny Dev->Prod para ordering em ca, All Services')

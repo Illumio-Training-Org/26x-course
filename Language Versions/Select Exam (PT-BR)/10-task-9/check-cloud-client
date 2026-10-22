@@ -99,12 +99,12 @@ else:
 if not inbound_rule:
     reasons.append('falta a regra allow de entrada ordering -> payment em TCP/443 (HTTPS)')
 else:
-    consumer_labels = resolve_labels(inbound_rule.get('consumers', []))
-    if consumer_labels != {('app', 'ordering')}:
-        reasons.append('o Source da regra de entrada está incorreto - deve ser exatamente Application=ordering, sem outras labels, encontrado ' + str(sorted(consumer_labels)))
-    provider_labels = resolve_labels(inbound_rule.get('providers', []))
-    if provider_labels != expected:
-        reasons.append('o Destination da regra de entrada está incorreto - deve ser exatamente Application=payment, Location=ldn, sem outras labels, encontrado ' + str(sorted(provider_labels)))
+    source_labels = resolve_labels(inbound_rule.get('consumers', []))
+    if source_labels != {('app', 'ordering')}:
+        reasons.append('o Source da regra de entrada está incorreto - deve ser exatamente Application=ordering, sem outras labels, encontrado ' + str(sorted(source_labels)))
+    destination_labels = resolve_labels(inbound_rule.get('providers', []))
+    if destination_labels != expected:
+        reasons.append('o Destination da regra de entrada está incorreto - deve ser exatamente Application=payment, Location=ldn, sem outras labels, encontrado ' + str(sorted(destination_labels)))
 
 if reasons:
     print('; '.join(reasons))

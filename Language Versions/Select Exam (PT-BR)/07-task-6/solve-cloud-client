@@ -44,7 +44,7 @@ def find_all_services_href():
     # Live-verified 2026-09-04: an empty ingress_services list is
     # REJECTED by the API at rule-creation time
     # ('ingress_service_required: At least one service is required if
-    # provider resolve_labels_as includes workloads') even though the
+    # destination resolve_labels_as includes workloads') even though the
     # UI's own 'All Services' selection resolves to a real linked
     # service object of that exact name, not an empty list. Must
     # reference that real object explicitly.

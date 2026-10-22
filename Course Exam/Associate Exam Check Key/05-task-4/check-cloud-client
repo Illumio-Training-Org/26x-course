@@ -85,22 +85,22 @@ def describe_services(ingress_services):
             out.append(str(entry))
     return out
 
-def is_all_workloads(consumers):
-    # 'All Workloads' as a consumer is an actors:'ams' entry - the API
-    # rejects an empty consumers list outright (live-verified), but the
+def is_all_workloads(sources):
+    # 'All Workloads' as a source is an actors:'ams' entry - the API
+    # rejects an empty sources list outright (live-verified), but the
     # empty-list check stays as a harmless fallback in case a rule was
     # ever built some other way.
-    if not consumers:
+    if not sources:
         return True
-    return any(c.get('actors') == 'ams' for c in consumers)
+    return any(c.get('actors') == 'ams' for c in sources)
 
-def describe_consumers(consumers):
-    # Human-readable version of consumers for fail messages - a linked
+def describe_sources(sources):
+    # Human-readable version of sources for fail messages - a linked
     # ip_list/label/workload is just {'href': ...} otherwise, unreadable
     # to a learner (same class of bug as describe_services, live-observed
     # 2026-09-02).
     out = []
-    for c in consumers or []:
+    for c in sources or []:
         if c.get('actors') == 'ams':
             out.append('All Workloads')
             continue
@@ -119,8 +119,8 @@ def describe_consumers(consumers):
 reasons = []
 for rs in named:
     for dr in rs.get('deny_rules', []):
-        providers = resolve(dr.get('providers', []))
-        labels_ok = all(providers.get(k) == v for k, v in expected.items())
+        destinations = resolve(dr.get('providers', []))
+        labels_ok = all(destinations.get(k) == v for k, v in expected.items())
         svc_ok = has_tcp_22(dr.get('ingress_services'))
         from_all_ok = is_all_workloads(dr.get('consumers', []))
         if labels_ok and svc_ok and from_all_ok:
@@ -131,7 +131,7 @@ for rs in named:
             if not svc_ok:
                 missing.append('service should deny SSH - either the built-in SSH service, or both tcp/22 and udp/22 entered manually, found ' + str(describe_services(dr.get('ingress_services'))))
             if not from_all_ok:
-                missing.append('source should be All Workloads, found ' + str(describe_consumers(dr.get('consumers'))))
+                missing.append('source should be All Workloads, found ' + str(describe_sources(dr.get('consumers'))))
             reasons.append('; '.join(missing))
 
 if reasons:

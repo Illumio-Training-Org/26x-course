@@ -2,7 +2,7 @@
 #
 # Runs when the learner clicks Skip. Creates the dev-prod Label Group,
 # then updates Task6-RingfenceOrdering's rule to use it instead of the
-# plain Development label on both consumers and providers - Scopes
+# plain Development label on both sources and destinations - Scopes
 # aren't taught in this course, so Task 6's ruleset is always
 # scopeless and this always edits the rule, never a scope. No-ops if
 # Task 6's ruleset doesn't exist yet (run its own solve/skip first).

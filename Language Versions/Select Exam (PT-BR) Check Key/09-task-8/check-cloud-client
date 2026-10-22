@@ -94,17 +94,17 @@ def run():
         print('Policy \"Task8-DenyGlobal\" não encontrada')
         sys.exit(1)
 
-    expected_consumer = {'app': 'ordering', 'env': 'development'}
-    expected_provider = {'app': 'ordering', 'env': 'production'}
+    expected_source = {'app': 'ordering', 'env': 'development'}
+    expected_destination = {'app': 'ordering', 'env': 'production'}
 
     dev_to_prod = False
     dev_to_prod_all_services = False
     best_deny_reasons = None
     deny_rules = rs.get('deny_rules', [])
     for dr in deny_rules:
-        consumers = resolve(dr.get('consumers', []))
-        providers = resolve(dr.get('providers', []))
-        reasons = side_problems('Source', consumers, expected_consumer) + side_problems('Destination', providers, expected_provider)
+        sources = resolve(dr.get('consumers', []))
+        destinations = resolve(dr.get('providers', []))
+        reasons = side_problems('Source', sources, expected_source) + side_problems('Destination', destinations, expected_destination)
         if not reasons and is_all_services(dr.get('ingress_services')):
             dev_to_prod = True
             dev_to_prod_all_services = True
@@ -119,9 +119,9 @@ def run():
     best_ssh_reasons = None
     enabled_rules = [rule for rule in rs.get('rules', []) if rule.get('enabled', True)]
     for rule in enabled_rules:
-        consumers = resolve(rule.get('consumers', []))
-        providers = resolve(rule.get('providers', []))
-        reasons = side_problems('Source', consumers, expected_consumer) + side_problems('Destination', providers, expected_provider)
+        sources = resolve(rule.get('consumers', []))
+        destinations = resolve(rule.get('providers', []))
+        reasons = side_problems('Source', sources, expected_source) + side_problems('Destination', destinations, expected_destination)
         if not reasons and is_ssh_only(rule.get('ingress_services')):
             ssh_dev_to_prod = True
             best_ssh_reasons = []
