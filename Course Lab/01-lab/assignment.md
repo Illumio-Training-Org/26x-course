@@ -416,7 +416,7 @@ Ransomware relies on a small set of well-known services to move laterally once i
 
 **1) Create a policy protecting jumphosts from lateral movement**
 
-**Rulesets and Rules → Segmentation Rulesets → Add**:
+**Segmentation → All Policies → Add → Add from Scratch**:
 
 - Name: `Jumphost-Ransomware-Protection`
 - Scope — Application: `jump-infra`, Environment: `Production`, Location: `ca`
