@@ -424,7 +424,7 @@ Ransomware relies on a small set of well-known services to move laterally once i
 
 ---
 
-**1) Create a policy protecting jumphosts from lateral movement**
+**1) Create a policy protecting Jumphosts from lateral movement**
 
 **Segmentation → All Policies → Add → Add from Scratch**:
 
