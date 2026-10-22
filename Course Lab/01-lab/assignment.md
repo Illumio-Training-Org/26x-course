@@ -419,11 +419,10 @@ Ransomware relies on a small set of well-known services to move laterally once i
 **Segmentation → All Policies → Add → Add from Scratch**:
 
 - Name: `Jumphost-Ransomware-Protection`
-- Scope — Application: `jump-infra`, Environment: `Production`, Location: `ca`
+- Scope: leave empty (no scope), so the policy applies to every jump host
 
-Inside the ruleset, add a **Deny Rule**. Create an **Intra-Scope** rule:
+Inside the ruleset, add a **Deny Rule**:
 
-- Scope Type: `Intra-Scope`
 - Source: Role `jumpbox`
 - Destination: Role `jumpbox`
 - Services: `RDP` (3389), `SMB` (445), `MSFT RPC` (135), `WinRM` (`winrm` 5985 **and** `winrm-secure` 5986 — two separate services)

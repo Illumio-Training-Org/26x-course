@@ -252,11 +252,8 @@ if not rs:
     sys.exit()
 r = rs[0]
 fails = []
-want = {'app': 'jump-infra', 'env': 'production', 'loc': 'ca'}
-scope = {labels.get(s.get('label', {}).get('href'), (None, None)) for s in (r.get('scopes') or [[]])[0]}
-for k, v in want.items():
-    if (k, v) not in scope:
-        fails.append('scope is missing ' + k + '=' + v)
+if any(s for s in r.get('scopes') or []):
+    fails.append('the policy should have no scope - remove the scope labels')
 def role_jumpbox(side):
     return [labels.get(a.get('label', {}).get('href')) for a in side] == [('role', 'jumpbox')]
 def ports(rule):
@@ -267,8 +264,6 @@ def ports(rule):
                 p.update(range(e['port'], (e.get('to_port') or e['port']) + 1))
     return p
 deny = [x for x in r.get('deny_rules') or [] if role_jumpbox(x.get('consumers') or []) and role_jumpbox(x.get('providers') or [])]
-if any(x.get('unscoped_consumers') for x in deny):
-    fails.append('Deny Rule Scope Type should be Intra-Scope, found Extra-Scope')
 if not deny:
     fails.append('no Deny Rule with Source Role jumpbox and Destination Role jumpbox')
 else:
@@ -282,7 +277,7 @@ if fails:
     for f in fails:
         print(' - ' + f)
 else:
-    print('PASS - Jumphost-Ransomware-Protection scoped to jump-infra/Production/ca, Deny Rule jumpbox -> jumpbox on RDP, SMB, MSFT RPC and WinRM')
+    print('PASS - Jumphost-Ransomware-Protection has no scope, Deny Rule jumpbox -> jumpbox on RDP, SMB, MSFT RPC and WinRM')
 PYEOF
 rm -rf "$T"
 CHECKEOF
