@@ -529,11 +529,16 @@ The jump host itself is the clearest containment target — it's the actual pivo
 
 **6) Confirm containment**
 
-**Explore → Map**, locate `inf-jh01-prd`. Confirm:
+Wait about **10 minutes** after labeling: the PCE takes that long to apply the new label to the traffic it has already recorded.
 
-- The inbound RDP sessions from `win-endpoint-*`/`mac-endpoint-*` now show as **blocked**
-- The outbound SSH pivot to the application tier now shows as **blocked**
-- The jump host's own normal management/monitoring traffic (if any) is unaffected
+**Explore → Map**, select **Draft View** and **re-run** the query (check the **Timestamp** is later than your label change; refreshing Draft View alone keeps the old data). Locate `inf-jh01-prd`, click its line to a Clean application (e.g. `assetmgmt` or `procurement`) and confirm:
+
+- The **Draft Policy Decision** is **Denied** with Policy **Override Deny**: the contained jump host can no longer reach Clean workloads
+- The inbound RDP sessions from `win-endpoint-*`/`mac-endpoint-*` and the outbound SSH pivot to the application tier also show as **Denied**
+- Only EDR, forensics storage, NTP and Windows Update traffic from the jump host stays allowed
+
+> [!NOTE]
+> Use **Draft View**, not Reported View. Reported View shows what actually happened, and `15. IR` is not provisioned in this lab, so it doesn't change. If a line still shows **No Rule**, the Map is using older data: wait a few minutes and re-run it.
 
 ---
 
