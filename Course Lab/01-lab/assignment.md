@@ -484,6 +484,8 @@ Clear Destination, set **Source** to Role `jumpbox`, Service `ssh` (**Policy Ser
 
 > [!NOTE]
 > Check the **First Detected** timestamp on an inbound RDP session vs. the jump host's outbound SSH connections. An outbound SSH connection first detected within minutes (not hours) of an inbound RDP session the jump host doesn't normally receive is the pivot in action, not routine admin activity.
+>
+> HINT: Use the **Traffic view** and review the **First Detected** column data to compare.
 
 ---
 
