@@ -6,7 +6,7 @@ change is in `track_scripts/setup-cloud-client`: right after the agent
 variables, setup uses the magic-link key to create a second PCE API key
 named `check-scripts` (`GET /users/login` for the user href, then
 `POST <user>/api_keys`) and saves it to `/root/.pce-check-key`. The
-`check-workloads`, `check-containers`, `check-ransomware` and `check-pce-api` commands use
+`check-workloads`, `check-containers`, `check-jumpbox-rule` and `check-pce-api` commands use
 that key; Crystal, Terraform and `disable-all-rulesets` keep the
 magic-link key. If key creation fails (`CHECK-FAIL: check-key` in the
 setup log) the checks fall back to the magic-link key.
@@ -36,7 +36,7 @@ Became the main lab on 2026-09-30, replacing the earlier 3-challenge layout
 
 | Folder | Title | What happens |
 |---|---|---|
-| `01-lab` | Illumio Lab Environment | One page for the whole lab. Starts at **🔑 Console** - the Illumio logo, then a "Click here to open the Illumio Console" link, with a copy box underneath in case the link doesn't open. Then **Workloads** (pairing profile, pair linux-vm/windows-vm, VEN CLI, enforcement), **Cloud** (AWS onboarding), **Containers** (k3s / C-VEN), **IR - Prevent** (Ransomware Protection, checked by `check-ransomware`), **IR - Investigate** (investigation of a live lateral-movement attack), and **🛠️ Advanced** at the bottom - troubleshooting commands *only for use if the instructor asks* (full reference: root README, *Troubleshooting reference*). Some sections end with a `check-*` command learners run in the CloudCLI tab. |
+| `01-lab` | Illumio Lab Environment | One page for the whole lab. Starts at **🔑 Console** - the Illumio logo, then a "Click here to open the Illumio Console" link, with a copy box underneath in case the link doesn't open. Then **Workloads** (pairing profile, pair linux-vm/windows-vm, VEN CLI, enforcement), **Cloud** (AWS onboarding), **Containers** (k3s / C-VEN), **IR - Prevent** (Ransomware Protection, checked by `check-jumpbox-rule`), **IR - Investigate** (investigation of a live lateral-movement attack), and **🛠️ Advanced** at the bottom - troubleshooting commands *only for use if the instructor asks* (full reference: root README, *Troubleshooting reference*). Some sections end with a `check-*` command learners run in the CloudCLI tab. |
 | `02-close-lab` | Close Lab | Warning page. The learner must run `close-lab` in the CloudCLI tab and type **YES**, then click **Check**, to end the session (an accidental click just shows a reminder). Ending deletes the learner's Crystal deployment. |
 
 Tabs: **Illumio & AWS** (one page with the console link and the AWS login

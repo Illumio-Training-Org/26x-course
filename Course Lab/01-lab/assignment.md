@@ -442,7 +442,7 @@ There's no jumphost-to-jumphost traffic in the lab, so you won't see this rule m
 **Check your work** (run in the **CloudCLI** tab):
 
 ```
-check-ransomware
+check-jumpbox-rule
 ```
 
 ---

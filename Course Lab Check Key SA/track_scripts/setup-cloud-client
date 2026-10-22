@@ -254,7 +254,7 @@ else:
 CHECKEOF
 chmod +x /usr/local/bin/check-containers
 
-cat > /usr/local/bin/check-ransomware << 'CHECKEOF'
+cat > /usr/local/bin/check-jumpbox-rule << 'CHECKEOF'
 #!/bin/bash
 clear
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
@@ -308,7 +308,7 @@ else:
 PYEOF
 rm -rf "$T"
 CHECKEOF
-chmod +x /usr/local/bin/check-ransomware
+chmod +x /usr/local/bin/check-jumpbox-rule
 
 cat > /usr/local/bin/check-pce-api << 'CHECKEOF'
 #!/bin/bash
