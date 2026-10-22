@@ -467,7 +467,7 @@ There are 4 domain controllers (`acd-dc01-prd` through `acd-dc04-prd`) and 2 jum
 
 **3) SSH — find the pivot**
 
-Clear Destination, set **Source** to Role `jumpbox`, Service `ssh` (**Policy Services** → `ssh`). This shows the jump hosts reaching *out* into the application tier — the pivot point, not just an entry point. You should find outbound SSH from a jump host to at least one process-tier workload (e.g. an `*-proc*-prd`) it doesn't normally reach.
+Clear Destination, set **Source** to Role `jumpbox`, Service `ssh` (**Policy Services** → `ssh`). This shows the jump hosts reaching *out* into the application tier — the pivot point, not just an entry point. You should find outbound SSH from a jump host to at least one process-tier workload (e.g. an `*-proc*-prd`) it doesn't normally reach. You'll likely also see SSH from the jump hosts into database, web, PCI and SWIFT hosts (e.g. `pay-db01-prd`, `pos-web01-pci`, `swf-gw01-prd`): the same attacker spreading further. All of it is suspicious.
 
 > [!NOTE]
 > Check the **First Detected** timestamp on an inbound RDP session vs. the jump host's outbound SSH connections. An outbound SSH connection first detected only shortly after — minutes, not hours — an inbound RDP session the jump host doesn't normally receive is the pivot in action, not routine admin activity.
@@ -478,7 +478,7 @@ Clear Destination, set **Source** to Role `jumpbox`, Service `ssh` (**Policy Ser
 
 Set Destination filters to Role `dc`, Application `ad`. Leave Source blank so every source shows. Group the results by **Applications** and **Roles** (top toolbar). Look for:
 
-- **Kerberos** (`88`) and **LDAP** (`389`) hits from web/processing-tier workloads in applications that have no business reason to authenticate directly against a domain controller — e.g. `pos`, `ord`, `pay`, `cat`, `ecm` workloads, not just `ad`/IT-owned ones
+- **Kerberos** (`88`) and **LDAP** (`389`) hits from web/processing-tier workloads in applications that have no business reason to authenticate directly against a domain controller — e.g. `pos`, `ordering`, `payment`, `catalog`, `ecomm` workloads, not just `ad`/IT-owned ones
 - **DNS** (`53`) queries from database-tier workloads (`*-db*-prd`) straight to a DC — a DB server doing its own DNS lookups against a domain controller is unusual
 - Any **SMB** (`445`) hits — SMB to a DC is the highest-priority one to flag, it's the classic ransomware-propagation port
 
