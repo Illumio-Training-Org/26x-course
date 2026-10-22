@@ -549,6 +549,12 @@ echo $AUTOACCOUNT_ORG_ID
 echo $AUTOACCOUNT_PCE_FQDN
 ```
 
+To show the Service Account details:
+
+```run
+cat /root/.pce-sa-key
+```
+
 To test the Console API:
 
 ```run
