@@ -208,20 +208,6 @@ Type of Integration: **Create IAM Roles on AWS**.
 
 ---
 
-**Check the PCE API is responding** (run in the **CloudCLI** tab):
-
-```
-check-pce-api
-```
-
-**Test the API check key** (run in the **CloudCLI** tab):
-
-```
-check-api-keys
-```
-
-This tests the lab's main API key and the backup service-account key created at lab start. Both should show **PASS**. If the main key shows **FAIL (HTTP 401)** but the service-account key still passes, tell your instructor. The check commands switch to whichever key works.
-
 **Check your work** (run in the **CloudCLI** tab):
 
 ```
@@ -591,6 +577,20 @@ BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
 echo "Service-account key: $SA_KEY_USER (role $SA_ROLE)"
 curl -s -o /dev/null -w "%{http_code}\n" -u "$SA_KEY_USER:$SA_KEY_SECRET" "$BASE/workloads?max_results=1"
 ```
+
+To check the PCE API is responding:
+
+```run
+check-pce-api
+```
+
+To test the lab's API keys:
+
+```run
+check-api-keys
+```
+
+This tests the lab's main API key and the backup service-account key created at lab start. Both should show **PASS**. If the main key shows **FAIL (HTTP 401)** but the service-account key still passes, tell your instructor. The check commands switch to whichever key works.
 
 To test the deployment process:
 
