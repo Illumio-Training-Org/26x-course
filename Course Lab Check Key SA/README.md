@@ -38,7 +38,7 @@ Became the main lab on 2026-09-30, replacing the earlier 3-challenge layout
 
 | Folder | Title | What happens |
 |---|---|---|
-| `01-lab` | Illumio Lab Environment | One page for the whole lab. Starts at **🔑 Console** - the Illumio logo, then a "Click here to open the Illumio Console" link, with a copy box underneath in case the link doesn't open. Then **Workloads** (pairing profile, pair linux-vm/windows-vm, VEN CLI, enforcement), **Cloud** (AWS onboarding), **Containers** (k3s / C-VEN), **IR - Prevent** (Ransomware Protection, checked by `check-ransomware`), **IR - Response** (investigation of a live lateral-movement attack), and **🛠️ Advanced** at the bottom - troubleshooting commands *only for use if the instructor asks* (full reference: root README, *Troubleshooting reference*). Some sections end with a `check-*` command learners run in the CloudCLI tab. |
+| `01-lab` | Illumio Lab Environment | One page for the whole lab. Starts at **🔑 Console** - the Illumio logo, then a "Click here to open the Illumio Console" link, with a copy box underneath in case the link doesn't open. Then **Workloads** (pairing profile, pair linux-vm/windows-vm, VEN CLI, enforcement), **Cloud** (AWS onboarding), **Containers** (k3s / C-VEN), **IR - Prevent** (Ransomware Protection, checked by `check-ransomware`), **IR - Investigate** (investigation of a live lateral-movement attack), and **🛠️ Advanced** at the bottom - troubleshooting commands *only for use if the instructor asks* (full reference: root README, *Troubleshooting reference*). Some sections end with a `check-*` command learners run in the CloudCLI tab. |
 | `02-close-lab` | Close Lab | Warning page. The learner must run `close-lab` in the CloudCLI tab and type **YES**, then click **Check**, to end the session (an accidental click just shows a reminder). Ending deletes the learner's Crystal deployment. |
 
 Tabs: **Illumio & AWS** (one page with the console link and the AWS login
@@ -61,7 +61,7 @@ Measured on 2026-09-29: page ready **~2 min 50 s** after the sandbox starts.
      their name from the team list in `setup-cloud-client`), so you can
      match a learner to their deployment in Crystal;
    - **fires Crystal's Lateral Movement attack automatically** (3 hours) for
-     the IR - Response investigation - no need to press Fire Attack;
+     the IR - Investigate investigation - no need to press Fire Attack;
    - starts a **background job that disables every policy (ruleset)** once
      Crystal has imported them (~5-10 min after start). Draft only - nothing
      is provisioned. Learners enable `15. IR` themselves in the IR section.
@@ -86,12 +86,12 @@ Measured on 2026-09-29: page ready **~2 min 50 s** after the sandbox starts.
 - The attack runs for **3 hours** from start, then stops; its traffic stays
   in history.
 
-## Tips for the IR - Prevent and IR - Response sections
+## Tips for the IR - Prevent and IR - Investigate sections
 
 - **IR - Prevent (Ransomware):** the jumpbox-to-jumpbox Deny rule is
   **preventive** - there is never any traffic between the two jump hosts, so
   an empty map there is expected. Learners don't provision it.
-- **IR - Response (Investigation):** learners should **disable all other policies**
+- **IR - Investigate (Investigation):** learners should **disable all other policies**
   and enable only `15. IR`. When filtering **Explore -> Traffic** by service,
   the Service filter opens on "Port and/or Protocol" - to pick `rdp` / `ssh`
   by name, click **Policy Services** at the bottom of that list first.

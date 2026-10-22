@@ -467,7 +467,7 @@ check-ransomware
 
 **Lab Complete**
 
-🧩 IR - Response
+🧩 IR - Investigate
 ==========
 
 Investigate and Contain an Incident
