@@ -545,51 +545,17 @@ Wait **a few minutes** after labeling: the PCE takes a little time to apply the 
 
 Using the CloudCLI Tab
 
-To show the Account Identities:
-
-```run
-echo $AUTOACCOUNT_APIKEY_ID
-echo $AUTOACCOUNT_APIKEY_SECRET
-echo $AUTOACCOUNT_ORG_ID
-echo $AUTOACCOUNT_PCE_FQDN
-```
-
-To show the Service Account details:
-
-```run
-cat /root/.pce-sa-key
-```
-
-To test the Console API:
-
-```run
-BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
-AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
-curl -s -o /dev/null -w "%{http_code}\n" -u "$AUTH" "$BASE/workloads?max_results=1"
-```
-
-To test the Service-account API:
+To show all the lab's credentials:
 
 ```run
 . /root/.pce-sa-key
-BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
-echo "Service-account key: $SA_KEY_USER (role $SA_ROLE)"
-curl -s -o /dev/null -w "%{http_code}\n" -u "$SA_KEY_USER:$SA_KEY_SECRET" "$BASE/workloads?max_results=1"
+echo "PCE:                  $AUTOACCOUNT_PCE_FQDN"
+echo "Org ID:               $AUTOACCOUNT_ORG_ID"
+echo "API key:              api_$AUTOACCOUNT_APIKEY_ID"
+echo "API secret:           $AUTOACCOUNT_APIKEY_SECRET"
+echo "Service-account key:  $SA_KEY_USER (role $SA_ROLE)"
+echo "Service-account secret: $SA_KEY_SECRET"
 ```
-
-To check the PCE API is responding:
-
-```run
-check-pce-api
-```
-
-To test the lab's API keys:
-
-```run
-check-api-keys
-```
-
-This tests the lab's main API key and the backup service-account key created at lab start. Both should show **PASS**. If the main key shows **FAIL (HTTP 401)** but the service-account key still passes, tell your instructor. The check commands switch to whichever key works.
 
 To test the deployment process:
 
