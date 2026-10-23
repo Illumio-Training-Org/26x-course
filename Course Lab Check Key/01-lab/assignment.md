@@ -140,7 +140,7 @@ Try a few of the commands shown, e.g. `version`, `status`, `check-env`, `connect
 
 **6) Change Enforcement**
 
-**Servers and Endpoints → Workloads**, select **linux-vm**, click **Enforcement → Enforced**. Return to the **Linux** tab and try interacting with it — access is blocked (no matching rule, expected). Change enforcement back to **Selective**, wait a few minutes, then confirm access is restored.
+**Servers and Endpoints → Workloads**, select **linux-vm**, click **Enforcement → Enforced (Full)**. Return to the **Linux** tab and try interacting with it — access is blocked (no matching rule, expected). Change enforcement back to **Selective**, wait a few minutes, then confirm access is restored.
 
 ---
 
