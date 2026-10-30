@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# Runs when the learner clicks Skip.
+#
+# NOTE: user creation can't be scripted - live-verified 2026-09-01
+# against a real sandbox. POST /users returns 403 "Unexpected system
+# error" even with the exact correct payload (username + full_name +
+# type:"local", confirmed by inspecting a Console-created user's real
+# shape via GET /users). This isn't a payload bug: the API key genuinely
+# doesn't have permission to create users, most likely a deliberate
+# Illumio restriction (user/identity management via session-based
+# Console auth only, not API keys). This is a stub so Skip is at least
+# available and doesn't error; it does NOT actually create the user.
+
+exit 0
