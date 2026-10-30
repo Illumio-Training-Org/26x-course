@@ -131,10 +131,21 @@ In the **Linux** tab:
 cd /opt/illumio_ven/
 ```
 ```run
-./illumio-ven-ctl -help
+./illumio-ven-ctl version
 ```
-
-Try a few of the commands shown, e.g. `version`, `status`, `check-env`, `connectivity-test -test-all-ips -v`, or `stop`/`start`.
+```run
+./illumio-ven-ctl status
+```
+```run
+./illumio-ven-ctl check-env
+```
+```run
+./illumio-ven-ctl connectivity-test -test-all-ips -v
+```
+```run
+./illumio-ven-ctl restart
+```
+Try a few of the commands shown above using the **run** option..
 
 ---
 
