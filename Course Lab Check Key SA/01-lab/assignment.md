@@ -164,10 +164,11 @@ check-workloads
 > [!NOTE]
 > **Optional — Unpair a VEN from the Console** (only if you need to, for example to pair a workload again from scratch)
 >
-> 1. **Servers and Endpoints → Workloads**, tick the workload (**linux-vm** or **windows-vm**).
-> 2. Click **Unpair**.
-> 3. Choose what happens to the workload's firewall. Revert it to its state before Illumio was installed, or open all ports.
-> 4. Confirm. The VEN uninstalls itself from the workload and the workload drops out of the list.
+> 1. Go to **Servers and Endpoints → Workloads**, then select the **VENs** tab.
+> 2. Tick the workload (**linux-vm** or **windows-vm**).
+> 3. Click **Unpair**.
+> 4. Choose what happens to the workload's firewall. Revert it to its state before Illumio was installed, or open all ports.
+> 5. Confirm. The VEN uninstalls itself from the workload and the workload drops out of the list.
 >
 > To pair it again, repeat **2) Pair the Windows Workload** or **3) Pair the Linux Workload** above. Until you do, **check-workloads** will report the workload as not paired.
 
