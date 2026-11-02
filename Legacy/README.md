@@ -7,7 +7,7 @@ example. They appear in Instruqt as `! 26.x Withdrawn: ...` (renamed from
 
 | Folder | Title / slug |
 |---|---|
-| `Course Lab 02-11/` | `! 26.x Withdrawn: Lab 02/11` / `26x-lab` - the **single-key** lab (magic-link key for everything), withdrawn 2026-11-02 |
+| `Course Lab 02-11/` | `! 26.x Withdrawn: Lab 02/11` / `26x-withdrawn-lab-0211` - the **single-key** lab (magic-link key for everything), withdrawn 2026-11-02 |
 | `Course Lab Check Key 02-11/` | `! 26.x Withdrawn: Lab Check Key 02/11` / `26x-test-lab-check-key` - the **separate check-key** lab (second user key for checks), withdrawn 2026-11-02 |
 | `Course Lab 30-09/` | `! 26.x Withdrawn: Lab 30/09` / `26x-superseded-lab-3009` - the 3-challenge **Crystal** lab, used until 2026-09-30 |
 | `Course Lab 28-09/` | `! 26.x Withdrawn: Lab 28/09` / `26x-superseded-lab-2809` - the original **vensim** lab, superseded 2026-09-28 |

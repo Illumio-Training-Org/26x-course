@@ -1,4 +1,4 @@
-> **Withdrawn 2026-11-02** as `! 26.x Withdrawn: Lab 02/11` (slug `26x-lab` unchanged). This was the single-key lab: the magic-link key is used for everything, including the check scripts. It's kept frozen as a backup. The service-account version replaced it as `! 26.x Lab` (`Course Lab/`).
+> **Withdrawn 2026-11-02** as `! 26.x Withdrawn: Lab 02/11` (slug changed from `26x-lab` to `26x-withdrawn-lab-0211`). This was the single-key lab: the magic-link key is used for everything, including the check scripts. It's kept frozen as a backup. The service-account version replaced it as `! 26.x Lab` (`Course Lab/`).
 
 # Course Lab — `! 26.x Lab`
 

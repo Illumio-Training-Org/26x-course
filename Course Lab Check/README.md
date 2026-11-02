@@ -85,7 +85,7 @@ being disabled, and traffic appearing (~13 min on partner100 in the 2026-10-16 r
    (Already cloned? `git pull` to get the latest.)
 4. **Run the check:**
    ```
-   ./quick-check.sh 26x-test-lab-check-key-sa
+   ./quick-check.sh 26x-lab
    ```
 5. **Read the result:** PASS/FAIL prints in the terminal and a Mac
    notification pops up. Details are in `reports/`.
@@ -139,7 +139,7 @@ Subsystem for Linux) - not in PowerShell or Command Prompt.
    ```
 6. **Run the check:**
    ```
-   bash ./quick-check.sh 26x-test-lab-check-key-sa
+   bash ./quick-check.sh 26x-lab
    ```
 7. **Read the result:** PASS/FAIL prints in the terminal (there's no pop-up
    notification on Windows). Details are in `reports/`.
@@ -151,7 +151,7 @@ CLI also accepts an Instruqt team API token (from the Instruqt team
 settings):
 
 ```
-INSTRUQT_TOKEN="<token>" bash ./quick-check.sh 26x-test-lab-check-key-sa
+INSTRUQT_TOKEN="<token>" bash ./quick-check.sh 26x-lab
 ```
 
 The token is a team-wide credential - keep it private and never save it in
@@ -171,7 +171,7 @@ this repo.
 Example of a passing run (2026-09-30):
 
 ```
-26.x quick check - 26x-test-lab-check-key-sa - PASS
+26.x quick check - 26x-lab - PASS
 run length: 2m31s (instruqt track test exit code 0)
 sandbox ready         (UTC) : 2026-09-30T08:33:02Z
 track setup complete  (UTC) : 2026-09-30T08:33:23Z
@@ -183,7 +183,7 @@ Crystal deleted       (UTC) : 2026-09-30T08:34:25Z
 
 - `quick-check.sh` - the check.
 - `tracks.txt` - which tracks to check and the markers each must print.
-  Currently only `26x-test-lab-check-key-sa` (`! 26.x Lab`).
+  Currently only `26x-lab` (`! 26.x Lab`).
 - The markers themselves are printed by the lab's scripts in
   `../Course Lab/` (`track_scripts/setup-cloud-client`,
   `01-lab/setup-cloud-client`, and both `cleanup-cloud-client` scripts) -

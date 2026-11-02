@@ -19,7 +19,7 @@ before "Test" to stay in the top group. Restructured 2026-09-28; the old
 tracks were renamed from "Superseded" to "Withdrawn" on 2026-10-16 so they
 sort after the Test tracks. Their slugs still say `26x-superseded-...`.
 
-- `Course Lab/` — **`! 26.x Lab`** (`26x-test-lab-check-key-sa`, the
+- `Course Lab/` — **`! 26.x Lab`** (`26x-lab`, the
   service-account version; renamed from `! 26.x Lab Check Key SA` on
   2026-11-02). Check scripts use an org service-account key with the
   magic-link key as fallback (`pce-auth`). 2 challenges (the lab on
@@ -48,7 +48,7 @@ sort after the Test tracks. Their slugs still say `26x-superseded-...`.
   (5 questions) then the Specialist Exam (5 questions). Partners take the
   Foundation Exam (10 questions) then the Specialist Exam (5 questions).
 - `Legacy/` — earlier versions, kept frozen as backup/reference:
-  - `Legacy/Course Lab 02-11/` — `! 26.x Withdrawn: Lab 02/11` (`26x-lab`):
+  - `Legacy/Course Lab 02-11/` — `! 26.x Withdrawn: Lab 02/11` (`26x-withdrawn-lab-0211`):
     the single-key lab, withdrawn 2026-11-02.
   - `Legacy/Course Lab Check Key 02-11/` — `! 26.x Withdrawn: Lab Check Key 02/11`
     (`26x-test-lab-check-key`): the separate check-key lab, withdrawn 2026-11-02.

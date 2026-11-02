@@ -1,11 +1,13 @@
 # Course Lab — `! 26.x Lab`
 
-The current 26.x course lab: `! 26.x Lab`, slug `26x-test-lab-check-key-sa`,
-track ID `ltm5un9l3axu`. I built it on 2026-10-20 as `! 26.x Lab Check Key SA`,
+The current 26.x course lab: `! 26.x Lab`, slug `26x-lab`, track ID
+`dispeobecttx`. I built it on 2026-10-20 as `! 26.x Lab Check Key SA`,
 a test copy of `! 26.x Lab Check Key`. It was the default class lab from
 2026-10-21, and on 2026-11-02 I made it the one lab: renamed to `! 26.x Lab`,
 with the single-key and separate-check-key versions withdrawn (see
-`Legacy/`). I kept the slug so the track ID and existing invites keep working. Tests on 2026-10-20 showed that every API key on the
+`Legacy/`), and moved to the `26x-lab` slug. The slug change created a new
+track ID, so I deleted the old `26x-test-lab-check-key-sa` track
+(`ltm5un9l3axu`) in the same sitting. Tests on 2026-10-20 showed that every API key on the
 lab *user* is wiped ~1.5-2.5 h into a lab (401), whichever way it was made,
 while an org-level **service-account** key kept working. So instead of a
 second user key, `track_scripts/setup-cloud-client` uses the magic-link key
