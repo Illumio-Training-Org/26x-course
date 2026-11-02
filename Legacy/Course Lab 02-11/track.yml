@@ -1,5 +1,5 @@
-slug: 26x-lab
-id: wmlreb7o00sm
+slug: 26x-withdrawn-lab-0211
+id: lvu9iybz68ag
 title: '! 26.x Withdrawn: Lab 02/11'
 description: |-
   This lab provides access to:
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "4685378290797477215"
+checksum: "631767970377621109"
 enhanced_loading: false

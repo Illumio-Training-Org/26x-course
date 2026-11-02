@@ -1,6 +1,6 @@
 ---
 slug: lab
-id: dqgryxfx9ffp
+id: lykfvwicvpnb
 type: challenge
 title: Illumio Lab Environment
 teaser: Access the Illumio Console, then pair workloads, onboard AWS, and connect
@@ -39,27 +39,27 @@ notes:
 - type: video
   url: https://www.youtube.com/embed/_QALLe3DJpk
 tabs:
-- id: nfrwkqgqhsba
+- id: 1s4htynecksd
   title: Illumio & AWS
   type: service
   hostname: cloud-client
   path: /
   port: 80
-- id: jnxpejjklzja
+- id: k9szqsyantst
   title: Linux
   type: terminal
   hostname: linux-vm
   cmd: bash
-- id: cyazfqdtjgfo
+- id: f8lyvpdvyeqy
   title: Windows
   type: terminal
   hostname: windows-vm
-- id: ozdes6otbdr0
+- id: wd6j6wthtiv7
   title: CloudCLI
   type: terminal
   hostname: cloud-client
   cmd: bash
-- id: 2skpilcyppew
+- id: qtekmrnhha9o
   title: k3s console
   type: terminal
   hostname: host
