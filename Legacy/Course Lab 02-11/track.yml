@@ -1,6 +1,6 @@
-slug: 26x-test-lab-check-key-sa
-id: ltm5un9l3axu
-title: '! 26.x Lab Check Key SA'
+slug: 26x-lab
+id: wmlreb7o00sm
+title: '! 26.x Withdrawn: Lab 02/11'
 description: |-
   This lab provides access to:
 
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "15346323240760498144"
+checksum: "4685378290797477215"
 enhanced_loading: false

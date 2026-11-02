@@ -1,3 +1,5 @@
+> **Withdrawn 2026-11-02** as `! 26.x Withdrawn: Lab Check Key 02/11` (slug `26x-test-lab-check-key` unchanged). This was the separate check-key lab: check scripts use a second API key on the same user. It's kept frozen as a backup. The service-account version replaced it as `! 26.x Lab` (`Course Lab/`).
+
 # Course Lab Check Key — `! 26.x Lab Check Key`
 
 A test copy of `! 26.x Lab` (slug `26x-test-lab-check-key`), created

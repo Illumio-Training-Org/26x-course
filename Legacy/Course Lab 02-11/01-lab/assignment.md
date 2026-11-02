@@ -1,6 +1,6 @@
 ---
 slug: lab
-id: n1k0o0fhgp7q
+id: dqgryxfx9ffp
 type: challenge
 title: Illumio Lab Environment
 teaser: Access the Illumio Console, then pair workloads, onboard AWS, and connect
@@ -39,27 +39,27 @@ notes:
 - type: video
   url: https://www.youtube.com/embed/_QALLe3DJpk
 tabs:
-- id: zqqbpnsyy3iq
+- id: nfrwkqgqhsba
   title: Illumio & AWS
   type: service
   hostname: cloud-client
   path: /
   port: 80
-- id: 6lysiz6t3lgq
+- id: jnxpejjklzja
   title: Linux
   type: terminal
   hostname: linux-vm
   cmd: bash
-- id: na4uhkyon8rp
+- id: cyazfqdtjgfo
   title: Windows
   type: terminal
   hostname: windows-vm
-- id: fmvxvrnw3mow
+- id: ozdes6otbdr0
   title: CloudCLI
   type: terminal
   hostname: cloud-client
   cmd: bash
-- id: byndfyblaxj7
+- id: 2skpilcyppew
   title: k3s console
   type: terminal
   hostname: host
@@ -160,17 +160,6 @@ Try a few of the commands shown above using the **run** option..
 ```
 check-workloads
 ```
-
-> [!NOTE]
-> **Optional — Unpair a VEN from the Console** (only if you need to, for example to pair a workload again from scratch)
->
-> 1. Go to **Servers and Endpoints → Workloads**, then select the **VENs** tab.
-> 2. Tick the workload (**linux-vm** or **windows-vm**).
-> 3. Click **Unpair**.
-> 4. Choose what happens to the workload's firewall. Revert it to its state before Illumio was installed, or open all ports.
-> 5. Confirm. The VEN uninstalls itself from the workload and the workload drops out of the list.
->
-> To pair it again, repeat **2) Pair the Windows Workload** or **3) Pair the Linux Workload** above. Until you do, **check-workloads** will report the workload as not paired.
 
 ---
 
@@ -557,16 +546,27 @@ Wait **a few minutes** after labeling: the PCE takes a little time to apply the 
 
 Using the CloudCLI Tab
 
-To show all the lab's credentials:
+To show the Account Identities:
 
 ```run
-. /root/.pce-sa-key
-echo "PCE:                  $AUTOACCOUNT_PCE_FQDN"
-echo "Org ID:               $AUTOACCOUNT_ORG_ID"
-echo "API key:              api_$AUTOACCOUNT_APIKEY_ID"
-echo "API secret:           $AUTOACCOUNT_APIKEY_SECRET"
-echo "Service-account key:  $SA_KEY_USER (role $SA_ROLE)"
-echo "Service-account secret: $SA_KEY_SECRET"
+echo $AUTOACCOUNT_APIKEY_ID
+echo $AUTOACCOUNT_APIKEY_SECRET
+echo $AUTOACCOUNT_ORG_ID
+echo $AUTOACCOUNT_PCE_FQDN
+```
+
+To test the Console API:
+
+```run
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+curl -s -o /dev/null -w "%{http_code}\n" -u "$AUTH" "$BASE/workloads?max_results=1"
+```
+
+To check the PCE API is responding:
+
+```run
+check-pce-api
 ```
 
 To test the deployment process:

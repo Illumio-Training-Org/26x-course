@@ -1,5 +1,5 @@
-slug: 26x-lab
-id: wmlreb7o00sm
+slug: 26x-test-lab-check-key-sa
+id: ltm5un9l3axu
 title: '! 26.x Lab'
 description: |-
   This lab provides access to:
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "8295446847606250201"
+checksum: "15705511431327226260"
 enhanced_loading: false

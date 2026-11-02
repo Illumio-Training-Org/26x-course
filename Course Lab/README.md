@@ -1,7 +1,34 @@
 # Course Lab — `! 26.x Lab`
 
-The current 26.x course lab (slug `26x-lab`), used for the instructor-led
-course. Each learner gets their own sandbox: a fresh Illumio PCE org (magic
+The current 26.x course lab: `! 26.x Lab`, slug `26x-test-lab-check-key-sa`,
+track ID `ltm5un9l3axu`. I built it on 2026-10-20 as `! 26.x Lab Check Key SA`,
+a test copy of `! 26.x Lab Check Key`. It was the default class lab from
+2026-10-21, and on 2026-11-02 I made it the one lab: renamed to `! 26.x Lab`,
+with the single-key and separate-check-key versions withdrawn (see
+`Legacy/`). I kept the slug so the track ID and existing invites keep working. Tests on 2026-10-20 showed that every API key on the
+lab *user* is wiped ~1.5-2.5 h into a lab (401), whichever way it was made,
+while an org-level **service-account** key kept working. So instead of a
+second user key, `track_scripts/setup-cloud-client` uses the magic-link key
+to create a service account in the org (`POST /orgs/{org}/service_accounts`,
+Global Organization Owner, falling back to Read Only; key expires after
+24 h) and saves its key to `/root/.pce-sa-key`.
+
+`pce-auth` prints the first key that answers `200` right now, service
+account first, then magic-link key. `check-workloads`, `check-containers`,
+`check-jumpbox-rule` and `check-pce-api` use it, so the checks keep working if either key dies.
+Crystal, Terraform and `disable-all-rulesets` keep the magic-link key.
+`check-api-keys` tests both keys side by side. The setup log shows
+`CHECK-OK: sa-key` or `CHECK-FAIL: sa-key`.
+
+Keys and service accounts made through the PCE API do not appear in the
+Console's API Keys or Service Accounts pages; that is expected.
+
+The rest of this README describes the base lab, which this track shares
+with the withdrawn versions.
+
+## The base lab
+
+Used for the instructor-led course. Each learner gets their own sandbox: a fresh Illumio PCE org (magic
 link), an AWS account, two VMs, a k3s node, and their own **Project Crystal**
 deployment that fills the org with demo workloads, labels, policies and
 traffic. Nothing is shared between learners, and everything is torn down
@@ -15,7 +42,7 @@ Became the main lab on 2026-09-30, replacing the earlier 3-challenge layout
 
 | Folder | Title | What happens |
 |---|---|---|
-| `01-lab` | Illumio Lab Environment | One page for the whole lab. Starts at **🔑 Console** - the Illumio logo, then a "Click here to open the Illumio Console" link, with a copy box underneath in case the link doesn't open. Then **Workloads** (pairing profile, pair linux-vm/windows-vm, VEN CLI, enforcement), **Cloud** (AWS onboarding), **Containers** (k3s / C-VEN), **IR - Prevent** (Ransomware Protection, checked by `check-jumpbox-rule`), **IR - Investigate** (investigation of a live lateral-movement attack), and **🛠️ Advanced** at the bottom - troubleshooting commands *only for use if the instructor asks* (full reference: root README, *Troubleshooting reference*). Some sections end with a `check-*` command learners run in the CloudCLI tab. |
+| `01-lab` | Illumio Lab Environment | One page for the whole lab. Starts at **🔑 Console** - the Illumio logo, then a "Click here to open the Illumio Console" link, with a copy box underneath in case the link doesn't open. Then **Workloads** (pairing profile, pair linux-vm/windows-vm, VEN CLI, enforcement), **Cloud** (AWS onboarding), **Containers** (k3s / C-VEN), **IR - Prevent** (Ransomware Protection, checked by `check-jumpbox-rule`), **IR - Investigate** (investigation of a live lateral-movement attack), and **🛠️ Advanced** at the bottom - one command that prints all the lab's credentials (PCE, org ID, API key + secret, service-account key + secret) and the deployment-process count check, *only for use if the instructor asks* (the other troubleshooting commands: root README, *Troubleshooting reference*). Some sections end with a `check-*` command learners run in the CloudCLI tab. |
 | `02-close-lab` | Close Lab | Warning page. The learner must run `close-lab` in the CloudCLI tab and type **YES**, then click **Check**, to end the session (an accidental click just shows a reminder). Ending deletes the learner's Crystal deployment. |
 
 Tabs: **Illumio & AWS** (one page with the console link and the AWS login

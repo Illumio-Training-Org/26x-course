@@ -1,25 +1,4 @@
-# Course Lab Check Key SA — `! 26.x Lab Check Key SA`
-
-A test copy of `! 26.x Lab Check Key` (slug `26x-test-lab-check-key-sa`),
-created 2026-10-20. Tests on 2026-10-20 showed that every API key on the
-lab *user* is wiped ~1.5-2.5 h into a lab (401), whichever way it was made,
-while an org-level **service-account** key kept working. So instead of a
-second user key, `track_scripts/setup-cloud-client` uses the magic-link key
-to create a service account in the org (`POST /orgs/{org}/service_accounts`,
-Global Organization Owner, falling back to Read Only; key expires after
-24 h) and saves its key to `/root/.pce-sa-key`.
-
-`pce-auth` prints the first key that answers `200` right now, service
-account first, then magic-link key. `check-workloads`, `check-containers`,
-`check-jumpbox-rule` and `check-pce-api` use it, so the checks keep working if either key dies.
-Crystal, Terraform and `disable-all-rulesets` keep the magic-link key.
-`check-api-keys` tests both keys side by side. The setup log shows
-`CHECK-OK: sa-key` or `CHECK-FAIL: sa-key`.
-
-Keys and service accounts made through the PCE API do not appear in the
-Console's API Keys or Service Accounts pages; that is expected.
-
-The rest of this README describes the original `! 26.x Lab`.
+> **Withdrawn 2026-11-02** as `! 26.x Withdrawn: Lab 02/11` (slug `26x-lab` unchanged). This was the single-key lab: the magic-link key is used for everything, including the check scripts. It's kept frozen as a backup. The service-account version replaced it as `! 26.x Lab` (`Course Lab/`).
 
 # Course Lab — `! 26.x Lab`
 
@@ -38,7 +17,7 @@ Became the main lab on 2026-09-30, replacing the earlier 3-challenge layout
 
 | Folder | Title | What happens |
 |---|---|---|
-| `01-lab` | Illumio Lab Environment | One page for the whole lab. Starts at **🔑 Console** - the Illumio logo, then a "Click here to open the Illumio Console" link, with a copy box underneath in case the link doesn't open. Then **Workloads** (pairing profile, pair linux-vm/windows-vm, VEN CLI, enforcement), **Cloud** (AWS onboarding), **Containers** (k3s / C-VEN), **IR - Prevent** (Ransomware Protection, checked by `check-jumpbox-rule`), **IR - Investigate** (investigation of a live lateral-movement attack), and **🛠️ Advanced** at the bottom - one command that prints all the lab's credentials (PCE, org ID, API key + secret, service-account key + secret) and the deployment-process count check, *only for use if the instructor asks* (the other troubleshooting commands: root README, *Troubleshooting reference*). Some sections end with a `check-*` command learners run in the CloudCLI tab. |
+| `01-lab` | Illumio Lab Environment | One page for the whole lab. Starts at **🔑 Console** - the Illumio logo, then a "Click here to open the Illumio Console" link, with a copy box underneath in case the link doesn't open. Then **Workloads** (pairing profile, pair linux-vm/windows-vm, VEN CLI, enforcement), **Cloud** (AWS onboarding), **Containers** (k3s / C-VEN), **IR - Prevent** (Ransomware Protection, checked by `check-jumpbox-rule`), **IR - Investigate** (investigation of a live lateral-movement attack), and **🛠️ Advanced** at the bottom - troubleshooting commands *only for use if the instructor asks* (full reference: root README, *Troubleshooting reference*). Some sections end with a `check-*` command learners run in the CloudCLI tab. |
 | `02-close-lab` | Close Lab | Warning page. The learner must run `close-lab` in the CloudCLI tab and type **YES**, then click **Check**, to end the session (an accidental click just shows a reminder). Ending deletes the learner's Crystal deployment. |
 
 Tabs: **Illumio & AWS** (one page with the console link and the AWS login
