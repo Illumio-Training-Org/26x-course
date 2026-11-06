@@ -17,10 +17,12 @@ Since 2026-11-06, Foundation, Associate and Specialist use the same key model as
 `! 26.x Lab`. `track_scripts/setup-cloud-client` uses the magic-link key to
 create a service account in the org (Global Organization Owner, falling back to
 Read Only; key expires after 24 h) and saves its key to `/root/.pce-sa-key`.
-Every check/solve script gets its key from `pce-auth`, which prints the first key
-that answers `200` right now: the service account first, then the magic-link key.
-Foundation Task 8 reads `/permissions` and falls back to the magic-link key per
-request if the service account isn't allowed. Crystal, Terraform and the exam
+Setup then appends the service-account key to `/root/.autoaccount_env` as an override of
+`AUTOACCOUNT_APIKEY_ID`/`_SECRET` (the old Check Key way), so the check/solve scripts
+are unchanged and use it automatically; `MAGIC_AUTH` keeps the magic-link key.
+Foundation Task 8 reads `/permissions` and falls back to `MAGIC_AUTH` per request.
+(Calling `pce-auth` from Instruqt check scripts returned empty responses on 2026-11-06,
+so the checks don't use it.) Crystal, Terraform and the exam
 start-state script keep the magic-link key. `check-api-keys` tests both keys side
 by side; the setup log shows `CHECK-OK: sa-key` or `CHECK-FAIL: sa-key`.
 The earlier separate-check-key versions are withdrawn (see `../Legacy/`).

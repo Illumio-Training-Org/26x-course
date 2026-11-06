@@ -208,6 +208,28 @@ fi
 CHECKEOF
 chmod +x /usr/local/bin/check-api-keys
 
+# Point the check/solve scripts at the service-account key. They all source
+# /root/.autoaccount_env and build AUTH from AUTOACCOUNT_APIKEY_ID/_SECRET,
+# so (as in the old Check Key exams) the SA key is appended there as an
+# override and the scripts need no changes. MAGIC_AUTH keeps the magic-link
+# key for checks that need a fallback (Foundation Task 8). Setup itself
+# (Crystal, Terraform, exam-start-state) keeps the magic-link key.
+# Command echo off so the secrets stay out of the track logs.
+{ set +x; } 2>/dev/null
+if [ -f /root/.pce-sa-key ]; then
+  . /root/.pce-sa-key
+  {
+    echo "# service-account key override (setup-cloud-client)"
+    echo "export MAGIC_AUTH=api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+    echo "export AUTOACCOUNT_APIKEY_ID=${SA_KEY_USER#api_}"
+    echo "export AUTOACCOUNT_APIKEY_SECRET=${SA_KEY_SECRET}"
+  } >> /root/.autoaccount_env
+  echo "CHECK-OK: sa-key set for check scripts"
+else
+  echo "CHECK-FAIL: no sa-key - check scripts use the magic-link key"
+fi
+set -x
+
 # ---------------------------------------
 # PROJECT CRYSTAL TRAFFIC GENERATION
 # ---------------------------------------
