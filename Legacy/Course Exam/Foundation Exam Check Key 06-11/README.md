@@ -1,4 +1,9 @@
-# Foundation Exam Check Key — `! 26.x Foundation Exam Check Key`
+# Foundation Exam Check Key - `! 26.x Withdrawn: Foundation Exam Check Key 06/11`
+
+**Withdrawn 2026-11-06.** I replaced it with `! 26.x Foundation Exam`, which now uses
+the service-account method from `! 26.x Lab`. Slug (`26x-foundation-exam-check-key`)
+and track ID are unchanged. Kept frozen as a backup and reference only.
+
 
 A test copy of `! 26.x Foundation Exam`, created 2026-10-18 to test a workaround
 for the mid-lab PCE API 401s. The only change is in

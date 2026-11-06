@@ -1,6 +1,11 @@
-# Specialist Exam Check Key — `! 26.x Specialist Exam Check Key`
+# Associate Exam Check Key - `! 26.x Withdrawn: Associate Exam Check Key 06/11`
 
-A test copy of `! 26.x Specialist Exam`, created 2026-10-18 to test a workaround
+**Withdrawn 2026-11-06.** I replaced it with `! 26.x Associate Exam`, which now uses
+the service-account method from `! 26.x Lab`. Slug (`26x-associate-exam-check-key`)
+and track ID are unchanged. Kept frozen as a backup and reference only.
+
+
+A test copy of `! 26.x Associate Exam`, created 2026-10-18 to test a workaround
 for the mid-lab PCE API 401s. The only change is in
 `track_scripts/setup-cloud-client`: right after the agent variables, setup
 uses the magic-link key to create a second PCE API key named

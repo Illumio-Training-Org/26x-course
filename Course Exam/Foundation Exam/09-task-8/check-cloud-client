@@ -21,7 +21,9 @@
 . /root/.autoaccount_env
 
 BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
-AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+# Use whichever key works: service account first, then magic-link
+AUTH=$(pce-auth)
+MAGIC="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
 FQDN="$AUTOACCOUNT_PCE_FQDN"
 
 result=$(python3 -c "
@@ -29,11 +31,16 @@ import json, subprocess, sys
 
 def get(path):
     url = 'https://$FQDN/api/v2' + path
-    out = subprocess.run(['curl', '-s', '-u', '$AUTH', url], capture_output=True, text=True).stdout
-    try:
-        return json.loads(out)
-    except Exception:
-        return None
+    # service-account key first; if it isn't allowed (non-200), magic-link key
+    for key in ('$AUTH', '$MAGIC'):
+        out = subprocess.run(['curl', '-s', '-w', '\\n%{http_code}', '-u', key, url], capture_output=True, text=True).stdout
+        body, _, code = out.rpartition('\\n')
+        if code == '200':
+            try:
+                return json.loads(body)
+            except Exception:
+                pass
+    return None
 
 expected_scope = {'env': 'production', 'loc': 'ca'}
 

@@ -1,6 +1,6 @@
 slug: 26x-foundation-exam-check-key
 id: 1ulpl2zlbzvv
-title: '! 26.x Foundation Exam Check Key'
+title: '! 26.x Withdrawn: Foundation Exam Check Key 06/11'
 description: |-
   Lab Name: 26.x FOUNDATION EXAM
 
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "11467159192911315859"
+checksum: "17972833462894324552"
 enhanced_loading: false

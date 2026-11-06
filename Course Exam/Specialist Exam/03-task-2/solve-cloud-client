@@ -15,7 +15,8 @@
 
 . /root/.autoaccount_env
 
-AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+# Use whichever key works: service account first, then magic-link
+AUTH=$(pce-auth)
 FQDN="$AUTOACCOUNT_PCE_FQDN"
 
 python3 -c "

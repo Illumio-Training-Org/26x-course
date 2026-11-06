@@ -9,6 +9,8 @@ see the repo root `README.md`).
 
 **Pass mark: 8 out of 10 tasks correct (80%).**
 
+API keys: I moved this exam to the service-account method on 2026-11-06 (same as `! 26.x Lab`) - see `../README.md`.
+
 ## Tasks
 
 Rebuilt 2026-09-02 to match the "Foundation & Select agenda" tab's
