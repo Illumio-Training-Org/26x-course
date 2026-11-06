@@ -12,6 +12,7 @@ example. They appear in Instruqt as `! 26.x Withdrawn: ...` (renamed from
 | `Course Exam/Foundation Exam Check Key 06-11/` | `! 26.x Withdrawn: Foundation Exam Check Key 06/11` / `26x-foundation-exam-check-key` - the **separate check-key** exam, withdrawn 2026-11-06 |
 | `Course Exam/Associate Exam Check Key 06-11/` | `! 26.x Withdrawn: Associate Exam Check Key 06/11` / `26x-associate-exam-check-key` - withdrawn 2026-11-06 |
 | `Course Exam/Specialist Exam Check Key 06-11/` | `! 26.x Withdrawn: Specialist Exam Check Key 06/11` / `26x-specialist-exam-check-key` - withdrawn 2026-11-06 |
+| `Course Exam/Select Exam Check Key 06-11/` | `! 26.x Withdrawn: Select Exam Check Key 06/11` / `26x-select-exam-check-key` - withdrawn 2026-11-06 |
 | `Course Lab 30-09/` | `! 26.x Withdrawn: Lab 30/09` / `26x-superseded-lab-3009` - the 3-challenge **Crystal** lab, used until 2026-09-30 |
 | `Course Lab 28-09/` | `! 26.x Withdrawn: Lab 28/09` / `26x-superseded-lab-2809` - the original **vensim** lab, superseded 2026-09-28 |
 | `Course Exam/Foundation Exam/` | `! 26.x Withdrawn: Foundation Exam` / `26x-superseded-foundation-exam` |

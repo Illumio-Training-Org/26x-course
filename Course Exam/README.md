@@ -13,7 +13,7 @@ its own Instruqt track. The previous vensim-based versions are in
 
 ## API keys (service-account method, same as `! 26.x Lab`)
 
-Since 2026-11-06, Foundation, Associate and Specialist use the same key model as
+Since 2026-11-06, all four exams use the same key model as
 `! 26.x Lab`. `track_scripts/setup-cloud-client` uses the magic-link key to
 create a service account in the org (Global Organization Owner, falling back to
 Read Only; key expires after 24 h) and saves its key to `/root/.pce-sa-key`.
@@ -26,7 +26,6 @@ so the checks don't use it.) Crystal, Terraform and the exam
 start-state script keep the magic-link key. `check-api-keys` tests both keys side
 by side; the setup log shows `CHECK-OK: sa-key` or `CHECK-FAIL: sa-key`.
 The earlier separate-check-key versions are withdrawn (see `../Legacy/`).
-The Select Exam has not been converted yet.
 
 **Which exams each audience takes:** Customers take the Associate Exam
 (5 questions) then the Specialist Exam (5 questions). Partners take the

@@ -1,4 +1,10 @@
-# Select Exam Check Key — `! 26.x Select Exam Check Key`
+# Select Exam Check Key - `! 26.x Withdrawn: Select Exam Check Key 06/11`
+
+**Withdrawn 2026-11-06.** I replaced it with `! 26.x Select Exam`, which now uses
+the service-account method (same as `! 26.x Lab` and the other exams). Slug
+(`26x-select-exam-check-key`) and track ID are unchanged. Kept frozen as a
+backup and reference only.
+
 
 A test copy of `! 26.x Select Exam`, created 2026-10-18 to test a workaround
 for the mid-lab PCE API 401s. The only change is in

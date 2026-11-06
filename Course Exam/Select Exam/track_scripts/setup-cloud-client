@@ -121,6 +121,116 @@ set -x
 date
 
 # ---------------------------------------
+# SERVICE ACCOUNT API KEY (backup for the check scripts)
+# ---------------------------------------
+# Tests (2026-10-20) showed every API key on the lab *user* gets wiped
+# ~1.5-2.5 h into a lab (401), while an org-level service-account key
+# survived. So setup uses the magic-link key to create a service account
+# in the org and saves its key to /root/.pce-sa-key (root only).
+# The check scripts use whichever key works (see pce-auth below).
+# Role: Global Organization Owner, falling back to Read Only if the
+# owner role can't be granted - the checks only read.
+python3 - << 'KEYEOF' || true
+import base64, json, os, time, urllib.request
+base = "https://" + os.environ["AUTOACCOUNT_PCE_FQDN"] + "/api/v2"
+org = "/orgs/" + os.environ["AUTOACCOUNT_ORG_ID"]
+auth = "Basic " + base64.b64encode(("api_" + os.environ["AUTOACCOUNT_APIKEY_ID"] + ":" + os.environ["AUTOACCOUNT_APIKEY_SECRET"]).encode()).decode()
+
+def call(method, path, body=None):
+    req = urllib.request.Request(base + path, method=method, data=json.dumps(body).encode() if body else None,
+                                 headers={"Authorization": auth, "Content-Type": "application/json", "Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return json.loads(r.read())
+
+done = False
+for attempt in range(1, 6):
+    for role in ("owner", "read_only"):
+        try:
+            sa = call("POST", org + "/service_accounts", {
+                "name": "check-scripts-sa-%d" % int(time.time()),
+                "description": "Lab self-check commands (backup key)",
+                "permissions": [{"role": {"href": org + "/roles/" + role}, "scope": []}],
+                "api_key": {"expires_in_seconds": 86400}})
+            key = sa["api_key"]
+            with open("/root/.pce-sa-key", "w") as f:
+                f.write("SA_KEY_USER=%s\nSA_KEY_SECRET=%s\nSA_ROLE=%s\n" % (key["auth_username"], key["secret"], role))
+            os.chmod("/root/.pce-sa-key", 0o600)
+            print("CHECK-OK: sa-key (%s, role %s)" % (key["auth_username"], role))
+            done = True
+            break
+        except Exception as e:
+            print("sa-key attempt %d (role %s) failed: %s" % (attempt, role, e))
+    if done:
+        break
+    time.sleep(15)
+else:
+    print("CHECK-FAIL: sa-key (checks will use the magic-link key)")
+KEYEOF
+
+# pce-auth: prints "user:secret" for the first key that works right now -
+# the service-account key, then the magic-link key. Used by the checks.
+cat > /usr/local/bin/pce-auth << 'AUTHEOF'
+#!/bin/bash
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+MAGIC="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+SA=""
+[ -f /root/.pce-sa-key ] && . /root/.pce-sa-key && SA="$SA_KEY_USER:$SA_KEY_SECRET"
+for a in "$SA" "$MAGIC"; do
+  [ -n "$a" ] || continue
+  [ "$(curl -s -o /dev/null -m 30 -w '%{http_code}' -u "$a" "$BASE/workloads?max_results=1")" = "200" ] && { echo "$a"; exit 0; }
+done
+echo "$MAGIC"
+AUTHEOF
+chmod +x /usr/local/bin/pce-auth
+
+# check-api-keys: tests the magic-link key and the service-account key
+# side by side, to see whether one survives when the other gets a 401.
+cat > /usr/local/bin/check-api-keys << 'CHECKEOF'
+#!/bin/bash
+clear
+BASE="https://$AUTOACCOUNT_PCE_FQDN/api/v2/orgs/$AUTOACCOUNT_ORG_ID"
+test_key() {
+  code=$(curl -s -o /dev/null -m 60 -w "%{http_code}" -u "$2" "$BASE/workloads?max_results=1")
+  if [ "$code" = "200" ]; then
+    echo "PASS - $1 key is working (HTTP 200)"
+  else
+    echo "FAIL - $1 key returned HTTP $code (expected 200)"
+  fi
+}
+echo "$(date -u '+%H:%M:%S UTC')"
+test_key "Magic-link" "api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+if [ -f /root/.pce-sa-key ]; then
+  . /root/.pce-sa-key
+  test_key "Service-account" "$SA_KEY_USER:$SA_KEY_SECRET"
+else
+  echo "FAIL - no service-account key was created at setup (/root/.pce-sa-key missing)"
+fi
+CHECKEOF
+chmod +x /usr/local/bin/check-api-keys
+
+# Point the check/solve scripts at the service-account key. They all source
+# /root/.autoaccount_env and build AUTH from AUTOACCOUNT_APIKEY_ID/_SECRET,
+# so (as in the old Check Key exams) the SA key is appended there as an
+# override and the scripts need no changes. MAGIC_AUTH keeps the magic-link
+# key for checks that need a fallback (Foundation Task 8). Setup itself
+# (Crystal, Terraform, exam-start-state) keeps the magic-link key.
+# Command echo off so the secrets stay out of the track logs.
+{ set +x; } 2>/dev/null
+if [ -f /root/.pce-sa-key ]; then
+  . /root/.pce-sa-key
+  {
+    echo "# service-account key override (setup-cloud-client)"
+    echo "export MAGIC_AUTH=api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
+    echo "export AUTOACCOUNT_APIKEY_ID=${SA_KEY_USER#api_}"
+    echo "export AUTOACCOUNT_APIKEY_SECRET=${SA_KEY_SECRET}"
+  } >> /root/.autoaccount_env
+  echo "CHECK-OK: sa-key set for check scripts"
+else
+  echo "CHECK-FAIL: no sa-key - check scripts use the magic-link key"
+fi
+set -x
+
+# ---------------------------------------
 # PROJECT CRYSTAL TRAFFIC GENERATION
 # ---------------------------------------
 # Replaces vensim for this lab variant. Project Crystal creates a new

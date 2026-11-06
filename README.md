@@ -43,9 +43,8 @@ sort after the Test tracks. Their slugs still say `26x-superseded-...`.
   demo (non-"Task") rulesets and, for Foundation, plants the Task 9 rogue
   label; log at `/var/log/exam-start-state.log`. Foundation/Associate Task 4
   requires a scopeless policy.
-  Foundation, Associate and Specialist use the service-account key method
-  (same as `! 26.x Lab`, see `Course Exam/README.md`) since 2026-11-06; Select
-  still has a plain and a Check Key version (not converted yet).
+  All four exams use the service-account key method (same as `! 26.x Lab`,
+  see `Course Exam/README.md`) since 2026-11-06, one version each.
 
   **Which exams each audience takes:** Customers take the Associate Exam
   (5 questions) then the Specialist Exam (5 questions). Partners take the
@@ -55,7 +54,7 @@ sort after the Test tracks. Their slugs still say `26x-superseded-...`.
     the single-key lab, withdrawn 2026-11-02.
   - `Legacy/Course Lab Check Key 02-11/` — `! 26.x Withdrawn: Lab Check Key 02/11`
     (`26x-test-lab-check-key`): the separate check-key lab, withdrawn 2026-11-02.
-  - `Legacy/Course Exam/{Foundation,Associate,Specialist} Exam Check Key 06-11/` —
+  - `Legacy/Course Exam/{Foundation,Associate,Select,Specialist} Exam Check Key 06-11/` —
     `! 26.x Withdrawn: <x> Exam Check Key 06/11` (slugs unchanged): the
     separate check-key exams, withdrawn 2026-11-06.
   - `Legacy/Course Lab 30-09/` — `! 26.x Withdrawn: Lab 30/09`

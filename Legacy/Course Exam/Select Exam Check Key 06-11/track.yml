@@ -1,6 +1,6 @@
 slug: 26x-select-exam-check-key
 id: cav9ntdswqgs
-title: '! 26.x Select Exam Check Key'
+title: '! 26.x Withdrawn: Select Exam Check Key 06/11'
 description: |-
   Lab Name: 26.x SELECT EXAM
 
@@ -27,5 +27,5 @@ lab_config:
   loadingMessages: true
   override_challenge_layout: false
   hideStopButton: false
-checksum: "16175622527155224102"
+checksum: "3517197413083997676"
 enhanced_loading: false
