@@ -15,8 +15,11 @@
 
 . /root/.autoaccount_env
 
-# Use whichever key works: service account first, then magic-link
-AUTH=$(pce-auth)
+# Use whichever key works: service account first, then magic-link.
+# Full path: Instruqt runs checks with a minimal PATH (no /usr/local/bin).
+# If pce-auth is missing or prints nothing, use the magic-link key.
+AUTH=$(/usr/local/bin/pce-auth 2>/dev/null)
+[ -n "$AUTH" ] || AUTH="api_${AUTOACCOUNT_APIKEY_ID}:${AUTOACCOUNT_APIKEY_SECRET}"
 FQDN="$AUTOACCOUNT_PCE_FQDN"
 
 python3 -c "
